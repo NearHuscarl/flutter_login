@@ -1,9 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart' as Login;
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
+
+  Future _loginUser(BuildContext context) {
+    return Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushNamed(DashboardScreen.routeName);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +36,15 @@ class LoginScreen extends StatelessWidget {
         print('Login info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
-        Navigator.of(context).pushNamed(DashboardScreen.routeName);
+        return _loginUser(context);
       },
       onSignup: (loginData) {
         print('Signup info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
-        Navigator.of(context).pushNamed(DashboardScreen.routeName);
+        return _loginUser(context);
       },
-      onRecoverPassword: (name) {
+      onRecoverPassword: (name) async {
         print('Recover password info');
         print('Name: $name');
         // Show new password dialog

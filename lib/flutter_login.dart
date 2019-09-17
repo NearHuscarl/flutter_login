@@ -12,14 +12,14 @@ class LoginScreen extends StatelessWidget {
   final String title;
   final TextStyleSetter titleTextStyle;
   final String logoAsset;
-  final Function(LoginData) onSignup;
-  final Function(LoginData) onLogin;
-  final Function(String) onRecoverPassword;
+  final Future<void> Function(LoginData) onSignup;
+  final Future<void> Function(LoginData) onLogin;
+  final Future<void> Function(String) onRecoverPassword;
   final FormFieldValidator<String> emailValidator;
   final FormFieldValidator<String> passwordValidator;
 
   LoginScreen({
-    this.title = 'My App',
+    this.title = 'Login',
     this.titleTextStyle,
     this.logoAsset,
     this.onSignup,
@@ -47,9 +47,9 @@ class LoginScreen extends StatelessWidget {
     return null;
   };
 
-  TextStyle _getTitleTextStyle(BuildContext context) {
+  TextStyle _getTitleTextStyle(ThemeData theme) {
     final defaultTextStyle = TextStyle(
-      color: Theme.of(context).primaryTextTheme.title.color,
+      color: theme.primaryTextTheme.title.color,
       fontSize: 50,
       fontWeight: FontWeight.normal,
     );
@@ -60,6 +60,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     final displayLogo = logoAsset != null;
 
@@ -71,8 +72,8 @@ class LoginScreen extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).primaryColor.withOpacity(0.9),
-                  Theme.of(context).primaryColor.withOpacity(0.5),
+                  theme.primaryColor.withOpacity(0.9),
+                  theme.primaryColor.withOpacity(0.5),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -94,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                       height: 125,
                     ),
                   SizedBox(height: 5),
-                  Text(title, style: _getTitleTextStyle(context)),
+                  Text(title, style: _getTitleTextStyle(theme)),
                   SizedBox(height: 15),
                   AuthCard(
                     onLogin: onLogin,
