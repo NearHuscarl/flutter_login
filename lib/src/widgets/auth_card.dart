@@ -1,70 +1,63 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'animated_button.dart';
+import 'expandable_container.dart';
 import '../login_data.dart';
+import '../paddings.dart';
 
 enum AuthMode { Signup, Login, RecoverPassword }
 
 class AuthCard extends StatefulWidget {
+  AuthCard({
+    Key key,
+    this.onLogin,
+    this.onSignup,
+    this.onRecoverPassword,
+    this.emailValidator,
+    this.passwordValidator,
+  }) : super(key: key);
+
   final Future<void> Function(LoginData) onLogin;
   final Future<void> Function(LoginData) onSignup;
   final Future<void> Function(String) onRecoverPassword;
   final FormFieldValidator<String> emailValidator;
   final FormFieldValidator<String> passwordValidator;
 
-  AuthCard({
-    this.onLogin,
-    this.onSignup,
-    this.onRecoverPassword,
-    this.emailValidator,
-    this.passwordValidator,
-  });
-
   @override
   _AuthCardState createState() => _AuthCardState();
 }
 
 class _AuthCardState extends State<AuthCard>
-    with SingleTickerProviderStateMixin {
-  var _obscurePasswordText = true;
-  var _obscureConfirmPasswordText = true;
+    with TickerProviderStateMixin {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
-
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
-  Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
-  var _isLoading = false;
   final _passwordController = TextEditingController();
-  AnimationController _aniController;
-  Animation<Offset> _slideAnimation;
+
+  var _obscurePasswordText = true;
+  var _obscureConfirmPasswordText = true;
+
+  var _authMode = AuthMode.Login;
+  var _authData = {'email': '', 'password': ''};
+  var _isLoading = false;
+
+  AnimationController _authChangedController;
+  AnimationController _submitController;
   Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
-    _aniController = AnimationController(
+
+    _authChangedController = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: 300,
-      ),
+      duration: Duration(milliseconds: 500),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(0, -1.5),
-      end: Offset(0, 0),
-    ).animate(CurvedAnimation(
-      parent: _aniController,
-      curve: Curves.fastOutSlowIn,
-    ));
-    _opacityAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _aniController,
-      curve: Curves.easeIn,
-    ));
+    _submitController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
   }
 
   @override
@@ -73,15 +66,16 @@ class _AuthCardState extends State<AuthCard>
 
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
-    _aniController.dispose();
+    _authChangedController.dispose();
+    _submitController.dispose();
   }
 
-  void _submit() async {
+  Future<bool> _submit() async {
     if (!_formKey.currentState.validate()) {
-      // Invalid!
-      return;
+      return false;
     }
     _formKey.currentState.save();
+    _submitController.forward();
     setState(() => _isLoading = true);
 
     if (_authMode == AuthMode.Login) {
@@ -97,32 +91,40 @@ class _AuthCardState extends State<AuthCard>
     }
 
     setState(() => _isLoading = false);
+    _submitController.reverse();
+    return true;
   }
 
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
       setState(() => _authMode = AuthMode.Signup);
-      _aniController.forward();
+      _authChangedController.forward();
     } else {
       setState(() => _authMode = AuthMode.Login);
-      _aniController.reverse();
+      _authChangedController.reverse();
     }
   }
 
-  TextFormField _buildNameField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Email',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        prefixIcon: Icon(
-          FontAwesomeIcons.solidUserCircle,
+  InputDecoration _getInputDecoration(String labelText, Widget prefixIcon,
+      [Widget suffixIcon]) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.symmetric(vertical: 4.0),
+      labelText: labelText,
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+        borderRadius: BorderRadius.all(
+          Radius.circular(100),
         ),
       ),
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+    );
+  }
+
+  Widget _buildNameField() {
+    return TextFormField(
+      decoration:
+          _getInputDecoration('Email', Icon(FontAwesomeIcons.solidUserCircle)),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
@@ -133,25 +135,15 @@ class _AuthCardState extends State<AuthCard>
     );
   }
 
-  TextFormField _buildPasswordField(bool isLogin) {
+  Widget _buildPasswordField(bool isLogin) {
     return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Password',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        prefixIcon: Icon(
-          FontAwesomeIcons.lock,
-          size: 20,
-        ),
-        suffixIcon: IconButton(
+      decoration: _getInputDecoration(
+        'Password',
+        Icon(FontAwesomeIcons.lock, size: 20),
+        IconButton(
           icon: Icon(Icons.remove_red_eye),
-          onPressed: () => setState(
-            () => _obscurePasswordText = !_obscurePasswordText,
-          ),
+          onPressed: () =>
+              setState(() => _obscurePasswordText = !_obscurePasswordText),
         ),
       ),
       obscureText: _obscurePasswordText,
@@ -171,26 +163,16 @@ class _AuthCardState extends State<AuthCard>
     );
   }
 
-  TextFormField _buildConfirmPasswordField(bool isSignUp) {
+  Widget _buildConfirmPasswordField(bool isSignUp) {
     return TextFormField(
       enabled: isSignUp,
-      decoration: InputDecoration(
-        labelText: 'Confirm Password',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
-        ),
-        prefixIcon: Icon(
-          FontAwesomeIcons.lock,
-          size: 20,
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(Icons.remove_red_eye),
-          onPressed: () => setState(
-              () => _obscureConfirmPasswordText = !_obscureConfirmPasswordText),
-        ),
+      decoration: _getInputDecoration(
+        'Confirm Password',
+        Icon(FontAwesomeIcons.lock, size: 20),
+        IconButton(
+            icon: Icon(Icons.remove_red_eye),
+            onPressed: () => setState(() =>
+                _obscureConfirmPasswordText = !_obscureConfirmPasswordText)),
       ),
       obscureText: _obscureConfirmPasswordText,
       textInputAction: TextInputAction.done,
@@ -219,22 +201,19 @@ class _AuthCardState extends State<AuthCard>
   }
 
   Widget _buildSubmitButton(bool isLogin, ThemeData theme) {
-    return RaisedButton(
-      child: Text(isLogin ? 'LOGIN' : 'SIGN UP'),
-      onPressed: _submit,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+    return AnimatedButton(
+      controller: _submitController,
       color: theme.primaryColor,
-      textColor: theme.primaryTextTheme.button.color,
+      loadingColor: theme.accentColor,
+      text: isLogin ? 'LOGIN' : 'SIGN UP',
+      onPressed: _submit,
     );
   }
 
   Widget _buildSwitchAuthButton(bool isLogin, ThemeData theme) {
     return FlatButton(
       child: Text('${isLogin ? 'SIGNUP' : 'LOGIN'}'),
-      onPressed: _switchAuthMode,
+      onPressed: _isLoading ? null : _switchAuthMode,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
@@ -245,61 +224,74 @@ class _AuthCardState extends State<AuthCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
+    final cardWidth = deviceSize.width * 0.75;
+    const cardPadding = 16.0;
     final isLogin = _authMode == AuthMode.Login;
     final isSignUp = _authMode == AuthMode.Signup;
     final isRecoverPassword = _authMode == AuthMode.RecoverPassword;
+    const aniDuration = Duration(milliseconds: 300);
+    const debugColor = false;
 
-    return Container(
-      // transform: Matrix4.identity()..setEntry(3, 2, 0.001)..rotateX(pi * 1 / 6),
-      // transform: Matrix4.diagonal3Values(2, 2, 1.0),
-      alignment: Alignment.bottomCenter,
-      // transform: Matrix4.skewY(.5),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 8.0,
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-          height: isSignUp ? 320 : 260,
-          // height: _heightAnimation.value.height,
-          constraints: BoxConstraints(minHeight: isSignUp ? 400 : 320),
-          width: deviceSize.width * 0.75,
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 10),
-              child: Column(
-                children: [
-                  _buildNameField(),
-                  SizedBox(height: 20),
-                  _buildPasswordField(isLogin),
-                  SizedBox(height: isSignUp ? 20 : 0),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    constraints: BoxConstraints(
-                      minHeight: isSignUp ? 60 : 0,
-                      maxHeight: isSignUp ? 120 : 0,
-                    ),
-                    curve: Curves.easeIn,
-                    child: FadeTransition(
-                      opacity: _opacityAnimation,
-                      child: SlideTransition(
-                        position: _slideAnimation,
-                        child: _buildConfirmPasswordField(isSignUp),
-                      ),
-                    ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      color: debugColor ? Colors.transparent : theme.cardColor,
+      elevation: 8.0,
+      child: AnimatedContainer(
+        duration: aniDuration,
+        curve: Curves.easeIn,
+        // height: isSignUp ? 320 : 260,
+        // constraints: BoxConstraints(minHeight: isSignUp ? 400 : 400 /*320*/),
+        width: cardWidth,
+        color: debugColor ? Colors.red : Colors.transparent,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 10),
+            child: Column(
+              children: [
+                Container(
+                  color: debugColor ? Colors.white : Colors.transparent,
+                  padding: Paddings.fromLTR(cardPadding),
+                  width: cardWidth,
+                  child: Column(
+                    children: <Widget>[
+                      _buildNameField(),
+                      SizedBox(height: 20),
+                      _buildPasswordField(isLogin),
+                      SizedBox(height: 20),
+                    ],
                   ),
-                  _buildForgotPassword(theme),
-                  if (_isLoading)
-                    CircularProgressIndicator()
-                  else
-                    _buildSubmitButton(isLogin, theme),
-                  _buildSwitchAuthButton(isLogin, theme),
-                ],
-              ),
+                ),
+                ExpandableContainer(
+                  background: theme.accentColor,
+                  controller: _authChangedController,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    color: debugColor ? Colors.white70 : theme.cardColor,
+                    padding: EdgeInsets.symmetric(horizontal: cardPadding),
+                    width: cardWidth,
+                    child: _buildConfirmPasswordField(isSignUp),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: aniDuration,
+                  alignment: Alignment.topCenter,
+                  // transform: Matrix4.identity()
+                  //   ..translate(0.0, _translateUpAni.value),
+                  color: debugColor ? Colors.white60 : Colors.transparent,
+                  padding: Paddings.fromRBL(cardPadding),
+                  width: cardWidth,
+                  child: Column(
+                    children: <Widget>[
+                      _buildForgotPassword(theme),
+                      _buildSubmitButton(isLogin, theme),
+                      _buildSwitchAuthButton(isLogin, theme),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),

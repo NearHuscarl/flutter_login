@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'src/login_data.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
+import 'src/widgets/fade_in.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
@@ -29,7 +30,8 @@ class LoginScreen extends StatelessWidget {
     this.passwordValidator,
   }) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: SystemUiOverlayStyle.dark.systemNavigationBarColor,
+      systemNavigationBarColor:
+          SystemUiOverlayStyle.dark.systemNavigationBarColor,
     ));
   }
 
@@ -51,7 +53,7 @@ class LoginScreen extends StatelessWidget {
     final defaultTextStyle = TextStyle(
       color: theme.primaryTextTheme.title.color,
       fontSize: 50,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.w300,
     );
     return titleTextStyle != null
         ? titleTextStyle(defaultTextStyle)
@@ -95,7 +97,11 @@ class LoginScreen extends StatelessWidget {
                       height: 125,
                     ),
                   SizedBox(height: 5),
-                  Text(title, style: _getTitleTextStyle(theme)),
+                  FadeIn(
+                    fadeDirection: FadeDirection.bottomToTop,
+                    duration: Duration(milliseconds: 1200),
+                    child: Text(title, style: _getTitleTextStyle(theme)),
+                  ),
                   SizedBox(height: 15),
                   AuthCard(
                     onLogin: onLogin,

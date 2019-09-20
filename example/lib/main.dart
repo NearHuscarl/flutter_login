@@ -2,8 +2,6 @@ import 'package:example/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
-const primaryColor = Colors.purple;
-
 void main() {
   runApp(MyApp());
 }
@@ -14,8 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Demo',
       theme: ThemeData(
-        primarySwatch: primaryColor,
+        primarySwatch: Colors.deepPurple,
         accentColor: Colors.orange,
+        cursorColor: Colors.orange,
       ),
       home: LoginScreen(),
       routes: {
