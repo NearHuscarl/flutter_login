@@ -185,7 +185,7 @@ class _AuthCardState extends State<AuthCard>
               }
               return null;
             }
-          : null,
+          : (value) => null,
     );
   }
 

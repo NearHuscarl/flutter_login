@@ -27,6 +27,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
   Animation<double> _indicatorOpacityAnimation;
   Animation<Color> _colorAnimation;
   var _buttonEnabled = true;
+  var _hover = false;
 
   static const _width = 120.0;
   static const _height = 40.0;
@@ -102,7 +103,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
               boxShadow: [
                 if (_buttonEnabled)
                   BoxShadow(
-                    blurRadius: 8,
+                    blurRadius: _hover ? 12 : 4,
                     color: theme.primaryColor.withOpacity(.4),
                     offset: Offset(0, 5),
                   )
@@ -117,6 +118,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
               ),
               child: InkWell(
                 onTap: _buttonEnabled ? widget.onPressed : null,
+                onHighlightChanged: (value) => setState(() => _hover = value),
                 splashColor: theme.accentColor,
                 borderRadius: borderRadius,
                 child: SizeTransition(
