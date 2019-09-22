@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum TextFieldType {
-  normal,
-  password,
-}
-
 class AnimatedTextFormField extends StatefulWidget {
   AnimatedTextFormField({
     Key key,
@@ -66,6 +61,27 @@ class AnimatedTextFormField extends StatefulWidget {
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
+  InputDecoration _getInputDecoration() {
+    return InputDecoration(
+      contentPadding: EdgeInsets.symmetric(vertical: 4.0),
+      labelText: widget.labelText,
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+        borderRadius: BorderRadius.all(
+          Radius.circular(100),
+        ),
+      ),
+      prefixIcon: FadeTransition(
+        opacity: widget.prefixIconOpacityAnimation,
+        child: widget.prefixIcon,
+      ),
+      suffixIcon: FadeTransition(
+        opacity: widget.suffixIconOpacityAnimation,
+        child: widget.suffixIcon,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -75,33 +91,16 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         child: child,
       ),
       child: TextFormField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 4.0),
-          labelText: widget.labelText,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
-            borderRadius: BorderRadius.all(
-              Radius.circular(100),
-            ),
-          ),
-          prefixIcon: FadeTransition(
-            opacity: widget.prefixIconOpacityAnimation,
-            child: widget.prefixIcon,
-          ),
-          suffixIcon: FadeTransition(
-            opacity: widget.suffixIconOpacityAnimation,
-            child: widget.suffixIcon,
-          ),
-        ),
-        enabled: widget.enabled,
+        controller: widget.controller,
+        focusNode: widget.focusNode,
+        decoration: _getInputDecoration(),
         keyboardType: widget.keyboardType,
         textInputAction: widget.textInputAction,
         obscureText: widget.obscureText,
-        controller: widget.controller,
-        focusNode: widget.focusNode,
         onFieldSubmitted: widget.onFieldSubmitted,
-        validator: widget.validator,
         onSaved: widget.onSaved,
+        validator: widget.validator,
+        enabled: widget.enabled,
       ),
     );
   }

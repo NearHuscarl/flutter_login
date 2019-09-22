@@ -83,21 +83,19 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       begin: begin,
       end: end,
     ).animate(CurvedAnimation(
-      parent: controller,
+      parent: _effectiveController,
       curve: widget.curve,
     ));
     _opacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: controller,
+      parent: _effectiveController,
       curve: widget.curve,
     ));
   }
 
-  AnimationController get controller {
-    return widget.controller ?? _controller;
-  }
+  AnimationController get _effectiveController => widget.controller ?? _controller;
 
   @override
   void didUpdateWidget(FadeIn oldWidget) {

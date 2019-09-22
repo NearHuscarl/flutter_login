@@ -314,7 +314,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                       _buildNameField(textFieldWidth),
                       SizedBox(height: 20),
                       _buildPasswordField(textFieldWidth, isLogin),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -324,7 +324,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   child: Container(
                     alignment: Alignment.topLeft,
                     color: debugColor ? Colors.white70 : theme.cardColor,
-                    padding: EdgeInsets.symmetric(horizontal: cardPadding),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: cardPadding,
+                      vertical: 10,
+                    ),
                     width: cardWidth,
                     child: _buildConfirmPasswordField(textFieldWidth, isSignUp),
                   ),
