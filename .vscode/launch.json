@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter debug",
+            "name": "Flutter Debug",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
@@ -15,6 +15,12 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
+        },
+        {
+            "name": "Flutter Release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         },
     ]
 }

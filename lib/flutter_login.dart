@@ -1,25 +1,11 @@
 library flutter_login;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'src/login_data.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
-
-enum BuildMode { debug, profile, release }
-
-// https://github.com/flutter/flutter/issues/11392#issuecomment-461668769
-BuildMode buildMode = (() {
-  if (const bool.fromEnvironment('dart.vm.product')) {
-    return BuildMode.release;
-  }
-  var result = BuildMode.profile;
-  assert(() {
-    result = BuildMode.debug;
-    return true;
-  }());
-  return result;
-}());
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
@@ -82,16 +68,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildDebugAnimationButton() {
-    if (buildMode != BuildMode.release) {
+    if (!kReleaseMode) {
       return Positioned(
         bottom: 0,
         child: InkWell(
           child: Container(
             width: 50,
             height: 50,
-            color: buildMode == BuildMode.debug
+            color: kDebugMode
                 ? Colors.red
-                : Colors.transparent, // BuildMode.profile
+                : Colors.transparent, // kProfileMode
           ),
           onTap: () {
             authCardKey.currentState.runLoadingAnimation();
@@ -159,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // empty container to push the login form up a bit
                     // the logo and title widgets is about 150px height
                     height: (displayLogo ? 150 : 25) / 2,
+                    color: kDebugMode ? Colors.red : Colors.transparent,
                     // color: Colors.red,
                   ),
                 ],
