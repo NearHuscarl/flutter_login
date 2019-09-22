@@ -1,15 +1,29 @@
 library flutter_login;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'src/login_data.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
 
+enum BuildMode { debug, profile, release }
+
+// https://github.com/flutter/flutter/issues/11392#issuecomment-461668769
+BuildMode buildMode = (() {
+  if (const bool.fromEnvironment('dart.vm.product')) {
+    return BuildMode.release;
+  }
+  var result = BuildMode.profile;
+  assert(() {
+    result = BuildMode.debug;
+    return true;
+  }());
+  return result;
+}());
+
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final String title;
   final TextStyleSetter titleTextStyle;
   final String logoAsset;
@@ -28,12 +42,7 @@ class LoginScreen extends StatelessWidget {
     this.onRecoverPassword,
     this.emailValidator,
     this.passwordValidator,
-  }) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor:
-          SystemUiOverlayStyle.dark.systemNavigationBarColor,
-    ));
-  }
+  });
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -49,22 +58,55 @@ class LoginScreen extends StatelessWidget {
     return null;
   };
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  /// [authCardKey] is a state since hot reload preserves the state of widget,
+  /// changes in [AuthCardState] will not trigger rebuilding the whole
+  /// [LoginScreen], prevent running the loading animation again after every small
+  /// changes
+  /// https://flutter.dev/docs/development/tools/hot-reload#previous-state-is-combined-with-new-code
+  final GlobalKey<AuthCardState> authCardKey = GlobalKey();
+
   TextStyle _getTitleTextStyle(ThemeData theme) {
     final defaultTextStyle = TextStyle(
       color: theme.primaryTextTheme.title.color,
       fontSize: 50,
       fontWeight: FontWeight.w300,
     );
-    return titleTextStyle != null
-        ? titleTextStyle(defaultTextStyle)
+    return widget.titleTextStyle != null
+        ? widget.titleTextStyle(defaultTextStyle)
         : defaultTextStyle;
+  }
+
+  Widget _buildDebugAnimationButton() {
+    if (buildMode != BuildMode.release) {
+      return Positioned(
+        bottom: 0,
+        child: InkWell(
+          child: Container(
+            width: 50,
+            height: 50,
+            color: buildMode == BuildMode.debug
+                ? Colors.red
+                : Colors.transparent, // BuildMode.profile
+          ),
+          onTap: () {
+            authCardKey.currentState.runLoadingAnimation();
+          },
+        ),
+      );
+    }
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
-    final displayLogo = logoAsset != null;
+    final displayLogo = widget.logoAsset != null;
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
@@ -74,8 +116,8 @@ class LoginScreen extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  theme.primaryColor.withOpacity(0.9),
-                  theme.primaryColor.withOpacity(0.5),
+                  theme.primaryColor.withOpacity(1.0),
+                  theme.primaryColor.withOpacity(0.7),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -93,23 +135,24 @@ class LoginScreen extends StatelessWidget {
                 children: <Widget>[
                   if (displayLogo)
                     Image(
-                      image: AssetImage(logoAsset),
+                      image: AssetImage(widget.logoAsset),
                       height: 125,
                     ),
                   SizedBox(height: 5),
                   FadeIn(
                     fadeDirection: FadeDirection.bottomToTop,
                     duration: Duration(milliseconds: 1200),
-                    child: Text(title, style: _getTitleTextStyle(theme)),
+                    child: Text(widget.title, style: _getTitleTextStyle(theme)),
                   ),
                   SizedBox(height: 15),
                   AuthCard(
-                    onLogin: onLogin,
-                    onSignup: onSignup,
-                    onRecoverPassword: onRecoverPassword,
-                    emailValidator: emailValidator ?? defaultEmailValidator,
+                    key: authCardKey,
+                    onLogin: widget.onLogin,
+                    onSignup: widget.onSignup,
+                    onRecoverPassword: widget.onRecoverPassword,
+                    emailValidator: widget.emailValidator ?? LoginScreen.defaultEmailValidator,
                     passwordValidator:
-                        passwordValidator ?? defaultPasswordValidator,
+                        widget.passwordValidator ?? LoginScreen.defaultPasswordValidator,
                   ),
                   SizedBox(height: 15),
                   Container(
@@ -122,6 +165,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
+          _buildDebugAnimationButton(),
         ],
       ),
     );
