@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 
+Interval _getInternalInterval(
+  double start,
+  double end,
+  double externalStart,
+  double externalEnd, [
+  Curve curve = Curves.linear,
+]) {
+  return Interval(
+    start + (end - start) * externalStart,
+    start + (end - start) * externalEnd,
+    curve: curve,
+  );
+}
+
 class AnimatedTextFormField extends StatefulWidget {
   AnimatedTextFormField({
     Key key,
+    Interval interval = const Interval(0.0, 1.0),
     @required this.animatedWidth,
     @required this.animationController,
     this.enabled = true,
@@ -17,22 +32,31 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
-  })  : prefixIconOpacityAnimation =
+  })  : scaleAnimation = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: animationController,
+          curve: _getInternalInterval(
+              0, .2, interval.begin, interval.end, Curves.easeOutBack),
+        )),
+        prefixIconOpacityAnimation =
             Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
           parent: animationController,
-          curve: Interval(0, .35),
+          curve: _getInternalInterval(.2, .55, interval.begin, interval.end),
         )),
         suffixIconOpacityAnimation =
             Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
           parent: animationController,
-          curve: Interval(.65, 1.0),
+          curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
         )),
         sizeAnimation = Tween<double>(
           begin: 48.0,
           end: animatedWidth,
         ).animate(CurvedAnimation(
           parent: animationController,
-          curve: Interval(0, 1.0, curve: Curves.linearToEaseOut),
+          curve: _getInternalInterval(
+              .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
           reverseCurve: Curves.easeInExpo,
         )),
         super(key: key);
@@ -52,6 +76,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldSetter<String> onSaved;
 
   final AnimationController animationController;
+  final Animation<double> scaleAnimation;
   final Animation<double> sizeAnimation;
   final Animation<double> prefixIconOpacityAnimation;
   final Animation<double> suffixIconOpacityAnimation;
@@ -61,15 +86,39 @@ class AnimatedTextFormField extends StatefulWidget {
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
-  InputDecoration _getInputDecoration() {
+  GlobalKey<FormFieldState<String>> _textFieldKey = GlobalKey();
+  // var _hasError = false;
+
+  // @override
+  // void didUpdateWidget(Widget oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+
+  //   _hasError = _textFieldKey.currentState != null
+  //       ? _textFieldKey.currentState.hasError
+  //       : false;
+  // }
+
+  InputDecoration _getInputDecoration(ThemeData theme) {
+    final bgColor = Colors.grey.withOpacity(.15);
+    final errorColor = theme.accentColor.withOpacity(.2);
+    final borderRadius = BorderRadius.circular(100);
+
     return InputDecoration(
+      filled: true,
+      fillColor: bgColor,
+      // fillColor: _hasError ? errorColor : bgColor,
       contentPadding: EdgeInsets.symmetric(vertical: 4.0),
       labelText: widget.labelText,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: bgColor),
+        borderRadius: borderRadius,
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: errorColor),
+        borderRadius: borderRadius,
+      ),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.red),
-        borderRadius: BorderRadius.all(
-          Radius.circular(100),
-        ),
+        borderRadius: borderRadius,
       ),
       prefixIcon: FadeTransition(
         opacity: widget.prefixIconOpacityAnimation,
@@ -84,16 +133,26 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final sizeAnimation = widget.sizeAnimation;
+    final scaleAnimation = widget.scaleAnimation;
+
     return AnimatedBuilder(
-      animation: widget.sizeAnimation,
-      builder: (context, child) => Container(
-        width: widget.sizeAnimation.value,
-        child: child,
+      animation: sizeAnimation,
+      builder: (context, child) => Transform(
+        transform: Matrix4.identity()
+          ..scale(scaleAnimation.value, scaleAnimation.value),
+        alignment: Alignment.center,
+        child: Container(
+          width: sizeAnimation.value,
+          child: child,
+        ),
       ),
       child: TextFormField(
+        key: _textFieldKey,
         controller: widget.controller,
         focusNode: widget.focusNode,
-        decoration: _getInputDecoration(),
+        decoration: _getInputDecoration(theme),
         keyboardType: widget.keyboardType,
         textInputAction: widget.textInputAction,
         obscureText: widget.obscureText,

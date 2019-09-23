@@ -67,6 +67,27 @@ class _LoginScreenState extends State<LoginScreen> {
         : defaultTextStyle;
   }
 
+  Widget _buildHeader(ThemeData theme) {
+    final displayLogo = widget.logoAsset != null;
+
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          if (displayLogo)
+            Image(
+              image: AssetImage(widget.logoAsset),
+              height: 125,
+            ),
+          SizedBox(height: 5),
+          FadeIn(
+            fadeDirection: FadeDirection.bottomToTop,
+            duration: Duration(milliseconds: 1200),
+            child: Text(widget.title, style: _getTitleTextStyle(theme)),
+          ),
+        ],
+    );
+  }
+
   Widget _buildDebugAnimationButton() {
     if (!kReleaseMode) {
       return Positioned(
@@ -75,9 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             width: 50,
             height: 50,
-            color: kDebugMode
-                ? Colors.red
-                : Colors.transparent, // kProfileMode
+            color:
+                kDebugMode ? Colors.green : Colors.transparent, // kProfileMode
           ),
           onTap: () {
             authCardKey.currentState.runLoadingAnimation();
@@ -92,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
-    final displayLogo = widget.logoAsset != null;
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
@@ -119,16 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  if (displayLogo)
-                    Image(
-                      image: AssetImage(widget.logoAsset),
-                      height: 125,
-                    ),
-                  SizedBox(height: 5),
-                  FadeIn(
-                    fadeDirection: FadeDirection.bottomToTop,
-                    duration: Duration(milliseconds: 1200),
-                    child: Text(widget.title, style: _getTitleTextStyle(theme)),
+                  Flexible(
+                    child: _buildHeader(theme),
                   ),
                   SizedBox(height: 15),
                   AuthCard(
@@ -136,17 +147,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     onLogin: widget.onLogin,
                     onSignup: widget.onSignup,
                     onRecoverPassword: widget.onRecoverPassword,
-                    emailValidator: widget.emailValidator ?? LoginScreen.defaultEmailValidator,
-                    passwordValidator:
-                        widget.passwordValidator ?? LoginScreen.defaultPasswordValidator,
+                    emailValidator: widget.emailValidator ??
+                        LoginScreen.defaultEmailValidator,
+                    passwordValidator: widget.passwordValidator ??
+                        LoginScreen.defaultPasswordValidator,
                   ),
                   SizedBox(height: 15),
-                  Container(
-                    // empty container to push the login form up a bit
-                    // the logo and title widgets is about 150px height
-                    height: (displayLogo ? 150 : 25) / 2,
-                    color: kDebugMode ? Colors.red : Colors.transparent,
-                    // color: Colors.red,
+                  Flexible(
+                    child: Container(
+                      // empty container to push the login form up a bit
+                      color: kDebugMode ? Colors.red.withOpacity(.2) : Colors.transparent,
+                    ),
                   ),
                 ],
               ),
