@@ -1,4 +1,10 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+
+enum DragDirection {
+  left,
+  right,
+}
 
 Interval _getInternalInterval(
   double start,
@@ -19,7 +25,9 @@ class AnimatedTextFormField extends StatefulWidget {
     Key key,
     Interval interval = const Interval(0.0, 1.0),
     @required this.animatedWidth,
-    @required this.animationController,
+    @required this.loadingController,
+    this.inertiaController,
+    this.dragDirection,
     this.enabled = true,
     this.labelText,
     this.prefixIcon,
@@ -32,34 +40,80 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
-  })  : scaleAnimation = Tween<double>(
+  })  : assert((inertiaController == null && dragDirection == null) ||
+            (inertiaController != null && dragDirection != null)),
+        scaleAnimation = Tween<double>(
           begin: 0.0,
           end: 1.0,
         ).animate(CurvedAnimation(
-          parent: animationController,
+          parent: loadingController,
           curve: _getInternalInterval(
               0, .2, interval.begin, interval.end, Curves.easeOutBack),
         )),
         prefixIconOpacityAnimation =
             Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: animationController,
+          parent: loadingController,
           curve: _getInternalInterval(.2, .55, interval.begin, interval.end),
         )),
         suffixIconOpacityAnimation =
             Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: animationController,
+          parent: loadingController,
           curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
         )),
         sizeAnimation = Tween<double>(
           begin: 48.0,
           end: animatedWidth,
         ).animate(CurvedAnimation(
-          parent: animationController,
+          parent: loadingController,
           curve: _getInternalInterval(
               .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
           reverseCurve: Curves.easeInExpo,
         )),
-        super(key: key);
+        translateAnimation = (inertiaController == null)
+            ? null
+            : Tween<double>(
+                begin: 0.0,
+                end: dragDirection == DragDirection.right ? 15.0 : -15.0,
+              ).animate(CurvedAnimation(
+                parent: inertiaController,
+                curve: Interval(0, .5, curve: Curves.easeOut),
+                reverseCurve: Curves.easeIn,
+              )),
+        prefixIconRotationAnimation = (inertiaController == null)
+            ? null
+            : Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
+                parent: inertiaController,
+                curve: Interval(.5, 1.0, curve: Curves.easeOut),
+                reverseCurve: Curves.easeIn,
+              )),
+        suffixIconRotationAnimation = (inertiaController == null)
+            ? null
+            : Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
+                parent: inertiaController,
+                curve: Interval(.5, 1.0, curve: Curves.easeOut),
+                reverseCurve: Curves.easeIn,
+              )),
+        prefixIconTranslateAnimation = (inertiaController == null)
+            ? null
+            : Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
+                parent: inertiaController,
+                curve: Interval(.5, 1.0, curve: Curves.easeOut),
+                reverseCurve: Curves.easeIn,
+              )),
+        suffixIconTranslateAnimation = (inertiaController == null)
+            ? null
+            : Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
+                parent: inertiaController,
+                curve: Interval(.5, 1.0, curve: Curves.easeOut),
+                reverseCurve: Curves.easeIn,
+              )),
+        super(key: key) {
+    inertiaController?.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        inertiaController.reverse();
+      }
+    });
+  }
 
   final double animatedWidth;
   final bool enabled;
@@ -74,12 +128,20 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onFieldSubmitted;
   final FormFieldSetter<String> onSaved;
+  final DragDirection dragDirection;
 
-  final AnimationController animationController;
+  final AnimationController loadingController;
   final Animation<double> scaleAnimation;
   final Animation<double> sizeAnimation;
   final Animation<double> prefixIconOpacityAnimation;
   final Animation<double> suffixIconOpacityAnimation;
+
+  final AnimationController inertiaController;
+  final Animation<double> translateAnimation;
+  final Animation<double> prefixIconRotationAnimation;
+  final Animation<double> suffixIconRotationAnimation;
+  final Animation<double> prefixIconTranslateAnimation;
+  final Animation<double> suffixIconTranslateAnimation;
 
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
@@ -97,6 +159,36 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   //       ? _textFieldKey.currentState.hasError
   //       : false;
   // }
+
+  Widget _buildInertiaAnimation(
+    Widget child,
+    Animation rotateAnimation,
+    Animation translateAnimation,
+  ) {
+    if (rotateAnimation == null || translateAnimation == null) {
+      return child;
+    }
+
+    final sign = widget.dragDirection == DragDirection.right ? 1 : -1;
+
+    return AnimatedBuilder(
+      animation: translateAnimation,
+      builder: (context, child) => Transform(
+        transform: Matrix4.identity()
+          ..translate(sign * translateAnimation.value),
+        child: child,
+      ),
+      child: AnimatedBuilder(
+        animation: rotateAnimation,
+        builder: (context, child) => Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.identity()..rotateZ(sign * rotateAnimation.value),
+          child: child,
+        ),
+        child: child,
+      ),
+    );
+  }
 
   InputDecoration _getInputDecoration(ThemeData theme) {
     final bgColor = Colors.grey.withOpacity(.15);
@@ -120,13 +212,21 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       border: OutlineInputBorder(
         borderRadius: borderRadius,
       ),
-      prefixIcon: FadeTransition(
-        opacity: widget.prefixIconOpacityAnimation,
-        child: widget.prefixIcon,
+      prefixIcon: _buildInertiaAnimation(
+        FadeTransition(
+          opacity: widget.prefixIconOpacityAnimation,
+          child: widget.prefixIcon,
+        ),
+        widget?.prefixIconRotationAnimation,
+        widget?.prefixIconTranslateAnimation,
       ),
-      suffixIcon: FadeTransition(
-        opacity: widget.suffixIconOpacityAnimation,
-        child: widget.suffixIcon,
+      suffixIcon: _buildInertiaAnimation(
+        FadeTransition(
+          opacity: widget.suffixIconOpacityAnimation,
+          child: widget.suffixIcon,
+        ),
+        widget?.suffixIconRotationAnimation,
+        widget?.suffixIconTranslateAnimation,
       ),
     );
   }
@@ -136,8 +236,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final theme = Theme.of(context);
     final sizeAnimation = widget.sizeAnimation;
     final scaleAnimation = widget.scaleAnimation;
-
-    return AnimatedBuilder(
+    final translateAnimation = widget?.translateAnimation;
+    final textField = AnimatedBuilder(
       animation: sizeAnimation,
       builder: (context, child) => Transform(
         transform: Matrix4.identity()
@@ -161,6 +261,19 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         validator: widget.validator,
         enabled: widget.enabled,
       ),
+    );
+
+    if (translateAnimation == null) {
+      return textField;
+    }
+
+    return AnimatedBuilder(
+      animation: translateAnimation,
+      builder: (context, child) => Transform(
+        transform: Matrix4.identity()..translate(translateAnimation.value),
+        child: child,
+      ),
+      child: textField,
     );
   }
 }

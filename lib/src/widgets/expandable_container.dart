@@ -5,6 +5,7 @@ class ExpandableContainer extends StatelessWidget {
     Key key,
     @required this.child,
     @required this.controller,
+    this.onExpandCompleted,
     this.background,
   })  : sizeAnimation = Tween<double>(
           begin: 0.0,
@@ -19,11 +20,17 @@ class ExpandableContainer extends StatelessWidget {
         ).animate(CurvedAnimation(
           parent: controller,
           curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
-        )),
+        ))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              onExpandCompleted();
+            }
+          }),
         super(key: key);
 
   final Widget child;
   final AnimationController controller;
+  final Function onExpandCompleted;
   final Color background;
 
   final Animation<double> sizeAnimation;
