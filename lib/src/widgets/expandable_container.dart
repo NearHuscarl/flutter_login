@@ -12,7 +12,7 @@ class ExpandableContainer extends StatelessWidget {
           end: 1.0,
         ).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(0.0, 0.5, curve: Curves.linear),
+          curve: Interval(0.0, 0.5, curve: Curves.ease),
         )),
         slideAnimation = Tween<Offset>(
           begin: Offset(-1, 0),

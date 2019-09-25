@@ -99,7 +99,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       });
     _postSwitchAuthController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 150),
     );
     _switchAuth2Controller = AnimationController(
       vsync: this,
