@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'animated_button.dart';
+import 'animated_text.dart';
 import 'expandable_container.dart';
 import 'shadow_button.dart';
 import 'fade_in.dart';
@@ -51,6 +52,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _authData = {'email': '', 'password': ''};
   var _isLoading = false;
   var _isSubmitting = false;
+  var _switchAuthEnabled = true;
 
   AnimationController _loadingController;
 
@@ -323,9 +325,20 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: _switchAuthLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
       child: FlatButton(
-        child: Text(_getLabel(switchAuth(authMode))),
-        onPressed:
-            (_isSubmitting || _isLoading) ? null : () => _switchAuthMode(),
+        child: AnimatedText(
+          text: _getLabel(switchAuth(authMode)),
+          onAnimationStatusChanged: (status) {
+            if (status == AnimationStatus.forward) {
+              setState(() => _switchAuthEnabled = false);
+            } else {
+              setState(() => _switchAuthEnabled = true);
+            }
+          },
+          textRotation: AnimatedTextRotation.down,
+        ),
+        onPressed: (_isSubmitting || _isLoading)
+            ? null
+            : () => _switchAuthMode(),
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
@@ -481,7 +494,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       ),
       child: Stack(
         children: <Widget>[
-          _buildRecoverPasswordCard(),
+          // _buildRecoverPasswordCard(),
           _buildAuthCard(),
         ],
       ),

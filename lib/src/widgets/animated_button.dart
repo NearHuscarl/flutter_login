@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'animated_text.dart';
+import 'ring.dart';
 
 class AnimatedButton extends StatefulWidget {
   AnimatedButton({
@@ -20,17 +22,21 @@ class AnimatedButton extends StatefulWidget {
   _AnimatedButtonState createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   Animation<double> _sizeAnimation;
   Animation<double> _textOpacityAnimation;
   Animation<double> _buttonOpacityAnimation;
-  Animation<double> _indicatorOpacityAnimation;
+  Animation<double> _ringThicknessAnimation;
+  Animation<double> _ringOpacityAnimation;
   Animation<Color> _colorAnimation;
   var _buttonEnabled = true;
   var _hover = false;
 
   static const _width = 120.0;
   static const _height = 40.0;
+  static const _loadingCircleRadius = _height / 2;
+  static const _loadingCircleThickness = 4.0;
 
   @override
   void initState() {
@@ -46,25 +52,31 @@ class _AnimatedButtonState extends State<AnimatedButton> {
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(0.0, .75, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
 
     _colorAnimation = ColorTween(begin: widget.color, end: widget.loadingColor)
         .animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(0.0, .75, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
 
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(.75, 1.0),
+      curve: Interval(.65, .65),
     ));
 
-    _indicatorOpacityAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    _ringThicknessAnimation =
+        Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
+            .animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(.75, 1.0),
+      curve: Interval(.65, .85),
+    ));
+    _ringOpacityAnimation =
+        Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+      parent: widget.controller,
+      curve: Interval(.85, 1.0),
     ));
 
     widget.controller.addStatusListener((status) {
@@ -77,73 +89,91 @@ class _AnimatedButtonState extends State<AnimatedButton> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(100);
-    final theme = Theme.of(context);
+  Widget _buildButtonText(ThemeData theme) {
+    return FadeTransition(
+      opacity: _textOpacityAnimation,
+      child: AnimatedText(
+        text: widget.text,
+        style: TextStyle(color: theme.primaryTextTheme.button.color),
+      ),
+    );
+  }
 
-    return Stack(
-      children: <Widget>[
-        FadeTransition(
-          opacity: _indicatorOpacityAnimation,
-          child: Container(
-            height: _height,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
+  Widget _buildButton(ThemeData theme) {
+    final borderRadius = BorderRadius.circular(100);
+
+    return FadeTransition(
+      opacity: _buttonOpacityAnimation,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          color: Colors.transparent,
+          boxShadow: [
+            if (_buttonEnabled)
+              BoxShadow(
+                blurRadius: _hover ? 12 : 4,
+                color: theme.primaryColor.withOpacity(.4),
+                offset: Offset(0, 5),
+              )
+          ],
+        ),
+        child: AnimatedBuilder(
+          animation: _colorAnimation,
+          builder: (context, child) => Material(
+            shape: RoundedRectangleBorder(borderRadius: borderRadius),
+            color: _colorAnimation.value,
+            child: child,
+          ),
+          child: InkWell(
+            onTap: _buttonEnabled ? widget.onPressed : null,
+            onHighlightChanged: (value) => setState(() => _hover = value),
+            splashColor: theme.accentColor,
+            borderRadius: borderRadius,
+            child: SizeTransition(
+              sizeFactor: _sizeAnimation,
+              axis: Axis.horizontal,
+              child: Container(
+                width: _width,
+                height: _height,
+                alignment: Alignment.center,
+                child: _buildButtonText(theme),
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
         FadeTransition(
-          opacity: _buttonOpacityAnimation,
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              color: Colors.transparent,
-              boxShadow: [
-                if (_buttonEnabled)
-                  BoxShadow(
-                    blurRadius: _hover ? 12 : 4,
-                    color: theme.primaryColor.withOpacity(.4),
-                    offset: Offset(0, 5),
-                  )
-              ],
-            ),
-            child: AnimatedBuilder(
-              animation: _colorAnimation,
-              builder: (context, child) => Material(
-                shape: RoundedRectangleBorder(borderRadius: borderRadius),
-                color: _colorAnimation.value,
-                child: child,
-              ),
-              child: InkWell(
-                onTap: _buttonEnabled ? widget.onPressed : null,
-                onHighlightChanged: (value) => setState(() => _hover = value),
-                splashColor: theme.accentColor,
-                borderRadius: borderRadius,
-                child: SizeTransition(
-                  sizeFactor: _sizeAnimation,
-                  axis: Axis.horizontal,
-                  child: Container(
-                    width: _width,
-                    height: _height,
-                    alignment: Alignment.center,
-                    child: FadeTransition(
-                      opacity: _textOpacityAnimation,
-                      child: Text(
-                        widget.text,
-                        style: TextStyle(
-                            color: theme.primaryTextTheme.button.color),
-                        overflow: TextOverflow.visible,
-                        softWrap: false,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+          opacity: _ringOpacityAnimation,
+          child: AnimatedBuilder(
+            animation: _ringThicknessAnimation,
+            builder: (context, child) => Ring(
+              color: widget.loadingColor,
+              size: _height,
+              thickness: _ringThicknessAnimation.value,
             ),
           ),
-        )
+        ),
+        Container(
+          width: _height - _loadingCircleThickness,
+          height: _height - _loadingCircleThickness,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
+            // backgroundColor: Colors.red,
+            strokeWidth: _loadingCircleThickness,
+          ),
+        ),
+        _buildButton(theme),
       ],
     );
   }
