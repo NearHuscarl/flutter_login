@@ -191,7 +191,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   InputDecoration _getInputDecoration(ThemeData theme) {
-    final bgColor = Colors.grey.withOpacity(.15);
+    final bgColor = Color.alphaBlend(
+      theme.primaryColor.withOpacity(.03),
+      Colors.grey.withOpacity(.09),
+    );
     final errorColor = theme.accentColor.withOpacity(.2);
     final borderRadius = BorderRadius.circular(100);
 
@@ -202,7 +205,11 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       contentPadding: EdgeInsets.symmetric(vertical: 4.0),
       labelText: widget.labelText,
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: bgColor),
+        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: borderRadius,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
         borderRadius: borderRadius,
       ),
       errorBorder: OutlineInputBorder(

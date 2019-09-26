@@ -113,7 +113,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
             if (_buttonEnabled)
               BoxShadow(
                 blurRadius: _hover ? 12 : 4,
-                color: theme.primaryColor.withOpacity(.4),
+                color: widget.color.withOpacity(.4),
                 offset: Offset(0, 5),
               )
           ],
