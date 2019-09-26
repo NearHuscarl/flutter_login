@@ -14,7 +14,6 @@ class AnimatedText extends StatefulWidget {
     @required this.text,
     this.padding = 4.0,
     this.style,
-    this.onAnimationStatusChanged,
     this.textRotation = AnimatedTextRotation.up,
   }) : super(key: key);
 
@@ -22,7 +21,6 @@ class AnimatedText extends StatefulWidget {
   final double padding;
   final TextStyle style;
   final AnimatedTextRotation textRotation;
-  final AnimationStatusListener onAnimationStatusChanged;
 
   @override
   _AnimatedTextState createState() => _AnimatedTextState();
@@ -46,8 +44,8 @@ class _AnimatedTextState extends State<AnimatedText>
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400),
-    )..addStatusListener(widget.onAnimationStatusChanged);
+      duration: Duration(milliseconds: 500),
+    );
 
     _animation = Tween<double>(begin: 0.0, end: pi / 2).animate(CurvedAnimation(
       parent: _controller,
@@ -70,10 +68,11 @@ class _AnimatedTextState extends State<AnimatedText>
       _oldText = oldWidget.text;
       _newText = widget.text;
       _controller.forward().then((void _) {
-        final t = _oldText;
-
-        _oldText = _newText;
-        _newText = t;
+        setState(() {
+          final t = _oldText;
+          _oldText = _newText;
+          _newText = t;
+        });
         _controller.reset();
       });
     }

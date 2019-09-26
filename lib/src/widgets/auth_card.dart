@@ -52,7 +52,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _authData = {'email': '', 'password': ''};
   var _isLoading = false;
   var _isSubmitting = false;
-  var _switchAuthEnabled = true;
 
   AnimationController _loadingController;
 
@@ -193,6 +192,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return 'SIGNUP';
       case AuthMode.Login:
         return 'LOGIN';
+      default:
+        return '';
     }
   }
 
@@ -327,18 +328,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       child: FlatButton(
         child: AnimatedText(
           text: _getLabel(switchAuth(authMode)),
-          onAnimationStatusChanged: (status) {
-            if (status == AnimationStatus.forward) {
-              setState(() => _switchAuthEnabled = false);
-            } else {
-              setState(() => _switchAuthEnabled = true);
-            }
-          },
           textRotation: AnimatedTextRotation.down,
         ),
-        onPressed: (_isSubmitting || _isLoading)
-            ? null
-            : () => _switchAuthMode(),
+        onPressed:
+            (_isSubmitting || _isLoading) ? null : () => _switchAuthMode(),
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
@@ -380,65 +373,69 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final textFieldWidth = cardWidth - cardPadding * 2;
     const debugColor = false;
 
+    final authForm = Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 10),
+        child: Column(
+          children: [
+            Container(
+              color: debugColor ? Colors.white : Colors.transparent,
+              padding: Paddings.fromLTR(cardPadding),
+              width: cardWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildNameField(textFieldWidth),
+                  SizedBox(height: 20),
+                  _buildPasswordField(textFieldWidth),
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+            ExpandableContainer(
+              background: theme.accentColor,
+              controller: _switchAuthController,
+              child: Container(
+                alignment: Alignment.topLeft,
+                color: debugColor ? Colors.white70 : theme.cardColor,
+                padding: EdgeInsets.symmetric(
+                  horizontal: cardPadding,
+                  vertical: 10,
+                ),
+                width: cardWidth,
+                child: _buildConfirmPasswordField(textFieldWidth),
+              ),
+              onExpandCompleted: () {},
+            ),
+            Container(
+              color: debugColor ? Colors.white60 : Colors.transparent,
+              padding: Paddings.fromRBL(cardPadding),
+              width: cardWidth,
+              child: Column(
+                children: <Widget>[
+                  _buildForgotPassword(theme),
+                  _buildSubmitButton(theme),
+                  _buildSwitchAuthButton(theme),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    const radius = 20.0;
+
     return Container(
       width: cardWidth,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(radius),
         ),
         color: debugColor ? Colors.transparent : theme.cardColor,
         elevation: 8.0,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 10),
-            child: Column(
-              children: [
-                Container(
-                  color: debugColor ? Colors.white : Colors.transparent,
-                  padding: Paddings.fromLTR(cardPadding),
-                  width: cardWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _buildNameField(textFieldWidth),
-                      SizedBox(height: 20),
-                      _buildPasswordField(textFieldWidth),
-                      SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-                ExpandableContainer(
-                  background: theme.accentColor,
-                  controller: _switchAuthController,
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    color: debugColor ? Colors.white70 : theme.cardColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: cardPadding,
-                      vertical: 10,
-                    ),
-                    width: cardWidth,
-                    child: _buildConfirmPasswordField(textFieldWidth),
-                  ),
-                  onExpandCompleted: () {},
-                ),
-                Container(
-                  color: debugColor ? Colors.white60 : Colors.transparent,
-                  padding: Paddings.fromRBL(cardPadding),
-                  width: cardWidth,
-                  child: Column(
-                    children: <Widget>[
-                      _buildForgotPassword(theme),
-                      _buildSubmitButton(theme),
-                      _buildSwitchAuthButton(theme),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: authForm,
       ),
     );
   }
