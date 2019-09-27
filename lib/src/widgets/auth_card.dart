@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../matrix.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'expandable_container.dart';
@@ -19,6 +20,7 @@ switchAuth(AuthMode authMode) =>
 class AuthCard extends StatefulWidget {
   AuthCard({
     Key key,
+    this.loadingController,
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
@@ -26,6 +28,7 @@ class AuthCard extends StatefulWidget {
     this.passwordValidator,
   }) : super(key: key);
 
+  final AnimationController loadingController;
   final Future<void> Function(LoginData) onLogin;
   final Future<void> Function(LoginData) onSignup;
   final Future<void> Function(String) onRecoverPassword;
@@ -38,6 +41,7 @@ class AuthCard extends StatefulWidget {
 
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey _cardKey = GlobalKey();
 
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
@@ -69,14 +73,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   Interval _switchAuthLoadingAnimationInterval;
   Animation<double> _buttonScaleAnimation;
   Animation<double> _flipAnimation;
-  final loadingBoxDuration = const Duration(milliseconds: 200);
+  Animation<double> _flipAuthAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(loadingBoxDuration, () {
-      _loadingController.forward();
+    widget.loadingController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _loadingController.forward();
+      }
     });
     _loadingController = AnimationController(
       vsync: this,
@@ -92,7 +98,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       });
     _switchAuthController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1000),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _postSwitchAuthController.forward();
@@ -124,10 +130,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
 
-    _flipAnimation = Tween<double>(begin: 0.0, end: pi).animate(
+    // _flipAuthAnimation = Tween<double>(begin: 0.0, end: pi).animate(
+    //   CurvedAnimation(
+    //     parent: _switchAuth2Controller,
+    //     curve: Curves.ease,
+    //   ),
+    // );
+    _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
       CurvedAnimation(
-        parent: _switchAuth2Controller,
-        curve: Curves.ease,
+        parent: widget.loadingController,
+        curve: Curves.easeOutBack,
+        reverseCurve: Curves.easeIn,
       ),
     );
 
@@ -199,9 +212,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   void runLoadingAnimation() {
     if (_loadingController.isDismissed) {
-      _loadingController.forward();
+      widget.loadingController.forward();
     } else if (_loadingController.isCompleted) {
-      _loadingController.reverse();
+      _loadingController.reverse().then((_) {
+        widget.loadingController.reverse();
+      });
     }
   }
 
@@ -339,7 +354,33 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildRecoverButton(ThemeData theme) {
+    return ScaleTransition(
+      scale: _buttonScaleAnimation,
+      child: AnimatedButton(
+        controller: _submitController,
+        color: theme.primaryColor,
+        loadingColor: theme.accentColor,
+        text: 'RECOVER',
+        onPressed: _submit,
+      ),
+    );
+  }
+
   Widget _buildBackButton(ThemeData theme) {
+    return FlatButton(
+      child: Text('BACK'),
+      onPressed: () {
+        setState(() {
+          isRecoverPassword = false;
+          _switchAuth2Controller.reverse();
+        });
+      },
+      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textColor: theme.primaryColor,
+    );
+
     return ShadowButton(
       text: 'BACK',
       width: 120.0,
@@ -357,12 +398,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Matrix4 _getCardTransform() {
-    if (isRecoverPassword) {
-      return Matrix4.identity()
-        ..setEntry(3, 2, .001)
-        ..rotateY(_flipAnimation.value);
-    }
-    return Matrix4.identity();
+    // if (isRecoverPassword) {
+    return Matrix.perspective()..rotateX(_flipAnimation.value);
+    // }
+    // return Matrix4.identity();
   }
 
   Widget _buildAuthCard() {
@@ -425,13 +464,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       ),
     );
 
-    const radius = 20.0;
-
     return Container(
+      key: _cardKey,
       width: cardWidth,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         color: debugColor ? Colors.transparent : theme.cardColor,
         elevation: 8.0,
@@ -447,7 +485,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
-    return Positioned.fill(
+    return Container(
+      width: cardWidth,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -460,18 +499,21 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 10),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildNameField(textFieldWidth),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                SizedBox(height: 15),
+                Text(
+                  // TODO: make it a props
+                  'We will send your password to this email account',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 15),
+                Column(
                   children: <Widget>[
-                    _buildSubmitButton(theme),
+                    _buildRecoverButton(theme),
                     _buildBackButton(theme),
                   ],
                 ),
-                SizedBox(height: 10),
               ],
             ),
           ),
@@ -485,16 +527,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     return AnimatedBuilder(
       animation: _flipAnimation,
       builder: (context, child) => Transform(
-        transform: _getCardTransform(),
+        transform: Matrix.perspective()..rotateX(_flipAnimation.value),
         alignment: Alignment.center,
         child: child,
       ),
-      child: Stack(
-        children: <Widget>[
+      child:
           // _buildRecoverPasswordCard(),
           _buildAuthCard(),
-        ],
-      ),
     );
   }
 }

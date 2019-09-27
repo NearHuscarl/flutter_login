@@ -48,13 +48,35 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   /// [authCardKey] is a state since hot reload preserves the state of widget,
   /// changes in [AuthCardState] will not trigger rebuilding the whole
   /// [LoginScreen], prevent running the loading animation again after every small
   /// changes
   /// https://flutter.dev/docs/development/tools/hot-reload#previous-state-is-combined-with-new-code
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
+  AnimationController _loadingController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadingController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+    );
+
+    Future.delayed(const Duration(seconds: 1), () {
+      _loadingController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _loadingController.dispose();
+  }
 
   TextStyle _getTitleTextStyle(ThemeData theme) {
     final defaultTextStyle = TextStyle(
@@ -67,24 +89,28 @@ class _LoginScreenState extends State<LoginScreen> {
         : defaultTextStyle;
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(ThemeData theme, double height) {
     final displayLogo = widget.logoAsset != null;
 
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (displayLogo)
-            Image(
-              image: AssetImage(widget.logoAsset),
-              height: 125,
-            ),
-          SizedBox(height: 5),
-          FadeIn(
-            fadeDirection: FadeDirection.bottomToTop,
-            duration: Duration(milliseconds: 1200),
-            child: Text(widget.title, style: _getTitleTextStyle(theme)),
-          ),
-        ],
+    return FadeIn(
+      controller: _loadingController,
+      offset: .2,
+      fadeDirection: FadeDirection.topToBottom,
+      child: Container(
+        height: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            if (displayLogo)
+              Image(
+                image: AssetImage(widget.logoAsset),
+                height: 125,
+              ),
+            SizedBox(height: 5),
+            Text(widget.title, style: _getTitleTextStyle(theme)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -112,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
+    final headerHeight = deviceSize.height * .3;
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
@@ -138,12 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(
-                    child: _buildHeader(theme),
-                  ),
+                  _buildHeader(theme, headerHeight),
                   SizedBox(height: 15),
                   AuthCard(
                     key: authCardKey,
+                    loadingController: _loadingController,
                     onLogin: widget.onLogin,
                     onSignup: widget.onSignup,
                     onRecoverPassword: widget.onRecoverPassword,
@@ -156,7 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Flexible(
                     child: Container(
                       // empty container to push the login form up a bit
-                      color: kDebugMode ? Colors.red.withOpacity(.2) : Colors.transparent,
+                      color: kDebugMode
+                          ? Colors.red.withOpacity(.2)
+                          : Colors.transparent,
                     ),
                   ),
                 ],

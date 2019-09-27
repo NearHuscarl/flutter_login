@@ -50,11 +50,6 @@ class AnimatedTextFormField extends StatefulWidget {
           curve: _getInternalInterval(
               0, .2, interval.begin, interval.end, Curves.easeOutBack),
         )),
-        prefixIconOpacityAnimation =
-            Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: loadingController,
-          curve: _getInternalInterval(.2, .55, interval.begin, interval.end),
-        )),
         suffixIconOpacityAnimation =
             Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
           parent: loadingController,
@@ -133,7 +128,6 @@ class AnimatedTextFormField extends StatefulWidget {
   final AnimationController loadingController;
   final Animation<double> scaleAnimation;
   final Animation<double> sizeAnimation;
-  final Animation<double> prefixIconOpacityAnimation;
   final Animation<double> suffixIconOpacityAnimation;
 
   final AnimationController inertiaController;
@@ -220,10 +214,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         borderRadius: borderRadius,
       ),
       prefixIcon: _buildInertiaAnimation(
-        FadeTransition(
-          opacity: widget.prefixIconOpacityAnimation,
-          child: widget.prefixIcon,
-        ),
+        widget.prefixIcon,
         widget?.prefixIconRotationAnimation,
         widget?.prefixIconTranslateAnimation,
       ),

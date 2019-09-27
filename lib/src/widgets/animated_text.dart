@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../math_helper.dart';
 import '../matrix.dart';
+import '../widget_helper.dart';
+import 'null_widget.dart';
 
 enum AnimatedTextRotation { up, down }
 
@@ -57,7 +59,7 @@ class _AnimatedTextState extends State<AnimatedText>
   }
 
   void _afterLayout(Duration timeStamp) {
-    _layoutHeight = _getWidgetSize()?.height;
+    _layoutHeight = getWidgetSize(_textKey)?.height;
   }
 
   @override
@@ -67,7 +69,7 @@ class _AnimatedTextState extends State<AnimatedText>
     if (widget.text != oldWidget.text) {
       _oldText = oldWidget.text;
       _newText = widget.text;
-      _controller.forward().then((void _) {
+      _controller.forward().then((_) {
         setState(() {
           final t = _oldText;
           _oldText = _newText;
@@ -82,11 +84,6 @@ class _AnimatedTextState extends State<AnimatedText>
   void dispose() {
     super.dispose();
     _controller.dispose();
-  }
-
-  Size _getWidgetSize() {
-    final RenderBox renderBox = _textKey.currentContext?.findRenderObject();
-    return renderBox?.size;
   }
 
   Matrix4 _getFrontSideUp(double value) {
@@ -151,24 +148,22 @@ class _AnimatedTextState extends State<AnimatedText>
       builder: (context, child) => Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          _animation.value <= MathHelper.toRadian(85)
-              ? Transform(
-                  alignment: Alignment.center,
-                  transform: rollUp
-                      ? _getFrontSideUp(_animation.value)
-                      : _getFrontSideDown(_animation.value),
-                  child: oldText,
-                )
-              : Container(width: 0, height: 0),
-          _animation.value >= MathHelper.toRadian(5)
-              ? Transform(
-                  alignment: Alignment.center,
-                  transform: rollUp
-                      ? _getBackSideUp(_animation.value)
-                      : _getBackSideDown(_animation.value),
-                  child: newText,
-                )
-              : Container(width: 0, height: 0),
+          if (_animation.value <= MathHelper.toRadian(85))
+            Transform(
+              alignment: Alignment.center,
+              transform: rollUp
+                  ? _getFrontSideUp(_animation.value)
+                  : _getFrontSideDown(_animation.value),
+              child: oldText,
+            ),
+          if (_animation.value >= MathHelper.toRadian(5))
+            Transform(
+              alignment: Alignment.center,
+              transform: rollUp
+                  ? _getBackSideUp(_animation.value)
+                  : _getBackSideDown(_animation.value),
+              child: newText,
+            ),
         ],
       ),
     );
