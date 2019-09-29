@@ -65,8 +65,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   AnimationController _postSwitchAuthController;
   PageController _pageController = PageController();
 
-  /// switch between login and recover password
-  AnimationController _switchAuth2Controller;
   AnimationController _submitController;
 
   Interval _nameTextFieldLoadingAnimationInterval;
@@ -110,10 +108,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _postSwitchAuthController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
-    );
-    _switchAuth2Controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 800),
     );
     _submitController = AnimationController(
       vsync: this,
@@ -161,7 +155,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _loadingController.dispose();
     _switchAuthController.dispose();
     _postSwitchAuthController.dispose();
-    _switchAuth2Controller.dispose();
     _submitController.dispose();
   }
 
@@ -219,16 +212,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     if (recovery) {
       _pageController.nextPage(
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 800),
         curve: Curves.ease,
       );
-      _switchAuth2Controller.forward();
     } else {
       _pageController.previousPage(
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 800),
         curve: Curves.ease,
       );
-      _switchAuth2Controller.reverse();
     }
   }
 

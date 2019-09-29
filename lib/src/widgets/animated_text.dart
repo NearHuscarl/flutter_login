@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../math_helper.dart';
 import '../matrix.dart';
 import '../widget_helper.dart';
-import 'null_widget.dart';
 
 enum AnimatedTextRotation { up, down }
 
@@ -14,13 +13,11 @@ class AnimatedText extends StatefulWidget {
   AnimatedText({
     Key key,
     @required this.text,
-    this.padding = 4.0,
     this.style,
     this.textRotation = AnimatedTextRotation.up,
   }) : super(key: key);
 
   final String text;
-  final double padding;
   final TextStyle style;
   final AnimatedTextRotation textRotation;
 
@@ -38,7 +35,7 @@ class _AnimatedTextState extends State<AnimatedText>
   Animation<double> _animation;
   AnimationController _controller;
 
-  double get radius => (_layoutHeight + widget.padding) / 2;
+  double get radius => (_layoutHeight) / 2;
 
   @override
   void initState() {
@@ -59,7 +56,7 @@ class _AnimatedTextState extends State<AnimatedText>
   }
 
   void _afterLayout(Duration timeStamp) {
-    _layoutHeight = getWidgetSize(_textKey)?.height;
+    setState(() => _layoutHeight = getWidgetSize(_textKey)?.height);
   }
 
   @override
