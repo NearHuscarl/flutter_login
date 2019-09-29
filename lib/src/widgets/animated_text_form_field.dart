@@ -102,13 +102,7 @@ class AnimatedTextFormField extends StatefulWidget {
                 curve: Interval(.5, 1.0, curve: Curves.easeOut),
                 reverseCurve: Curves.easeIn,
               )),
-        super(key: key) {
-    inertiaController?.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        inertiaController.reverse();
-      }
-    });
-  }
+        super(key: key);
 
   final double animatedWidth;
   final bool enabled;
@@ -142,17 +136,24 @@ class AnimatedTextFormField extends StatefulWidget {
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
-  GlobalKey<FormFieldState<String>> _textFieldKey = GlobalKey();
-  // var _hasError = false;
+  @override
+  void initState() {
+    super.initState();
 
-  // @override
-  // void didUpdateWidget(Widget oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
+    widget.inertiaController?.addStatusListener(onAniStatusChanged);
+  }
 
-  //   _hasError = _textFieldKey.currentState != null
-  //       ? _textFieldKey.currentState.hasError
-  //       : false;
-  // }
+  @override
+  dispose() {
+    widget.inertiaController?.removeStatusListener(onAniStatusChanged);
+    super.dispose();
+  }
+
+  void onAniStatusChanged(status) {
+    if (status == AnimationStatus.completed) {
+      widget.inertiaController?.reverse();
+    }
+  }
 
   Widget _buildInertiaAnimation(
     Widget child,
@@ -247,7 +248,6 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         ),
       ),
       child: TextFormField(
-        key: _textFieldKey,
         controller: widget.controller,
         focusNode: widget.focusNode,
         decoration: _getInputDecoration(theme),

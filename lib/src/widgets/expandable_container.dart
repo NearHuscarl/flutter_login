@@ -12,15 +12,15 @@ class ExpandableContainer extends StatelessWidget {
           end: 1.0,
         ).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(0.0, .75, curve: Curves.bounceOut),
-          reverseCurve: Interval(0.0, .75, curve: Curves.bounceIn),
+          curve: Interval(0.0, .6875, curve: Curves.bounceOut),
+          reverseCurve: Interval(0.0, .6875, curve: Curves.bounceIn),
         )),
         slideAnimation = Tween<Offset>(
           begin: Offset(-1, 0),
           end: Offset(0, 0),
         ).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(.75, 1.0, curve: Curves.fastOutSlowIn),
+          curve: Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
         ))
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {

@@ -8,8 +8,14 @@ class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
   Future _loginUser(BuildContext context) {
-    return Future.delayed(const Duration(seconds: 2), () {
+    return Future.delayed(const Duration(seconds: 8), () {
       Navigator.of(context).pushNamed(DashboardScreen.routeName);
+    });
+  }
+
+  Future _recoverPassword() {
+    return Future.delayed(const Duration(seconds: 8), () {
+      // send email
     });
   }
 
@@ -47,6 +53,7 @@ class LoginScreen extends StatelessWidget {
       onRecoverPassword: (name) async {
         print('Recover password info');
         print('Name: $name');
+        return _recoverPassword();
         // Show new password dialog
       },
     );

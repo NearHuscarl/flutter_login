@@ -79,14 +79,22 @@ class _AnimatedButtonState extends State<AnimatedButton>
       curve: Interval(.85, 1.0),
     ));
 
-    widget.controller.addStatusListener((status) {
-      if (status == AnimationStatus.forward) {
-        setState(() => _buttonEnabled = false);
-      }
-      if (status == AnimationStatus.dismissed) {
-        setState(() => _buttonEnabled = true);
-      }
-    });
+    widget.controller.addStatusListener(onStatusChanged);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller.removeStatusListener(onStatusChanged);
+  }
+
+  void onStatusChanged(status) {
+    if (status == AnimationStatus.forward) {
+      setState(() => _buttonEnabled = false);
+    }
+    if (status == AnimationStatus.dismissed) {
+      setState(() => _buttonEnabled = true);
+    }
   }
 
   Widget _buildButtonText(ThemeData theme) {
