@@ -11,6 +11,7 @@ import 'fade_in.dart';
 import 'animated_text_form_field.dart';
 import '../login_data.dart';
 import '../paddings.dart';
+import '../math_helper.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -63,7 +64,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   /// switch between login and signup
   AnimationController _switchAuthController;
   AnimationController _postSwitchAuthController;
-  PageController _pageController = PageController();
+  PageController _pageController;
+  var _currentPageValue = 0.0;
 
   AnimationController _submitController;
 
@@ -79,6 +81,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    _pageController = PageController()
+      ..addListener(() {
+        setState(() => _currentPageValue = _pageController.page);
+      });
 
     widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
@@ -212,12 +219,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     if (recovery) {
       _pageController.nextPage(
-        duration: Duration(milliseconds: 800),
+        duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
     } else {
       _pageController.previousPage(
-        duration: Duration(milliseconds: 800),
+        duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
     }
@@ -541,33 +548,56 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    final pagePadding =
-        EdgeInsets.symmetric(horizontal: (deviceSize.width * 0.25) / 2);
+    final pagePadding = EdgeInsets.symmetric(
+      horizontal: (deviceSize.width * 0.25) / 2,
+    );
 
     return LimitedBox(
       maxHeight: 400,
-      child: PageView(
+      child: PageView.builder(
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: <Widget>[
-          Padding(
-            padding: pagePadding,
-            child: AnimatedBuilder(
-              animation: _flipAnimation,
-              builder: (context, child) => Transform(
-                transform: Matrix.perspective()..rotateX(_flipAnimation.value),
-                alignment: Alignment.center,
-                child: child,
-              ),
-              child: _buildAuthCard(),
-            ),
-          ),
-          if (!_isLoading)
-            Padding(
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          final child = (index == 0)
+              ? AnimatedBuilder(
+                  animation: _flipAnimation,
+                  builder: (context, child) => Transform(
+                    transform: Matrix.perspective()
+                      ..rotateX(_flipAnimation.value),
+                    alignment: Alignment.center,
+                    child: child,
+                  ),
+                  child: _buildAuthCard(),
+                )
+              : _buildRecoverPasswordCard();
+          final transform = Matrix.perspective();
+
+          if (index == _currentPageValue.floor()) {
+            // previous page
+            transform
+              ..scale(MathHelper.lerp(
+                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
+              ..rotateY((_currentPageValue - index) * -1.5);
+          } else if (index == _currentPageValue.floor() + 1) {
+            // next page
+            transform
+              ..scale(MathHelper.lerp(
+                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
+              ..rotateY((_currentPageValue - index) * 1.5);
+          } else {
+            // off-screen page
+          }
+
+          return Transform(
+            alignment: Alignment.center,
+            transform: transform,
+            child: Padding(
               padding: pagePadding,
-              child: _buildRecoverPasswordCard(),
+              child: child,
             ),
-        ],
+          );
+        },
       ),
     );
   }
