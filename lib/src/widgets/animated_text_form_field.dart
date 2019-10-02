@@ -23,9 +23,9 @@ Interval _getInternalInterval(
 class AnimatedTextFormField extends StatefulWidget {
   AnimatedTextFormField({
     Key key,
-    Interval interval = const Interval(0.0, 1.0),
+    this.interval = const Interval(0.0, 1.0),
     @required this.animatedWidth,
-    @required this.loadingController,
+    this.loadingController,
     this.inertiaController,
     this.dragDirection,
     this.enabled = true,
@@ -42,68 +42,11 @@ class AnimatedTextFormField extends StatefulWidget {
     this.onSaved,
   })  : assert((inertiaController == null && dragDirection == null) ||
             (inertiaController != null && dragDirection != null)),
-        scaleAnimation = Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(CurvedAnimation(
-          parent: loadingController,
-          curve: _getInternalInterval(
-              0, .2, interval.begin, interval.end, Curves.easeOutBack),
-        )),
-        suffixIconOpacityAnimation =
-            Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: loadingController,
-          curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
-        )),
-        sizeAnimation = Tween<double>(
-          begin: 48.0,
-          end: animatedWidth,
-        ).animate(CurvedAnimation(
-          parent: loadingController,
-          curve: _getInternalInterval(
-              .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
-          reverseCurve: Curves.easeInExpo,
-        )),
-        translateAnimation = (inertiaController == null)
-            ? null
-            : Tween<double>(
-                begin: 0.0,
-                end: dragDirection == DragDirection.right ? 15.0 : -15.0,
-              ).animate(CurvedAnimation(
-                parent: inertiaController,
-                curve: Interval(0, .5, curve: Curves.easeOut),
-                reverseCurve: Curves.easeIn,
-              )),
-        prefixIconRotationAnimation = (inertiaController == null)
-            ? null
-            : Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
-                parent: inertiaController,
-                curve: Interval(.5, 1.0, curve: Curves.easeOut),
-                reverseCurve: Curves.easeIn,
-              )),
-        suffixIconRotationAnimation = (inertiaController == null)
-            ? null
-            : Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
-                parent: inertiaController,
-                curve: Interval(.5, 1.0, curve: Curves.easeOut),
-                reverseCurve: Curves.easeIn,
-              )),
-        prefixIconTranslateAnimation = (inertiaController == null)
-            ? null
-            : Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
-                parent: inertiaController,
-                curve: Interval(.5, 1.0, curve: Curves.easeOut),
-                reverseCurve: Curves.easeIn,
-              )),
-        suffixIconTranslateAnimation = (inertiaController == null)
-            ? null
-            : Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
-                parent: inertiaController,
-                curve: Interval(.5, 1.0, curve: Curves.easeOut),
-                reverseCurve: Curves.easeIn,
-              )),
         super(key: key);
 
+  final Interval interval;
+  final AnimationController loadingController;
+  final AnimationController inertiaController;
   final double animatedWidth;
   final bool enabled;
   final String labelText;
@@ -119,28 +62,92 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldSetter<String> onSaved;
   final DragDirection dragDirection;
 
-  final AnimationController loadingController;
-  final Animation<double> scaleAnimation;
-  final Animation<double> sizeAnimation;
-  final Animation<double> suffixIconOpacityAnimation;
-
-  final AnimationController inertiaController;
-  final Animation<double> translateAnimation;
-  final Animation<double> prefixIconRotationAnimation;
-  final Animation<double> suffixIconRotationAnimation;
-  final Animation<double> prefixIconTranslateAnimation;
-  final Animation<double> suffixIconTranslateAnimation;
-
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
+  Animation<double> scaleAnimation;
+  Animation<double> sizeAnimation;
+  Animation<double> suffixIconOpacityAnimation;
+
+  Animation<double> translateAnimation;
+  Animation<double> prefixIconRotationAnimation;
+  Animation<double> suffixIconRotationAnimation;
+  Animation<double> prefixIconTranslateAnimation;
+  Animation<double> suffixIconTranslateAnimation;
+
   @override
   void initState() {
     super.initState();
 
     widget.inertiaController?.addStatusListener(onAniStatusChanged);
+
+    final interval = widget.interval;
+    final dragDirection = widget.dragDirection;
+    final loadingController = widget.loadingController;
+
+    if (loadingController != null) {
+      scaleAnimation = Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: loadingController,
+        curve: _getInternalInterval(
+            0, .2, interval.begin, interval.end, Curves.easeOutBack),
+      ));
+      suffixIconOpacityAnimation =
+          Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: loadingController,
+        curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
+      ));
+      sizeAnimation = Tween<double>(
+        begin: 48.0,
+        end: widget.animatedWidth,
+      ).animate(CurvedAnimation(
+        parent: loadingController,
+        curve: _getInternalInterval(
+            .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
+        reverseCurve: Curves.easeInExpo,
+      ));
+    }
+
+    final inertiaController = widget.inertiaController;
+
+    if (inertiaController != null) {
+      translateAnimation = Tween<double>(
+        begin: 0.0,
+        end: dragDirection == DragDirection.right ? 15.0 : -15.0,
+      ).animate(CurvedAnimation(
+        parent: inertiaController,
+        curve: Interval(0, .5, curve: Curves.easeOut),
+        reverseCurve: Curves.easeIn,
+      ));
+      prefixIconRotationAnimation =
+          Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
+        parent: inertiaController,
+        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        reverseCurve: Curves.easeIn,
+      ));
+      suffixIconRotationAnimation =
+          Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
+        parent: inertiaController,
+        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        reverseCurve: Curves.easeIn,
+      ));
+      prefixIconTranslateAnimation =
+          Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
+        parent: inertiaController,
+        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        reverseCurve: Curves.easeIn,
+      ));
+      suffixIconTranslateAnimation =
+          Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
+        parent: inertiaController,
+        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        reverseCurve: Curves.easeIn,
+      ));
+    }
   }
 
   @override
@@ -160,7 +167,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     Animation rotateAnimation,
     Animation translateAnimation,
   ) {
-    if (rotateAnimation == null || translateAnimation == null) {
+    if (widget.inertiaController == null) {
       return child;
     }
 
@@ -216,16 +223,18 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       ),
       prefixIcon: _buildInertiaAnimation(
         widget.prefixIcon,
-        widget?.prefixIconRotationAnimation,
-        widget?.prefixIconTranslateAnimation,
+        prefixIconRotationAnimation,
+        prefixIconTranslateAnimation,
       ),
       suffixIcon: _buildInertiaAnimation(
-        FadeTransition(
-          opacity: widget.suffixIconOpacityAnimation,
-          child: widget.suffixIcon,
-        ),
-        widget?.suffixIconRotationAnimation,
-        widget?.suffixIconTranslateAnimation,
+        widget.loadingController != null
+            ? FadeTransition(
+                opacity: suffixIconOpacityAnimation,
+                child: widget.suffixIcon,
+              )
+            : widget.suffixIcon,
+        suffixIconRotationAnimation,
+        suffixIconTranslateAnimation,
       ),
     );
   }
@@ -233,45 +242,46 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final sizeAnimation = widget.sizeAnimation;
-    final scaleAnimation = widget.scaleAnimation;
-    final translateAnimation = widget?.translateAnimation;
-    final textField = AnimatedBuilder(
-      animation: sizeAnimation,
-      builder: (context, child) => Transform(
-        transform: Matrix4.identity()
-          ..scale(scaleAnimation.value, scaleAnimation.value),
-        alignment: Alignment.center,
-        child: Container(
-          width: sizeAnimation.value,
-          child: child,
-        ),
-      ),
-      child: TextFormField(
-        controller: widget.controller,
-        focusNode: widget.focusNode,
-        decoration: _getInputDecoration(theme),
-        keyboardType: widget.keyboardType,
-        textInputAction: widget.textInputAction,
-        obscureText: widget.obscureText,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        onSaved: widget.onSaved,
-        validator: widget.validator,
-        enabled: widget.enabled,
-      ),
+    Widget textField = TextFormField(
+      controller: widget.controller,
+      focusNode: widget.focusNode,
+      decoration: _getInputDecoration(theme),
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      obscureText: widget.obscureText,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      onSaved: widget.onSaved,
+      validator: widget.validator,
+      enabled: widget.enabled,
     );
 
-    if (translateAnimation == null) {
-      return textField;
+    if (widget.loadingController != null) {
+      textField = AnimatedBuilder(
+        animation: sizeAnimation,
+        builder: (context, child) => Transform(
+          transform: Matrix4.identity()
+            ..scale(scaleAnimation.value, scaleAnimation.value),
+          alignment: Alignment.center,
+          child: Container(
+            width: sizeAnimation.value,
+            child: child,
+          ),
+        ),
+        child: textField,
+      );
     }
 
-    return AnimatedBuilder(
-      animation: translateAnimation,
-      builder: (context, child) => Transform(
-        transform: Matrix4.identity()..translate(translateAnimation.value),
-        child: child,
-      ),
-      child: textField,
-    );
+    if (widget.inertiaController != null) {
+      textField = AnimatedBuilder(
+        animation: translateAnimation,
+        builder: (context, child) => Transform(
+          transform: Matrix4.identity()..translate(translateAnimation.value),
+          child: child,
+        ),
+        child: textField,
+      );
+    }
+
+    return textField;
   }
 }

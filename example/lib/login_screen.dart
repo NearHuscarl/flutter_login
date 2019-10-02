@@ -8,13 +8,13 @@ class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
   Future _loginUser(BuildContext context) {
-    return Future.delayed(const Duration(seconds: 8), () {
+    return Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pushNamed(DashboardScreen.routeName);
     });
   }
 
   Future _recoverPassword() {
-    return Future.delayed(const Duration(seconds: 8), () {
+    return Future.delayed(const Duration(seconds: 2), () {
       // send email
     });
   }

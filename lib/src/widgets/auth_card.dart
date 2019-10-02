@@ -2,13 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../matrix.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'expandable_container.dart';
-import 'shadow_button.dart';
 import 'fade_in.dart';
 import 'animated_text_form_field.dart';
+import '../matrix.dart';
 import '../login_data.dart';
 import '../paddings.dart';
 import '../math_helper.dart';
@@ -40,43 +39,14 @@ class AuthCard extends StatefulWidget {
   AuthCardState createState() => AuthCardState();
 }
 
-class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  final GlobalKey<FormState> _formRecoverKey = GlobalKey();
-  final GlobalKey _cardKey = GlobalKey();
-
-  final _passwordFocusNode = FocusNode();
-  final _confirmPasswordFocusNode = FocusNode();
-  final _passwordController = TextEditingController();
-
-  var _obscurePasswordText = true;
-  var _obscureConfirmPasswordText = true;
-
-  var authMode = AuthMode.Login;
-  var isRecoverPassword = false;
-
-  var _authData = {'email': '', 'password': ''};
-  var _isLoading = false;
-  var _isSubmitting = false;
-
-  AnimationController _loadingController;
-
-  /// switch between login and signup
-  AnimationController _switchAuthController;
-  AnimationController _postSwitchAuthController;
-  PageController _pageController;
+class AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
+  final _loginCardKey = GlobalKey<_LoginCardState>();
   var _currentPageValue = 0.0;
+  var _isLoadingFirstTime = true;
 
-  AnimationController _submitController;
-
-  Interval _nameTextFieldLoadingAnimationInterval;
-  Interval _passTextFieldLoadingAnimationInterval;
-  Interval _forgotPasswordLoadingAnimationInterval;
-  Interval _switchAuthLoadingAnimationInterval;
-  Animation<double> _buttonScaleAnimation;
+  PageController _pageController;
   Animation<double> _flipAnimation;
-
-  bool get buttonEnabled => !_isLoading && !_isSubmitting;
 
   @override
   void initState() {
@@ -88,6 +58,171 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       });
 
     widget.loadingController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _isLoadingFirstTime = false;
+      }
+    });
+
+    _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
+      CurvedAnimation(
+        parent: widget.loadingController,
+        curve: Curves.easeOutBack,
+        reverseCurve: Curves.easeIn,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  void _switchRecovery(bool recovery) {
+    if (recovery) {
+      _pageController.nextPage(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    } else {
+      _pageController.previousPage(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
+  }
+
+  void runLoadingAnimation() =>
+      _loginCardKey.currentState.runLoadingAnimation();
+
+  @override
+  Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+    final pagePadding = EdgeInsets.symmetric(
+      horizontal: (deviceSize.width * 0.25) / 2,
+    );
+
+    return LimitedBox(
+      maxHeight: 450,
+      child: PageView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          final child = (index == 0)
+              ? AnimatedBuilder(
+                  animation: _flipAnimation,
+                  builder: (context, child) => Transform(
+                    transform: Matrix.perspective()
+                      ..rotateX(_flipAnimation.value),
+                    alignment: Alignment.center,
+                    child: child,
+                  ),
+                  child: _LoginCard(
+                    key: _loginCardKey,
+                    loadingController:
+                        _isLoadingFirstTime ? widget.loadingController : null,
+                    emailValidator: widget.emailValidator,
+                    passwordValidator: widget.passwordValidator,
+                    onLogin: widget.onLogin,
+                    onSignup: widget.onSignup,
+                    onSwitchRecoveryPassword: () => _switchRecovery(true),
+                  ),
+                )
+              : _RecoverCard(
+                  emailValidator: widget.emailValidator,
+                  onRecoverPassword: widget.onRecoverPassword,
+                  onSwitchLogin: () => _switchRecovery(false),
+                );
+          final transform = Matrix.perspective();
+
+          if (index == _currentPageValue.floor()) {
+            // previous page
+            transform
+              ..scale(MathHelper.lerp(
+                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
+              ..rotateY((_currentPageValue - index) * -1.5);
+          } else if (index == _currentPageValue.floor() + 1) {
+            // next page
+            transform
+              ..scale(MathHelper.lerp(
+                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
+              ..rotateY((_currentPageValue - index) * 1.5);
+          } else {
+            // off-screen page
+          }
+
+          return Transform(
+            alignment: Alignment.center,
+            transform: transform,
+            child: Padding(
+              padding: pagePadding,
+              child: child,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _LoginCard extends StatefulWidget {
+  _LoginCard({
+    Key key,
+    this.loadingController,
+    @required this.onLogin,
+    @required this.onSignup,
+    @required this.emailValidator,
+    @required this.passwordValidator,
+    @required this.onSwitchRecoveryPassword,
+  }) : super(key: key);
+
+  final AnimationController loadingController;
+  final Future<void> Function(LoginData) onLogin;
+  final Future<void> Function(LoginData) onSignup;
+  final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String> passwordValidator;
+  final Function onSwitchRecoveryPassword;
+
+  @override
+  _LoginCardState createState() => _LoginCardState();
+}
+
+class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+  final _passwordController = TextEditingController();
+
+  var _obscurePasswordText = true;
+  var _obscureConfirmPasswordText = true;
+
+  var authMode = AuthMode.Login;
+
+  var _authData = {'email': '', 'password': ''};
+  var _isLoading = false;
+  var _isSubmitting = false;
+
+  AnimationController _loadingController;
+
+  /// switch between login and signup
+  AnimationController _switchAuthController;
+  AnimationController _postSwitchAuthController;
+  AnimationController _submitController;
+
+  Interval _nameTextFieldLoadingAnimationInterval;
+  Interval _passTextFieldLoadingAnimationInterval;
+  Interval _forgotPasswordLoadingAnimationInterval;
+  Animation<double> _buttonScaleAnimation;
+
+  bool get buttonEnabled => !_isLoading && !_isSubmitting;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.loadingController?.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
         setState(() => _isLoading = true);
       }
@@ -125,30 +260,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
     _forgotPasswordLoadingAnimationInterval =
         const Interval(.6, 1.0, curve: Curves.easeOut);
-    _switchAuthLoadingAnimationInterval =
-        const Interval(.6, 1.0, curve: Curves.easeOut);
-
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _loadingController,
       curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
 
-    // _flipAuthAnimation = Tween<double>(begin: 0.0, end: pi).animate(
-    //   CurvedAnimation(
-    //     parent: _switchAuth2Controller,
-    //     curve: Curves.ease,
-    //   ),
-    // );
-    _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
-      CurvedAnimation(
-        parent: widget.loadingController,
-        curve: Curves.easeOutBack,
-        reverseCurve: Curves.easeIn,
-      ),
-    );
-
-    // _loadingController.forward();
+    if (widget.loadingController == null) {
+      _loadingController.value = 1.0;
+    }
   }
 
   @override
@@ -157,12 +277,43 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
-    _pageController.dispose();
 
     _loadingController.dispose();
     _switchAuthController.dispose();
     _postSwitchAuthController.dispose();
     _submitController.dispose();
+  }
+
+  void runLoadingAnimation() {
+    if (_loadingController.isDismissed) {
+      widget.loadingController.forward();
+    } else if (_loadingController.isCompleted) {
+      _loadingController.reverse().then((_) {
+        widget.loadingController.reverse();
+      });
+    }
+  }
+
+  String _getLabel(AuthMode authMode) {
+    switch (authMode) {
+      case AuthMode.Signup:
+        return 'SIGNUP';
+      case AuthMode.Login:
+        return 'LOGIN';
+      default:
+        return '';
+    }
+  }
+
+  void _switchAuthMode() {
+    final newAuthMode = switchAuth(authMode);
+    setState(() => authMode = newAuthMode);
+
+    if (newAuthMode == AuthMode.Signup) {
+      _switchAuthController.forward();
+    } else {
+      _switchAuthController.reverse();
+    }
   }
 
   Future<bool> _submit() async {
@@ -188,67 +339,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     setState(() => _isSubmitting = false);
     _submitController.reverse();
     return true;
-  }
-
-  Future<bool> _submitRecover() async {
-    if (!_formRecoverKey.currentState.validate()) {
-      return false;
-    }
-    _formRecoverKey.currentState.save();
-    _submitController.forward();
-    setState(() => _isSubmitting = true);
-    await widget.onRecoverPassword(_authData['email']);
-    setState(() => _isSubmitting = false);
-    _submitController.reverse();
-    return true;
-  }
-
-  void _switchAuthMode() {
-    final newAuthMode = switchAuth(authMode);
-    setState(() => authMode = newAuthMode);
-
-    if (newAuthMode == AuthMode.Signup) {
-      _switchAuthController.forward();
-    } else {
-      _switchAuthController.reverse();
-    }
-  }
-
-  void _switchRecovery(bool recovery) {
-    setState(() => isRecoverPassword = recovery);
-
-    if (recovery) {
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-    } else {
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-    }
-  }
-
-  String _getLabel(AuthMode authMode) {
-    switch (authMode) {
-      case AuthMode.Signup:
-        return 'SIGNUP';
-      case AuthMode.Login:
-        return 'LOGIN';
-      default:
-        return '';
-    }
-  }
-
-  void runLoadingAnimation() {
-    if (_loadingController.isDismissed) {
-      widget.loadingController.forward();
-    } else if (_loadingController.isCompleted) {
-      _loadingController.reverse().then((_) {
-        widget.loadingController.reverse();
-      });
-    }
   }
 
   Widget _buildNameField(double width) {
@@ -342,7 +432,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           style: theme.textTheme.body1,
           textAlign: TextAlign.left,
         ),
-        onPressed: buttonEnabled ? () => _switchRecovery(true) : null,
+        onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
       ),
     );
   }
@@ -361,70 +451,26 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Widget _buildSwitchAuthButton(ThemeData theme) {
-    return FadeIn(
-      controller: _loadingController,
-      offset: .5,
-      curve: _switchAuthLoadingAnimationInterval,
-      fadeDirection: FadeDirection.topToBottom,
-      child: FlatButton(
-        child: AnimatedText(
-          text: _getLabel(switchAuth(authMode)),
-          textRotation: AnimatedTextRotation.down,
-        ),
-        onPressed: buttonEnabled ? _switchAuthMode : null,
-        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: theme.primaryColor,
-      ),
-    );
-  }
-
-  Widget _buildRecoverNameField(double width) {
-    return AnimatedTextFormField(
-      animatedWidth: width,
-      loadingController: _loadingController,
-      interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: 'Email',
-      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (value) => _submitRecover(),
-      validator: widget.emailValidator,
-      onSaved: (value) => _authData['email'] = value,
-    );
-  }
-
-  Widget _buildRecoverButton(ThemeData theme) {
-    return ScaleTransition(
-      scale: _buttonScaleAnimation,
-      child: AnimatedButton(
-        controller: _submitController,
-        color: theme.primaryColor,
-        loadingColor: theme.accentColor,
-        text: 'RECOVER',
-        onPressed: buttonEnabled ? _submitRecover : null,
-      ),
-    );
-  }
-
-  Widget _buildBackButton(ThemeData theme) {
     return FlatButton(
-      child: Text('BACK'),
-      onPressed: buttonEnabled ? () => _switchRecovery(false) : null,
+      child: AnimatedText(
+        text: _getLabel(switchAuth(authMode)),
+        textRotation: AnimatedTextRotation.down,
+      ),
+      onPressed: buttonEnabled ? _switchAuthMode : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
     );
   }
 
-  Widget _buildAuthCard() {
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     const debugColor = false;
-
     final authForm = Form(
       key: _formKey,
       child: Padding(
@@ -480,7 +526,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     return Column(
       children: <Widget>[
         Container(
-          key: _cardKey,
           width: cardWidth,
           child: Card(
             shape: RoundedRectangleBorder(
@@ -494,8 +539,97 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       ],
     );
   }
+}
 
-  Widget _buildRecoverPasswordCard() {
+class _RecoverCard extends StatefulWidget {
+  _RecoverCard({
+    Key key,
+    @required this.emailValidator,
+    @required this.onRecoverPassword,
+    @required this.onSwitchLogin,
+  }) : super(key: key);
+
+  final FormFieldValidator<String> emailValidator;
+  final Future<void> Function(String) onRecoverPassword;
+  final Function onSwitchLogin;
+
+  @override
+  _RecoverCardState createState() => _RecoverCardState();
+}
+
+class _RecoverCardState extends State<_RecoverCard>
+    with SingleTickerProviderStateMixin {
+  final GlobalKey<FormState> _formRecoverKey = GlobalKey();
+
+  var _isSubmitting = false;
+  var _name = '';
+
+  AnimationController _submitController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _submitController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _submitController.dispose();
+  }
+
+  Future<bool> _submitRecover() async {
+    if (!_formRecoverKey.currentState.validate()) {
+      return false;
+    }
+    _formRecoverKey.currentState.save();
+    _submitController.forward();
+    setState(() => _isSubmitting = true);
+    await widget.onRecoverPassword(_name);
+    setState(() => _isSubmitting = false);
+    _submitController.reverse();
+    return true;
+  }
+
+  Widget _buildRecoverNameField(double width) {
+    return AnimatedTextFormField(
+      animatedWidth: width,
+      labelText: 'Email',
+      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done,
+      onFieldSubmitted: (value) => _submitRecover(),
+      validator: widget.emailValidator,
+      onSaved: (value) => _name = value,
+    );
+  }
+
+  Widget _buildRecoverButton(ThemeData theme) {
+    return AnimatedButton(
+      controller: _submitController,
+      color: theme.primaryColor,
+      loadingColor: theme.accentColor,
+      text: 'RECOVER',
+      onPressed: !_isSubmitting ? _submitRecover : null,
+    );
+  }
+
+  Widget _buildBackButton(ThemeData theme) {
+    return FlatButton(
+      child: Text('BACK'),
+      onPressed: !_isSubmitting ? widget.onSwitchLogin : null,
+      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textColor: theme.primaryColor,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
@@ -542,63 +676,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         ),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    final pagePadding = EdgeInsets.symmetric(
-      horizontal: (deviceSize.width * 0.25) / 2,
-    );
-
-    return LimitedBox(
-      maxHeight: 400,
-      child: PageView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          final child = (index == 0)
-              ? AnimatedBuilder(
-                  animation: _flipAnimation,
-                  builder: (context, child) => Transform(
-                    transform: Matrix.perspective()
-                      ..rotateX(_flipAnimation.value),
-                    alignment: Alignment.center,
-                    child: child,
-                  ),
-                  child: _buildAuthCard(),
-                )
-              : _buildRecoverPasswordCard();
-          final transform = Matrix.perspective();
-
-          if (index == _currentPageValue.floor()) {
-            // previous page
-            transform
-              ..scale(MathHelper.lerp(
-                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
-              ..rotateY((_currentPageValue - index) * -1.5);
-          } else if (index == _currentPageValue.floor() + 1) {
-            // next page
-            transform
-              ..scale(MathHelper.lerp(
-                  0.6, 1.0, 1 - (_currentPageValue - index).abs()))
-              ..rotateY((_currentPageValue - index) * 1.5);
-          } else {
-            // off-screen page
-          }
-
-          return Transform(
-            alignment: Alignment.center,
-            transform: transform,
-            child: Padding(
-              padding: pagePadding,
-              child: child,
-            ),
-          );
-        },
-      ),
     );
   }
 }

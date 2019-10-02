@@ -32,6 +32,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Animation<Color> _colorAnimation;
   var _buttonEnabled = true;
   var _hover = false;
+  var _isLoading = false;
 
   static const _width = 120.0;
   static const _height = 40.0;
@@ -97,6 +98,12 @@ class _AnimatedButtonState extends State<AnimatedButton>
     }
   }
 
+  void _onTap() async {
+    setState(() => _isLoading = true);
+    await widget.onPressed();
+    setState(() => _isLoading = false);
+  }
+
   Widget _buildButtonText(ThemeData theme) {
     return FadeTransition(
       opacity: _textOpacityAnimation,
@@ -134,7 +141,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
             child: child,
           ),
           child: InkWell(
-            onTap: _buttonEnabled ? widget.onPressed : null,
+            onTap: _buttonEnabled ? _onTap : null,
             onHighlightChanged: (value) => setState(() => _hover = value),
             splashColor: theme.accentColor,
             borderRadius: borderRadius,
@@ -172,15 +179,16 @@ class _AnimatedButtonState extends State<AnimatedButton>
             ),
           ),
         ),
-        Container(
-          width: _height - _loadingCircleThickness,
-          height: _height - _loadingCircleThickness,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
-            // backgroundColor: Colors.red,
-            strokeWidth: _loadingCircleThickness,
+        if (_isLoading)
+          Container(
+            width: _height - _loadingCircleThickness,
+            height: _height - _loadingCircleThickness,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
+              // backgroundColor: Colors.red,
+              strokeWidth: _loadingCircleThickness,
+            ),
           ),
-        ),
         _buildButton(theme),
       ],
     );
