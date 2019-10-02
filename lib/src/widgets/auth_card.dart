@@ -92,8 +92,19 @@ class AuthCardState extends State<AuthCard>
     }
   }
 
-  void runLoadingAnimation() =>
-      _loginCardKey.currentState.runLoadingAnimation();
+  void runLoadingAnimation() {
+    if (widget.loadingController.isDismissed) {
+      widget.loadingController.forward().then((_) {
+        if (!_isLoadingFirstTime) {
+          _loginCardKey.currentState.runLoadingAnimation(reverse: false);
+        }
+      });
+    } else if (widget.loadingController.isCompleted) {
+      _loginCardKey.currentState.runLoadingAnimation(reverse: true).then((_) {
+        widget.loadingController.reverse();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +225,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
   Interval _forgotPasswordLoadingAnimationInterval;
+  Interval _switchAuthLoadingAnimationInterval;
   Animation<double> _buttonScaleAnimation;
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
@@ -222,14 +234,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    widget.loadingController?.addStatusListener((status) {
-      if (status == AnimationStatus.forward) {
-        setState(() => _isLoading = true);
-      }
-      if (status == AnimationStatus.completed) {
-        _loadingController.forward();
-      }
-    });
+    widget.loadingController
+        ?.addStatusListener(onLoadingAnimationStatusChanged);
     _loadingController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1150),
@@ -260,6 +266,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
     _forgotPasswordLoadingAnimationInterval =
         const Interval(.6, 1.0, curve: Curves.easeOut);
+    _switchAuthLoadingAnimationInterval =
+        const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _loadingController,
@@ -275,6 +283,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
 
+    widget.loadingController
+        ?.removeStatusListener(onLoadingAnimationStatusChanged);
+
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 
@@ -284,13 +295,20 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _submitController.dispose();
   }
 
-  void runLoadingAnimation() {
-    if (_loadingController.isDismissed) {
-      widget.loadingController.forward();
-    } else if (_loadingController.isCompleted) {
-      _loadingController.reverse().then((_) {
-        widget.loadingController.reverse();
-      });
+  void onLoadingAnimationStatusChanged(status) {
+    if (status == AnimationStatus.forward) {
+      setState(() => _isLoading = true);
+    }
+    if (status == AnimationStatus.completed) {
+      _loadingController.forward();
+    }
+  }
+
+  Future<void> runLoadingAnimation({bool reverse}) {
+    if (reverse) {
+      return _loadingController.reverse();
+    } else {
+      return _loadingController.forward();
     }
   }
 
@@ -451,15 +469,21 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Widget _buildSwitchAuthButton(ThemeData theme) {
-    return FlatButton(
-      child: AnimatedText(
-        text: _getLabel(switchAuth(authMode)),
-        textRotation: AnimatedTextRotation.down,
+    return FadeIn(
+      controller: _loadingController,
+      offset: .5,
+      curve: _switchAuthLoadingAnimationInterval,
+      fadeDirection: FadeDirection.topToBottom,
+      child: FlatButton(
+        child: AnimatedText(
+          text: _getLabel(switchAuth(authMode)),
+          textRotation: AnimatedTextRotation.down,
+        ),
+        onPressed: buttonEnabled ? _switchAuthMode : null,
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textColor: theme.primaryColor,
       ),
-      onPressed: buttonEnabled ? _switchAuthMode : null,
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: theme.primaryColor,
     );
   }
 
