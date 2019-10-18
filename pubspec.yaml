@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   font_awesome_flutter: ^8.5.0
+  provider: ^3.1.0
+  transformer_page_view:
 
 dev_dependencies:
   flutter_test:

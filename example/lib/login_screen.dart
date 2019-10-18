@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart' as Login;
+import 'custom_route.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  Future _loginUser(BuildContext context) {
-    return Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushNamed(DashboardScreen.routeName);
-    });
+  Future<void> _loginUser(BuildContext context) {
+    return Future.delayed(const Duration(seconds: 2));
   }
 
   Future _recoverPassword() {
@@ -23,7 +22,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Login.LoginScreen(
       title: 'ECorp',
-      logoAsset: 'assets/images/ecorp.png',
+      logo: 'assets/images/ecorp.png',
       titleTextStyle: (defaultTextStyle) =>
           defaultTextStyle.copyWith(color: Colors.orange),
       emailValidator: (value) {
@@ -49,6 +48,11 @@ class LoginScreen extends StatelessWidget {
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
         return _loginUser(context);
+      },
+      onChangeRouteAnimationCompleted: () {
+        Navigator.of(context).push(FadePageRoute(
+          builder: (context) => DashboardScreen(),
+        ));
       },
       onRecoverPassword: (name) async {
         print('Recover password info');

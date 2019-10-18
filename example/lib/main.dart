@@ -11,7 +11,7 @@ void main() {
           SystemUiOverlayStyle.dark.systemNavigationBarColor,
     ),
   );
-  // timeDilation = 50.0; // animation debug will slow down the animation 10 times
+  // timeDilation = 10.0; // animation debug will slow down the animation 10 times
   runApp(MyApp());
 }
 

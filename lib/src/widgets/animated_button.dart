@@ -46,7 +46,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: widget.controller,
-        curve: Interval(0.0, .3),
+        curve: Interval(0.0, .25),
       ),
     );
 

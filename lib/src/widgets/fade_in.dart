@@ -98,13 +98,6 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
   AnimationController get _effectiveController => widget.controller ?? _controller;
 
   @override
-  void didUpdateWidget(FadeIn oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // update animations when hot reloading
-    _updateAnimations();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     _controller?.dispose();
