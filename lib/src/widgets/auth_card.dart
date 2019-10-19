@@ -365,8 +365,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
-  Interval _forgotPasswordLoadingAnimationInterval;
-  Interval _switchAuthLoadingAnimationInterval;
+  Interval _textButtonLoadingAnimationInterval;
   Animation<double> _buttonScaleAnimation;
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
@@ -397,9 +396,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
-    _forgotPasswordLoadingAnimationInterval =
-        const Interval(.6, 1.0, curve: Curves.easeOut);
-    _switchAuthLoadingAnimationInterval =
+    _textButtonLoadingAnimationInterval =
         const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -567,7 +564,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       controller: widget.loadingController,
       fadeDirection: FadeDirection.bottomToTop,
       offset: .5,
-      curve: _forgotPasswordLoadingAnimationInterval,
+      curve: _textButtonLoadingAnimationInterval,
       child: FlatButton(
         child: Text(
           'Forgot Password?',
@@ -600,7 +597,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return FadeIn(
       controller: widget.loadingController,
       offset: .5,
-      curve: _switchAuthLoadingAnimationInterval,
+      curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
       child: FlatButton(
         child: AnimatedText(

@@ -71,11 +71,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   Animation<double> sizeAnimation;
   Animation<double> suffixIconOpacityAnimation;
 
-  Animation<double> translateAnimation;
-  Animation<double> prefixIconRotationAnimation;
-  Animation<double> suffixIconRotationAnimation;
-  Animation<double> prefixIconTranslateAnimation;
-  Animation<double> suffixIconTranslateAnimation;
+  Animation<double> fieldTranslateAnimation;
+  Animation<double> iconRotationAnimation;
+  Animation<double> iconTranslateAnimation;
 
   @override
   void initState() {
@@ -115,7 +113,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final inertiaController = widget.inertiaController;
 
     if (inertiaController != null) {
-      translateAnimation = Tween<double>(
+      fieldTranslateAnimation = Tween<double>(
         begin: 0.0,
         end: dragDirection == DragDirection.right ? 15.0 : -15.0,
       ).animate(CurvedAnimation(
@@ -123,25 +121,13 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         curve: Interval(0, .5, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
-      prefixIconRotationAnimation =
+      iconRotationAnimation =
           Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
         parent: inertiaController,
         curve: Interval(.5, 1.0, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
-      suffixIconRotationAnimation =
-          Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
-        parent: inertiaController,
-        curve: Interval(.5, 1.0, curve: Curves.easeOut),
-        reverseCurve: Curves.easeIn,
-      ));
-      prefixIconTranslateAnimation =
-          Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
-        parent: inertiaController,
-        curve: Interval(.5, 1.0, curve: Curves.easeOut),
-        reverseCurve: Curves.easeIn,
-      ));
-      suffixIconTranslateAnimation =
+      iconTranslateAnimation =
           Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
         parent: inertiaController,
         curve: Interval(.5, 1.0, curve: Curves.easeOut),
@@ -162,11 +148,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
   }
 
-  Widget _buildInertiaAnimation(
-    Widget child,
-    Animation rotateAnimation,
-    Animation translateAnimation,
-  ) {
+  Widget _buildInertiaAnimation(Widget child) {
     if (widget.inertiaController == null) {
       return child;
     }
@@ -174,17 +156,17 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final sign = widget.dragDirection == DragDirection.right ? 1 : -1;
 
     return AnimatedBuilder(
-      animation: translateAnimation,
+      animation: iconTranslateAnimation,
       builder: (context, child) => Transform(
         transform: Matrix4.identity()
-          ..translate(sign * translateAnimation.value),
+          ..translate(sign * iconTranslateAnimation.value),
         child: child,
       ),
       child: AnimatedBuilder(
-        animation: rotateAnimation,
+        animation: iconRotationAnimation,
         builder: (context, child) => Transform(
           alignment: Alignment.center,
-          transform: Matrix4.identity()..rotateZ(sign * rotateAnimation.value),
+          transform: Matrix4.identity()..rotateZ(sign * iconRotationAnimation.value),
           child: child,
         ),
         child: child,
@@ -221,21 +203,13 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       border: OutlineInputBorder(
         borderRadius: borderRadius,
       ),
-      prefixIcon: _buildInertiaAnimation(
-        widget.prefixIcon,
-        prefixIconRotationAnimation,
-        prefixIconTranslateAnimation,
-      ),
-      suffixIcon: _buildInertiaAnimation(
-        widget.loadingController != null
-            ? FadeTransition(
-                opacity: suffixIconOpacityAnimation,
-                child: widget.suffixIcon,
-              )
-            : widget.suffixIcon,
-        suffixIconRotationAnimation,
-        suffixIconTranslateAnimation,
-      ),
+      prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
+      suffixIcon: _buildInertiaAnimation(widget.loadingController != null
+          ? FadeTransition(
+              opacity: suffixIconOpacityAnimation,
+              child: widget.suffixIcon,
+            )
+          : widget.suffixIcon),
     );
   }
 
@@ -273,9 +247,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     if (widget.inertiaController != null) {
       textField = AnimatedBuilder(
-        animation: translateAnimation,
+        animation: fieldTranslateAnimation,
         builder: (context, child) => Transform(
-          transform: Matrix4.identity()..translate(translateAnimation.value),
+          transform: Matrix4.identity()..translate(fieldTranslateAnimation.value),
           child: child,
         ),
         child: textField,
