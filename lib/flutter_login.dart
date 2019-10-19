@@ -1,5 +1,7 @@
 library flutter_login;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +64,9 @@ class _LoginScreenState extends State<LoginScreen>
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
   AnimationController _loadingController;
   AnimationController _logoController;
+  // 1 is normal time, 5 is 5x time slower animation for debugging
+  static const _animationSpeeds = [1, 5, 10, 25, 50, 100];
+  double _selectTimeDilation = 1.0;
 
   @override
   void initState() {
@@ -71,13 +76,13 @@ class _LoginScreenState extends State<LoginScreen>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     )..addStatusListener((status) {
-      if (status == AnimationStatus.forward) {
-        _logoController.forward();
-      }
-      if (status == AnimationStatus.reverse) {
-        _logoController.reverse();
-      }
-    });
+        if (status == AnimationStatus.forward) {
+          _logoController.forward();
+        }
+        if (status == AnimationStatus.reverse) {
+          _logoController.reverse();
+        }
+      });
     _logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -132,12 +137,46 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildDebugAnimationButton(Size deviceSize) {
-    final textStyle = TextStyle(fontSize: 12, color: Colors.white);
+    const textStyle = TextStyle(fontSize: 12, color: Colors.white);
+
     return Positioned(
       bottom: 0,
       right: 0,
       child: Row(
         children: <Widget>[
+          RaisedButton(
+            onPressed: () {
+              timeDilation = 1.0;
+
+              showModalBottomSheet(
+                context: context,
+                builder: (_) {
+                  return Container(
+                    height: 200,
+                    color: Colors.blue.withOpacity(.5),
+                    child: CupertinoPicker(
+                      // backgroundColor: Colors.red,
+                      itemExtent: 30.0,
+                      onSelectedItemChanged: (int index) {
+                        setState(() => _selectTimeDilation =
+                            _animationSpeeds[index].toDouble());
+                      },
+                      children:
+                          _animationSpeeds.map((x) => Text('x$x')).toList(),
+                    ),
+                  );
+                },
+              ).then((_) {
+                // wait until the BottomSheet close animation finishing before
+                // assigning or you will have to watch x100 time slower animation
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  timeDilation = _selectTimeDilation;
+                });
+              });
+            },
+            color: Colors.green,
+            child: Text('ani speed', style: textStyle),
+          ),
           RaisedButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.blue,
@@ -224,7 +263,8 @@ class _LoginScreenState extends State<LoginScreen>
                         passwordValidator: widget.passwordValidator ??
                             LoginScreen.defaultPasswordValidator,
                         onSubmit: () => _logoController.reverse(),
-                        onSubmitCompleted: widget.onChangeRouteAnimationCompleted,
+                        onSubmitCompleted:
+                            widget.onChangeRouteAnimationCompleted,
                       ),
                     ),
                     Positioned(
