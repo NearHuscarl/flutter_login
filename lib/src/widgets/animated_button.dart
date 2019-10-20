@@ -30,7 +30,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Animation<double> _ringThicknessAnimation;
   Animation<double> _ringOpacityAnimation;
   Animation<Color> _colorAnimation;
-  var _buttonEnabled = true;
   var _hover = false;
   var _isLoading = false;
 
@@ -91,17 +90,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   void onStatusChanged(status) {
     if (status == AnimationStatus.forward) {
-      setState(() => _buttonEnabled = false);
+      setState(() => _isLoading = true);
     }
     if (status == AnimationStatus.dismissed) {
-      setState(() => _buttonEnabled = true);
+      setState(() => _isLoading = false);
     }
-  }
-
-  void _onTap() async {
-    setState(() => _isLoading = true);
-    await widget.onPressed();
-    setState(() => _isLoading = false);
   }
 
   Widget _buildButtonText(ThemeData theme) {
@@ -125,7 +118,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
           borderRadius: borderRadius,
           color: Colors.transparent,
           boxShadow: [
-            if (_buttonEnabled)
+            if (!_isLoading)
               BoxShadow(
                 blurRadius: _hover ? 12 : 4,
                 color: widget.color.withOpacity(.4),
@@ -141,7 +134,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
             child: child,
           ),
           child: InkWell(
-            onTap: _buttonEnabled ? _onTap : null,
+            onTap: !_isLoading ? widget.onPressed : null,
             onHighlightChanged: (value) => setState(() => _hover = value),
             splashColor: theme.accentColor,
             borderRadius: borderRadius,
