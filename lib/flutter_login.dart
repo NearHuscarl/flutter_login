@@ -13,28 +13,144 @@ import 'src/widgets/fade_in.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
-class LoginScreen extends StatefulWidget {
+class _AnimationTimeDilationDropdown extends StatelessWidget {
+  _AnimationTimeDilationDropdown({
+    @required this.onSelectedItemChanged,
+  });
+
+  final Function onSelectedItemChanged;
+  static const animationSpeeds = [1, 5, 10, 25, 50, 100];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'x1 is normal time, x5 means the animation is 5x times slower for debugging purpose',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            height: 125,
+            child: CupertinoPicker(
+              itemExtent: 30.0,
+              backgroundColor: Colors.white,
+              onSelectedItemChanged: onSelectedItemChanged,
+              children: animationSpeeds.map((x) => Text('x$x')).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  _Header({
+    this.logoPath,
+    this.logoTag,
+    this.title,
+    this.titleTextStyle,
+    this.titleTag,
+    this.height = 250.0,
+    this.controller,
+  });
+
+  final String logoPath;
+  final String logoTag;
   final String title;
   final TextStyleSetter titleTextStyle;
-  final String logo;
-  final Future<void> Function(LoginData) onSignup;
-  final Future<void> Function(LoginData) onLogin;
-  final Future<void> Function(String) onRecoverPassword;
-  final FormFieldValidator<String> emailValidator;
-  final FormFieldValidator<String> passwordValidator;
-  final Function onChangeRouteAnimationCompleted;
+  final String titleTag;
+  final double height;
+  final AnimationController controller;
 
+  TextStyle _getTitleTextStyle(ThemeData theme) {
+    final defaultTextStyle = TextStyle(
+      color: theme.primaryTextTheme.title.color,
+      fontSize: 50,
+      fontWeight: FontWeight.w300,
+    );
+    return titleTextStyle != null
+        ? titleTextStyle(defaultTextStyle)
+        : defaultTextStyle;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final displayLogo = logoPath != null;
+    Widget logo = Image(
+      filterQuality: FilterQuality.high,
+      image: AssetImage(logoPath),
+      height: 125,
+    );
+
+    if (logoTag != null) {
+      logo = Hero(
+        tag: logoTag,
+        child: logo,
+      );
+    }
+
+    Widget header = Text(title, style: _getTitleTextStyle(theme));
+
+    if (titleTag != null) {
+      header = Hero(
+        tag: titleTag,
+        child: header,
+      );
+    }
+
+    return FadeIn(
+      controller: controller,
+      offset: .2,
+      fadeDirection: FadeDirection.topToBottom,
+      child: Container(
+        height: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            if (displayLogo) logo,
+            SizedBox(height: 5),
+            header,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
   LoginScreen({
+    @required this.onSignup,
+    @required this.onLogin,
+    @required this.onRecoverPassword,
     this.title = 'Login',
     this.titleTextStyle,
     this.logo,
-    this.onSignup,
-    this.onLogin,
-    this.onRecoverPassword,
     this.emailValidator,
     this.passwordValidator,
     this.onChangeRouteAnimationCompleted,
+    this.logoTag,
+    this.titleTag,
   });
+
+  final Future<void> Function(LoginData) onSignup;
+  final Future<void> Function(LoginData) onLogin;
+  final Future<void> Function(String) onRecoverPassword;
+  final String title;
+  final TextStyleSetter titleTextStyle;
+  final String logo;
+  final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String> passwordValidator;
+  final Function onChangeRouteAnimationCompleted;
+  final String logoTag;
+  final String titleTag;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -64,8 +180,6 @@ class _LoginScreenState extends State<LoginScreen>
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
   AnimationController _loadingController;
   AnimationController _logoController;
-  // 1 is normal time, 5 is 5x time slower animation for debugging
-  static const _animationSpeeds = [1, 5, 10, 25, 50, 100];
   double _selectTimeDilation = 1.0;
 
   @override
@@ -100,39 +214,15 @@ class _LoginScreenState extends State<LoginScreen>
     _logoController.dispose();
   }
 
-  TextStyle _getTitleTextStyle(ThemeData theme) {
-    final defaultTextStyle = TextStyle(
-      color: theme.primaryTextTheme.title.color,
-      fontSize: 50,
-      fontWeight: FontWeight.w300,
-    );
-    return widget.titleTextStyle != null
-        ? widget.titleTextStyle(defaultTextStyle)
-        : defaultTextStyle;
-  }
-
   Widget _buildHeader(ThemeData theme, double height) {
-    final displayLogo = widget.logo != null;
-
-    return FadeIn(
+    return _Header(
       controller: _logoController,
-      offset: .2,
-      fadeDirection: FadeDirection.topToBottom,
-      child: Container(
-        height: height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (displayLogo)
-              Image(
-                image: AssetImage(widget.logo),
-                height: 125,
-              ),
-            SizedBox(height: 5),
-            Text(widget.title, style: _getTitleTextStyle(theme)),
-          ],
-        ),
-      ),
+      height: height,
+      logoPath: widget.logo,
+      logoTag: widget.logo,
+      title: widget.title,
+      titleTag: widget.titleTag,
+      titleTextStyle: widget.titleTextStyle,
     );
   }
 
@@ -145,25 +235,22 @@ class _LoginScreenState extends State<LoginScreen>
       child: Row(
         children: <Widget>[
           RaisedButton(
+            color: Colors.green,
+            child: Text('ani speed', style: textStyle),
             onPressed: () {
               timeDilation = 1.0;
 
               showModalBottomSheet(
                 context: context,
                 builder: (_) {
-                  return Container(
-                    height: 200,
-                    color: Colors.blue.withOpacity(.5),
-                    child: CupertinoPicker(
-                      // backgroundColor: Colors.red,
-                      itemExtent: 30.0,
-                      onSelectedItemChanged: (int index) {
-                        setState(() => _selectTimeDilation =
-                            _animationSpeeds[index].toDouble());
-                      },
-                      children:
-                          _animationSpeeds.map((x) => Text('x$x')).toList(),
-                    ),
+                  return _AnimationTimeDilationDropdown(
+                    onSelectedItemChanged: (int index) {
+                      setState(() {
+                        _selectTimeDilation = _AnimationTimeDilationDropdown
+                            .animationSpeeds[index]
+                            .toDouble();
+                      });
+                    },
                   );
                 },
               ).then((_) {
@@ -174,8 +261,6 @@ class _LoginScreenState extends State<LoginScreen>
                 });
               });
             },
-            color: Colors.green,
-            child: Text('ani speed', style: textStyle),
           ),
           RaisedButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -209,6 +294,10 @@ class _LoginScreenState extends State<LoginScreen>
     const logoMargin = 15;
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
+    final emailValidator =
+        widget.emailValidator ?? LoginScreen.defaultEmailValidator;
+    final passwordValidator =
+        widget.passwordValidator ?? LoginScreen.defaultPasswordValidator;
 
     return MultiProvider(
       providers: [
@@ -258,10 +347,8 @@ class _LoginScreenState extends State<LoginScreen>
                         key: authCardKey,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
-                        emailValidator: widget.emailValidator ??
-                            LoginScreen.defaultEmailValidator,
-                        passwordValidator: widget.passwordValidator ??
-                            LoginScreen.defaultPasswordValidator,
+                        emailValidator: emailValidator,
+                        passwordValidator: passwordValidator,
                         onSubmit: () => _logoController.reverse(),
                         onSubmitCompleted:
                             widget.onChangeRouteAnimationCompleted,
