@@ -10,16 +10,30 @@ import 'src/providers/auth.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
+import 'src/widgets/hero_text.dart';
+
+export 'src/widgets/hero_text.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
+
+double beforeHeroFontSize = 48.0;
+double afterHeroFontSize = 15.0;
+
+TextStyle defaultLoginTitleStyle(ThemeData theme) => TextStyle(
+      color: theme.primaryTextTheme.title.color,
+      fontSize: beforeHeroFontSize,
+      fontWeight: FontWeight.w300,
+    );
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
     @required this.onSelectedItemChanged,
+    this.initialValue = 1.0,
   });
 
   final Function onSelectedItemChanged;
-  static const animationSpeeds = [1, 5, 10, 25, 50, 100];
+  final double initialValue;
+  static const animationSpeeds = const [1, 2, 5, 10];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +43,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Text(
               'x1 is normal time, x5 means the animation is 5x times slower for debugging purpose',
               textAlign: TextAlign.center,
@@ -38,6 +52,9 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
           Container(
             height: 125,
             child: CupertinoPicker(
+              scrollController: FixedExtentScrollController(
+                initialItem: animationSpeeds.indexOf(initialValue.toInt()),
+              ),
               itemExtent: 30.0,
               backgroundColor: Colors.white,
               onSelectedItemChanged: onSelectedItemChanged,
@@ -58,7 +75,8 @@ class _Header extends StatelessWidget {
     this.titleTextStyle,
     this.titleTag,
     this.height = 250.0,
-    this.controller,
+    this.logoController,
+    this.titleController,
   });
 
   final String logoPath;
@@ -67,26 +85,24 @@ class _Header extends StatelessWidget {
   final TextStyleSetter titleTextStyle;
   final String titleTag;
   final double height;
-  final AnimationController controller;
+  final AnimationController logoController;
+  final AnimationController titleController;
 
   TextStyle _getTitleTextStyle(ThemeData theme) {
-    final defaultTextStyle = TextStyle(
-      color: theme.primaryTextTheme.title.color,
-      fontSize: 50,
-      fontWeight: FontWeight.w300,
-    );
+    final defaultStyle = defaultLoginTitleStyle(theme);
+
     return titleTextStyle != null
-        ? titleTextStyle(defaultTextStyle)
-        : defaultTextStyle;
+        ? titleTextStyle(defaultStyle)
+        : defaultStyle;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final displayLogo = logoPath != null;
-    Widget logo = Image(
+    Widget logo = Image.asset(
+      logoPath,
       filterQuality: FilterQuality.high,
-      image: AssetImage(logoPath),
       height: 125,
     );
 
@@ -97,29 +113,44 @@ class _Header extends StatelessWidget {
       );
     }
 
-    Widget header = Text(title, style: _getTitleTextStyle(theme));
+    Widget header;
 
     if (titleTag != null) {
-      header = Hero(
+      header = HeroText(
+        title,
         tag: titleTag,
-        child: header,
+        largeFontSize: beforeHeroFontSize,
+        smallFontSize: afterHeroFontSize,
+        style: _getTitleTextStyle(theme),
+        viewState: ViewState.enlarged,
+      );
+    } else {
+      header = Text(
+        title,
+        style: _getTitleTextStyle(theme),
       );
     }
 
-    return FadeIn(
-      controller: controller,
-      offset: .2,
-      fadeDirection: FadeDirection.topToBottom,
-      child: Container(
-        height: height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (displayLogo) logo,
-            SizedBox(height: 5),
-            header,
-          ],
-        ),
+    return Container(
+      height: height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          if (displayLogo)
+            FadeIn(
+              controller: logoController,
+              offset: .25,
+              fadeDirection: FadeDirection.topToBottom,
+              child: logo,
+            ),
+          SizedBox(height: 5),
+          FadeIn(
+            controller: titleController,
+            offset: .5,
+            fadeDirection: FadeDirection.topToBottom,
+            child: header,
+          ),
+        ],
       ),
     );
   }
@@ -178,8 +209,10 @@ class _LoginScreenState extends State<LoginScreen>
   /// changes
   /// https://flutter.dev/docs/development/tools/hot-reload#previous-state-is-combined-with-new-code
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
+  static const loadingDuration = const Duration(milliseconds: 400);
   AnimationController _loadingController;
   AnimationController _logoController;
+  AnimationController _titleController;
   double _selectTimeDilation = 1.0;
 
   @override
@@ -188,18 +221,24 @@ class _LoginScreenState extends State<LoginScreen>
 
     _loadingController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: loadingDuration,
     )..addStatusListener((status) {
         if (status == AnimationStatus.forward) {
           _logoController.forward();
+          _titleController.forward();
         }
         if (status == AnimationStatus.reverse) {
           _logoController.reverse();
+          _titleController.reverse();
         }
       });
     _logoController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: loadingDuration,
+    );
+    _titleController = AnimationController(
+      vsync: this,
+      duration: loadingDuration,
     );
 
     Future.delayed(const Duration(seconds: 1), () {
@@ -212,14 +251,25 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
     _loadingController.dispose();
     _logoController.dispose();
+    _titleController.dispose();
+  }
+
+  void _reverseHeaderAnimation() {
+    if (widget.logoTag == null) {
+      _logoController.reverse();
+    }
+    if (widget.titleTag == null) {
+      _titleController.reverse();
+    }
   }
 
   Widget _buildHeader(ThemeData theme, double height) {
     return _Header(
-      controller: _logoController,
+      logoController: _logoController,
+      titleController: _titleController,
       height: height,
       logoPath: widget.logo,
-      logoTag: widget.logo,
+      logoTag: widget.logoTag,
       title: widget.title,
       titleTag: widget.titleTag,
       titleTextStyle: widget.titleTextStyle,
@@ -244,6 +294,7 @@ class _LoginScreenState extends State<LoginScreen>
                 context: context,
                 builder: (_) {
                   return _AnimationTimeDilationDropdown(
+                    initialValue: _selectTimeDilation,
                     onSelectedItemChanged: (int index) {
                       setState(() {
                         _selectTimeDilation = _AnimationTimeDilationDropdown
@@ -349,7 +400,7 @@ class _LoginScreenState extends State<LoginScreen>
                         loadingController: _loadingController,
                         emailValidator: emailValidator,
                         passwordValidator: passwordValidator,
-                        onSubmit: () => _logoController.reverse(),
+                        onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted:
                             widget.onChangeRouteAnimationCompleted,
                       ),

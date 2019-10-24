@@ -7,6 +7,7 @@ class Ring extends StatelessWidget {
     this.color,
     this.size = 40.0,
     this.thickness = 2.0,
+    this.value = 1.0,
   })  : assert(size - thickness > 0),
         assert(thickness >= 0),
         super(key: key);
@@ -14,6 +15,7 @@ class Ring extends StatelessWidget {
   final Color color;
   final double size;
   final double thickness;
+  final double value;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class Ring extends StatelessWidget {
           : CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(color),
               strokeWidth: thickness,
-              value: 1.0,
+              value: value,
             ),
     );
   }

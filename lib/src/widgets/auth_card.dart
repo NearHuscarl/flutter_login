@@ -59,6 +59,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _pageController = TransformerPageController();
 
+    // TODO: remove middle-man controller by reassigning flip animation to empty ani object after running
     widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
@@ -240,7 +241,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         card,
         Positioned(
           // the _LoginCard is a Card widget which is smaller than normal Container
-          // because it has to reserve some spaces for card shadow
+          // because it has to reserve space for card shadow
           left: 4, top: 4, bottom: 4, right: 4,
           child: overlay,
         ),
@@ -267,9 +268,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   theme: theme,
                   child: _LoginCard(
                     key: _cardKey,
-                    loadingController: _isLoadingFirstTime
-                        ? _formLoadingController
-                        : (_formLoadingController..value = 1.0),
+                    loadingController:
+                        _isLoadingFirstTime ? _formLoadingController : null,
                     emailValidator: widget.emailValidator,
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
@@ -359,6 +359,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   var _isSubmitting = false;
 
   /// switch between login and signup
+  AnimationController _loadingController;
   AnimationController _switchAuthController;
   AnimationController _postSwitchAuthController;
   AnimationController _submitController;
@@ -374,8 +375,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    widget.loadingController
-        ?.addStatusListener(onLoadingAnimationStatusChanged);
+    _loadingController = widget.loadingController ??
+        (AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: 1150),
+          reverseDuration: Duration(milliseconds: 300),
+        )..value = 1.0);
+
+    _loadingController?.addStatusListener(onLoadingAnimationStatusChanged);
 
     _switchAuthController = AnimationController(
       vsync: this,
@@ -400,7 +407,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: widget.loadingController,
+      parent: _loadingController,
       curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
   }
@@ -418,8 +425,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
 
-    widget.loadingController
-        ?.removeStatusListener(onLoadingAnimationStatusChanged);
+    _loadingController?.removeStatusListener(onLoadingAnimationStatusChanged);
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 
@@ -451,6 +457,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Future<bool> _submit() async {
+    // a hack to force unfocus the soft keyboard. If not, after change-route
+    // animation completes, it will trigger rebuilding this widget and show all
+    // textfields and buttons again before going to new route
+    FocusScope.of(context).requestFocus(FocusNode());
+
     if (!_formKey.currentState.validate()) {
       return false;
     }
@@ -472,7 +483,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       ));
     }
 
-    setState(() => _isSubmitting = false);
+    // setState(() => _isSubmitting = false);
     _submitController.reverse();
     widget?.onSubmitCompleted();
 
@@ -482,7 +493,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildNameField(double width) {
     return AnimatedTextFormField(
       animatedWidth: width,
-      loadingController: widget.loadingController,
+      loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: 'Email',
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
@@ -501,7 +512,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     return AnimatedTextFormField(
       animatedWidth: width,
-      loadingController: widget.loadingController,
+      loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: 'Password',
       prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
@@ -534,7 +545,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return AnimatedTextFormField(
       animatedWidth: width,
       enabled: auth.isSignup,
-      loadingController: widget.loadingController,
+      loadingController: _loadingController,
       inertiaController: _postSwitchAuthController,
       dragDirection: DragDirection.right,
       labelText: 'Confirm Password',
@@ -561,7 +572,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildForgotPassword(ThemeData theme) {
     return FadeIn(
-      controller: widget.loadingController,
+      controller: _loadingController,
       fadeDirection: FadeDirection.bottomToTop,
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
@@ -595,7 +606,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
 
     return FadeIn(
-      controller: widget.loadingController,
+      controller: _loadingController,
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,

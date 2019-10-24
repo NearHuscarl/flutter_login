@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart' as Login;
+import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
 
@@ -9,11 +11,12 @@ class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
   Future<void> _loginUser(BuildContext context) {
-    return Future.delayed(const Duration(seconds: 2));
+    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250));
   }
 
   Future _recoverPassword() {
-    return Future.delayed(const Duration(seconds: 2), () {
+    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250),
+        () {
       // send email
     });
   }
@@ -21,8 +24,10 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Login.LoginScreen(
-      title: 'ECorp',
+      title: Constants.appName,
       logo: 'assets/images/ecorp.png',
+      logoTag: Constants.logoTag,
+      titleTag: Constants.titleTag,
       titleTextStyle: (defaultTextStyle) =>
           defaultTextStyle.copyWith(color: Colors.orange),
       emailValidator: (value) {
@@ -50,7 +55,7 @@ class LoginScreen extends StatelessWidget {
         return _loginUser(context);
       },
       onChangeRouteAnimationCompleted: () {
-        Navigator.of(context).push(FadePageRoute(
+        Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context) => DashboardScreen(),
         ));
       },

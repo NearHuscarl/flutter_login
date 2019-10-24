@@ -9,6 +9,8 @@ class FadePageRoute<T> extends MaterialPageRoute<T> {
           settings: settings,
         );
 
+  @override Duration get transitionDuration => const Duration(milliseconds: 600);
+
   @override
   Widget buildTransitions(
     BuildContext context,

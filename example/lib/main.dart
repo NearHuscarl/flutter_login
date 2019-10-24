@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginScreen(),
       routes: {
-        // LoginScreen.routeName: (context) => LoginScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(),
         DashboardScreen.routeName: (context) => DashboardScreen(),
       },
     );
