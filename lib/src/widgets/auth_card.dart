@@ -12,6 +12,7 @@ import 'fade_in.dart';
 import 'animated_text_form_field.dart';
 import '../providers/auth.dart';
 import '../models/login_data.dart';
+import '../dart_helper.dart';
 import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
@@ -42,6 +43,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   GlobalKey _cardKey = GlobalKey();
 
   var _isLoadingFirstTime = true;
+  var _pageIndex = 0;
   static const cardSizeScaleEnd = .2;
 
   TransformerPageController _pageController;
@@ -59,7 +61,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _pageController = TransformerPageController();
 
-    // TODO: remove middle-man controller by reassigning flip animation to empty ani object after running
     widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
@@ -125,11 +126,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
+      _pageIndex = 1;
     } else {
       _pageController.previousPage(
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
+      _pageIndex = 0;
     }
   }
 
@@ -261,6 +264,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         physics: NeverScrollableScrollPhysics(),
         pageController: _pageController,
         itemCount: 2,
+        /// we need to keep track of page index because soft keyboard will
+        /// trigger rebuilding of page view
+        index: _pageIndex,
         transformer: CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
           final child = (index == 0)
@@ -470,21 +476,28 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _submitController.forward();
     setState(() => _isSubmitting = true);
     final auth = Provider.of<Auth>(context, listen: false);
+    String error;
 
     if (auth.isLogin) {
-      await auth.onLogin(LoginData(
+      error = await auth.onLogin(LoginData(
         name: _authData['email'],
         password: _authData['password'],
       ));
     } else {
-      await auth.onSignup(LoginData(
+      error = await auth.onSignup(LoginData(
         name: _authData['email'],
         password: _authData['password'],
       ));
     }
 
-    // setState(() => _isSubmitting = false);
     _submitController.reverse();
+
+    if (!DartHelper.isNullOrEmpty(error)) {
+      showErrorToast(context, error);
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
     widget?.onSubmitCompleted();
 
     return true;
@@ -736,7 +749,7 @@ class _RecoverCardState extends State<_RecoverCard>
     _submitController.dispose();
   }
 
-  Future<bool> _submitRecover() async {
+  Future<bool> _submit() async {
     if (!_formRecoverKey.currentState.validate()) {
       return false;
     }
@@ -745,10 +758,20 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState.save();
     _submitController.forward();
     setState(() => _isSubmitting = true);
-    await auth.onRecoverPassword(_name);
-    setState(() => _isSubmitting = false);
-    _submitController.reverse();
-    return true;
+    final error = await auth.onRecoverPassword(_name);
+
+    if (error != null) {
+      showErrorToast(context, error);
+      setState(() => _isSubmitting = false);
+      _submitController.reverse();
+      return false;
+    } else {
+      // TODO: dont hardcode
+      showSuccessToast(context, 'An email has been sent');
+      setState(() => _isSubmitting = false);
+      _submitController.reverse();
+      return true;
+    }
   }
 
   Widget _buildRecoverNameField(double width) {
@@ -758,7 +781,7 @@ class _RecoverCardState extends State<_RecoverCard>
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
-      onFieldSubmitted: (value) => _submitRecover(),
+      onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
       onSaved: (value) => _name = value,
     );
@@ -770,7 +793,7 @@ class _RecoverCardState extends State<_RecoverCard>
       color: theme.primaryColor,
       loadingColor: theme.accentColor,
       text: 'RECOVER',
-      onPressed: !_isSubmitting ? _submitRecover : null,
+      onPressed: !_isSubmitting ? _submit : null,
     );
   }
 

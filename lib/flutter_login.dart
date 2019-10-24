@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'src/models/login_data.dart';
 import 'src/providers/auth.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
@@ -13,6 +12,7 @@ import 'src/widgets/fade_in.dart';
 import 'src/widgets/hero_text.dart';
 
 export 'src/widgets/hero_text.dart';
+export 'src/models/login_data.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
@@ -171,9 +171,9 @@ class LoginScreen extends StatefulWidget {
     this.titleTag,
   });
 
-  final Future<void> Function(LoginData) onSignup;
-  final Future<void> Function(LoginData) onLogin;
-  final Future<void> Function(String) onRecoverPassword;
+  final AuthCallback onSignup;
+  final AuthCallback onLogin;
+  final RecoverCallback onRecoverPassword;
   final String title;
   final TextStyleSetter titleTextStyle;
   final String logo;

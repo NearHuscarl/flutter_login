@@ -6,18 +6,31 @@ import 'package:flutter_login/flutter_login.dart' as Login;
 import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
+import 'users.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  Future<void> _loginUser(BuildContext context) {
-    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250));
+  Future<String> _loginUser(Login.LoginData data) {
+    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250))
+        .then((_) {
+      if (!mockUsers.containsKey(data.name)) {
+        return 'Username not exists';
+      }
+      if (mockUsers[data.name] != data.password) {
+        return 'Password does not match';
+      }
+      return null;
+    });
   }
 
-  Future _recoverPassword() {
-    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250),
-        () {
-      // send email
+  Future<String> _recoverPassword(String name) {
+    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250))
+        .then((_) {
+      if (!mockUsers.containsKey(name)) {
+        return 'Username not exists';
+      }
+      return null;
     });
   }
 
@@ -46,13 +59,13 @@ class LoginScreen extends StatelessWidget {
         print('Login info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
-        return _loginUser(context);
+        return _loginUser(loginData);
       },
       onSignup: (loginData) {
         print('Signup info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
-        return _loginUser(context);
+        return _loginUser(loginData);
       },
       onChangeRouteAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
@@ -62,7 +75,7 @@ class LoginScreen extends StatelessWidget {
       onRecoverPassword: (name) async {
         print('Recover password info');
         print('Name: $name');
-        return _recoverPassword();
+        return _recoverPassword(name);
         // Show new password dialog
       },
     );

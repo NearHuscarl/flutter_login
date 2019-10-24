@@ -3,6 +3,10 @@ import '../models/login_data.dart';
 
 enum AuthMode { Signup, Login }
 
+/// The result is an error message, callback successes if message is null
+typedef AuthCallback = Future<String> Function(LoginData);
+typedef RecoverCallback = Future<String> Function(String);
+
 class Auth with ChangeNotifier {
   Auth({
     this.onLogin,
@@ -23,9 +27,9 @@ class Auth with ChangeNotifier {
           previous: null,
         );
 
-  final Future<void> Function(LoginData) onLogin;
-  final Future<void> Function(LoginData) onSignup;
-  final Future<void> Function(String) onRecoverPassword;
+  final AuthCallback onLogin;
+  final AuthCallback onSignup;
+  final RecoverCallback onRecoverPassword;
 
   AuthMode _mode = AuthMode.Login;
 
