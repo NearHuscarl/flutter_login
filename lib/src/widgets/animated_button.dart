@@ -64,7 +64,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(.65, .65),
+      curve: Threshold(.65),
     ));
 
     _ringThicknessAnimation =

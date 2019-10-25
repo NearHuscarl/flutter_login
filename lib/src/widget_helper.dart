@@ -6,8 +6,9 @@ Size getWidgetSize(GlobalKey key) {
   final RenderBox renderBox = key.currentContext?.findRenderObject();
   return renderBox?.size;
 }
-void showSuccessToast(BuildContext context, String message) {
-  Flushbar(
+
+Flushbar showSuccessToast(BuildContext context, String message) {
+  return Flushbar(
     title: 'Success',
     message: message,
     icon: Icon(
@@ -19,12 +20,12 @@ void showSuccessToast(BuildContext context, String message) {
     backgroundGradient: LinearGradient(
       colors: [Colors.green[600], Colors.green[400]],
     ),
+    onTap: (flushbar) => flushbar.dismiss(),
   )..show(context);
 }
 
-
-void showErrorToast(BuildContext context, String message) {
-  Flushbar(
+Flushbar showErrorToast(BuildContext context, String message) {
+  return Flushbar(
     title: 'Error',
     message: message,
     icon: Icon(
@@ -36,5 +37,6 @@ void showErrorToast(BuildContext context, String message) {
     backgroundGradient: LinearGradient(
       colors: [Colors.red[600], Colors.red[400]],
     ),
+    onTap: (flushbar) => flushbar.dismiss(),
   )..show(context);
 }
