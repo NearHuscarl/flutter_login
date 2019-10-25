@@ -264,8 +264,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         physics: NeverScrollableScrollPhysics(),
         pageController: _pageController,
         itemCount: 2,
+
         /// we need to keep track of page index because soft keyboard will
-        /// trigger rebuilding of page view
+        /// make page view rebuilt
         index: _pageIndex,
         transformer: CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
@@ -274,8 +275,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   theme: theme,
                   child: _LoginCard(
                     key: _cardKey,
-                    loadingController:
-                        _isLoadingFirstTime ? _formLoadingController : null,
+                    loadingController: _isLoadingFirstTime
+                        ? _formLoadingController
+                        : (_formLoadingController..value = 1.0),
                     emailValidator: widget.emailValidator,
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
