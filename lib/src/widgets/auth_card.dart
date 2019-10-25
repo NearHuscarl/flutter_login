@@ -359,9 +359,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _confirmPasswordFocusNode = FocusNode();
   final _passwordController = TextEditingController();
 
-  var _obscurePasswordText = true;
-  var _obscureConfirmPasswordText = true;
-
   var _authData = {'email': '', 'password': ''};
   var _isLoading = false;
   var _isSubmitting = false;
@@ -525,18 +522,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildPasswordField(double width) {
     final auth = Provider.of<Auth>(context);
 
-    return AnimatedTextFormField(
+    return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: 'Password',
-      prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
-      suffixIcon: IconButton(
-        icon: Icon(Icons.remove_red_eye),
-        onPressed: () =>
-            setState(() => _obscurePasswordText = !_obscurePasswordText),
-      ),
-      obscureText: _obscurePasswordText,
       controller: _passwordController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -557,20 +547,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildConfirmPasswordField(double width) {
     final auth = Provider.of<Auth>(context);
 
-    return AnimatedTextFormField(
+    return AnimatedPasswordTextFormField(
       animatedWidth: width,
       enabled: auth.isSignup,
       loadingController: _loadingController,
       inertiaController: _postSwitchAuthController,
-      dragDirection: DragDirection.right,
+      inertiaDirection: TextFieldInertiaDirection.right,
       labelText: 'Confirm Password',
-      prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
-      suffixIcon: IconButton(
-        icon: Icon(Icons.remove_red_eye),
-        onPressed: () => setState(
-            () => _obscureConfirmPasswordText = !_obscureConfirmPasswordText),
-      ),
-      obscureText: _obscureConfirmPasswordText,
       textInputAction: TextInputAction.done,
       focusNode: _confirmPasswordFocusNode,
       onFieldSubmitted: (value) => _submit(),
