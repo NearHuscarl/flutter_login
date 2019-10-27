@@ -55,11 +55,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
 
-    _colorAnimation = ColorTween(begin: widget.color, end: widget.loadingColor)
-        .animate(CurvedAnimation(
-      parent: widget.controller,
-      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
-    ));
+    _updateColorAnimation();
 
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
@@ -80,6 +76,20 @@ class _AnimatedButtonState extends State<AnimatedButton>
     ));
 
     widget.controller.addStatusListener(onStatusChanged);
+  }
+
+  void _updateColorAnimation() => _colorAnimation =
+          ColorTween(begin: widget.color, end: widget.loadingColor)
+              .animate(CurvedAnimation(
+        parent: widget.controller,
+        curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+      ));
+
+  @override
+  void didUpdateWidget(AnimatedButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _updateColorAnimation();
   }
 
   @override

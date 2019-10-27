@@ -17,6 +17,9 @@ import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
 
+TextStyle _getParagraphStyle(ThemeData theme) =>
+    theme.textTheme.body1.copyWith(color: Colors.black54);
+
 class AuthCard extends StatefulWidget {
   AuthCard({
     Key key,
@@ -577,7 +580,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: FlatButton(
         child: Text(
           'Forgot Password?',
-          style: theme.textTheme.body1,
+          style: _getParagraphStyle(theme),
           textAlign: TextAlign.left,
         ),
         onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
@@ -585,14 +588,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme) {
+  Widget _buildSubmitButton(ThemeData theme, Color backgroundColor) {
     final auth = Provider.of<Auth>(context);
 
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
         controller: _submitController,
-        color: theme.primaryColor,
+        color: backgroundColor,
         loadingColor: theme.accentColor,
         text: _getLabel(auth.mode),
         onPressed: _submit,
@@ -600,7 +603,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSwitchAuthButton(ThemeData theme) {
+  Widget _buildSwitchAuthButton(Color color) {
     final auth = Provider.of<Auth>(context, listen: false);
 
     return FadeIn(
@@ -613,11 +616,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           text: _getLabel(auth.opposite()),
           textRotation: AnimatedTextRotation.down,
         ),
-        disabledTextColor: theme.primaryColor,
+        disabledTextColor: color,
         onPressed: buttonEnabled ? _switchAuthMode : null,
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: theme.primaryColor,
+        textColor: color,
       ),
     );
   }
@@ -625,6 +628,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final buttonColor = getMaterialColor(theme.primaryColor).shade600;
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
@@ -671,8 +675,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               child: Column(
                 children: <Widget>[
                   _buildForgotPassword(theme),
-                  _buildSubmitButton(theme),
-                  _buildSwitchAuthButton(theme),
+                  _buildSubmitButton(theme, buttonColor),
+                  _buildSwitchAuthButton(buttonColor),
                 ],
               ),
             ),
@@ -772,29 +776,30 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
-  Widget _buildRecoverButton(ThemeData theme) {
+  Widget _buildRecoverButton(ThemeData theme, Color backgroundColor) {
     return AnimatedButton(
       controller: _submitController,
-      color: theme.primaryColor,
+      color: backgroundColor,
       loadingColor: theme.accentColor,
       text: 'RECOVER',
       onPressed: !_isSubmitting ? _submit : null,
     );
   }
 
-  Widget _buildBackButton(ThemeData theme) {
+  Widget _buildBackButton(Color color) {
     return FlatButton(
       child: Text('BACK'),
       onPressed: !_isSubmitting ? widget.onSwitchLogin : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: theme.primaryColor,
+      textColor: color,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final buttonColor = getMaterialColor(theme.primaryColor).shade600;
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
@@ -826,10 +831,11 @@ class _RecoverCardState extends State<_RecoverCard>
                     // TODO: make it a props
                     'We will send your password to this email account',
                     textAlign: TextAlign.center,
+                    style: _getParagraphStyle(theme),
                   ),
                   SizedBox(height: 15),
-                  _buildRecoverButton(theme),
-                  _buildBackButton(theme),
+                  _buildRecoverButton(theme, buttonColor),
+                  _buildBackButton(buttonColor),
                 ],
               ),
             ),

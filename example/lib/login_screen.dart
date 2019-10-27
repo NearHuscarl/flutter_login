@@ -41,8 +41,8 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
-      titleTextStyle: (defaultTextStyle) =>
-          defaultTextStyle.copyWith(color: Colors.orange),
+      // titleTextStyle: (defaultTextStyle) =>
+      //     defaultTextStyle.copyWith(color: Colors.orange),
       emailValidator: (value) {
         if (!value.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";

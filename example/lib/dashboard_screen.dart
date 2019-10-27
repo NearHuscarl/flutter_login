@@ -163,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   AnimatedNumericText(
                     initialValue: 14,
                     targetValue: 3467.87,
-                    curve: Interval(0, .4),
+                    curve: Interval(0, .6, curve: Curves.easeOut),
                     controller: _loadingController,
                     style: theme.textTheme.display2.copyWith(
                       foreground: Paint()..shader = linearGradient,
@@ -311,11 +311,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                       child: ShaderMask(
                         // blendMode: BlendMode.srcOver,
                         shaderCallback: (Rect bounds) {
-                          return RadialGradient(
-                            center: Alignment(-1, -1.5),
-                            radius: 1,
+                          return LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.clamp,
                             colors: <Color>[
                               Colors.deepPurpleAccent.shade100,
+                              Colors.deepPurple.shade100,
+                              Colors.deepPurple.shade100,
                               Colors.deepPurple.shade100,
                               // Colors.red,
                               // Colors.yellow,

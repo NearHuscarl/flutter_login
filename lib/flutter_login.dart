@@ -19,8 +19,9 @@ typedef TextStyleSetter = TextStyle Function(TextStyle);
 double beforeHeroFontSize = 48.0;
 double afterHeroFontSize = 15.0;
 
-TextStyle defaultLoginTitleStyle(ThemeData theme) => TextStyle(
-      color: theme.primaryTextTheme.title.color,
+TextStyle defaultLoginTitleStyle(ThemeData theme) =>
+    theme.textTheme.display2.copyWith(
+      color: theme.accentColor,
       fontSize: beforeHeroFontSize,
       fontWeight: FontWeight.w300,
     );
@@ -91,9 +92,7 @@ class _Header extends StatelessWidget {
   TextStyle _getTitleTextStyle(ThemeData theme) {
     final defaultStyle = defaultLoginTitleStyle(theme);
 
-    return titleTextStyle != null
-        ? titleTextStyle(defaultStyle)
-        : defaultStyle;
+    return titleTextStyle != null ? titleTextStyle(defaultStyle) : defaultStyle;
   }
 
   @override
