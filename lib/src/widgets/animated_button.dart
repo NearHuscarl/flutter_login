@@ -112,7 +112,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       opacity: _textOpacityAnimation,
       child: AnimatedText(
         text: widget.text,
-        style: TextStyle(color: theme.primaryTextTheme.button.color),
+        style: theme.textTheme.button.copyWith(color: Colors.white),
       ),
     );
   }
