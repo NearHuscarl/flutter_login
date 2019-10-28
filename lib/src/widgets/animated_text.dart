@@ -35,7 +35,7 @@ class _AnimatedTextState extends State<AnimatedText>
   Animation<double> _animation;
   AnimationController _controller;
 
-  double get radius => (_layoutHeight) / 2;
+  double get radius => _layoutHeight / 2;
 
   @override
   void initState() {

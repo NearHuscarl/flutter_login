@@ -55,6 +55,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   Animation<double> _flipAnimation;
   Animation<double> _cardSizeAnimation;
   Animation<double> _cardSize2Animation;
+  Animation<double> _cardRotationAnimation;
   Animation<double> _cardOverlayHeightFactorAnimation;
   Animation<double> _cardOverlaySizeAndOpacityAnimation;
 
@@ -109,6 +110,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       parent: _routeTransitionController,
       curve: Interval(.75, 1, curve: Curves.easeIn),
     ));
+    _cardRotationAnimation =
+        Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
+      parent: _routeTransitionController,
+      curve: Interval(.75, 1, curve: Curves.easeIn),
+    ));
   }
 
   @override
@@ -156,10 +162,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   Future<void> _forwardChangeRouteAnimation(Size deviceSize) {
     final cardSize = getWidgetSize(_cardKey);
-    final widthRatio = deviceSize.width / cardSize.width;
-    final heightRatio = deviceSize.height / cardSize.height;
-    // add .2 to make sure the scaling will cover the whole screen
-    final scale = max(widthRatio, heightRatio) + 0.2;
+    final widthRatio = deviceSize.width / cardSize.height;
+    final heightRatio = deviceSize.height / cardSize.width;
+    // add .1 to make sure the scaling will cover the whole screen
+    final scale = max(widthRatio, heightRatio) + 0.1;
 
     _cardSize2Animation =
         Tween<double>(begin: 1.0, end: scale / cardSizeScaleEnd)
@@ -220,22 +226,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           child: child,
         ),
       ),
-      child: Container(
-        color: theme.accentColor,
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: theme.accentColor),
       ),
     );
 
-    overlay = AnimatedBuilder(
-      animation: _cardOverlayHeightFactorAnimation,
-      builder: (context, child) => Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..scale(
-            _cardOverlaySizeAndOpacityAnimation.value,
-            _cardOverlaySizeAndOpacityAnimation.value,
-          ),
-        child: child,
-      ),
+    overlay = ScaleTransition(
+      scale: _cardOverlaySizeAndOpacityAnimation,
       child: FadeTransition(
         opacity: _cardOverlaySizeAndOpacityAnimation,
         child: overlay,
@@ -296,39 +293,28 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   onSwitchLogin: () => _switchRecovery(false),
                 );
 
-          return Column(
-            children: <Widget>[child],
+          return Align(
+            alignment: Alignment.topCenter,
+            child: child,
           );
         },
       ),
     );
 
-    current = AnimatedBuilder(
-      animation: _cardSizeAnimation,
-      builder: (context, child) => Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..scale(
-            _cardSizeAnimation.value,
-            _cardSizeAnimation.value,
-          ),
-        child: child,
-      ),
-      child: current,
-    );
-
     return AnimatedBuilder(
       animation: _cardSize2Animation,
-      builder: (context, child) => Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..scale(
-            _cardSize2Animation.value,
-            _cardSize2Animation.value,
+      builder: (context, snapshot) {
+        return Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.identity()
+            ..rotateZ(_cardRotationAnimation.value)
+            ..scale(_cardSize2Animation.value, _cardSize2Animation.value),
+          child: ScaleTransition(
+            scale: _cardSizeAnimation,
+            child: current,
           ),
-        child: child,
-      ),
-      child: current,
+        );
+      },
     );
   }
 }
@@ -507,7 +493,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildNameField(double width) {
     return AnimatedTextFormField(
-      animatedWidth: width,
+      width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: 'Email',
@@ -635,58 +621,53 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
       key: _formKey,
-      child: Padding(
-        padding: EdgeInsets.only(top: 10),
-        child: Column(
-          children: [
-            Container(
-              color: Colors.transparent,
-              padding: Paddings.fromLTR(cardPadding),
-              width: cardWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildNameField(textFieldWidth),
-                  SizedBox(height: 20),
-                  _buildPasswordField(textFieldWidth),
-                  SizedBox(height: 10),
-                ],
-              ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+              left: cardPadding,
+              right: cardPadding,
+              top: cardPadding + 10,
             ),
-            ExpandableContainer(
-              background: theme.accentColor,
-              controller: _switchAuthController,
-              child: Container(
-                alignment: Alignment.topLeft,
-                color: theme.cardColor,
-                padding: EdgeInsets.symmetric(
-                  horizontal: cardPadding,
-                  vertical: 10,
-                ),
-                width: cardWidth,
-                child: _buildConfirmPasswordField(textFieldWidth),
-              ),
-              onExpandCompleted: () {},
+            width: cardWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildNameField(textFieldWidth),
+                SizedBox(height: 20),
+                _buildPasswordField(textFieldWidth),
+                SizedBox(height: 10),
+              ],
             ),
-            Container(
-              color: Colors.transparent,
-              padding: Paddings.fromRBL(cardPadding),
-              width: cardWidth,
-              child: Column(
-                children: <Widget>[
-                  _buildForgotPassword(theme),
-                  _buildSubmitButton(theme, buttonColor),
-                  _buildSwitchAuthButton(buttonColor),
-                ],
-              ),
+          ),
+          ExpandableContainer(
+            backgroundColor: theme.accentColor,
+            controller: _switchAuthController,
+            alignment: Alignment.topLeft,
+            color: theme.cardColor,
+            width: cardWidth,
+            padding: EdgeInsets.symmetric(
+              horizontal: cardPadding,
+              vertical: 10,
             ),
-          ],
-        ),
+            child: _buildConfirmPasswordField(textFieldWidth),
+          ),
+          Container(
+            padding: Paddings.fromRBL(cardPadding),
+            width: cardWidth,
+            child: Column(
+              children: <Widget>[
+                _buildForgotPassword(theme),
+                _buildSubmitButton(theme, buttonColor),
+                _buildSwitchAuthButton(buttonColor),
+              ],
+            ),
+          ),
+        ],
       ),
     );
 
-    return Container(
-      width: cardWidth,
+    return FittedBox(
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -765,7 +746,7 @@ class _RecoverCardState extends State<_RecoverCard>
 
   Widget _buildRecoverNameField(double width) {
     return AnimatedTextFormField(
-      animatedWidth: width,
+      width: width,
       labelText: 'Email',
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
@@ -805,39 +786,38 @@ class _RecoverCardState extends State<_RecoverCard>
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
-    return Container(
-      width: cardWidth,
+    return FittedBox(
+      // width: cardWidth,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
         elevation: 8.0,
-        child: Form(
-          key: _formRecoverKey,
-          child: Container(
-            padding: EdgeInsets.all(cardPadding),
-            width: cardWidth,
-            alignment: Alignment.center,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 10),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: _buildRecoverNameField(textFieldWidth),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    // TODO: make it a props
-                    'We will send your password to this email account',
-                    textAlign: TextAlign.center,
-                    style: _getParagraphStyle(theme),
-                  ),
-                  SizedBox(height: 15),
-                  _buildRecoverButton(theme, buttonColor),
-                  _buildBackButton(buttonColor),
-                ],
-              ),
+        child: Container(
+          padding: const EdgeInsets.only(
+            left: cardPadding,
+            top: cardPadding + 10.0,
+            right: cardPadding,
+            bottom: cardPadding,
+          ),
+          width: cardWidth,
+          alignment: Alignment.center,
+          child: Form(
+            key: _formRecoverKey,
+            child: Column(
+              children: [
+                _buildRecoverNameField(textFieldWidth),
+                SizedBox(height: 15),
+                Text(
+                  // TODO: make it a props
+                  'We will send your password to this email account',
+                  textAlign: TextAlign.center,
+                  style: _getParagraphStyle(theme),
+                ),
+                SizedBox(height: 15),
+                _buildRecoverButton(theme, buttonColor),
+                _buildBackButton(buttonColor),
+              ],
             ),
           ),
         ),

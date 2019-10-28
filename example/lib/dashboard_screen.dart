@@ -163,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   AnimatedNumericText(
                     initialValue: 14,
                     targetValue: 3467.87,
-                    curve: Interval(0, .6, curve: Curves.easeOut),
+                    curve: Interval(0, .5, curve: Curves.easeOut),
                     controller: _loadingController,
                     style: theme.textTheme.display2.copyWith(
                       foreground: Paint()..shader = linearGradient,

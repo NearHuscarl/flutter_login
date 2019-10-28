@@ -6,33 +6,45 @@ class ExpandableContainer extends StatelessWidget {
     @required this.child,
     @required this.controller,
     this.onExpandCompleted,
-    this.background,
+    this.alignment,
+    this.backgroundColor,
+    this.color,
+    this.width,
+    this.height,
+    this.padding,
   })  : sizeAnimation = Tween<double>(
           begin: 0.0,
           end: 1.0,
         ).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(0.0, .6875, curve: Curves.bounceOut),
-          reverseCurve: Interval(0.0, .6875, curve: Curves.bounceIn),
+          curve: const Interval(0.0, .6875, curve: Curves.bounceOut),
+          reverseCurve: const Interval(0.0, .6875, curve: Curves.bounceIn),
         )),
         slideAnimation = Tween<Offset>(
-          begin: Offset(-1, 0),
-          end: Offset(0, 0),
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
         ).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
+          curve: const Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
         ))
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
-              onExpandCompleted();
+              if (onExpandCompleted != null) {
+                onExpandCompleted();
+              }
             }
           }),
         super(key: key);
 
-  final Widget child;
   final AnimationController controller;
   final Function onExpandCompleted;
-  final Color background;
+  final Widget child;
+  final Alignment alignment;
+  final Color backgroundColor;
+  final Color color;
+  final double width;
+  final double height;
+  final EdgeInsetsGeometry padding;
 
   final Animation<double> sizeAnimation;
   final Animation<Offset> slideAnimation;
@@ -44,11 +56,20 @@ class ExpandableContainer extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Positioned.fill(
-            child: Container(color: background),
+            child: DecoratedBox(
+              decoration: BoxDecoration(color: backgroundColor),
+            ),
           ),
           SlideTransition(
             position: slideAnimation,
-            child: child,
+            child: Container(
+              alignment: alignment,
+              color: color,
+              width: width,
+              height: height,
+              padding: padding,
+              child: child,
+            ),
           ),
         ],
       ),

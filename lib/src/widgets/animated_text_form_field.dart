@@ -27,7 +27,7 @@ class AnimatedTextFormField extends StatefulWidget {
   AnimatedTextFormField({
     Key key,
     this.interval = const Interval(0.0, 1.0),
-    @required this.animatedWidth,
+    @required this.width,
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -50,7 +50,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final Interval interval;
   final AnimationController loadingController;
   final AnimationController inertiaController;
-  final double animatedWidth;
+  final double width;
   final bool enabled;
   final String labelText;
   final Widget prefixIcon;
@@ -85,7 +85,6 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     widget.inertiaController?.addStatusListener(onAniStatusChanged);
 
     final interval = widget.interval;
-    final inertiaDirection = widget.inertiaDirection;
     final loadingController = widget.loadingController;
 
     if (loadingController != null) {
@@ -104,7 +103,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       ));
       sizeAnimation = Tween<double>(
         begin: 48.0,
-        end: widget.animatedWidth,
+        end: widget.width,
       ).animate(CurvedAnimation(
         parent: loadingController,
         curve: _getInternalInterval(
@@ -114,18 +113,21 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
 
     final inertiaController = widget.inertiaController;
+    final inertiaDirection = widget.inertiaDirection;
+    final sign = inertiaDirection == TextFieldInertiaDirection.right ? 1 : -1;
 
     if (inertiaController != null) {
       fieldTranslateAnimation = Tween<double>(
         begin: 0.0,
-        end: inertiaDirection == TextFieldInertiaDirection.right ? 15.0 : -15.0,
+        end: sign * 15.0,
       ).animate(CurvedAnimation(
         parent: inertiaController,
         curve: Interval(0, .5, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
       iconRotationAnimation =
-          Tween<double>(begin: 0.0, end: pi / 12).animate(CurvedAnimation(
+          Tween<double>(begin: 0.0, end: sign * .0416666 /* 15deg */)
+              .animate(CurvedAnimation(
         parent: inertiaController,
         curve: Interval(.5, 1.0, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
@@ -156,24 +158,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       return child;
     }
 
-    final inertiaDirection = widget.inertiaDirection;
-    final sign = inertiaDirection == TextFieldInertiaDirection.right ? 1 : -1;
-
     return AnimatedBuilder(
       animation: iconTranslateAnimation,
-      builder: (context, child) => Transform(
-        transform: Matrix4.identity()
-          ..translate(sign * iconTranslateAnimation.value),
+      builder: (context, child) => Transform.translate(
+        offset: Offset(iconTranslateAnimation.value, 0),
         child: child,
       ),
-      child: AnimatedBuilder(
-        animation: iconRotationAnimation,
-        builder: (context, child) => Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.identity()
-            ..rotateZ(sign * iconRotationAnimation.value),
-          child: child,
-        ),
+      child: RotationTransition(
+        turns: iconRotationAnimation,
         child: child,
       ),
     );
@@ -233,27 +225,24 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     );
 
     if (widget.loadingController != null) {
-      textField = AnimatedBuilder(
-        animation: sizeAnimation,
-        builder: (context, child) => Transform(
-          transform: Matrix4.identity()
-            ..scale(scaleAnimation.value, scaleAnimation.value),
-          alignment: Alignment.center,
-          child: Container(
-            width: sizeAnimation.value,
+      textField = ScaleTransition(
+        scale: scaleAnimation,
+        child: AnimatedBuilder(
+          animation: sizeAnimation,
+          builder: (context, child) => ConstrainedBox(
+            constraints: BoxConstraints.tightFor(width: sizeAnimation.value),
             child: child,
           ),
+          child: textField,
         ),
-        child: textField,
       );
     }
 
     if (widget.inertiaController != null) {
       textField = AnimatedBuilder(
         animation: fieldTranslateAnimation,
-        builder: (context, child) => Transform(
-          transform: Matrix4.identity()
-            ..translate(fieldTranslateAnimation.value),
+        builder: (context, child) => Transform.translate(
+          offset: Offset(fieldTranslateAnimation.value, 0),
           child: child,
         ),
         child: textField,
@@ -315,7 +304,7 @@ class _AnimatedPasswordTextFormFieldState
       interval: widget.interval,
       loadingController: widget.loadingController,
       inertiaController: widget.inertiaController,
-      animatedWidth: widget.animatedWidth,
+      width: widget.animatedWidth,
       enabled: widget.enabled,
       labelText: widget.labelText,
       prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
