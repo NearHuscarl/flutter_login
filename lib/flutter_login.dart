@@ -28,11 +28,11 @@ TextStyle defaultLoginTitleStyle(ThemeData theme) =>
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
-    @required this.onSelectedItemChanged,
+    @required this.onChanged,
     this.initialValue = 1.0,
   });
 
-  final Function onSelectedItemChanged;
+  final Function onChanged;
   final double initialValue;
   static const animationSpeeds = const [1, 2, 5, 10];
 
@@ -58,7 +58,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
               ),
               itemExtent: 30.0,
               backgroundColor: Colors.white,
-              onSelectedItemChanged: onSelectedItemChanged,
+              onSelectedItemChanged: onChanged,
               children: animationSpeeds.map((x) => Text('x$x')).toList(),
             ),
           ),
@@ -294,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen>
                 builder: (_) {
                   return _AnimationTimeDilationDropdown(
                     initialValue: _selectTimeDilation,
-                    onSelectedItemChanged: (int index) {
+                    onChanged: (int index) {
                       setState(() {
                         _selectTimeDilation = _AnimationTimeDilationDropdown
                             .animationSpeeds[index]

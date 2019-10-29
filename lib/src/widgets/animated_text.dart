@@ -43,7 +43,7 @@ class _AnimatedTextState extends State<AnimatedText>
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     _animation = Tween<double>(begin: 0.0, end: pi / 2).animate(CurvedAnimation(
@@ -52,11 +52,10 @@ class _AnimatedTextState extends State<AnimatedText>
     ));
 
     _oldText = widget.text;
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
-  }
 
-  void _afterLayout(Duration timeStamp) {
-    setState(() => _layoutHeight = getWidgetSize(_textKey)?.height);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() => _layoutHeight = getWidgetSize(_textKey)?.height);
+    });
   }
 
   @override
