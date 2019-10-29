@@ -381,11 +381,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _switchAuthController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 800),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _postSwitchAuthController.forward();
-        }
-      });
+    );
     _postSwitchAuthController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 150),
@@ -613,6 +609,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
     final theme = Theme.of(context);
     final buttonColor = getMaterialColor(theme.primaryColor).shade600;
     final deviceSize = MediaQuery.of(context).size;
@@ -643,6 +640,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           ExpandableContainer(
             backgroundColor: theme.accentColor,
             controller: _switchAuthController,
+            initialState: isLogin
+                ? ExpandableContainerState.shrunk
+                : ExpandableContainerState.expanded,
             alignment: Alignment.topLeft,
             color: theme.cardColor,
             width: cardWidth,
@@ -650,6 +650,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               horizontal: cardPadding,
               vertical: 10,
             ),
+            onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: _buildConfirmPasswordField(textFieldWidth),
           ),
           Container(
