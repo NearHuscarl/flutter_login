@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
+import '../../theme.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'custom_page_transformer.dart';
@@ -16,9 +17,6 @@ import '../dart_helper.dart';
 import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
-
-TextStyle _getParagraphStyle(ThemeData theme) =>
-    theme.textTheme.body1.copyWith(color: Colors.black54);
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -200,7 +198,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _switchRecovery(!auth.isRecover);
   }
 
-  Widget _buildLoadingAnimator({Widget child, ThemeData theme}) {
+  Widget _buildLoadingAnimator({Widget child, Color backgroundColor}) {
     Widget card;
     Widget overlay;
 
@@ -227,7 +225,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         ),
       ),
       child: DecoratedBox(
-        decoration: BoxDecoration(color: theme.accentColor),
+        decoration: BoxDecoration(color: backgroundColor),
       ),
     );
 
@@ -272,7 +270,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           final child = (index == 0)
               ? _buildLoadingAnimator(
-                  theme: theme,
+                  backgroundColor: theme.accentColor,
                   child: _LoginCard(
                     key: _cardKey,
                     loadingController: _isLoadingFirstTime
@@ -562,7 +560,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: FlatButton(
         child: Text(
           'Forgot Password?',
-          style: _getParagraphStyle(theme),
+          style: LoginTheme.paragraphStyle(theme),
           textAlign: TextAlign.left,
         ),
         onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
@@ -570,14 +568,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme, Color backgroundColor) {
+  Widget _buildSubmitButton(ThemeData theme) {
     final auth = Provider.of<Auth>(context);
 
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
         controller: _submitController,
-        color: backgroundColor,
+        color: theme.primaryColor,
         loadingColor: theme.accentColor,
         text: _getLabel(auth.mode),
         onPressed: _submit,
@@ -585,7 +583,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSwitchAuthButton(Color color) {
+  Widget _buildSwitchAuthButton(ThemeData theme) {
     final auth = Provider.of<Auth>(context, listen: false);
 
     return FadeIn(
@@ -598,11 +596,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           text: _getLabel(auth.opposite()),
           textRotation: AnimatedTextRotation.down,
         ),
-        disabledTextColor: color,
+        disabledTextColor: theme.primaryColor,
         onPressed: buttonEnabled ? _switchAuthMode : null,
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: color,
+        textColor: theme.primaryColor,
       ),
     );
   }
@@ -611,7 +609,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
     final theme = Theme.of(context);
-    final buttonColor = getMaterialColor(theme.primaryColor).shade600;
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
@@ -659,8 +656,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               children: <Widget>[
                 _buildForgotPassword(theme),
-                _buildSubmitButton(theme, buttonColor),
-                _buildSwitchAuthButton(buttonColor),
+                _buildSubmitButton(theme),
+                _buildSwitchAuthButton(theme),
               ],
             ),
           ),
@@ -758,30 +755,29 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
-  Widget _buildRecoverButton(ThemeData theme, Color backgroundColor) {
+  Widget _buildRecoverButton(ThemeData theme) {
     return AnimatedButton(
       controller: _submitController,
-      color: backgroundColor,
+      color: theme.primaryColor,
       loadingColor: theme.accentColor,
       text: 'RECOVER',
       onPressed: !_isSubmitting ? _submit : null,
     );
   }
 
-  Widget _buildBackButton(Color color) {
+  Widget _buildBackButton(ThemeData theme) {
     return FlatButton(
       child: Text('BACK'),
       onPressed: !_isSubmitting ? widget.onSwitchLogin : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: color,
+      textColor: theme.primaryColor,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buttonColor = getMaterialColor(theme.primaryColor).shade600;
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
@@ -813,11 +809,11 @@ class _RecoverCardState extends State<_RecoverCard>
                   // TODO: make it a props
                   'We will send your password to this email account',
                   textAlign: TextAlign.center,
-                  style: _getParagraphStyle(theme),
+                  style: LoginTheme.paragraphStyle(theme),
                 ),
                 SizedBox(height: 15),
-                _buildRecoverButton(theme, buttonColor),
-                _buildBackButton(buttonColor),
+                _buildRecoverButton(theme),
+                _buildBackButton(theme),
               ],
             ),
           ),

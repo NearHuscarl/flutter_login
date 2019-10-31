@@ -73,11 +73,6 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
   }
 
   @override
-  void didUpdateWidget(ExpandableContainer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor: _sizeAnimation,

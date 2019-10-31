@@ -5,26 +5,18 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'theme.dart';
+import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
 import 'src/widgets/hero_text.dart';
-
+import 'src/widgets/gradient_box.dart';
 export 'src/widgets/hero_text.dart';
 export 'src/models/login_data.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
-
-double beforeHeroFontSize = 48.0;
-double afterHeroFontSize = 15.0;
-
-TextStyle defaultLoginTitleStyle(ThemeData theme) =>
-    theme.textTheme.display2.copyWith(
-      color: theme.accentColor,
-      fontSize: beforeHeroFontSize,
-      fontWeight: FontWeight.w300,
-    );
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
@@ -90,7 +82,7 @@ class _Header extends StatelessWidget {
   final AnimationController titleController;
 
   TextStyle _getTitleTextStyle(ThemeData theme) {
-    final defaultStyle = defaultLoginTitleStyle(theme);
+    final defaultStyle = LoginTheme.defaultLoginTitleStyle(theme);
 
     return titleTextStyle != null ? titleTextStyle(defaultStyle) : defaultStyle;
   }
@@ -118,8 +110,8 @@ class _Header extends StatelessWidget {
       header = HeroText(
         title,
         tag: titleTag,
-        largeFontSize: beforeHeroFontSize,
-        smallFontSize: afterHeroFontSize,
+        largeFontSize: LoginTheme.beforeHeroFontSize,
+        smallFontSize: LoginTheme.afterHeroFontSize,
         style: _getTitleTextStyle(theme),
         viewState: ViewState.enlarged,
       );
@@ -130,7 +122,7 @@ class _Header extends StatelessWidget {
       );
     }
 
-    return Container(
+    return SizedBox(
       height: height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -157,9 +149,13 @@ class _Header extends StatelessWidget {
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({
+    Key key,
     @required this.onSignup,
     @required this.onLogin,
     @required this.onRecoverPassword,
+    this.primaryColor,
+    this.accentColor,
+    this.errorColor,
     this.title = 'Login',
     this.titleTextStyle,
     this.logo,
@@ -168,11 +164,16 @@ class LoginScreen extends StatefulWidget {
     this.onChangeRouteAnimationCompleted,
     this.logoTag,
     this.titleTag,
-  });
+  }) : super(key: key) {
+    LoginTheme.accentColor = accentColor;
+  }
 
   final AuthCallback onSignup;
   final AuthCallback onLogin;
   final RecoverCallback onRecoverPassword;
+  final MaterialColor primaryColor;
+  final Color accentColor;
+  final Color errorColor;
   final String title;
   final TextStyleSetter titleTextStyle;
   final String logo;
@@ -262,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  Widget _buildHeader(ThemeData theme, double height) {
+  Widget _buildHeader(double height) {
     return _Header(
       logoController: _logoController,
       titleController: _titleController,
@@ -285,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen>
         children: <Widget>[
           RaisedButton(
             color: Colors.green,
-            child: Text('ani speed', style: textStyle),
+            child: Text('OPTIONS', style: textStyle),
             onPressed: () {
               timeDilation = 1.0;
 
@@ -315,19 +316,19 @@ class _LoginScreenState extends State<LoginScreen>
           RaisedButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.blue,
-            child: Text('loading', style: textStyle),
+            child: Text('LOADING', style: textStyle),
             onPressed: () => authCardKey.currentState.runLoadingAnimation(),
           ),
           RaisedButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.orange,
-            child: Text('page', style: textStyle),
+            child: Text('PAGE', style: textStyle),
             onPressed: () => authCardKey.currentState.runChangePageAnimation(),
           ),
           RaisedButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            child: Text('nav', style: textStyle),
+            child: Text('NAV', style: textStyle),
             onPressed: () =>
                 authCardKey.currentState.runChangeRouteAnimation(deviceSize),
           ),
@@ -336,9 +337,26 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  List<Color> _getBackgroundGradientColors(Color color) {
+    final primaryDarkShades = getDarkShades(color);
+
+    if (primaryDarkShades.length == 1) {
+      primaryDarkShades.insert(0, lighten(primaryDarkShades.first));
+    }
+
+    return [
+      primaryDarkShades.length >= 3
+          ? primaryDarkShades[2]
+          : primaryDarkShades[1],
+      primaryDarkShades[0],
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final themeColor = widget.primaryColor ?? theme.primaryColor;
+    final backgroundColors = _getBackgroundGradientColors(themeColor);
     final deviceSize = MediaQuery.of(context).size;
     final headerHeight = deviceSize.height * .3;
     const logoMargin = 15;
@@ -372,41 +390,42 @@ class _LoginScreenState extends State<LoginScreen>
         // resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    theme.primaryColor.withOpacity(1.0),
-                    theme.primaryColor.withOpacity(0.7),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0, 1],
-                ),
-              ),
+            GradientBox(
+              colors: backgroundColors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
             SingleChildScrollView(
-              child: Container(
-                height: deviceSize.height,
-                width: deviceSize.width,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(
+                  width: deviceSize.width,
+                  height: deviceSize.height,
+                ),
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     Positioned(
-                      child: AuthCard(
-                        key: authCardKey,
-                        padding: EdgeInsets.only(top: cardTopPosition),
-                        loadingController: _loadingController,
-                        emailValidator: emailValidator,
-                        passwordValidator: passwordValidator,
-                        onSubmit: _reverseHeaderAnimation,
-                        onSubmitCompleted:
-                            widget.onChangeRouteAnimationCompleted,
+                      child: Theme(
+                        data: theme.copyWith(
+                          primaryColor: backgroundColors.last,
+                          accentColor: widget.accentColor ?? theme.accentColor,
+                          errorColor: widget.errorColor ?? theme.errorColor,
+                        ),
+                        child: AuthCard(
+                          key: authCardKey,
+                          padding: EdgeInsets.only(top: cardTopPosition),
+                          loadingController: _loadingController,
+                          emailValidator: emailValidator,
+                          passwordValidator: passwordValidator,
+                          onSubmit: _reverseHeaderAnimation,
+                          onSubmitCompleted:
+                              widget.onChangeRouteAnimationCompleted,
+                        ),
                       ),
                     ),
                     Positioned(
                       top: cardTopPosition - headerHeight - logoMargin,
-                      child: _buildHeader(theme, headerHeight),
+                      child: _buildHeader(headerHeight),
                     ),
                   ],
                 ),

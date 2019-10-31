@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../widget_helper.dart';
 
 enum TextFieldInertiaDirection {
   left,
@@ -171,26 +170,31 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   InputDecoration _getInputDecoration(ThemeData theme) {
-    final bgColor = theme.primaryColor.withOpacity(.075);
-    final primaryColorSwatch = getMaterialColor(theme.primaryColor);
-    final errorColor = theme.accentColor.withOpacity(.2);
+    final primaryColor = theme.primaryColor;
+    final fillColor = primaryColor.withOpacity(.075);
+    final errorColor = theme.errorColor;
     final borderRadius = BorderRadius.circular(100);
 
     return InputDecoration(
       filled: true,
-      fillColor: bgColor,
+      fillColor: fillColor,
       contentPadding: EdgeInsets.symmetric(vertical: 4.0),
       labelText: widget.labelText,
+      errorStyle: TextStyle(color: errorColor),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.transparent),
         borderRadius: borderRadius,
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: primaryColorSwatch.shade700, width: 1.5),
+        borderSide: BorderSide(color: primaryColor, width: 1.5),
         borderRadius: borderRadius,
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: errorColor),
+        borderRadius: borderRadius,
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: errorColor, width: 1.5),
         borderRadius: borderRadius,
       ),
       border: OutlineInputBorder(

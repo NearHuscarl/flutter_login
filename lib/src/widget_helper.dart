@@ -2,27 +2,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-MaterialColor getMaterialColor(Color color) {
-  return Colors.primaries.firstWhere(
-    (c) => c.value == color.value,
-    orElse: () => MaterialColor(
-      color.value,
-      <int, Color>{
-        50: color,
-        100: color,
-        200: color,
-        300: color,
-        400: color,
-        500: color,
-        600: color,
-        700: color,
-        800: color,
-        900: color,
-      },
-    ),
-  );
-}
-
 Size getWidgetSize(GlobalKey key) {
   final RenderBox renderBox = key.currentContext?.findRenderObject();
   return renderBox?.size;

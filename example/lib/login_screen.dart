@@ -41,6 +41,9 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      // primaryColor: Colors.blue,
+      // accentColor: Colors.green,
+      // errorColor: Colors.blue,
       // titleTextStyle: (defaultTextStyle) =>
       //     defaultTextStyle.copyWith(color: Colors.orange),
       emailValidator: (value) {

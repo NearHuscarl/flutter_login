@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login/theme.dart';
+import 'package:flutter_login/widgets.dart';
 import 'transition_route_observer.dart';
 import 'widgets/fade_in.dart';
 import 'constants.dart';
@@ -94,8 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               Constants.appName,
               tag: Constants.titleTag,
               viewState: ViewState.shrunk,
-              style:
-                  defaultLoginTitleStyle(theme).copyWith(color: Colors.orange),
+              style: LoginTheme.defaultLoginTitleStyle(theme),
             ),
             SizedBox(width: 20),
           ],
