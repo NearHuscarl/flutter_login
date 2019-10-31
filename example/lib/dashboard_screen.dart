@@ -66,40 +66,36 @@ class _DashboardScreenState extends State<DashboardScreen>
   AppBar _buildAppBar(ThemeData theme) {
     final menuBtn = IconButton(
       color: theme.accentColor,
-      icon: Icon(FontAwesomeIcons.bars),
+      icon: const Icon(FontAwesomeIcons.bars),
       onPressed: () {},
     );
     final signOutBtn = IconButton(
-      icon: Icon(FontAwesomeIcons.signOutAlt),
+      icon: const Icon(FontAwesomeIcons.signOutAlt),
       color: theme.accentColor,
       onPressed: () => _goToLogin(context),
     );
-    final title = Container(
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Hero(
-                  tag: Constants.logoTag,
-                  child: Image.asset(
-                    'assets/images/ecorp.png',
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
+    final title = Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Hero(
+              tag: Constants.logoTag,
+              child: Image.asset(
+                'assets/images/ecorp.png',
+                filterQuality: FilterQuality.high,
               ),
             ),
-            HeroText(
-              Constants.appName,
-              tag: Constants.titleTag,
-              viewState: ViewState.shrunk,
-              style: LoginTheme.defaultLoginTitleStyle(theme),
-            ),
-            SizedBox(width: 20),
-          ],
-        ),
+          ),
+          HeroText(
+            Constants.appName,
+            tag: Constants.titleTag,
+            viewState: ViewState.shrunk,
+            style: LoginTheme.defaultLoginTitleStyle(theme),
+          ),
+          SizedBox(width: 20),
+        ],
       ),
     );
 
@@ -145,35 +141,33 @@ class _DashboardScreenState extends State<DashboardScreen>
         curve: headerAniInterval,
         fadeDirection: FadeDirection.bottomToTop,
         offset: .5,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '\$',
-                    style: theme.textTheme.display2.copyWith(
-                      fontWeight: FontWeight.w300,
-                      color: accentColor.shade400,
-                    ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '\$',
+                  style: theme.textTheme.display2.copyWith(
+                    fontWeight: FontWeight.w300,
+                    color: accentColor.shade400,
                   ),
-                  SizedBox(width: 5),
-                  AnimatedNumericText(
-                    initialValue: 14,
-                    targetValue: 3467.87,
-                    curve: Interval(0, .5, curve: Curves.easeOut),
-                    controller: _loadingController,
-                    style: theme.textTheme.display2.copyWith(
-                      foreground: Paint()..shader = linearGradient,
-                    ),
+                ),
+                SizedBox(width: 5),
+                AnimatedNumericText(
+                  initialValue: 14,
+                  targetValue: 3467.87,
+                  curve: Interval(0, .5, curve: Curves.easeOut),
+                  controller: _loadingController,
+                  style: theme.textTheme.display2.copyWith(
+                    foreground: Paint()..shader = linearGradient,
                   ),
-                ],
-              ),
-              Text('Account Balance', style: theme.textTheme.caption),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Text('Account Balance', style: theme.textTheme.caption),
+          ],
         ),
       ),
     );

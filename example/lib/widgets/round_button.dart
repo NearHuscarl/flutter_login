@@ -64,7 +64,7 @@ class _RoundButtonState extends State<RoundButton>
     final primaryColor =
         Colors.primaries.where((c) => c == theme.primaryColor).first;
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ScaleTransition(
         scale: _scaleLoadingAnimation,
@@ -74,7 +74,7 @@ class _RoundButtonState extends State<RoundButton>
           children: <Widget>[
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Container(
+              child: SizedBox(
                 width: widget.size,
                 height: widget.size,
                 child: FittedBox(

@@ -30,7 +30,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,7 +42,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
+          SizedBox(
             height: 125,
             child: CupertinoPicker(
               scrollController: FixedExtentScrollController(

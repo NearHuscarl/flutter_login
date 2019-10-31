@@ -183,7 +183,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
           ),
         ),
         if (_isLoading)
-          Container(
+          SizedBox(
             width: _height - _loadingCircleThickness,
             height: _height - _loadingCircleThickness,
             child: CircularProgressIndicator(

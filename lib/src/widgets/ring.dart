@@ -19,7 +19,7 @@ class Ring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: size - thickness,
       height: size - thickness,
       child: thickness == 0

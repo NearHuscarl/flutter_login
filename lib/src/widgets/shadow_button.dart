@@ -28,7 +28,7 @@ class ShadowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         color: Colors.transparent,
