@@ -171,7 +171,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
   InputDecoration _getInputDecoration(ThemeData theme) {
     final primaryColor = theme.primaryColor;
-    final fillColor = primaryColor.withOpacity(.075);
+    final fillColor = Color.alphaBlend(
+      primaryColor.withOpacity(.07),
+      Colors.grey.withOpacity(.04),
+    );
     final errorColor = theme.errorColor;
     final borderRadius = BorderRadius.circular(100);
 

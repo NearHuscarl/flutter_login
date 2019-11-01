@@ -8,13 +8,14 @@ import 'package:provider/provider.dart';
 import 'theme.dart';
 import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
+import 'src/providers/login_messages.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
 import 'src/widgets/hero_text.dart';
 import 'src/widgets/gradient_box.dart';
-export 'src/widgets/hero_text.dart';
 export 'src/models/login_data.dart';
+export 'src/providers/login_messages.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
@@ -158,6 +159,7 @@ class LoginScreen extends StatefulWidget {
     this.errorColor,
     this.title = 'Login',
     this.titleTextStyle,
+    this.messages,
     this.logo,
     this.emailValidator,
     this.passwordValidator,
@@ -175,6 +177,7 @@ class LoginScreen extends StatefulWidget {
   final Color accentColor;
   final Color errorColor;
   final String title;
+  final LoginMessages messages;
   final TextStyleSetter titleTextStyle;
   final String logo;
   final FormFieldValidator<String> emailValidator;
@@ -276,6 +279,16 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  Widget _buildTheme({Widget child, ThemeData theme, Color primaryColor}) =>
+      Theme(
+        data: theme.copyWith(
+          primaryColor: primaryColor,
+          accentColor: widget.accentColor ?? theme.accentColor,
+          errorColor: widget.errorColor ?? theme.errorColor,
+        ),
+        child: child,
+      );
+
   Widget _buildDebugAnimationButton(Size deviceSize) {
     const textStyle = TextStyle(fontSize: 12, color: Colors.white);
 
@@ -345,10 +358,10 @@ class _LoginScreenState extends State<LoginScreen>
     }
 
     return [
+      primaryDarkShades[0],
       primaryDarkShades.length >= 3
           ? primaryDarkShades[2]
           : primaryDarkShades[1],
-      primaryDarkShades[0],
     ];
   }
 
@@ -369,6 +382,9 @@ class _LoginScreenState extends State<LoginScreen>
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(
+          value: widget.messages ?? LoginMessages(),
+        ),
         ChangeNotifierProvider.value(
           /// dummy value for the second argument of [ProxyProviderBuilder] below
           value: Auth.empty(),
@@ -405,12 +421,9 @@ class _LoginScreenState extends State<LoginScreen>
                   alignment: Alignment.center,
                   children: <Widget>[
                     Positioned(
-                      child: Theme(
-                        data: theme.copyWith(
-                          primaryColor: backgroundColors.last,
-                          accentColor: widget.accentColor ?? theme.accentColor,
-                          errorColor: widget.errorColor ?? theme.errorColor,
-                        ),
+                      child: _buildTheme(
+                        theme: theme,
+                        primaryColor: backgroundColors.first,
                         child: AuthCard(
                           key: authCardKey,
                           padding: EdgeInsets.only(top: cardTopPosition),

@@ -47,9 +47,22 @@ MaterialColor getMaterialColor(Color color) {
   );
 }
 
+/// Determines whether the given [Color] is [Brightness.light] or
+/// [Brightness.dark].
+/// Copied from [ThemeData.estimateBrightnessForColor(color)]
+/// change [kThreshold] from 0.15 to 0.45 to accept more color
+/// with [Brightness.dark]
+Brightness estimateBrightnessForColor(Color color) {
+  final double relativeLuminance = color.computeLuminance();
+  const double kThreshold = 0.45;
+  if ((relativeLuminance + 0.05) * (relativeLuminance + 0.05) > kThreshold)
+    return Brightness.light;
+  return Brightness.dark;
+}
+
 /// get the dark shades version of current color,
 List<Color> getDarkShades(Color color,
-    [ColorShade minShade = ColorShade.normal]) {
+    [ColorShade minShade = ColorShade.fifthLightest]) {
   final materialColor =
       color is MaterialColor ? color : getMaterialColor(color);
   final darkShades = <Color>[];
@@ -58,7 +71,7 @@ List<Color> getDarkShades(Color color,
     if (shade < shades[minShade]) continue;
 
     final colorShade = materialColor[shade];
-    if (ThemeData.estimateBrightnessForColor(colorShade) == Brightness.dark) {
+    if (estimateBrightnessForColor(colorShade) == Brightness.dark) {
       darkShades.add(colorShade);
     }
   }

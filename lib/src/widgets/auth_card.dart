@@ -12,6 +12,7 @@ import 'expandable_container.dart';
 import 'fade_in.dart';
 import 'animated_text_form_field.dart';
 import '../providers/auth.dart';
+import '../providers/login_messages.dart';
 import '../models/login_data.dart';
 import '../dart_helper.dart';
 import '../matrix.dart';
@@ -422,17 +423,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _submitController.dispose();
   }
 
-  String _getLabel(AuthMode authMode) {
-    switch (authMode) {
-      case AuthMode.Signup:
-        return 'SIGNUP';
-      case AuthMode.Login:
-        return 'LOGIN';
-      default:
-        return '';
-    }
-  }
-
   void _switchAuthMode() {
     final auth = Provider.of<Auth>(context, listen: false);
     final newAuthMode = auth.switchAuth();
@@ -485,12 +475,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
-  Widget _buildNameField(double width) {
+  Widget _buildNameField(double width, LoginMessages messages) {
     return AnimatedTextFormField(
       width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: 'Email',
+      labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -502,14 +492,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildPasswordField(double width) {
+  Widget _buildPasswordField(double width, LoginMessages messages) {
     final auth = Provider.of<Auth>(context);
 
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
-      labelText: 'Password',
+      labelText: messages.passwordHint,
       controller: _passwordController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -527,7 +517,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildConfirmPasswordField(double width) {
+  Widget _buildConfirmPasswordField(double width, LoginMessages messages) {
     final auth = Provider.of<Auth>(context);
 
     return AnimatedPasswordTextFormField(
@@ -536,14 +526,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       inertiaController: _postSwitchAuthController,
       inertiaDirection: TextFieldInertiaDirection.right,
-      labelText: 'Confirm Password',
+      labelText: messages.confirmPasswordHint,
       textInputAction: TextInputAction.done,
       focusNode: _confirmPasswordFocusNode,
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
               if (value != _passwordController.text) {
-                return 'Passwords do not match!';
+                return messages.confirmPasswordError;
               }
               return null;
             }
@@ -551,7 +541,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildForgotPassword(ThemeData theme) {
+  Widget _buildForgotPassword(ThemeData theme, LoginMessages messages) {
     return FadeIn(
       controller: _loadingController,
       fadeDirection: FadeDirection.bottomToTop,
@@ -559,7 +549,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       curve: _textButtonLoadingAnimationInterval,
       child: FlatButton(
         child: Text(
-          'Forgot Password?',
+          messages.forgotPasswordButton,
           style: LoginTheme.paragraphStyle(theme),
           textAlign: TextAlign.left,
         ),
@@ -568,7 +558,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme) {
+  Widget _buildSubmitButton(ThemeData theme, LoginMessages messages) {
     final auth = Provider.of<Auth>(context);
 
     return ScaleTransition(
@@ -577,13 +567,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         controller: _submitController,
         color: theme.primaryColor,
         loadingColor: theme.accentColor,
-        text: _getLabel(auth.mode),
+        text: auth.isLogin ? messages.loginButton : messages.signupButton,
         onPressed: _submit,
       ),
     );
   }
 
-  Widget _buildSwitchAuthButton(ThemeData theme) {
+  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages) {
     final auth = Provider.of<Auth>(context, listen: false);
 
     return FadeIn(
@@ -593,7 +583,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       fadeDirection: FadeDirection.topToBottom,
       child: FlatButton(
         child: AnimatedText(
-          text: _getLabel(auth.opposite()),
+          text: auth.isSignup
+              ? messages.loginButton
+              : messages.signupButton,
           textRotation: AnimatedTextRotation.down,
         ),
         disabledTextColor: theme.primaryColor,
@@ -608,6 +600,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
+    final messages = Provider.of<LoginMessages>(context, listen: false);
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
@@ -627,9 +620,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildNameField(textFieldWidth),
+                _buildNameField(textFieldWidth, messages),
                 SizedBox(height: 20),
-                _buildPasswordField(textFieldWidth),
+                _buildPasswordField(textFieldWidth, messages),
                 SizedBox(height: 10),
               ],
             ),
@@ -648,16 +641,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               vertical: 10,
             ),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth),
+            child: _buildConfirmPasswordField(textFieldWidth, messages),
           ),
           Container(
             padding: Paddings.fromRBL(cardPadding),
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                _buildForgotPassword(theme),
-                _buildSubmitButton(theme),
-                _buildSwitchAuthButton(theme),
+                _buildForgotPassword(theme, messages),
+                _buildSubmitButton(theme, messages),
+                _buildSwitchAuthButton(theme, messages),
               ],
             ),
           ),
@@ -722,6 +715,7 @@ class _RecoverCardState extends State<_RecoverCard>
       return false;
     }
     final auth = Provider.of<Auth>(context, listen: false);
+    final messages = Provider.of<LoginMessages>(context, listen: false);
 
     _formRecoverKey.currentState.save();
     _submitController.forward();
@@ -734,18 +728,17 @@ class _RecoverCardState extends State<_RecoverCard>
       _submitController.reverse();
       return false;
     } else {
-      // TODO: dont hardcode
-      showSuccessToast(context, 'An email has been sent');
+      showSuccessToast(context, messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
       _submitController.reverse();
       return true;
     }
   }
 
-  Widget _buildRecoverNameField(double width) {
+  Widget _buildRecoverNameField(double width, LoginMessages messages) {
     return AnimatedTextFormField(
       width: width,
-      labelText: 'Email',
+      labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
@@ -755,19 +748,19 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
-  Widget _buildRecoverButton(ThemeData theme) {
+  Widget _buildRecoverButton(ThemeData theme, LoginMessages messages) {
     return AnimatedButton(
       controller: _submitController,
       color: theme.primaryColor,
       loadingColor: theme.accentColor,
-      text: 'RECOVER',
+      text: messages.recoverPasswordButton,
       onPressed: !_isSubmitting ? _submit : null,
     );
   }
 
-  Widget _buildBackButton(ThemeData theme) {
+  Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
     return FlatButton(
-      child: Text('BACK'),
+      child: Text(messages.goBackButton),
       onPressed: !_isSubmitting ? widget.onSwitchLogin : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -778,6 +771,7 @@ class _RecoverCardState extends State<_RecoverCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = deviceSize.width * 0.75;
     const cardPadding = 16.0;
@@ -803,17 +797,16 @@ class _RecoverCardState extends State<_RecoverCard>
             key: _formRecoverKey,
             child: Column(
               children: [
-                _buildRecoverNameField(textFieldWidth),
+                _buildRecoverNameField(textFieldWidth, messages),
                 SizedBox(height: 15),
                 Text(
-                  // TODO: make it a props
-                  'We will send your password to this email account',
+                  messages.recoverPasswordDescription,
                   textAlign: TextAlign.center,
                   style: LoginTheme.paragraphStyle(theme),
                 ),
                 SizedBox(height: 15),
-                _buildRecoverButton(theme),
-                _buildBackButton(theme),
+                _buildRecoverButton(theme, messages),
+                _buildBackButton(theme, messages),
               ],
             ),
           ),
