@@ -92,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             Constants.appName,
             tag: Constants.titleTag,
             viewState: ViewState.shrunk,
-            style: LoginTheme.defaultLoginTitleStyle(theme),
+            style: LoginThemeHelper.loginTextStyle,
           ),
           SizedBox(width: 20),
         ],

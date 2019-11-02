@@ -170,39 +170,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   InputDecoration _getInputDecoration(ThemeData theme) {
-    final primaryColor = theme.primaryColor;
-    final fillColor = Color.alphaBlend(
-      primaryColor.withOpacity(.07),
-      Colors.grey.withOpacity(.04),
-    );
-    final errorColor = theme.errorColor;
-    final borderRadius = BorderRadius.circular(100);
-
     return InputDecoration(
-      filled: true,
-      fillColor: fillColor,
-      contentPadding: EdgeInsets.symmetric(vertical: 4.0),
       labelText: widget.labelText,
-      errorStyle: TextStyle(color: errorColor),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.transparent),
-        borderRadius: borderRadius,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: primaryColor, width: 1.5),
-        borderRadius: borderRadius,
-      ),
-      errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: errorColor),
-        borderRadius: borderRadius,
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: errorColor, width: 1.5),
-        borderRadius: borderRadius,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: borderRadius,
-      ),
       prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
       suffixIcon: _buildInertiaAnimation(widget.loadingController != null
           ? FadeTransition(
@@ -227,7 +196,6 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       onSaved: widget.onSaved,
       validator: widget.validator,
       enabled: widget.enabled,
-      style: TextStyle(color: Colors.black.withOpacity(.65)),
     );
 
     if (widget.loadingController != null) {

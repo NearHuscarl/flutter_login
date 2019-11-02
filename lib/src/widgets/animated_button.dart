@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'animated_text.dart';
 import 'ring.dart';
@@ -6,10 +8,10 @@ class AnimatedButton extends StatefulWidget {
   AnimatedButton({
     Key key,
     @required this.text,
-    @required this.color,
-    @required this.loadingColor,
     @required this.onPressed,
     @required this.controller,
+    this.loadingColor,
+    this.color,
   }) : super(key: key);
 
   final String text;
@@ -30,8 +32,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Animation<double> _ringThicknessAnimation;
   Animation<double> _ringOpacityAnimation;
   Animation<Color> _colorAnimation;
-  var _hover = false;
   var _isLoading = false;
+  var _hover = false;
+
+  Color _color;
+  Color _loadingColor;
 
   static const _width = 120.0;
   static const _height = 40.0;
@@ -55,7 +60,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
 
-    _updateColorAnimation();
+    // _colorAnimation
 
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
@@ -78,18 +83,38 @@ class _AnimatedButtonState extends State<AnimatedButton>
     widget.controller.addStatusListener(onStatusChanged);
   }
 
-  void _updateColorAnimation() => _colorAnimation =
-          ColorTween(begin: widget.color, end: widget.loadingColor)
-              .animate(CurvedAnimation(
+  @override
+  void didChangeDependencies() {
+    _updateColorAnimation();
+    super.didChangeDependencies();
+  }
+
+  void _updateColorAnimation() {
+    final theme = Theme.of(context);
+    final buttonTheme = theme.floatingActionButtonTheme;
+
+    _color = widget.color ?? buttonTheme.backgroundColor;
+    _loadingColor = widget.loadingColor ?? theme.accentColor;
+
+    _colorAnimation = ColorTween(
+      begin: _color,
+      end: _loadingColor,
+    ).animate(
+      CurvedAnimation(
         parent: widget.controller,
-        curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
-      ));
+        curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+      ),
+    );
+  }
 
   @override
   void didUpdateWidget(AnimatedButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _updateColorAnimation();
+    if (oldWidget.color != widget.color ||
+        oldWidget.loadingColor != widget.loadingColor) {
+      _updateColorAnimation();
+    }
   }
 
   @override
@@ -112,42 +137,33 @@ class _AnimatedButtonState extends State<AnimatedButton>
       opacity: _textOpacityAnimation,
       child: AnimatedText(
         text: widget.text,
-        style: theme.textTheme.button.copyWith(color: Colors.white),
+        style: theme.textTheme.button,
       ),
     );
   }
 
   Widget _buildButton(ThemeData theme) {
-    final borderRadius = BorderRadius.circular(100);
+    final buttonTheme = theme.floatingActionButtonTheme;
 
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        decoration: BoxDecoration(
-          borderRadius: borderRadius,
-          color: Colors.transparent,
-          boxShadow: [
-            if (!_isLoading)
-              BoxShadow(
-                blurRadius: _hover ? 12 : 4,
-                color: widget.color.withOpacity(.4),
-                offset: Offset(0, 5),
-              )
-          ],
-        ),
         child: AnimatedBuilder(
           animation: _colorAnimation,
           builder: (context, child) => Material(
-            shape: RoundedRectangleBorder(borderRadius: borderRadius),
+            shape: buttonTheme.shape,
             color: _colorAnimation.value,
             child: child,
+            shadowColor: _color,
+            elevation:
+                _hover ? buttonTheme.highlightElevation : buttonTheme.elevation,
           ),
           child: InkWell(
             onTap: !_isLoading ? widget.onPressed : null,
+            splashColor: buttonTheme.splashColor,
+            customBorder: buttonTheme.shape,
             onHighlightChanged: (value) => setState(() => _hover = value),
-            splashColor: theme.accentColor,
-            borderRadius: borderRadius,
             child: SizeTransition(
               sizeFactor: _sizeAnimation,
               axis: Axis.horizontal,

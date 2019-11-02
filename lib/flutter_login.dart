@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'src/providers/login_theme.dart';
 import 'theme.dart';
 import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
@@ -16,6 +17,7 @@ import 'src/widgets/hero_text.dart';
 import 'src/widgets/gradient_box.dart';
 export 'src/models/login_data.dart';
 export 'src/providers/login_messages.dart';
+export 'src/providers/login_theme.dart';
 
 typedef TextStyleSetter = TextStyle Function(TextStyle);
 
@@ -66,27 +68,21 @@ class _Header extends StatelessWidget {
     this.logoPath,
     this.logoTag,
     this.title,
-    this.titleTextStyle,
     this.titleTag,
     this.height = 250.0,
     this.logoController,
     this.titleController,
+    @required this.loginTheme,
   });
 
   final String logoPath;
   final String logoTag;
   final String title;
-  final TextStyleSetter titleTextStyle;
   final String titleTag;
   final double height;
+  final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
-
-  TextStyle _getTitleTextStyle(ThemeData theme) {
-    final defaultStyle = LoginTheme.defaultLoginTitleStyle(theme);
-
-    return titleTextStyle != null ? titleTextStyle(defaultStyle) : defaultStyle;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,15 +107,15 @@ class _Header extends StatelessWidget {
       header = HeroText(
         title,
         tag: titleTag,
-        largeFontSize: LoginTheme.beforeHeroFontSize,
-        smallFontSize: LoginTheme.afterHeroFontSize,
-        style: _getTitleTextStyle(theme),
+        largeFontSize: loginTheme.beforeHeroFontSize,
+        smallFontSize: loginTheme.afterHeroFontSize,
+        style: theme.textTheme.display2,
         viewState: ViewState.enlarged,
       );
     } else {
       header = Text(
         title,
-        style: _getTitleTextStyle(theme),
+        style: theme.textTheme.display2,
       );
     }
 
@@ -154,31 +150,23 @@ class LoginScreen extends StatefulWidget {
     @required this.onSignup,
     @required this.onLogin,
     @required this.onRecoverPassword,
-    this.primaryColor,
-    this.accentColor,
-    this.errorColor,
     this.title = 'Login',
-    this.titleTextStyle,
     this.messages,
+    this.theme,
     this.logo,
     this.emailValidator,
     this.passwordValidator,
     this.onChangeRouteAnimationCompleted,
     this.logoTag,
     this.titleTag,
-  }) : super(key: key) {
-    LoginTheme.accentColor = accentColor;
-  }
+  }) : super(key: key);
 
   final AuthCallback onSignup;
   final AuthCallback onLogin;
   final RecoverCallback onRecoverPassword;
-  final MaterialColor primaryColor;
-  final Color accentColor;
-  final Color errorColor;
   final String title;
   final LoginMessages messages;
-  final TextStyleSetter titleTextStyle;
+  final LoginTheme theme;
   final String logo;
   final FormFieldValidator<String> emailValidator;
   final FormFieldValidator<String> passwordValidator;
@@ -266,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  Widget _buildHeader(double height) {
+  Widget _buildHeader(double height, LoginTheme loginTheme) {
     return _Header(
       logoController: _logoController,
       titleController: _titleController,
@@ -275,21 +263,11 @@ class _LoginScreenState extends State<LoginScreen>
       logoTag: widget.logoTag,
       title: widget.title,
       titleTag: widget.titleTag,
-      titleTextStyle: widget.titleTextStyle,
+      loginTheme: loginTheme,
     );
   }
 
-  Widget _buildTheme({Widget child, ThemeData theme, Color primaryColor}) =>
-      Theme(
-        data: theme.copyWith(
-          primaryColor: primaryColor,
-          accentColor: widget.accentColor ?? theme.accentColor,
-          errorColor: widget.errorColor ?? theme.errorColor,
-        ),
-        child: child,
-      );
-
-  Widget _buildDebugAnimationButton(Size deviceSize) {
+  Widget _buildDebugAnimationButtons(Size deviceSize) {
     const textStyle = TextStyle(fontSize: 12, color: Colors.white);
 
     return Positioned(
@@ -350,26 +328,110 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  List<Color> _getBackgroundGradientColors(Color color) {
-    final primaryDarkShades = getDarkShades(color);
+  ThemeData _mergeTheme({ThemeData theme, LoginTheme loginTheme}) {
+    final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
+    final primaryDarkShades = getDarkShades(originalPrimaryColor);
+    final primaryColor = primaryDarkShades.length == 1
+        ? lighten(primaryDarkShades.first)
+        : primaryDarkShades.first;
+    final primaryColorDark = primaryDarkShades.length >= 3
+        ? primaryDarkShades[2]
+        : primaryDarkShades[1];
+    final accentColor = loginTheme.accentColor ?? theme.accentColor;
+    final errorColor = loginTheme.errorColor ?? theme.errorColor;
+    final titleStyle = theme.textTheme.display2
+        .copyWith(
+          color: accentColor,
+          fontSize: loginTheme.beforeHeroFontSize,
+          fontWeight: FontWeight.w300,
+        )
+        .merge(loginTheme.titleStyle);
+    final textStyle = theme.textTheme.body1
+        .copyWith(color: Colors.black54)
+        .merge(loginTheme.bodyStyle);
+    final textFieldStyle = theme.textTheme.subhead
+        .copyWith(color: Colors.black.withOpacity(.65))
+        .merge(loginTheme.textFieldStyle);
+    final buttonStyle = theme.textTheme.button
+        .copyWith(color: Colors.white)
+        .merge(loginTheme.buttonStyle);
+    final cardTheme = loginTheme.cardTheme;
+    final inputTheme = loginTheme.inputTheme;
+    final buttonTheme = loginTheme.buttonTheme;
+    final roundBorderRadius = BorderRadius.circular(100);
 
-    if (primaryDarkShades.length == 1) {
-      primaryDarkShades.insert(0, lighten(primaryDarkShades.first));
-    }
+    LoginThemeHelper.loginTextStyle = titleStyle;
 
-    return [
-      primaryDarkShades[0],
-      primaryDarkShades.length >= 3
-          ? primaryDarkShades[2]
-          : primaryDarkShades[1],
-    ];
+    return theme.copyWith(
+      primaryColor: primaryColor,
+      primaryColorDark: primaryColorDark,
+      accentColor: accentColor,
+      errorColor: errorColor,
+      cardTheme: theme.cardTheme.copyWith(
+        clipBehavior: cardTheme.clipBehavior,
+        color: cardTheme.color ?? theme.cardColor,
+        elevation: cardTheme.elevation ?? 15.0,
+        margin: cardTheme.margin,
+        shape: cardTheme.shape ??
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      ),
+      inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+        filled: inputTheme.filled,
+        fillColor: inputTheme.fillColor ??
+            Color.alphaBlend(
+              primaryColor.withOpacity(.07),
+              Colors.grey.withOpacity(.04),
+            ),
+        contentPadding: inputTheme.contentPadding ??
+            const EdgeInsets.symmetric(vertical: 4.0),
+        errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
+        labelStyle: inputTheme.labelStyle,
+        enabledBorder: inputTheme.enabledBorder ??
+            OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: roundBorderRadius,
+            ),
+        focusedBorder: inputTheme.focusedBorder ??
+            OutlineInputBorder(
+              borderSide: BorderSide(color: primaryColor, width: 1.5),
+              borderRadius: roundBorderRadius,
+            ),
+        errorBorder: inputTheme.errorBorder ??
+            OutlineInputBorder(
+              borderSide: BorderSide(color: errorColor),
+              borderRadius: roundBorderRadius,
+            ),
+        focusedErrorBorder: inputTheme.focusedErrorBorder ??
+            OutlineInputBorder(
+              borderSide: BorderSide(color: errorColor, width: 1.5),
+              borderRadius: roundBorderRadius,
+            ),
+        border: inputTheme.border ??
+            OutlineInputBorder(borderRadius: roundBorderRadius),
+      ),
+      floatingActionButtonTheme: theme.floatingActionButtonTheme.copyWith(
+        backgroundColor: buttonTheme?.backgroundColor ?? primaryColor,
+        splashColor: buttonTheme.splashColor ?? theme.accentColor,
+        elevation: buttonTheme.elevation ?? 4.0,
+        highlightElevation: buttonTheme.highlightElevation ?? 2.0,
+        shape: buttonTheme.shape ?? StadiumBorder(),
+      ),
+      // put it here because floatingActionButtonTheme doesnt have highlightColor property
+      highlightColor:
+          loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
+      textTheme: theme.textTheme.copyWith(
+        display2: titleStyle,
+        body1: textStyle,
+        subhead: textFieldStyle,
+        button: buttonStyle,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final themeColor = widget.primaryColor ?? theme.primaryColor;
-    final backgroundColors = _getBackgroundGradientColors(themeColor);
+    final loginTheme = widget.theme ?? LoginTheme();
+    final theme = _mergeTheme(theme: Theme.of(context), loginTheme: loginTheme);
     final deviceSize = MediaQuery.of(context).size;
     final headerHeight = deviceSize.height * .3;
     const logoMargin = 15;
@@ -407,44 +469,37 @@ class _LoginScreenState extends State<LoginScreen>
         body: Stack(
           children: <Widget>[
             GradientBox(
-              colors: backgroundColors,
+              colors: [theme.primaryColor, theme.primaryColorDark],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(
-                  width: deviceSize.width,
-                  height: deviceSize.height,
-                ),
+              child: Theme(
+                data: theme,
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     Positioned(
-                      child: _buildTheme(
-                        theme: theme,
-                        primaryColor: backgroundColors.first,
-                        child: AuthCard(
-                          key: authCardKey,
-                          padding: EdgeInsets.only(top: cardTopPosition),
-                          loadingController: _loadingController,
-                          emailValidator: emailValidator,
-                          passwordValidator: passwordValidator,
-                          onSubmit: _reverseHeaderAnimation,
-                          onSubmitCompleted:
-                              widget.onChangeRouteAnimationCompleted,
-                        ),
+                      child: AuthCard(
+                        key: authCardKey,
+                        padding: EdgeInsets.only(top: cardTopPosition),
+                        loadingController: _loadingController,
+                        emailValidator: emailValidator,
+                        passwordValidator: passwordValidator,
+                        onSubmit: _reverseHeaderAnimation,
+                        onSubmitCompleted:
+                            widget.onChangeRouteAnimationCompleted,
                       ),
                     ),
                     Positioned(
                       top: cardTopPosition - headerHeight - logoMargin,
-                      child: _buildHeader(headerHeight),
+                      child: _buildHeader(headerHeight, loginTheme),
                     ),
                   ],
                 ),
               ),
             ),
-            if (!kReleaseMode) _buildDebugAnimationButton(deviceSize),
+            if (!kReleaseMode) _buildDebugAnimationButtons(deviceSize),
           ],
         ),
       ),

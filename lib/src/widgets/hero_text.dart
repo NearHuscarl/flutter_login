@@ -59,6 +59,15 @@ class __HeroTextContentState extends State<_HeroTextContent>
         setState(() => fontSize = _fontSizeTween.value);
       });
 
+    _updateFontSize();
+
+    if (widget.viewState == ViewState.enlarge ||
+        widget.viewState == ViewState.shrink) {
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  void _updateFontSize() {
     switch (widget.viewState) {
       case ViewState.enlarge:
         _fontSizeTween = Tween<double>(
@@ -70,7 +79,6 @@ class __HeroTextContentState extends State<_HeroTextContent>
             curve: Curves.easeInOut,
           ),
         );
-        _controller.forward(from: 0.0);
         break;
 
       case ViewState.enlarged:
@@ -87,12 +95,21 @@ class __HeroTextContentState extends State<_HeroTextContent>
             curve: Curves.easeInOut,
           ),
         );
-        _controller.forward(from: 0.0);
         break;
 
       case ViewState.shrunk:
         fontSize = widget.smallFontSize;
         break;
+    }
+  }
+
+  @override
+  void didUpdateWidget(_HeroTextContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.largeFontSize != widget.largeFontSize ||
+        oldWidget.smallFontSize != widget.smallFontSize) {
+      _updateFontSize();
     }
   }
 

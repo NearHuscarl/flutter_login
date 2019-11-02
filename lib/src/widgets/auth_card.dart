@@ -550,7 +550,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: FlatButton(
         child: Text(
           messages.forgotPasswordButton,
-          style: LoginTheme.paragraphStyle(theme),
+          style: theme.textTheme.body1,
           textAlign: TextAlign.left,
         ),
         onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
@@ -565,8 +565,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
         controller: _submitController,
-        color: theme.primaryColor,
-        loadingColor: theme.accentColor,
         text: auth.isLogin ? messages.loginButton : messages.signupButton,
         onPressed: _submit,
       ),
@@ -634,7 +632,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 ? ExpandableContainerState.shrunk
                 : ExpandableContainerState.expanded,
             alignment: Alignment.topLeft,
-            color: theme.cardColor,
+            color: theme.cardTheme.color,
             width: cardWidth,
             padding: EdgeInsets.symmetric(
               horizontal: cardPadding,
@@ -660,11 +658,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     return FittedBox(
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        color: theme.cardColor,
-        elevation: 8.0,
         child: authForm,
       ),
     );
@@ -751,8 +744,6 @@ class _RecoverCardState extends State<_RecoverCard>
   Widget _buildRecoverButton(ThemeData theme, LoginMessages messages) {
     return AnimatedButton(
       controller: _submitController,
-      color: theme.primaryColor,
-      loadingColor: theme.accentColor,
       text: messages.recoverPasswordButton,
       onPressed: !_isSubmitting ? _submit : null,
     );
@@ -780,10 +771,6 @@ class _RecoverCardState extends State<_RecoverCard>
     return FittedBox(
       // width: cardWidth,
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 8.0,
         child: Container(
           padding: const EdgeInsets.only(
             left: cardPadding,
@@ -802,7 +789,7 @@ class _RecoverCardState extends State<_RecoverCard>
                 Text(
                   messages.recoverPasswordDescription,
                   textAlign: TextAlign.center,
-                  style: LoginTheme.paragraphStyle(theme),
+                  style: theme.textTheme.body1,
                 ),
                 SizedBox(height: 15),
                 _buildRecoverButton(theme, messages),
