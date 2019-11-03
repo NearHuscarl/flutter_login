@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildDebugAnimationButtons(Size deviceSize) {
+  Widget _buildDebugAnimationButtons() {
     const textStyle = TextStyle(fontSize: 12, color: Colors.white);
 
     return Positioned(
@@ -320,8 +320,7 @@ class _LoginScreenState extends State<LoginScreen>
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
             child: Text('NAV', style: textStyle),
-            onPressed: () =>
-                authCardKey.currentState.runChangeRouteAnimation(deviceSize),
+            onPressed: () => authCardKey.currentState.runChangeRouteAnimation(),
           ),
         ],
       ),
@@ -370,8 +369,8 @@ class _LoginScreenState extends State<LoginScreen>
       cardTheme: theme.cardTheme.copyWith(
         clipBehavior: cardTheme.clipBehavior,
         color: cardTheme.color ?? theme.cardColor,
-        elevation: cardTheme.elevation ?? 15.0,
-        margin: cardTheme.margin,
+        elevation: cardTheme.elevation ?? 12.0,
+        margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
         shape: cardTheme.shape ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       ),
@@ -387,27 +386,30 @@ class _LoginScreenState extends State<LoginScreen>
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
         labelStyle: inputTheme.labelStyle,
         enabledBorder: inputTheme.enabledBorder ??
+            inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent),
               borderRadius: roundBorderRadius,
             ),
         focusedBorder: inputTheme.focusedBorder ??
+            inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: primaryColor, width: 1.5),
               borderRadius: roundBorderRadius,
             ),
         errorBorder: inputTheme.errorBorder ??
+            inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: errorColor),
               borderRadius: roundBorderRadius,
             ),
         focusedErrorBorder: inputTheme.focusedErrorBorder ??
+            inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: errorColor, width: 1.5),
               borderRadius: roundBorderRadius,
             ),
-        border: inputTheme.border ??
-            OutlineInputBorder(borderRadius: roundBorderRadius),
+        disabledBorder: inputTheme.disabledBorder ?? inputTheme.border,
       ),
       floatingActionButtonTheme: theme.floatingActionButtonTheme.copyWith(
         backgroundColor: buttonTheme?.backgroundColor ?? primaryColor,
@@ -499,7 +501,7 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               ),
             ),
-            if (!kReleaseMode) _buildDebugAnimationButtons(deviceSize),
+            if (!kReleaseMode) _buildDebugAnimationButtons(),
           ],
         ),
       ),

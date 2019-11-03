@@ -159,7 +159,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     return Future(null);
   }
 
-  Future<void> _forwardChangeRouteAnimation(Size deviceSize) {
+  Future<void> _forwardChangeRouteAnimation() {
+    final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(_cardKey);
     final widthRatio = deviceSize.width / cardSize.height;
     final heightRatio = deviceSize.height / cardSize.width;
@@ -186,11 +187,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         .then((_) => _formLoadingController.forward());
   }
 
-  void runChangeRouteAnimation(Size deviceSize) {
+  void runChangeRouteAnimation() {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
     } else if (_routeTransitionController.isDismissed) {
-      _forwardChangeRouteAnimation(deviceSize);
+      _forwardChangeRouteAnimation();
     }
   }
 
@@ -199,7 +200,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _switchRecovery(!auth.isRecover);
   }
 
-  Widget _buildLoadingAnimator({Widget child, Color backgroundColor}) {
+  Widget _buildLoadingAnimator({Widget child, ThemeData theme}) {
     Widget card;
     Widget overlay;
 
@@ -215,18 +216,21 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
 
     // change-route transition
-    overlay = AnimatedBuilder(
-      animation: _cardOverlayHeightFactorAnimation,
-      builder: (context, child) => ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: FractionallySizedBox(
-          heightFactor: _cardOverlayHeightFactorAnimation.value,
-          alignment: Alignment.topCenter,
-          child: child,
+    overlay = Padding(
+      padding: theme.cardTheme.margin,
+      child: AnimatedBuilder(
+        animation: _cardOverlayHeightFactorAnimation,
+        builder: (context, child) => ClipPath.shape(
+          shape: theme.cardTheme.shape,
+          child: FractionallySizedBox(
+            heightFactor: _cardOverlayHeightFactorAnimation.value,
+            alignment: Alignment.topCenter,
+            child: child,
+          ),
         ),
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: backgroundColor),
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: theme.accentColor),
+        ),
       ),
     );
 
@@ -242,9 +246,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       children: <Widget>[
         card,
         Positioned(
-          // the _LoginCard is a Card widget which is smaller than normal Container
-          // because it has to reserve space for card shadow
-          left: 4, top: 4, bottom: 4, right: 4,
+          left: 0, top: 0, bottom: 0, right: 0,
           child: overlay,
         ),
       ],
@@ -271,7 +273,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           final child = (index == 0)
               ? _buildLoadingAnimator(
-                  backgroundColor: theme.accentColor,
+                  theme: theme,
                   child: _LoginCard(
                     key: _cardKey,
                     loadingController: _isLoadingFirstTime
@@ -281,7 +283,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
                     onSubmitCompleted: () {
-                      _forwardChangeRouteAnimation(deviceSize).then((_) {
+                      _forwardChangeRouteAnimation().then((_) {
                         widget.onSubmitCompleted();
                       });
                     },
