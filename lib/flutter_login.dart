@@ -161,17 +161,48 @@ class FlutterLogin extends StatefulWidget {
     this.titleTag,
   }) : super(key: key);
 
+  /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
+
+  /// Called when the user hit the submit button when in login mode
   final AuthCallback onLogin;
+
+  /// Called when the user hit the submit button when in recover password mode
   final RecoverCallback onRecoverPassword;
+
+  /// The large text above the login [Card], usually the app or company name
   final String title;
+
+  /// The path to the asset image that will be passed to the `Image.asset()`
   final String logo;
+
+  /// Describes all of the labels, text hints, button texts and other auth
+  /// descriptions
   final LoginMessages messages;
+
+  /// FlutterLogin's theme. If not specified, it will use the default theme as
+  /// shown in the demo gifs and use the colorsheme in the closest `Theme`
+  /// widget
   final LoginTheme theme;
+
+  /// Email validating logic, Returns an error string to display if the input is
+  /// invalid, or null otherwise
   final FormFieldValidator<String> emailValidator;
+
+  /// Same as [emailValidator] but for password
   final FormFieldValidator<String> passwordValidator;
+
+  /// Called after the submit animation's completed. Put your route transition
+  /// logic here. Recommend to use with [logoTag] and [titleTag]
   final Function onSubmitAnimationCompleted;
+
+  /// Hero tag for logo image. If not specified, it will simply fade out when
+  /// changing route
   final String logoTag;
+
+  /// Hero tag for title text. Need to specify `LoginTheme.beforeHeroFontSize`
+  /// and `LoginTheme.afterHeroFontSize` if you want different font size before
+  /// and after hero animation
   final String titleTag;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
