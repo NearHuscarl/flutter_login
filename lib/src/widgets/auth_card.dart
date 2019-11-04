@@ -161,11 +161,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Future<void> _forwardChangeRouteAnimation() {
+    final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
     final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(_cardKey);
     // add .25 to make sure the scaling will cover the whole screen
-    final widthRatio = deviceSize.width / cardSize.height + 0.25;
-    final heightRatio = deviceSize.height / cardSize.width + 0.25;
+    final widthRatio = deviceSize.width / cardSize.height + (isLogin ? .25 : .65);
+    final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
         Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd)
@@ -609,7 +610,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = deviceSize.width * 0.75;
+    final cardWidth = min(deviceSize.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
@@ -773,7 +774,7 @@ class _RecoverCardState extends State<_RecoverCard>
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = deviceSize.width * 0.75;
+    final cardWidth = min(deviceSize.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
