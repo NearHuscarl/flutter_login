@@ -99,15 +99,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         parent: loadingController,
         curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
       ));
-      sizeAnimation = Tween<double>(
-        begin: 48.0,
-        end: widget.width,
-      ).animate(CurvedAnimation(
-        parent: loadingController,
-        curve: _getInternalInterval(
-            .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
-        reverseCurve: Curves.easeInExpo,
-      ));
+      _updateSizeAnimation();
     }
 
     final inertiaController = widget.inertiaController;
@@ -136,6 +128,30 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         curve: Interval(.5, 1.0, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
+    }
+  }
+
+  void _updateSizeAnimation() {
+    final interval = widget.interval;
+    final loadingController = widget.loadingController;
+
+    sizeAnimation = Tween<double>(
+      begin: 48.0,
+      end: widget.width,
+    ).animate(CurvedAnimation(
+      parent: loadingController,
+      curve: _getInternalInterval(
+          .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
+      reverseCurve: Curves.easeInExpo,
+    ));
+  }
+
+  @override
+  void didUpdateWidget(AnimatedTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.width != widget.width) {
+      _updateSizeAnimation();
     }
   }
 
