@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -80,7 +82,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   void initState() {
     super.initState();
 
-    widget.inertiaController?.addStatusListener(onAniStatusChanged);
+    widget.inertiaController?.addStatusListener(handleAnimationStatus);
 
     final interval = widget.interval;
     final loadingController = widget.loadingController;
@@ -116,7 +118,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         reverseCurve: Curves.easeIn,
       ));
       iconRotationAnimation =
-          Tween<double>(begin: 0.0, end: sign * .0416666 /* 15deg */)
+          Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */)
               .animate(CurvedAnimation(
         parent: inertiaController,
         curve: Interval(.5, 1.0, curve: Curves.easeOut),
@@ -157,11 +159,11 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
   @override
   dispose() {
-    widget.inertiaController?.removeStatusListener(onAniStatusChanged);
+    widget.inertiaController?.removeStatusListener(handleAnimationStatus);
     super.dispose();
   }
 
-  void onAniStatusChanged(status) {
+  void handleAnimationStatus(status) {
     if (status == AnimationStatus.completed) {
       widget.inertiaController?.reverse();
     }
@@ -174,14 +176,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     return AnimatedBuilder(
       animation: iconTranslateAnimation,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(iconTranslateAnimation.value, 0),
+      builder: (context, child) => Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..translate(iconTranslateAnimation.value)
+          ..rotateZ(iconRotationAnimation.value),
         child: child,
       ),
-      child: RotationTransition(
-        turns: iconRotationAnimation,
-        child: child,
-      ),
+      child: child,
     );
   }
 

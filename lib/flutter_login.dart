@@ -144,19 +144,19 @@ class _Header extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({
+class FlutterLogin extends StatefulWidget {
+  FlutterLogin({
     Key key,
     @required this.onSignup,
     @required this.onLogin,
     @required this.onRecoverPassword,
     this.title = 'Login',
+    this.logo,
     this.messages,
     this.theme,
-    this.logo,
     this.emailValidator,
     this.passwordValidator,
-    this.onChangeRouteAnimationCompleted,
+    this.onSubmitAnimationCompleted,
     this.logoTag,
     this.titleTag,
   }) : super(key: key);
@@ -165,12 +165,12 @@ class LoginScreen extends StatefulWidget {
   final AuthCallback onLogin;
   final RecoverCallback onRecoverPassword;
   final String title;
+  final String logo;
   final LoginMessages messages;
   final LoginTheme theme;
-  final String logo;
   final FormFieldValidator<String> emailValidator;
   final FormFieldValidator<String> passwordValidator;
-  final Function onChangeRouteAnimationCompleted;
+  final Function onSubmitAnimationCompleted;
   final String logoTag;
   final String titleTag;
 
@@ -189,14 +189,14 @@ class LoginScreen extends StatefulWidget {
   };
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _FlutterLoginState createState() => _FlutterLoginState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _FlutterLoginState extends State<FlutterLogin>
     with TickerProviderStateMixin {
   /// [authCardKey] is a state since hot reload preserves the state of widget,
   /// changes in [AuthCardState] will not trigger rebuilding the whole
-  /// [LoginScreen], prevent running the loading animation again after every small
+  /// [FlutterLogin], prevent running the loading animation again after every small
   /// changes
   /// https://flutter.dev/docs/development/tools/hot-reload#previous-state-is-combined-with-new-code
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
@@ -338,9 +338,14 @@ class _LoginScreenState extends State<LoginScreen>
         : primaryDarkShades[1];
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
+    // the background is a dark gradient, force to use white text if detect default black text color
+    final isDefaultBlackText = theme.textTheme.display2.color ==
+        Typography.blackMountainView.display2.color;
     final titleStyle = theme.textTheme.display2
         .copyWith(
-          color: accentColor,
+          color: loginTheme.accentColor ?? (isDefaultBlackText
+              ? Colors.white
+              : theme.textTheme.display2.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
@@ -440,9 +445,9 @@ class _LoginScreenState extends State<LoginScreen>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final emailValidator =
-        widget.emailValidator ?? LoginScreen.defaultEmailValidator;
+        widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
     final passwordValidator =
-        widget.passwordValidator ?? LoginScreen.defaultPasswordValidator;
+        widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
     return MultiProvider(
       providers: [
@@ -489,8 +494,7 @@ class _LoginScreenState extends State<LoginScreen>
                         emailValidator: emailValidator,
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
-                        onSubmitCompleted:
-                            widget.onChangeRouteAnimationCompleted,
+                        onSubmitCompleted: widget.onSubmitAnimationCompleted,
                       ),
                     ),
                     Positioned(

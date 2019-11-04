@@ -189,7 +189,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildDashboardGrid() {
     const step = 0.04;
-    const aniDuration = 0.75;
+    const aniInterval = 0.75;
 
     return GridView.count(
       padding: const EdgeInsets.symmetric(
@@ -203,7 +203,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _buildButton(
           icon: Icon(FontAwesomeIcons.user),
           label: 'Profile',
-          interval: Interval(0, aniDuration),
+          interval: Interval(0, aniInterval),
         ),
         _buildButton(
           icon: Container(
@@ -216,42 +216,42 @@ class _DashboardScreenState extends State<DashboardScreen>
             ),
           ),
           label: 'Fund Transfer',
-          interval: Interval(step, aniDuration + step),
+          interval: Interval(step, aniInterval + step),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.handHoldingUsd),
           label: 'Payment',
-          interval: Interval(step * 2, aniDuration + step * 2),
+          interval: Interval(step * 2, aniInterval + step * 2),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.chartLine),
           label: 'Report',
-          interval: Interval(0, aniDuration),
+          interval: Interval(0, aniInterval),
         ),
         _buildButton(
           icon: Icon(Icons.vpn_key),
           label: 'Register',
-          interval: Interval(step, aniDuration + step),
+          interval: Interval(step, aniInterval + step),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.history),
           label: 'History',
-          interval: Interval(step * 2, aniDuration + step * 2),
+          interval: Interval(step * 2, aniInterval + step * 2),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.ellipsisH),
           label: 'Other',
-          interval: Interval(0, aniDuration),
+          interval: Interval(0, aniInterval),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.search, size: 20),
           label: 'Search',
-          interval: Interval(step, aniDuration + step),
+          interval: Interval(step, aniInterval + step),
         ),
         _buildButton(
           icon: Icon(FontAwesomeIcons.slidersH, size: 20),
           label: 'Settings',
-          interval: Interval(step * 2, aniDuration + step * 2),
+          interval: Interval(step * 2, aniInterval + step * 2),
         ),
       ],
     );

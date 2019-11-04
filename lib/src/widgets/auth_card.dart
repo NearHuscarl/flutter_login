@@ -380,7 +380,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           reverseDuration: Duration(milliseconds: 300),
         )..value = 1.0);
 
-    _loadingController?.addStatusListener(onLoadingAnimationStatusChanged);
+    _loadingController?.addStatusListener(handleLoadingAnimationStatus);
 
     _switchAuthController = AnimationController(
       vsync: this,
@@ -406,7 +406,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     ));
   }
 
-  void onLoadingAnimationStatusChanged(AnimationStatus status) {
+  void handleLoadingAnimationStatus(AnimationStatus status) {
     if (status == AnimationStatus.forward) {
       setState(() => _isLoading = true);
     }
@@ -419,7 +419,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
 
-    _loadingController?.removeStatusListener(onLoadingAnimationStatusChanged);
+    _loadingController?.removeStatusListener(handleLoadingAnimationStatus);
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 

@@ -23,6 +23,8 @@ flutter:
 
   assets:
   - assets/images/ecorp.png
+  - assets/images/ecorp-lightblue.png
+  - assets/images/ecorp-lightgreen.png
 
   fonts:
     - family: OpenSans

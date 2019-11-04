@@ -1,8 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart' as Login;
+import 'package:flutter_login/flutter_login.dart';
 import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
@@ -11,9 +9,10 @@ import 'users.dart';
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  Future<String> _loginUser(Login.LoginData data) {
-    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250))
-        .then((_) {
+  Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
+
+  Future<String> _loginUser(LoginData data) {
+    return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
         return 'Username not exists';
       }
@@ -25,8 +24,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String> _recoverPassword(String name) {
-    return Future.delayed(Duration(milliseconds: timeDilation.ceil() * 1250))
-        .then((_) {
+    return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(name)) {
         return 'Username not exists';
       }
@@ -36,12 +34,17 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Login.LoginScreen(
+    final inputBorder = BorderRadius.vertical(
+      bottom: Radius.circular(10.0),
+      top: Radius.circular(20.0),
+    );
+
+    return FlutterLogin(
       title: Constants.appName,
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
-      // messages: Login.LoginMessages(
+      // messages: LoginMessages(
       //   usernameHint: 'Username',
       //   passwordHint: 'Pass',
       //   confirmPasswordHint: 'Confirm',
@@ -49,12 +52,12 @@ class LoginScreen extends StatelessWidget {
       //   signupButton: 'REGISTER',
       //   forgotPasswordButton: 'Forgot huh?',
       //   recoverPasswordButton: 'HELP ME',
-      //   goBackButton: 'GET ME BACK',
+      //   goBackButton: 'GO BACK',
       //   confirmPasswordError: 'Not match!',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
       // ),
-      // theme: Login.LoginTheme(
+      // theme: LoginTheme(
       //   primaryColor: Colors.teal,
       //   accentColor: Colors.yellow,
       //   errorColor: Colors.deepOrange,
@@ -94,23 +97,27 @@ class LoginScreen extends StatelessWidget {
       //     ),
       //     labelStyle: TextStyle(fontSize: 12),
       //     enabledBorder: UnderlineInputBorder(
-      //       borderRadius: BorderRadius.circular(10.0),
       //       borderSide: BorderSide(color: Colors.blue.shade700, width: 4),
+      //       borderRadius: inputBorder,
       //     ),
       //     focusedBorder: UnderlineInputBorder(
-      //       borderRadius: BorderRadius.circular(10.0),
       //       borderSide: BorderSide(color: Colors.blue.shade400, width: 5),
+      //       borderRadius: inputBorder,
       //     ),
       //     errorBorder: UnderlineInputBorder(
-      //       borderRadius: BorderRadius.circular(10.0),
       //       borderSide: BorderSide(color: Colors.red.shade700, width: 7),
+      //       borderRadius: inputBorder,
       //     ),
       //     focusedErrorBorder: UnderlineInputBorder(
-      //       borderRadius: BorderRadius.circular(10.0),
       //       borderSide: BorderSide(color: Colors.red.shade400, width: 8),
+      //       borderRadius: inputBorder,
+      //     ),
+      //     disabledBorder: UnderlineInputBorder(
+      //       borderSide: BorderSide(color: Colors.grey, width: 5),
+      //       borderRadius: inputBorder,
       //     ),
       //   ),
-      //   buttonTheme: Login.LoginButtonTheme(
+      //   buttonTheme: LoginButtonTheme(
       //     splashColor: Colors.purple,
       //     backgroundColor: Colors.pinkAccent,
       //     highlightColor: Colors.lightGreen,
@@ -148,12 +155,12 @@ class LoginScreen extends StatelessWidget {
         print('Password: ${loginData.password}');
         return _loginUser(loginData);
       },
-      onChangeRouteAnimationCompleted: () {
+      onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context) => DashboardScreen(),
         ));
       },
-      onRecoverPassword: (name) async {
+      onRecoverPassword: (name) {
         print('Recover password info');
         print('Name: $name');
         return _recoverPassword(name);

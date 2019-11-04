@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'animated_text.dart';
 import 'ring.dart';
@@ -17,7 +15,7 @@ class AnimatedButton extends StatefulWidget {
   final String text;
   final Color color;
   final Color loadingColor;
-  final Future<bool> Function() onPressed;
+  final Function onPressed;
   final AnimationController controller;
 
   @override
@@ -80,7 +78,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       curve: Interval(.85, 1.0),
     ));
 
-    widget.controller.addStatusListener(onStatusChanged);
+    widget.controller.addStatusListener(handleStatusChanged);
   }
 
   @override
@@ -120,10 +118,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   void dispose() {
     super.dispose();
-    widget.controller.removeStatusListener(onStatusChanged);
+    widget.controller.removeStatusListener(handleStatusChanged);
   }
 
-  void onStatusChanged(status) {
+  void handleStatusChanged(status) {
     if (status == AnimationStatus.forward) {
       setState(() => _isLoading = true);
     }
