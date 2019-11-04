@@ -343,9 +343,10 @@ class _FlutterLoginState extends State<FlutterLogin>
         Typography.blackMountainView.display2.color;
     final titleStyle = theme.textTheme.display2
         .copyWith(
-          color: loginTheme.accentColor ?? (isDefaultBlackText
-              ? Colors.white
-              : theme.textTheme.display2.color),
+          color: loginTheme.accentColor ??
+              (isDefaultBlackText
+                  ? Colors.white
+                  : theme.textTheme.display2.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
@@ -354,7 +355,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         .copyWith(color: Colors.black54)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subhead
-        .copyWith(color: Colors.black.withOpacity(.65))
+        .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button
         .copyWith(color: Colors.white)
