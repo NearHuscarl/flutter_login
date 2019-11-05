@@ -1,11 +1,11 @@
 # Flutter Login
 
-FlutterLogin is a ready-made login/signup widget with many animation effects to
+`FlutterLogin` is a ready-made login/signup widget with many animation effects to
 demonstrate the capabilities of Flutter
 
 <p align="center">
   <a href='https://i.imgur.com/z3FJSe7.mp4'>
-    <img src='demo/demo.gif' width=300>
+    <img src='demo/demo.gif' width=320>
   </a>
 </p>
 
@@ -27,10 +27,10 @@ theme |   [`LoginTheme`](#LoginTheme)     | FlutterLogin's theme. If not specifi
 emailValidator |   `FormFieldValidator<String>`     | Email validating logic, Returns an error string to display if the input is invalid, or null otherwise
 passwordValidator |   `FormFieldValidator<String>`     | Same as `emailValidator` but for password
 onSubmitAnimationCompleted |   `Function`     | Called after the submit animation's completed. Put your route transition logic here. Recommend to use with [logoTag] and [titleTag]
-logoTag |   `String`     | Hero tag for logo image. If not specified, it will simply fade out when changing route
-titleTag |   `String`     | Hero tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation
+logoTag |   `String`     | `Hero` tag for logo image. If not specified, it will simply fade out when changing route
+titleTag |   `String`     | `Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation
 
-*NOTE:* It is recommended that the child widget of the Hero widget should be the
+*NOTE:* It is recommended that the child widget of the `Hero` widget should be the
 same in both places. For title's hero animation use the
 `LoginThemeHelper.loginTextStyle` in the next screen to get the style of the
 exact text widget in the login screen. `LoginThemeHelper` can be accessed by adding
