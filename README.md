@@ -3,9 +3,11 @@
 FlutterLogin is a ready-made login/signup widget with many animation effects to
 demonstrate the capabilities of Flutter
 
-<div style='text-align: center;'>
-  <img src='demo/demo.gif' width=300>
-</div>
+<p align="center">
+  <a href='https://i.imgur.com/z3FJSe7.mp4'>
+    <img src='demo/demo.gif' width=300>
+  </a>
+</p>
 
 ## Installation
 
