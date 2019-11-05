@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
-import '../../theme.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'custom_page_transformer.dart';
@@ -165,7 +164,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(_cardKey);
     // add .25 to make sure the scaling will cover the whole screen
-    final widthRatio = deviceSize.width / cardSize.height + (isLogin ? .25 : .65);
+    final widthRatio =
+        deviceSize.width / cardSize.height + (isLogin ? .25 : .65);
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
@@ -469,7 +469,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 270), () {
       setState(() => _showShadow = false);
     });
 
@@ -477,6 +477,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, error);
+      Future.delayed(const Duration(milliseconds: 271), () {
+        setState(() => _showShadow = true);
+      });
       setState(() => _isSubmitting = false);
       return false;
     }
