@@ -5,7 +5,7 @@ demonstrate the capabilities of Flutter
 
 <p align="center">
   <a href='https://i.imgur.com/z3FJSe7.mp4'>
-    <img src='demo/demo.gif' width=320>
+    <img src='https://github.com/NearHuscarl/flutter_login/raw/master/demo/demo.gif' width=320>
   </a>
 </p>
 
@@ -17,18 +17,18 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 
 Property |   Type     | Desciption
 -------- |------------| ---------------
-onSignup |   `AuthCallback`     | Called when the user hit the submit button when in sign up mode
-onLogin |   `AuthCallback`     | Called when the user hit the submit button when in login mode
-onRecoverPassword |   `RecoverCallback`     | Called when the user hit the submit button when in recover password mode
-title |   `String`     | The large text above the login [Card], usually the app or company name
-logo |   `String`     | The path to the asset image that will be passed to the `Image.asset()`
-messages |   [`LoginMessages`](#LoginMessages)     | Describes all of the labels, text hints, button texts and other auth descriptions
-theme |   [`LoginTheme`](#LoginTheme)     | FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget
-emailValidator |   `FormFieldValidator<String>`     | Email validating logic, Returns an error string to display if the input is invalid, or null otherwise
-passwordValidator |   `FormFieldValidator<String>`     | Same as `emailValidator` but for password
-onSubmitAnimationCompleted |   `Function`     | Called after the submit animation's completed. Put your route transition logic here. Recommend to use with [logoTag] and [titleTag]
-logoTag |   `String`     | `Hero` tag for logo image. If not specified, it will simply fade out when changing route
-titleTag |   `String`     | `Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation
+onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode</sub>
+onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
+onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
+title |   `String`     | <sub>The large text above the login [Card], usually the app or company name</sub>
+logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
+messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
+theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
+emailValidator |   `FormFieldValidator<String>`     | <sub>Email validating logic, Returns an error string to display if the input is invalid, or null otherwise</sub>
+passwordValidator | `FormFieldValidator<String>`     | <sub>Same as `emailValidator` but for password</sub>
+<sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here. Recommend to use with [logoTag] and [titleTag]</sub>
+logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
+titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the
 same in both places. For title's hero animation use the
@@ -132,7 +132,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="demo/basic.png" width="300">
+<img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/basic.png" width="300">
 
 ### Theming via `ThemeData`
 
@@ -196,7 +196,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="demo/theme-data.png" width="300">
+<img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/theme-data.png" width="300">
 
 ### Custom labels
 
@@ -346,7 +346,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="demo/theme.png" width="300">
+<img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/theme.png" width="300">
 
 ## Inspiration
 * [VNPAY App Interactions](https://dribbble.com/shots/3829985-VNPAY-App-Interactions)
