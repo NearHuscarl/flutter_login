@@ -1,8 +1,8 @@
 name: flutter_login
-description: A new Flutter package project.
-version: 0.0.1
-author:
-homepage:
+description: A login widget with login/signup functionalities to help speed up development
+version: 1.0.0
+author: NearHuscarl <near.huscarl@gmail.com>
+homepage: https://github.com/NearHuscarl/flutter_login
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
