@@ -36,7 +36,9 @@ same in both places. For title's hero animation use the
 exact text widget in the login screen. `LoginThemeHelper` can be accessed by adding
 this line
 
-`import 'package:flutter_login/theme.dart';`
+```dart
+import 'package:flutter_login/theme.dart';
+```
 
 ### LoginMessages
 
@@ -356,4 +358,4 @@ class LoginScreen extends StatelessWidget {
 
 * MIT License
 
-[example project]: (example/)
+[example project]: example/
