@@ -75,8 +75,8 @@ afterHeroFontSize | `double` | Defines the font size of the title in the screen 
 
 ## Examples
 
-You can view the complete example in the [example project] which is the resulted
-of the gif above
+You can view the complete example in the [example project] which resulted in the
+gif above
 
 ### Basic example
 
@@ -242,7 +242,7 @@ class LoginScreen extends StatelessWidget {
 
 Login/Signup | Password Recovery
 :-------:|:-------:
-![Floating Style](demo/custom-label-login.png)  |  ![Grounded Style](demo/custom-label-recover.png)
+![Login/Signup](demo/custom-label-login.png)  |  ![Password Recovery](demo/custom-label-recover.png)
 
 ### Theme customization
 

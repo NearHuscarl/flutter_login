@@ -6,6 +6,8 @@ enum AuthMode { Signup, Login }
 
 /// The result is an error message, callback successes if message is null
 typedef AuthCallback = Future<String> Function(LoginData);
+
+/// The result is an error message, callback successes if message is null
 typedef RecoverCallback = Future<String> Function(String);
 
 class Auth with ChangeNotifier {

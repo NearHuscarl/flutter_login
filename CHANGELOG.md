@@ -1,3 +1,6 @@
+## [1.0.3] - Bug fix
+* Fix app crashing when omitting `logoPath` parameter
+
 ## [1.0.2] - Add license
 * Add license
 

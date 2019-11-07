@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
+import 'src/widgets/null_widget.dart';
 import 'theme.dart';
 import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
@@ -18,8 +19,6 @@ import 'src/widgets/gradient_box.dart';
 export 'src/models/login_data.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
-
-typedef TextStyleSetter = TextStyle Function(TextStyle);
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
@@ -88,11 +87,13 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final displayLogo = logoPath != null;
-    Widget logo = Image.asset(
-      logoPath,
-      filterQuality: FilterQuality.high,
-      height: 125,
-    );
+    Widget logo = displayLogo
+        ? Image.asset(
+            logoPath,
+            filterQuality: FilterQuality.high,
+            height: 125,
+          )
+        : NullWidget();
 
     if (logoTag != null) {
       logo = Hero(
@@ -150,7 +151,7 @@ class FlutterLogin extends StatefulWidget {
     @required this.onSignup,
     @required this.onLogin,
     @required this.onRecoverPassword,
-    this.title = 'Login',
+    this.title = 'LOGIN',
     this.logo,
     this.messages,
     this.theme,
