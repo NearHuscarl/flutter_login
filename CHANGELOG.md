@@ -1,3 +1,5 @@
+## [1.0.4] - Add option to disable debug buttons (11/10/2019)
+
 ## [1.0.3] - Bug fix
 * Fix app crashing when omitting `logoPath` parameter
 

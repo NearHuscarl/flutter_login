@@ -95,7 +95,8 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
     ));
   }
 
-  AnimationController get _effectiveController => widget.controller ?? _controller;
+  AnimationController get _effectiveController =>
+      widget.controller ?? _controller;
 
   @override
   void dispose() {

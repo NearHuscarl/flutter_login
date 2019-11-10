@@ -160,6 +160,7 @@ class FlutterLogin extends StatefulWidget {
     this.onSubmitAnimationCompleted,
     this.logoTag,
     this.titleTag,
+    this.showDebugButtons = false,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -205,6 +206,11 @@ class FlutterLogin extends StatefulWidget {
   /// and `LoginTheme.afterHeroFontSize` if you want different font size before
   /// and after hero animation
   final String titleTag;
+
+  /// Display the debug buttons to quickly forward/reverse login animations. In
+  /// release mode, this will be overrided to false regardless of the value
+  /// passed in
+  final bool showDebugButtons;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -538,7 +544,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                 ),
               ),
             ),
-            if (!kReleaseMode) _buildDebugAnimationButtons(),
+            if (!kReleaseMode && widget.showDebugButtons)
+              _buildDebugAnimationButtons(),
           ],
         ),
       ),
