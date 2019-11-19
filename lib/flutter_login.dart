@@ -103,8 +103,7 @@ class _Header extends StatelessWidget {
     }
 
     Widget header;
-
-    if (titleTag != null) {
+    if (titleTag != null && title.isNotEmpty) {
       header = HeroText(
         title,
         tag: titleTag,
@@ -113,11 +112,13 @@ class _Header extends StatelessWidget {
         style: theme.textTheme.display2,
         viewState: ViewState.enlarged,
       );
-    } else {
+    } else if (title.isNotEmpty) {
       header = Text(
         title,
         style: theme.textTheme.display2,
       );
+    } else {
+      header = null;
     }
 
     return SizedBox(

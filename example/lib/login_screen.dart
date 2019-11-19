@@ -40,10 +40,10 @@ class LoginScreen extends StatelessWidget {
     );
 
     return FlutterLogin(
-      title: Constants.appName,
+      title: '',
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
-      titleTag: Constants.titleTag,
+      titleTag: null,
       // messages: LoginMessages(
       //   usernameHint: 'Username',
       //   passwordHint: 'Pass',
