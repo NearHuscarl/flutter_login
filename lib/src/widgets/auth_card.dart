@@ -797,6 +797,12 @@ class _RecoverCardState extends State<_RecoverCard>
             key: _formRecoverKey,
             child: Column(
               children: [
+                Text(
+                  messages.recoverPasswordIntro,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.body1,
+                ),
+                SizedBox(height: 15),
                 _buildRecoverNameField(textFieldWidth, messages),
                 SizedBox(height: 15),
                 Text(
