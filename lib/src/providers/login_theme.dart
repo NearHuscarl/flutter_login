@@ -36,6 +36,8 @@ class LoginButtonTheme {
 
 class LoginTheme with ChangeNotifier {
   LoginTheme({
+    this.pageColorLight,
+    this.pageColorDark,
     this.primaryColor,
     this.accentColor,
     this.errorColor,
@@ -51,6 +53,14 @@ class LoginTheme with ChangeNotifier {
     this.beforeHeroFontSize = 48.0,
     this.afterHeroFontSize = 15.0,
   });
+
+  /// The background color of the login page for light gradient; if specified,
+  /// overrides the [primaryColor] for page background
+  final Color pageColorLight;
+
+  /// The background color of the login page for dark gradient; if specified,
+  /// overrides the computed primaryColorDark for page background
+  final Color pageColorDark;
 
   /// The background color of major parts of the widget like the login screen
   /// and buttons
