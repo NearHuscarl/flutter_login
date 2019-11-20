@@ -373,7 +373,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         : primaryDarkShades.first;
     final primaryColorDark = primaryDarkShades.length >= 3
         ? primaryDarkShades[2]
-        : primaryDarkShades[1];
+        : primaryDarkShades.last;
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
