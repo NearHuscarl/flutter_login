@@ -54,11 +54,11 @@ class LoginTheme with ChangeNotifier {
     this.afterHeroFontSize = 15.0,
   });
 
-  /// The background color of the login page for light gradient; if specified,
+  /// The background color of the login page for light gradient; if provided,
   /// overrides the [primaryColor] for page background
   final Color pageColorLight;
 
-  /// The background color of the login page for dark gradient; if specified,
+  /// The background color of the login page for dark gradient; if provided,
   /// overrides the computed primaryColorDark for page background
   final Color pageColorDark;
 
