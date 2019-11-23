@@ -32,6 +32,15 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
+  Future<String> _confirmRecoverPassword(String code, String password) {
+    return Future.delayed(loginTime).then((_) {
+      if (false) {
+        return 'Wrong verification code. Try again.';
+      }
+      return null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final inputBorder = BorderRadius.vertical(
@@ -165,6 +174,11 @@ class LoginScreen extends StatelessWidget {
         print('Name: $name');
         return _recoverPassword(name);
         // Show new password dialog
+      },
+      onConfirmRecover: (code, password) {
+        print("Recover code info");
+        print('Code: $code');
+        return _confirmRecoverPassword(code, password);
       },
       showDebugButtons: true,
     );
