@@ -19,6 +19,8 @@ class Auth with ChangeNotifier {
   }) {
     if (previous != null) {
       _mode = previous.mode;
+      _authData['email'] = previous.email;
+      _authData['password'] = previous.password;
     }
   }
 
