@@ -287,7 +287,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         );
 
       case 2:
-        return RecoverCodeCard(
+        return ConfirmRecoverCard(
           passwordValidator: widget.passwordValidator,
           onBack: () => _switchRecovery(2, false),
           onSubmitCompleted: widget.onSubmitCompleted,
@@ -582,7 +582,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           style: theme.textTheme.body1,
           textAlign: TextAlign.left,
         ),
-        onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
+        onPressed: buttonEnabled ? () {
+          FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+          widget.onSwitchRecoveryPassword();
+        } : null,
       ),
     );
   }
@@ -734,6 +737,8 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   Future<bool> _submit() async {
+    FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+
     if (!_formRecoverKey.currentState.validate()) {
       return false;
     }

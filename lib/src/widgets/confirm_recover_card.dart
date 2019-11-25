@@ -10,8 +10,8 @@ import '../providers/login_messages.dart';
 import '../widget_helper.dart';
 import '../paddings.dart';
 
-class RecoverCodeCard extends StatefulWidget {
-  RecoverCodeCard({
+class ConfirmRecoverCard extends StatefulWidget {
+  ConfirmRecoverCard({
     Key key,
     @required this.passwordValidator,
     @required this.onBack,
@@ -23,10 +23,10 @@ class RecoverCodeCard extends StatefulWidget {
   final Function onSubmitCompleted;
 
   @override
-  RecoverCodeCardState createState() => RecoverCodeCardState();
+  ConfirmRecoverCardState createState() => ConfirmRecoverCardState();
 }
 
-class RecoverCodeCardState extends State<RecoverCodeCard>
+class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
@@ -57,6 +57,8 @@ class RecoverCodeCardState extends State<RecoverCodeCard>
   }
 
   Future<bool> _submit() async {
+    FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+
     if (!_formRecoverKey.currentState.validate()) {
       return false;
     }
