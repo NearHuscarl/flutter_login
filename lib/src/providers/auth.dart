@@ -10,11 +10,16 @@ typedef AuthCallback = Future<String> Function(LoginData);
 /// The result is an error message, callback successes if message is null
 typedef RecoverCallback = Future<String> Function(String);
 
+/// The result is an error message, callback successes if message is null
+typedef ConfirmSignupCallback = Future<String> Function(String code, LoginData);
+
 class Auth with ChangeNotifier {
   Auth({
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
+    this.onConfirmSignup,
+    this.onResendCode,
     Auth previous,
   }) {
     if (previous != null) {
@@ -27,12 +32,16 @@ class Auth with ChangeNotifier {
           onLogin: null,
           onSignup: null,
           onRecoverPassword: null,
+          onConfirmSignup: null,
+          onResendCode: null,
           previous: null,
         );
 
   final AuthCallback onLogin;
   final AuthCallback onSignup;
   final RecoverCallback onRecoverPassword;
+  final ConfirmSignupCallback onConfirmSignup;
+  final AuthCallback onResendCode;
 
   AuthMode _mode = AuthMode.Login;
 
