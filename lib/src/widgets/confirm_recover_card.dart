@@ -119,6 +119,11 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
         FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
       },
       validator: widget.passwordValidator,
+      // todo: integrate with shared auth data, like this:
+      // onSaved: (value) {
+      //   final auth = Provider.of<Auth>(context, listen: false);
+      //   auth.password = value;
+      // },
       onSaved: (value) => _authData['password'] = value,
     );
   }
