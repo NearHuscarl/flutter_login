@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'animated_text.dart';
 import 'ring.dart';
 
@@ -33,10 +35,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
   var _isLoading = false;
   var _hover = false;
 
+  double _width;
   Color _color;
   Color _loadingColor;
 
-  static const _width = 120.0;
   static const _height = 40.0;
   static const _loadingCircleRadius = _height / 2;
   static const _loadingCircleThickness = 4.0;
@@ -44,6 +46,23 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   void initState() {
     super.initState();
+
+    var renderParagraph = RenderParagraph(
+      TextSpan(
+        text: widget.text,
+      ),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+
+    renderParagraph.layout(BoxConstraints(minWidth: 120.0));
+
+    // text width based on fontSize 12, plus 24.0 for padding
+    var textWidth = renderParagraph.getMinIntrinsicWidth(12).ceilToDouble() + 24.0;
+
+    // button width is min 120.0 and max 240.0
+    _width = textWidth > 120.0 && textWidth < 240.0 ? textWidth :
+        textWidth >= 240.0 ? 240.0 : 120.0;
 
     _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
