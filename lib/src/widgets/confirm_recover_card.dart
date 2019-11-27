@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'animated_button.dart';
 import 'animated_text_form_field.dart';
+import '../models/login_data.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
 import '../widget_helper.dart';
@@ -68,7 +69,11 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     _formRecoverKey.currentState.save();
     _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onConfirmRecover(_code, _authData['password']);
+    final error = await auth.onConfirmRecover(_code, LoginData(
+        // todo: integrate with shared auth data
+        name: _authData['email'],
+        password: _authData['password']
+    ));
 
     if (error != null) {
       showErrorToast(context, error);
