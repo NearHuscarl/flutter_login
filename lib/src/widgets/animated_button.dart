@@ -34,8 +34,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Animation<Color> _colorAnimation;
   var _isLoading = false;
   var _hover = false;
+  var _width = -1.0;
 
-  double _width;
   Color _color;
   Color _loadingColor;
 
@@ -47,35 +47,12 @@ class _AnimatedButtonState extends State<AnimatedButton>
   void initState() {
     super.initState();
 
-    var renderParagraph = RenderParagraph(
-      TextSpan(
-        text: widget.text,
-      ),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    );
-
-    renderParagraph.layout(BoxConstraints(minWidth: 120.0));
-
-    // text width based on fontSize 12, plus 24.0 for padding
-    var textWidth = renderParagraph.getMinIntrinsicWidth(12).ceilToDouble() + 24.0;
-
-    // button width is min 120.0 and max 240.0
-    _width = textWidth > 120.0 && textWidth < 240.0 ? textWidth :
-        textWidth >= 240.0 ? 240.0 : 120.0;
-
     _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: widget.controller,
         curve: Interval(0.0, .25),
       ),
     );
-
-    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
-        .animate(CurvedAnimation(
-      parent: widget.controller,
-      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
-    ));
 
     // _colorAnimation
 
@@ -149,6 +126,40 @@ class _AnimatedButtonState extends State<AnimatedButton>
     }
   }
 
+  // initializes width and size animation
+  void _initWidth(BuildContext context) {
+    final theme = Theme.of(context);
+    final fontSize = theme.textTheme.button.fontSize;
+
+    var renderParagraph = RenderParagraph(
+      TextSpan(
+        text: widget.text,
+        style: TextStyle(
+          fontSize: fontSize,
+          fontWeight: theme.textTheme.button.fontWeight,
+          letterSpacing: theme.textTheme.button.letterSpacing,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+
+    renderParagraph.layout(BoxConstraints(minWidth: 120.0));
+
+    // text width based on fontSize, plus 24.0 for padding
+    var textWidth = renderParagraph.getMinIntrinsicWidth(fontSize).ceilToDouble() + 24.0;
+
+    // button width is min 120.0 and max 240.0
+    _width = textWidth > 120.0 && textWidth < 240.0 ? textWidth :
+      textWidth >= 240.0 ? 240.0 : 120.0;
+
+    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
+        .animate(CurvedAnimation(
+      parent: widget.controller,
+      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+    ));
+  }
+
   Widget _buildButtonText(ThemeData theme) {
     return FadeTransition(
       opacity: _textOpacityAnimation,
@@ -161,6 +172,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   Widget _buildButton(ThemeData theme) {
     final buttonTheme = theme.floatingActionButtonTheme;
+
+    if (_width < 0) {
+      _initWidth(context);
+    }
 
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
