@@ -119,7 +119,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     );
   }
 
-  Widget _buildResendCode(ThemeData theme, LoginMessages messages, Auth auth) {
+  Widget _buildResendCode(ThemeData theme, LoginMessages messages) {
     return FlatButton(
       child: Text(
         messages.resendCodeButton,
@@ -152,7 +152,6 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
-    final auth = Provider.of<Auth>(context, listen: false);
     final deviceSize = MediaQuery
         .of(context)
         .size;
@@ -183,7 +182,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
                 SizedBox(height: 20),
                 _buildConfirmationCodeField(textFieldWidth, messages),
                 SizedBox(height: 10),
-                _buildResendCode(theme, messages, auth),
+                _buildResendCode(theme, messages),
                 _buildConfirmButton(theme, messages),
                 _buildBackButton(theme, messages),
               ],
