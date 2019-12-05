@@ -9,6 +9,7 @@ class LoginMessages with ChangeNotifier {
     this.loginButton: defaultLoginButton,
     this.signupButton: defaultSignupButton,
     this.recoverPasswordButton: defaultRecoverPasswordButton,
+    this.recoverPasswordIntro: defaultRecoverPasswordIntro,
     this.recoverPasswordDescription: defaultRecoverPasswordDescription,
     this.goBackButton: defaultGoBackButton,
     this.confirmPasswordError: defaultConfirmPasswordError,
@@ -27,6 +28,7 @@ class LoginMessages with ChangeNotifier {
   static const defaultLoginButton = 'LOGIN';
   static const defaultSignupButton = 'SIGNUP';
   static const defaultRecoverPasswordButton = 'RECOVER';
+  static const defaultRecoverPasswordIntro = 'Don\'t worry, happens to the best of us.';
   static const defaultRecoverPasswordDescription =
       'We will send a password recovery code to your email.';
   static const defaultGoBackButton = 'BACK';
@@ -60,6 +62,9 @@ class LoginMessages with ChangeNotifier {
 
   /// Recover password button's label
   final String recoverPasswordButton;
+
+  /// Intro in password recovery form
+  final String recoverPasswordIntro;
 
   /// Description in password recovery form
   final String recoverPasswordDescription;
