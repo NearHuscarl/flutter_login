@@ -54,6 +54,7 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordButton: 'HELP ME',
       //   goBackButton: 'GO BACK',
       //   confirmPasswordError: 'Not match!',
+      //   recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
       // ),
