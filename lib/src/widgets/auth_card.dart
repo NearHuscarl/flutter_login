@@ -512,8 +512,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
-    final auth = Provider.of<Auth>(context);
-
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
@@ -536,9 +534,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildConfirmPasswordField(double width, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context);
-
+  Widget _buildConfirmPasswordField(double width, LoginMessages messages, Auth auth) {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       enabled: auth.isSignup,
@@ -581,9 +577,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context);
-
+  Widget _buildSubmitButton(ThemeData theme, LoginMessages messages, Auth auth) {
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
@@ -594,9 +588,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context, listen: false);
-
+  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages, Auth auth) {
     return FadeIn(
       controller: _loadingController,
       offset: .5,
@@ -661,7 +653,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               vertical: 10,
             ),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth, messages),
+            child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
           ),
           Container(
             padding: Paddings.fromRBL(cardPadding),
@@ -669,8 +661,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               children: <Widget>[
                 _buildForgotPassword(theme, messages),
-                _buildSubmitButton(theme, messages),
-                _buildSwitchAuthButton(theme, messages),
+                _buildSubmitButton(theme, messages, auth),
+                _buildSwitchAuthButton(theme, messages, auth),
               ],
             ),
           ),
