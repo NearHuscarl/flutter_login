@@ -36,7 +36,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   var _hover = false;
   var _width = 120.0;
 
-  String _oldText;
   Color _color;
   Color _loadingColor;
 
@@ -56,6 +55,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     );
 
     // _colorAnimation
+    // _width, _sizeAnimation
 
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
@@ -81,6 +81,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   void didChangeDependencies() {
     _updateColorAnimation();
+    _updateWidth();
     super.didChangeDependencies();
   }
 
@@ -110,6 +111,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
         oldWidget.loadingColor != widget.loadingColor) {
       _updateColorAnimation();
     }
+
+    if (oldWidget.text != widget.text) {
+      _updateWidth();
+    }
   }
 
   @override
@@ -128,7 +133,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   }
 
   /// sets width and size animation
-  void _updateWidth(BuildContext context) {
+  void _updateWidth() {
     final theme = Theme.of(context);
     final fontSize = theme.textTheme.button.fontSize;
 
@@ -175,11 +180,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   Widget _buildButton(ThemeData theme) {
     final buttonTheme = theme.floatingActionButtonTheme;
-
-    if (widget.text != _oldText) {
-      _updateWidth(context);
-      _oldText = widget.text;
-    }
 
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
