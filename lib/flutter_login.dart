@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
 import 'src/widgets/null_widget.dart';
 import 'theme.dart';
+import 'src/dart_helper.dart';
 import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
 import 'src/providers/login_messages.dart';
@@ -103,7 +104,7 @@ class _Header extends StatelessWidget {
     }
 
     Widget header;
-    if (titleTag != null && title.isNotEmpty) {
+    if (titleTag != null && !DartHelper.isNullOrEmpty(title)) {
       header = HeroText(
         title,
         tag: titleTag,
@@ -112,7 +113,7 @@ class _Header extends StatelessWidget {
         style: theme.textTheme.display2,
         viewState: ViewState.enlarged,
       );
-    } else if (title.isNotEmpty) {
+    } else if (!DartHelper.isNullOrEmpty(title)) {
       header = Text(
         title,
         style: theme.textTheme.display2,
