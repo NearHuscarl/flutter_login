@@ -76,6 +76,9 @@ textFieldStyle | `TextStyle` | Text style for [TextField] input text
 buttonStyle | `TextStyle` | Text style for button text
 beforeHeroFontSize | `double` | Defines the font size of the title in the login screen (before the hero transition)
 afterHeroFontSize | `double` | Defines the font size of the title in the screen after the login screen (after the hero transition)
+pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
+pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
+
 
 ## Examples
 
