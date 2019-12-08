@@ -62,6 +62,8 @@ class LoginScreen extends StatelessWidget {
       //   primaryColor: Colors.teal,
       //   accentColor: Colors.yellow,
       //   errorColor: Colors.deepOrange,
+      //   pageColorLight: Colors.indigo.shade300,
+      //   pageColorDark: Colors.indigo.shade500,
       //   titleStyle: TextStyle(
       //     color: Colors.greenAccent,
       //     fontFamily: 'Quicksand',
