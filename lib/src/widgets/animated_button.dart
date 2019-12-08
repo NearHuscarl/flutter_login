@@ -152,9 +152,9 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
     renderParagraph.layout(BoxConstraints(minWidth: 120.0));
 
-    // text width based on fontSize, plus 64.0 for padding
+    // text width based on fontSize, plus 45.0 for padding
     var textWidth =
-        renderParagraph.getMinIntrinsicWidth(fontSize).ceilToDouble() + 64.0;
+        renderParagraph.getMinIntrinsicWidth(fontSize).ceilToDouble() + 45.0;
 
     // button width is min 120.0 and max 240.0
     _width = textWidth > 120.0 && textWidth < 240.0
