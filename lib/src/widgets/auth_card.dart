@@ -126,7 +126,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _routeTransitionController.dispose();
   }
 
-  void _switchRecovery(int fromIndex, bool forward) {
+  void _switchPage(bool forward) {
     final auth = Provider.of<Auth>(context, listen: false);
 
     if (forward) {
@@ -141,7 +141,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       );
     }
 
-    _pageIndex = forward ? ++fromIndex : --fromIndex;
+    _pageIndex = forward ? ++_pageIndex : --_pageIndex;
     auth.isRecover = _pageIndex > 0;
   }
 
@@ -204,8 +204,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   void runChangePageAnimation() {
-    //final auth = Provider.of<Auth>(context, listen: false);
-    _switchRecovery(_pageIndex, _pageIndex < 2);
+    _switchPage(_pageIndex < 2);
   }
 
   Widget _buildLoadingAnimator({Widget child, ThemeData theme}) {
@@ -270,7 +269,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 : (_formLoadingController..value = 1.0),
             emailValidator: widget.emailValidator,
             passwordValidator: widget.passwordValidator,
-            onSwitchRecoveryPassword: () => _switchRecovery(0, true),
+            onSwitchRecoveryPassword: () => _switchPage(true),
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation().then((_) {
                 widget.onSubmitCompleted();
@@ -282,14 +281,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       case 1:
         return _RecoverCard(
             emailValidator: widget.emailValidator,
-            onBack: () => _switchRecovery(1, false),
-            onSwitchRecoverCode: () => _switchRecovery(1, true),
+            onBack: () => _switchPage(false),
+            onSwitchRecoverCode: () => _switchPage(true),
         );
 
       case 2:
         return ConfirmRecoverCard(
           passwordValidator: widget.passwordValidator,
-          onBack: () => _switchRecovery(2, false),
+          onBack: () => _switchPage(false),
           onSubmitCompleted: widget.onSubmitCompleted,
         );
     }
