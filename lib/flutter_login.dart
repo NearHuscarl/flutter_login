@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
 import 'src/widgets/null_widget.dart';
 import 'theme.dart';
+import 'src/dart_helper.dart';
 import 'src/color_helper.dart';
 import 'src/providers/auth.dart';
 import 'src/providers/login_messages.dart';
@@ -103,8 +104,7 @@ class _Header extends StatelessWidget {
     }
 
     Widget header;
-
-    if (titleTag != null) {
+    if (titleTag != null && !DartHelper.isNullOrEmpty(title)) {
       header = HeroText(
         title,
         tag: titleTag,
@@ -113,11 +113,13 @@ class _Header extends StatelessWidget {
         style: theme.textTheme.display2,
         viewState: ViewState.enlarged,
       );
-    } else {
+    } else if (!DartHelper.isNullOrEmpty(title)) {
       header = Text(
         title,
         style: theme.textTheme.display2,
       );
+    } else {
+      header = null;
     }
 
     return SizedBox(
@@ -377,7 +379,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         : primaryDarkShades.first;
     final primaryColorDark = primaryDarkShades.length >= 3
         ? primaryDarkShades[2]
-        : primaryDarkShades[1];
+        : primaryDarkShades.last;
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
@@ -520,7 +522,10 @@ class _FlutterLoginState extends State<FlutterLogin>
         body: Stack(
           children: <Widget>[
             GradientBox(
-              colors: [theme.primaryColor, theme.primaryColorDark],
+              colors: [
+                loginTheme.pageColorLight ?? theme.primaryColor,
+                loginTheme.pageColorDark ?? theme.primaryColorDark,
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
