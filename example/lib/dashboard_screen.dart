@@ -85,6 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               child: Image.asset(
                 'assets/images/ecorp.png',
                 filterQuality: FilterQuality.high,
+                height: 30,
               ),
             ),
           ),
