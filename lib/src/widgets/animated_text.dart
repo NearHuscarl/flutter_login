@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../math_helper.dart';
@@ -82,8 +83,16 @@ class _AnimatedTextState extends State<AnimatedText>
     _controller.dispose();
   }
 
+  Matrix4 get _matrix {
+    // Fix: The text is not centered after applying perspective effect in the web build. Idk why
+    if (kIsWeb) {
+      return Matrix4.identity();
+    }
+    return Matrix.perspective(.006);
+  }
+
   Matrix4 _getFrontSideUp(double value) {
-    return Matrix.perspective(.006)
+    return _matrix
       ..translate(
         0.0,
         -radius * sin(_animation.value),
@@ -93,7 +102,7 @@ class _AnimatedTextState extends State<AnimatedText>
   }
 
   Matrix4 _getBackSideUp(double value) {
-    return Matrix.perspective(.006)
+    return _matrix
       ..translate(
         0.0,
         radius * cos(_animation.value),
@@ -103,7 +112,7 @@ class _AnimatedTextState extends State<AnimatedText>
   }
 
   Matrix4 _getFrontSideDown(double value) {
-    return Matrix.perspective(.006)
+    return _matrix
       ..translate(
         0.0,
         radius * sin(_animation.value),
@@ -113,7 +122,7 @@ class _AnimatedTextState extends State<AnimatedText>
   }
 
   Matrix4 _getBackSideDown(double value) {
-    return Matrix.perspective(.006)
+    return _matrix
       ..translate(
         0.0,
         -radius * cos(_animation.value),
