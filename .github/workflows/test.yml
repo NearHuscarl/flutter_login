@@ -1,4 +1,4 @@
-name: CI
+name: Widget tests
 
 on: [push]
 
@@ -11,7 +11,7 @@ jobs:
     steps:
     # Checkout the repository code using V1 of the standard checkout Action
     - uses: actions/checkout@v2
-    # Use the standard Java Action to setup Java 
+    # Use the standard Java Action to setup Java
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
