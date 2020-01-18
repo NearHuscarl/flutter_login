@@ -20,6 +20,7 @@ import 'src/widgets/gradient_box.dart';
 export 'src/models/login_data.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
+import 'src/constants.dart';
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
@@ -107,6 +108,7 @@ class _Header extends StatelessWidget {
     if (titleTag != null && !DartHelper.isNullOrEmpty(title)) {
       header = HeroText(
         title,
+        key: kTitleKey,
         tag: titleTag,
         largeFontSize: loginTheme.beforeHeroFontSize,
         smallFontSize: loginTheme.afterHeroFontSize,
@@ -116,6 +118,7 @@ class _Header extends StatelessWidget {
     } else if (!DartHelper.isNullOrEmpty(title)) {
       header = Text(
         title,
+        key: kTitleKey,
         style: theme.textTheme.display2,
       );
     } else {
@@ -234,11 +237,6 @@ class FlutterLogin extends StatefulWidget {
 
 class _FlutterLoginState extends State<FlutterLogin>
     with TickerProviderStateMixin {
-  /// [authCardKey] is a state since hot reload preserves the state of widget,
-  /// changes in [AuthCardState] will not trigger rebuilding the whole
-  /// [FlutterLogin], prevent running the loading animation again after every small
-  /// changes
-  /// https://flutter.dev/docs/development/tools/hot-reload#previous-state-is-combined-with-new-code
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
   static const loadingDuration = const Duration(milliseconds: 400);
   AnimationController _loadingController;
@@ -314,6 +312,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       bottom: 0,
       right: 0,
       child: Row(
+        key: kDebugToolbarKey,
         children: <Widget>[
           RaisedButton(
             color: Colors.green,

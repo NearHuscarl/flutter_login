@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
+import '../constants.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'custom_page_transformer.dart';
@@ -801,6 +802,7 @@ class _RecoverCardState extends State<_RecoverCard>
               children: [
                 Text(
                   messages.recoverPasswordIntro,
+                  key: kRecoverPasswordIntroKey,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.body1,
                 ),
@@ -809,6 +811,7 @@ class _RecoverCardState extends State<_RecoverCard>
                 SizedBox(height: 20),
                 Text(
                   messages.recoverPasswordDescription,
+                  key: kRecoverPasswordDescriptionKey,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.body1,
                 ),
