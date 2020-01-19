@@ -592,6 +592,35 @@ void main() {
     addTearDown(() => reset(mockCallback));
   });
 
+  testWidgets(
+      'Name, pass and confirm pass fields should remember their content when switching between login/signup and recover password',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(defaultFlutterLogin());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickSwitchAuthButton();
+    await tester.pumpAndSettle();
+
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), '12345');
+    await tester.pumpAndSettle();
+    await tester.enterText(findConfirmPasswordTextField(), 'abcde');
+    await tester.pumpAndSettle();
+
+    clickForgotPasswordButton();
+    await tester.pumpAndSettle();
+
+    expect(nameTextFieldWidget(tester).controller.text, 'near@gmail.com');
+
+    clickGoBackButton();
+    await tester.pumpAndSettle();
+
+    expect(nameTextFieldWidget(tester).controller.text, 'near@gmail.com');
+    expect(passwordTextFieldWidget(tester).controller.text, '12345');
+    expect(confirmPasswordTextFieldWidget(tester).controller.text, 'abcde');
+  });
+
   // TODO:
   // https://github.com/NearHuscarl/flutter_login/issues/20
   testWidgets('Hide Logo completely if device height is less than ????',

@@ -132,6 +132,7 @@ Text recoverDescriptionTextWidget() {
 // https://github.com/flutter/flutter/issues/31066#issuecomment-530507319
 void clickSubmitButton() => submitButtonWidget().onPressed();
 void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed();
+void clickGoBackButton() => goBackButtonWidget().onPressed();
 void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed();
 
 /// this prevents this error:
