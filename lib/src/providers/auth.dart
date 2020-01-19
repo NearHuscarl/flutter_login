@@ -19,8 +19,9 @@ class Auth with ChangeNotifier {
   }) {
     if (previous != null) {
       _mode = previous.mode;
-      _authData['email'] = previous.email;
-      _authData['password'] = previous.password;
+      _email = previous.email;
+      _password = previous.password;
+      _confirmPassword = previous.confirmPassword;
     }
   }
 
@@ -35,8 +36,6 @@ class Auth with ChangeNotifier {
   final AuthCallback onLogin;
   final AuthCallback onSignup;
   final RecoverCallback onRecoverPassword;
-
-  var _authData = {'email': '', 'password': ''};
 
   AuthMode _mode = AuthMode.Login;
 
@@ -63,15 +62,24 @@ class Auth with ChangeNotifier {
     return mode;
   }
 
-  get email => _authData['email'];
+  String _email = '';
+  get email => _email;
   set email(String email) {
-    _authData['email'] = email;
+    _email = email;
     notifyListeners();
   }
 
-  get password => _authData['password'];
+  String _password = '';
+  get password => _password;
   set password(String password) {
-    _authData['password'] = password;
+    _password = password;
+    notifyListeners();
+  }
+
+  String _confirmPassword = '';
+  get confirmPassword => _confirmPassword;
+  set confirmPassword(String confirmPassword) {
+    _confirmPassword = confirmPassword;
     notifyListeners();
   }
 }

@@ -352,9 +352,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
-  final _passwordController = TextEditingController();
 
   TextEditingController _nameController;
+  TextEditingController _passController;
+  TextEditingController _confirmPassController;
 
   var _isLoading = false;
   var _isSubmitting = false;
@@ -378,7 +379,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = new TextEditingController(text: auth.email);
+    _nameController = TextEditingController(text: auth.email);
+    _passController = TextEditingController(text: auth.password);
+    _confirmPassController = TextEditingController(text: auth.confirmPassword);
 
     _loadingController = widget.loadingController ??
         (AnimationController(
@@ -520,7 +523,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
-      controller: _passwordController,
+      controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
       focusNode: _passwordFocusNode,
@@ -545,17 +548,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       inertiaController: _postSwitchAuthController,
       inertiaDirection: TextFieldInertiaDirection.right,
       labelText: messages.confirmPasswordHint,
+      controller: _confirmPassController,
       textInputAction: TextInputAction.done,
       focusNode: _confirmPasswordFocusNode,
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-              if (value != _passwordController.text) {
+              if (value != _passController.text) {
                 return messages.confirmPasswordError;
               }
               return null;
             }
           : (value) => null,
+      onSaved: (value) => auth.confirmPassword = value,
     );
   }
 
@@ -788,7 +793,7 @@ class _RecoverCardState extends State<_RecoverCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final auth = Provider.of<Auth>(context, listen: true);
+    final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = min(deviceSize.width * 0.75, 360.0);

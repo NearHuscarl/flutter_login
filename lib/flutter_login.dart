@@ -495,7 +495,7 @@ class _FlutterLoginState extends State<FlutterLogin>
           value: widget.messages ?? LoginMessages(),
         ),
         ChangeNotifierProvider.value(
-          /// dummy value for the second argument of [ProxyProviderBuilder] below
+          /// dummy value for the second argument of [ChangeNotifierProxyProvider].builder below
           value: Auth.empty(),
         ),
 
