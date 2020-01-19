@@ -354,7 +354,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _confirmPasswordFocusNode = FocusNode();
   final _passwordController = TextEditingController();
 
-  var _authData = {'email': '', 'password': ''};
+  TextEditingController _nameController;
+
   var _isLoading = false;
   var _isSubmitting = false;
   var _showShadow = true;
@@ -375,6 +376,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    final auth = Provider.of<Auth>(context, listen: false);
+    _nameController = new TextEditingController(text: auth.email);
 
     _loadingController = widget.loadingController ??
         (AnimationController(
@@ -460,13 +464,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (auth.isLogin) {
       error = await auth.onLogin(LoginData(
-        name: _authData['email'],
-        password: _authData['password'],
+        name: auth.email,
+        password: auth.password,
       ));
     } else {
       error = await auth.onSignup(LoginData(
-        name: _authData['email'],
-        password: _authData['password'],
+        name: auth.email,
+        password: auth.password,
       ));
     }
 
@@ -492,8 +496,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
-  Widget _buildNameField(double width, LoginMessages messages) {
+  Widget _buildNameField(double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
+      controller: _nameController,
       width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
@@ -505,13 +510,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
       validator: widget.emailValidator,
-      onSaved: (value) => _authData['email'] = value,
+      onSaved: (value) => auth.email = value,
     );
   }
 
-  Widget _buildPasswordField(double width, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context);
-
+  Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
@@ -530,13 +533,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         }
       },
       validator: widget.passwordValidator,
-      onSaved: (value) => _authData['password'] = value,
+      onSaved: (value) => auth.password = value,
     );
   }
 
-  Widget _buildConfirmPasswordField(double width, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context);
-
+  Widget _buildConfirmPasswordField(double width, LoginMessages messages, Auth auth) {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       enabled: auth.isSignup,
@@ -570,14 +571,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           style: theme.textTheme.body1,
           textAlign: TextAlign.left,
         ),
-        onPressed: buttonEnabled ? widget.onSwitchRecoveryPassword : null,
+        onPressed: buttonEnabled ? () {
+          // save state to populate email field on recovery card
+          _formKey.currentState.save();
+          widget.onSwitchRecoveryPassword();
+        } : null,
       ),
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context);
-
+  Widget _buildSubmitButton(ThemeData theme, LoginMessages messages, Auth auth) {
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
@@ -588,9 +591,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages) {
-    final auth = Provider.of<Auth>(context, listen: false);
-
+  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages, Auth auth) {
     return FadeIn(
       controller: _loadingController,
       offset: .5,
@@ -612,7 +613,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
+    final auth = Provider.of<Auth>(context, listen: true);
+    final isLogin = auth.isLogin;
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
@@ -633,9 +635,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildNameField(textFieldWidth, messages),
+                _buildNameField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
-                _buildPasswordField(textFieldWidth, messages),
+                _buildPasswordField(textFieldWidth, messages, auth),
                 SizedBox(height: 10),
               ],
             ),
@@ -654,7 +656,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               vertical: 10,
             ),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth, messages),
+            child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
           ),
           Container(
             padding: Paddings.fromRBL(cardPadding),
@@ -662,8 +664,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               children: <Widget>[
                 _buildForgotPassword(theme, messages),
-                _buildSubmitButton(theme, messages),
-                _buildSwitchAuthButton(theme, messages),
+                _buildSubmitButton(theme, messages, auth),
+                _buildSwitchAuthButton(theme, messages, auth),
               ],
             ),
           ),
@@ -698,14 +700,18 @@ class _RecoverCardState extends State<_RecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
+  TextEditingController _nameController;
+
   var _isSubmitting = false;
-  var _name = '';
 
   AnimationController _submitController;
 
   @override
   void initState() {
     super.initState();
+
+    final auth = Provider.of<Auth>(context, listen: false);
+    _nameController = new TextEditingController(text: auth.email);
 
     _submitController = AnimationController(
       vsync: this,
@@ -729,7 +735,7 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState.save();
     _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword(_name);
+    final error = await auth.onRecoverPassword(auth.email);
 
     if (error != null) {
       showErrorToast(context, error);
@@ -744,8 +750,9 @@ class _RecoverCardState extends State<_RecoverCard>
     }
   }
 
-  Widget _buildRecoverNameField(double width, LoginMessages messages) {
+  Widget _buildRecoverNameField(double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
+      controller: _nameController,
       width: width,
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
@@ -753,7 +760,7 @@ class _RecoverCardState extends State<_RecoverCard>
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
-      onSaved: (value) => _name = value,
+      onSaved: (value) => auth.email = value,
     );
   }
 
@@ -768,7 +775,10 @@ class _RecoverCardState extends State<_RecoverCard>
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
     return FlatButton(
       child: Text(messages.goBackButton),
-      onPressed: !_isSubmitting ? widget.onSwitchLogin : null,
+      onPressed: !_isSubmitting ? () {
+        _formRecoverKey.currentState.save();
+        widget.onSwitchLogin();
+      } : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
@@ -778,6 +788,7 @@ class _RecoverCardState extends State<_RecoverCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final auth = Provider.of<Auth>(context, listen: true);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = min(deviceSize.width * 0.75, 360.0);
@@ -807,7 +818,7 @@ class _RecoverCardState extends State<_RecoverCard>
                   style: theme.textTheme.body1,
                 ),
                 SizedBox(height: 20),
-                _buildRecoverNameField(textFieldWidth, messages),
+                _buildRecoverNameField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
                 Text(
                   messages.recoverPasswordDescription,
