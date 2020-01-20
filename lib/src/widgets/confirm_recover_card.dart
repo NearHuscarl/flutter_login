@@ -35,7 +35,6 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   final _confirmPasswordFocusNode = FocusNode();
   final _passwordController = TextEditingController();
 
-  var _authData = {'email': '', 'password': ''};
   var _isSubmitting = false;
   var _code = '';
 
@@ -69,11 +68,13 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     _formRecoverKey.currentState.save();
     _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onConfirmRecover(_code, LoginData(
-        // todo: integrate with shared auth data
-        name: _authData['email'],
-        password: _authData['password']
-    ));
+    final error = await auth.onConfirmRecover(
+      _code,
+      LoginData(
+        name: auth.email,
+        password: auth.password,
+      ),
+    );
 
     if (error != null) {
       showErrorToast(context, error);
@@ -119,12 +120,10 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
         FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
       },
       validator: widget.passwordValidator,
-      // todo: integrate with shared auth data, like this:
-      // onSaved: (value) {
-      //   final auth = Provider.of<Auth>(context, listen: false);
-      //   auth.password = value;
-      // },
-      onSaved: (value) => _authData['password'] = value,
+      onSaved: (value) {
+        final auth = Provider.of<Auth>(context, listen: false);
+        auth.password = value;
+      },
     );
   }
 
@@ -140,7 +139,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
           return messages.confirmPasswordError;
         }
         return null;
-      }
+      },
     );
   }
 
@@ -166,9 +165,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
-    final deviceSize = MediaQuery
-        .of(context)
-        .size;
+    final deviceSize = MediaQuery.of(context).size;
     final cardWidth = min(deviceSize.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;

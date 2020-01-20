@@ -498,8 +498,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         ChangeNotifierProvider.value(
           value: widget.messages ?? LoginMessages(),
         ),
-        ChangeNotifierProvider.value(
-          value: Auth(
+        ChangeNotifierProvider(
+          create: (_) => Auth(
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
