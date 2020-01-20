@@ -1,0 +1,24 @@
+name: Widget tests
+
+on: [push]
+
+# https://admcpr.com/continuous-integration-for-flutter-with-github-actions/
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository code using V1 of the standard checkout Action
+    - uses: actions/checkout@v2
+    # Use the standard Java Action to setup Java
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    # Use the community Action to install Flutter
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '1.12.x'
+        channel: 'beta'
+    - run: flutter pub get
+    - run: flutter test

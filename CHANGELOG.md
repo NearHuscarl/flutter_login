@@ -1,3 +1,10 @@
+## [1.0.11] - Misc bug fixes (17/01/2020)
+- Attempt to fix text not centered in the web build
+- Fix exception on submit when onSubmitAnimationCompleted is empty
+- Fix: test failed due to framework error
+
+## [1.0.10+1] - Fix example's logo hero animation (11/12/2019)
+
 ## [1.0.10] - Extend configurations & bug fixes (09/12/2019)
 * Add `pageColorLight` and `pageColorDark` to customize screen background color gradients ([@doc-rj-celltrak](https://github.com/doc-rj-celltrak) in [#12](https://github.com/NearHuscarl/flutter_login/pull/12))
 * Add configurable intro to recovery card ([@doc-rj-celltrak](https://github.com/doc-rj-celltrak) in [#9](https://github.com/NearHuscarl/flutter_login/pull/9))
