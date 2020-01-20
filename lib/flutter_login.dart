@@ -495,19 +495,10 @@ class _FlutterLoginState extends State<FlutterLogin>
           value: widget.messages ?? LoginMessages(),
         ),
         ChangeNotifierProvider.value(
-          /// dummy value for the second argument of [ChangeNotifierProxyProvider].builder below
-          value: Auth.empty(),
-        ),
-
-        /// use [ChangeNotifierProxyProvider] to get access to the previous
-        /// [Auth] state since the state will keep being created when the soft
-        /// keyboard trigger rebuilding
-        ChangeNotifierProxyProvider<Auth, Auth>(
-          builder: (context, auth, prevAuth) => Auth(
+          value: Auth(
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
-            previous: prevAuth,
           ),
         ),
       ],

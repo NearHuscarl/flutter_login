@@ -15,23 +15,12 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
-    Auth previous,
-  }) {
-    if (previous != null) {
-      _mode = previous.mode;
-      _email = previous.email;
-      _password = previous.password;
-      _confirmPassword = previous.confirmPassword;
-    }
-  }
-
-  Auth.empty()
-      : this(
-          onLogin: null,
-          onSignup: null,
-          onRecoverPassword: null,
-          previous: null,
-        );
+    email = '',
+    password = '',
+    confirmPassword = '',
+  })  : this._email = email,
+        this._password = password,
+        this._confirmPassword = confirmPassword;
 
   final AuthCallback onLogin;
   final AuthCallback onSignup;
