@@ -3,11 +3,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'utils.dart';
 import '../lib/flutter_login.dart';
+import '../lib/src/constants.dart';
 import '../lib/src/widgets/animated_text.dart';
 
 void main() {
   final TestWidgetsFlutterBinding binding =
       TestWidgetsFlutterBinding.ensureInitialized();
+
+  void setScreenSize(Size size) {
+    binding.window.physicalSizeTestValue = size;
+    binding.window.devicePixelRatioTestValue = 1.0;
+  }
+
+  void clearScreenSize() {
+    binding.window.clearPhysicalSizeTestValue();
+  }
 
   testWidgets('Default email validator throws error if not match email regex',
       (WidgetTester tester) async {
@@ -367,6 +377,9 @@ void main() {
 
   testWidgets('Leave logo parameter empty should not display login logo image',
       (WidgetTester tester) async {
+    // default device height is 600. Logo is hidden in all cases because there is no space to display
+    setScreenSize(Size(786, 1024));
+
     var flutterLogin = widget(FlutterLogin(
       onSignup: (data) => null,
       onLogin: (data) => null,
@@ -387,6 +400,9 @@ void main() {
     await tester.pumpAndSettle(loadingAnimationDuration);
 
     expect(findLogoImage(), findsOneWidget);
+
+    // resets the screen to its orinal size after the test end
+    addTearDown(() => clearScreenSize());
   });
 
   testWidgets('Leave title parameter empty should not display login title',
@@ -621,18 +637,40 @@ void main() {
     expect(confirmPasswordTextFieldWidget(tester).controller.text, 'abcde');
   });
 
-  // TODO:
   // https://github.com/NearHuscarl/flutter_login/issues/20
-  testWidgets('Hide Logo completely if device height is less than ????',
+  testWidgets(
+      'Logo should be hidden if its height is less than Header.minLogoHeight. Logo height should be never larger than Header.maxLogoHeight',
       (WidgetTester tester) async {
-    await binding.setSurfaceSize(Size(480, 800));
+    final flutterLogin = widget(FlutterLogin(
+      onSignup: (data) => null,
+      onLogin: (data) => null,
+      onRecoverPassword: (data) => null,
+      logo: 'assets/images/ecorp.png',
+      title: 'Yang2020',
+    ));
 
-    await tester.pumpWidget(defaultFlutterLogin());
+    const veryLargeHeight = 2000.0;
+    const enoughHeight = 680.0;
+    const verySmallHeight = 500.0;
+
+    setScreenSize(Size(480, veryLargeHeight));
+    await tester.pumpWidget(flutterLogin);
     await tester.pumpAndSettle(loadingAnimationDuration);
-    expect(true, true);
+    expect(logoWidget(tester).height, kMaxLogoHeight);
+
+    setScreenSize(Size(480, enoughHeight));
+    await tester.pumpWidget(flutterLogin);
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(logoWidget(tester).height,
+        inInclusiveRange(kMinLogoHeight, kMaxLogoHeight));
+
+    setScreenSize(Size(480, verySmallHeight));
+    await tester.pumpWidget(flutterLogin);
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(findLogoImage(), findsNothing);
 
     // resets the screen to its orinal size after the test end
-    addTearDown(() => binding.setSurfaceSize(null));
+    addTearDown(() => clearScreenSize());
   });
 
   // TODO: wait for flutter to add support for testing in web environment on Windows 10

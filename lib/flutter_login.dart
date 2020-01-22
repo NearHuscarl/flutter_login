@@ -1,8 +1,10 @@
 library flutter_login;
 
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
@@ -64,7 +66,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatefulWidget {
   _Header({
     this.logoPath,
     this.logoTag,
@@ -86,63 +88,113 @@ class _Header extends StatelessWidget {
   final AnimationController titleController;
 
   @override
+  __HeaderState createState() => __HeaderState();
+}
+
+class __HeaderState extends State<_Header> {
+  double _titleHeight = 0.0;
+
+  /// https://stackoverflow.com/a/56997641/9449426
+  double getEstimatedTitleHeight() {
+    if (DartHelper.isNullOrEmpty(widget.title)) {
+      return 0.0;
+    }
+
+    final theme = Theme.of(context);
+    final renderParagraph = RenderParagraph(
+      TextSpan(
+        text: widget.title,
+        style: theme.textTheme.display2.copyWith(
+          fontSize: widget.loginTheme.beforeHeroFontSize,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+
+    renderParagraph.layout(BoxConstraints());
+
+    return renderParagraph
+        .getMinIntrinsicHeight(widget.loginTheme.beforeHeroFontSize)
+        .ceilToDouble();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _titleHeight = getEstimatedTitleHeight();
+  }
+
+  @override
+  void didUpdateWidget(_Header oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.title != oldWidget.title) {
+      _titleHeight = getEstimatedTitleHeight();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final displayLogo = logoPath != null;
+    const gap = 5.0;
+    final logoHeight = min(widget.height - _titleHeight - gap, kMaxLogoHeight);
+    final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
+
     Widget logo = displayLogo
         ? Image.asset(
-            logoPath,
+            widget.logoPath,
             filterQuality: FilterQuality.high,
-            height: 125,
+            height: logoHeight,
           )
         : NullWidget();
 
-    if (logoTag != null) {
+    if (widget.logoTag != null) {
       logo = Hero(
-        tag: logoTag,
+        tag: widget.logoTag,
         child: logo,
       );
     }
 
-    Widget header;
-    if (titleTag != null && !DartHelper.isNullOrEmpty(title)) {
-      header = HeroText(
-        title,
+    Widget title;
+    if (widget.titleTag != null && !DartHelper.isNullOrEmpty(widget.title)) {
+      title = HeroText(
+        widget.title,
         key: kTitleKey,
-        tag: titleTag,
-        largeFontSize: loginTheme.beforeHeroFontSize,
-        smallFontSize: loginTheme.afterHeroFontSize,
+        tag: widget.titleTag,
+        largeFontSize: widget.loginTheme.beforeHeroFontSize,
+        smallFontSize: widget.loginTheme.afterHeroFontSize,
         style: theme.textTheme.display2,
         viewState: ViewState.enlarged,
       );
-    } else if (!DartHelper.isNullOrEmpty(title)) {
-      header = Text(
-        title,
+    } else if (!DartHelper.isNullOrEmpty(widget.title)) {
+      title = Text(
+        widget.title,
         key: kTitleKey,
         style: theme.textTheme.display2,
       );
     } else {
-      header = null;
+      title = null;
     }
 
     return SizedBox(
-      height: height,
+      height: widget.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           if (displayLogo)
             FadeIn(
-              controller: logoController,
+              controller: widget.logoController,
               offset: .25,
               fadeDirection: FadeDirection.topToBottom,
               child: logo,
             ),
-          SizedBox(height: 5),
+          SizedBox(height: gap),
           FadeIn(
-            controller: titleController,
+            controller: widget.titleController,
             offset: .5,
             fadeDirection: FadeDirection.topToBottom,
-            child: header,
+            child: title,
           ),
         ],
       ),
@@ -480,10 +532,10 @@ class _FlutterLoginState extends State<FlutterLogin>
     final loginTheme = widget.theme ?? LoginTheme();
     final theme = _mergeTheme(theme: Theme.of(context), loginTheme: loginTheme);
     final deviceSize = MediaQuery.of(context).size;
-    final headerHeight = deviceSize.height * .3;
-    const logoMargin = 15;
+    const headerMargin = 15;
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
+    final headerHeight = cardTopPosition - headerMargin;
     final emailValidator =
         widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
     final passwordValidator =
@@ -532,7 +584,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                       ),
                     ),
                     Positioned(
-                      top: cardTopPosition - headerHeight - logoMargin,
+                      top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
                     ),
                   ],

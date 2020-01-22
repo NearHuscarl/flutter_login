@@ -136,8 +136,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   void _updateWidth() {
     final theme = Theme.of(context);
     final fontSize = theme.textTheme.button.fontSize;
-
-    var renderParagraph = RenderParagraph(
+    final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.text,
         style: TextStyle(

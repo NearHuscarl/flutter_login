@@ -92,6 +92,10 @@ Finder findDebugToolbar() {
   return find.byKey(kDebugToolbarKey);
 }
 
+Image logoWidget(WidgetTester tester) {
+  return tester.widget<Image>(findLogoImage());
+}
+
 TextField nameTextFieldWidget(WidgetTester tester) {
   return tester.widgetList<TextField>(find.byType(TextField)).elementAt(0);
 }
