@@ -1,3 +1,7 @@
+## [1.0.13] - Minor improvements and Bug fix(es) (23/01/2020)
+* Share email input between login and recovery cards ([@doc-rj-celltrak](https://github.com/doc-rj-celltrak) in [#13](https://github.com/NearHuscarl/flutter_login/pull/13))
+* Fix render overflow exceptions [#20](https://github.com/NearHuscarl/flutter_login/issues/20)
+
 ## [1.0.11] - Misc bug fixes (17/01/2020)
 - Attempt to fix text not centered in the web build
 - Fix exception on submit when onSubmitAnimationCompleted is empty
