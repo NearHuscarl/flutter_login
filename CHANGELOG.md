@@ -1,3 +1,6 @@
+## [1.0.13+1] - Update dependency (23/01/2020)
+* Update Provider dependency [#35](https://github.com/NearHuscarl/flutter_login/issues/35)
+
 ## [1.0.13] - Minor improvements and Bug fix(es) (23/01/2020)
 * Share email input between login and recovery cards ([@doc-rj-celltrak](https://github.com/doc-rj-celltrak) in [#13](https://github.com/NearHuscarl/flutter_login/pull/13))
 * Fix render overflow exceptions [#20](https://github.com/NearHuscarl/flutter_login/issues/20)
