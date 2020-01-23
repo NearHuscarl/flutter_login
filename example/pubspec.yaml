@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   font_awesome_flutter: ^8.5.0
   intl: ^0.16.1
+  # dummy package to test https://github.com/NearHuscarl/flutter_login/issues/35
+  provider: ^4.0.1
 
 dev_dependencies:
   flutter_test:

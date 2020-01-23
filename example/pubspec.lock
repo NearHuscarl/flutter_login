@@ -82,7 +82,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.13"
+    version: "1.0.13+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -123,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   path:
     dependency: transitive
     description:
@@ -145,12 +152,12 @@ packages:
     source: hosted
     version: "2.4.0"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0+1"
+    version: "4.0.2"
   quiver:
     dependency: transitive
     description:
@@ -235,4 +242,4 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.5.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.12.1 <2.0.0"
