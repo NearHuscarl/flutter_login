@@ -24,7 +24,7 @@
             "type": "dart",
             // Fix error 'Failed to setup Skia Gr context' when using Genymotion
             // https://github.com/flutter/flutter/issues/11094#issuecomment-373530604
-            "args": ["--enable-software-rendering", "-d", "all"],
+            "args": ["--enable-software-rendering"],
             "flutterMode": "debug"
         },
         {

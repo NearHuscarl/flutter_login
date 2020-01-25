@@ -60,6 +60,21 @@ Widget widget(Widget widget) {
   );
 }
 
+Future<void> simulateOpenSoftKeyboard(
+  WidgetTester tester,
+  Widget widget,
+) async {
+  // Open soft keyboard on small devices will rebuild the whole screen
+  // tester.enterText() seems to only insert text in [EditableText] without
+  // opening/closing the actual soft keyboard, hidding the side effects in
+  // the real environment
+  await tester.pumpWidget(widget);
+}
+
+bool isSignup(WidgetTester tester) {
+  return confirmPasswordTextFieldWidget(tester).enabled;
+}
+
 Finder findLogoImage() {
   return find.byType(Image);
 }
