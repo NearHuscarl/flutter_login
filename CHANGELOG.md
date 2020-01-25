@@ -1,3 +1,6 @@
+## [1.0.14] - Fix signup textfield not selectable in signup mode (26/01/2020)
+* [#34](https://github.com/NearHuscarl/flutter_login/issues/34)
+
 ## [1.0.13+1] - Update dependency (23/01/2020)
 * Update Provider dependency [#35](https://github.com/NearHuscarl/flutter_login/issues/35)
 
