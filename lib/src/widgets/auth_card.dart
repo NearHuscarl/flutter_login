@@ -449,13 +449,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
   }
 
-  Future<bool> _submit() async {
+  Future<bool> _submit([bool cancel = false]) async {
     // a hack to force unfocus the soft keyboard. If not, after change-route
     // animation completes, it will trigger rebuilding this widget and show all
     // textfields and buttons again before going to new route
     FocusScope.of(context).requestFocus(FocusNode());
 
-    if (!_formKey.currentState.validate()) {
+    if (!cancel && !_formKey.currentState.validate()) {
       return false;
     }
 
@@ -465,16 +465,18 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
     String error;
 
-    if (auth.isLogin) {
-      error = await auth.onLogin(LoginData(
-        name: auth.email,
-        password: auth.password,
-      ));
-    } else {
-      error = await auth.onSignup(LoginData(
-        name: auth.email,
-        password: auth.password,
-      ));
+    if (!cancel) {
+      if (auth.isLogin) {
+        error = await auth.onLogin(LoginData(
+            name: auth.email,
+            password: auth.password,
+        ));
+      } else {
+        error = await auth.onSignup(LoginData(
+            name: auth.email,
+            password: auth.password,
+        ));
+      }
     }
 
     // workaround to run after _cardSizeAnimation in parent finished
@@ -616,6 +618,22 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildCancelButton(ThemeData theme, LoginMessages messages, Auth auth) {
+    return FadeIn(
+      controller: _loadingController,
+      offset: .5,
+      curve: _textButtonLoadingAnimationInterval,
+      fadeDirection: FadeDirection.topToBottom,
+      child: FlatButton(
+        child: Text(messages.cancelButton),
+        onPressed: () => _submit(true),
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textColor: theme.primaryColor,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
@@ -668,9 +686,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                _buildForgotPassword(theme, messages),
+                if (messages.forgotPasswordButton != null)
+                  _buildForgotPassword(theme, messages),
                 _buildSubmitButton(theme, messages, auth),
-                _buildSwitchAuthButton(theme, messages, auth),
+                if (messages.signupButton != null)
+                  _buildSwitchAuthButton(theme, messages, auth),
+                if (messages.cancelButton != null)
+                  _buildCancelButton(theme, messages, auth),
               ],
             ),
           ),
