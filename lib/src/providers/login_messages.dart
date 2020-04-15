@@ -23,7 +23,7 @@ class LoginMessages with ChangeNotifier {
   static const defaultLoginButton = 'LOGIN';
   static const defaultSignupButton = 'SIGNUP';
   static const defaultRecoverPasswordButton = 'RECOVER';
-  static const defaultRecoverPasswordIntro = 'Don\'t worry, happens to the best of us.';
+  static const defaultRecoverPasswordIntro = 'Reset your password here';
   static const defaultRecoverPasswordDescription =
       'We will send your plain-text password to this email account.';
   static const defaultGoBackButton = 'BACK';

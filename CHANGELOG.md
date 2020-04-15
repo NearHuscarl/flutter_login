@@ -1,3 +1,18 @@
+## [1.0.14] - Fix signup textfield not selectable in signup mode (26/01/2020)
+* [#34](https://github.com/NearHuscarl/flutter_login/issues/34)
+
+## [1.0.13+1] - Update dependency (23/01/2020)
+* Update Provider dependency [#35](https://github.com/NearHuscarl/flutter_login/issues/35)
+
+## [1.0.13] - Minor improvements and Bug fix(es) (23/01/2020)
+* Share email input between login and recovery cards ([@doc-rj-celltrak](https://github.com/doc-rj-celltrak) in [#13](https://github.com/NearHuscarl/flutter_login/pull/13))
+* Fix render overflow exceptions [#20](https://github.com/NearHuscarl/flutter_login/issues/20)
+
+## [1.0.11] - Misc bug fixes (17/01/2020)
+- Attempt to fix text not centered in the web build
+- Fix exception on submit when onSubmitAnimationCompleted is empty
+- Fix: test failed due to framework error
+
 ## [1.0.10+1] - Fix example's logo hero animation (11/12/2019)
 
 ## [1.0.10] - Extend configurations & bug fixes (09/12/2019)

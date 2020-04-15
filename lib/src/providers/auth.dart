@@ -15,20 +15,12 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
-    Auth previous,
-  }) {
-    if (previous != null) {
-      _mode = previous.mode;
-    }
-  }
-
-  Auth.empty()
-      : this(
-          onLogin: null,
-          onSignup: null,
-          onRecoverPassword: null,
-          previous: null,
-        );
+    String email = '',
+    String password = '',
+    String confirmPassword = '',
+  })  : this._email = email,
+        this._password = password,
+        this._confirmPassword = confirmPassword;
 
   final AuthCallback onLogin;
   final AuthCallback onSignup;
@@ -57,5 +49,26 @@ class Auth with ChangeNotifier {
       mode = AuthMode.Login;
     }
     return mode;
+  }
+
+  String _email = '';
+  get email => _email;
+  set email(String email) {
+    _email = email;
+    notifyListeners();
+  }
+
+  String _password = '';
+  get password => _password;
+  set password(String password) {
+    _password = password;
+    notifyListeners();
+  }
+
+  String _confirmPassword = '';
+  get confirmPassword => _confirmPassword;
+  set confirmPassword(String confirmPassword) {
+    _confirmPassword = confirmPassword;
+    notifyListeners();
   }
 }
