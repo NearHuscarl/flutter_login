@@ -1,23 +1,24 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
+
 import '../constants.dart';
+import '../dart_helper.dart';
+import '../matrix.dart';
+import '../models/login_data.dart';
+import '../paddings.dart';
+import '../providers/auth.dart';
+import '../providers/login_messages.dart';
+import '../widget_helper.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
+import 'animated_text_form_field.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
-import 'animated_text_form_field.dart';
-import '../providers/auth.dart';
-import '../providers/login_messages.dart';
-import '../models/login_data.dart';
-import '../dart_helper.dart';
-import '../matrix.dart';
-import '../paddings.dart';
-import '../widget_helper.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -508,6 +509,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
+      autocorrect: false,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -762,6 +764,7 @@ class _RecoverCardState extends State<_RecoverCard>
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
+      autocorrect: false,
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
