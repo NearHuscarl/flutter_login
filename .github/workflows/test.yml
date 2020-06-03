@@ -18,7 +18,7 @@ jobs:
     # Use the community Action to install Flutter
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.12.x'
-        channel: 'beta'
+        flutter-version: '1.17.x'
+        channel: 'stable'
     - run: flutter pub get
     - run: flutter test
