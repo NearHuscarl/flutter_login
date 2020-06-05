@@ -71,6 +71,7 @@ class _Header extends StatefulWidget {
     this.logoPath,
     this.logoTag,
     this.title,
+    this.padding,
     this.titleTag,
     this.height = 250.0,
     this.logoController,
@@ -81,6 +82,8 @@ class _Header extends StatefulWidget {
   final String logoPath;
   final String logoTag;
   final String title;
+
+  final EdgeInsets padding;
   final String titleTag;
   final double height;
   final LoginTheme loginTheme;
@@ -178,6 +181,7 @@ class __HeaderState extends State<_Header> {
     }
 
     return Container(
+      padding: widget.padding,
       child: SizedBox(
         height: widget.height,
         child: Column(
@@ -211,6 +215,7 @@ class FlutterLogin extends StatefulWidget {
     @required this.onLogin,
     @required this.onRecoverPassword,
     this.title = 'LOGIN',
+    this.padding,
     this.logo,
     this.messages,
     this.theme,
@@ -233,6 +238,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// The large text above the login [Card], usually the app or company name
   final String title;
+
+  // Add padding parameter to the [Card]
+  final EdgeInsets padding;
 
   /// The path to the asset image that will be passed to the `Image.asset()`
   final String logo;
@@ -354,6 +362,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       logoPath: widget.logo,
       logoTag: widget.logoTag,
       title: widget.title,
+      padding: widget.padding,
       titleTag: widget.titleTag,
       loginTheme: loginTheme,
     );
