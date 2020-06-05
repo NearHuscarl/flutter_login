@@ -447,7 +447,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     final textStyle = theme.textTheme.bodyText2
         .copyWith(color: Colors.black54)
         .merge(loginTheme.bodyStyle);
-    final textFieldStyle = theme.textTheme.subhead
+    final textFieldStyle = theme.textTheme.subtitle1
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button
@@ -523,7 +523,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       textTheme: theme.textTheme.copyWith(
         headline3: titleStyle,
         bodyText2: textStyle,
-        subhead: textFieldStyle,
+        subtitle1: textFieldStyle,
         button: buttonStyle,
       ),
     );
