@@ -104,7 +104,7 @@ class __HeaderState extends State<_Header> {
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.title,
-        style: theme.textTheme.display2.copyWith(
+        style: theme.textTheme.headline3.copyWith(
           fontSize: widget.loginTheme.beforeHeroFontSize,
         ),
       ),
@@ -164,39 +164,41 @@ class __HeaderState extends State<_Header> {
         tag: widget.titleTag,
         largeFontSize: widget.loginTheme.beforeHeroFontSize,
         smallFontSize: widget.loginTheme.afterHeroFontSize,
-        style: theme.textTheme.display2,
+        style: theme.textTheme.headline3,
         viewState: ViewState.enlarged,
       );
     } else if (!DartHelper.isNullOrEmpty(widget.title)) {
       title = Text(
         widget.title,
         key: kTitleKey,
-        style: theme.textTheme.display2,
+        style: theme.textTheme.headline3,
       );
     } else {
       title = null;
     }
 
-    return SizedBox(
-      height: widget.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (displayLogo)
+    return Container(
+      child: SizedBox(
+        height: widget.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            if (displayLogo)
+              FadeIn(
+                controller: widget.logoController,
+                offset: .25,
+                fadeDirection: FadeDirection.topToBottom,
+                child: logo,
+              ),
+            SizedBox(height: gap),
             FadeIn(
-              controller: widget.logoController,
-              offset: .25,
+              controller: widget.titleController,
+              offset: .5,
               fadeDirection: FadeDirection.topToBottom,
-              child: logo,
+              child: title,
             ),
-          SizedBox(height: gap),
-          FadeIn(
-            controller: widget.titleController,
-            offset: .5,
-            fadeDirection: FadeDirection.topToBottom,
-            child: title,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -430,19 +432,19 @@ class _FlutterLoginState extends State<FlutterLogin>
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
-    final isDefaultBlackText = theme.textTheme.display2.color ==
-        Typography.blackMountainView.display2.color;
-    final titleStyle = theme.textTheme.display2
+    final isDefaultBlackText = theme.textTheme.headline3.color ==
+        Typography.blackMountainView.headline3.color;
+    final titleStyle = theme.textTheme.headline3
         .copyWith(
           color: loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
-                  : theme.textTheme.display2.color),
+                  : theme.textTheme.headline3.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
-    final textStyle = theme.textTheme.body1
+    final textStyle = theme.textTheme.bodyText2
         .copyWith(color: Colors.black54)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subhead
@@ -519,8 +521,8 @@ class _FlutterLoginState extends State<FlutterLogin>
       highlightColor:
           loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
-        display2: titleStyle,
-        body1: textStyle,
+        headline3: titleStyle,
+        bodyText2: textStyle,
         subhead: textFieldStyle,
         button: buttonStyle,
       ),
