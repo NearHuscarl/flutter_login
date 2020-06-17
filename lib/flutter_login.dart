@@ -146,6 +146,9 @@ class __HeaderState extends State<_Header> {
             widget.logoPath,
             filterQuality: FilterQuality.high,
             height: logoHeight,
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            width: (MediaQuery.of(context).size.width)*0.7,
           )
         : NullWidget();
 
