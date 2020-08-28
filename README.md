@@ -240,7 +240,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/sign_in_providers.png" width="300">
+<img src="https://github.com/xnio94/flutter_login/edit/master/demo/sign_in_providers.png" width="300">
 
 
 
