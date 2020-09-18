@@ -145,10 +145,13 @@ class __HeaderState extends State<_Header> {
     final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
 
     Widget logo = displayLogo
-        ? Image.asset(
-            widget.logoPath,
-            filterQuality: FilterQuality.high,
-            height: logoHeight,
+        ? GestureDetector(
+            onTap: widget.onLogoTapFunction,
+            child: Image.asset(
+              widget.logoPath,
+              filterQuality: FilterQuality.high,
+              height: logoHeight,
+            ),
           )
         : NullWidget();
 
@@ -190,10 +193,7 @@ class __HeaderState extends State<_Header> {
               controller: widget.logoController,
               offset: .25,
               fadeDirection: FadeDirection.topToBottom,
-              child: GestureDetector(
-                onTap: widget.onLogoTapFunction,
-                child: logo,
-              ),
+              child: logo,
             ),
           SizedBox(height: gap),
           FadeIn(
