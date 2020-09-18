@@ -75,6 +75,7 @@ class _Header extends StatefulWidget {
     this.height = 250.0,
     this.logoController,
     this.titleController,
+    this.onLogoTapFunction,
     @required this.loginTheme,
   });
 
@@ -86,6 +87,7 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
+  final Function onLogoTapFunction;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -93,6 +95,7 @@ class _Header extends StatefulWidget {
 
 class __HeaderState extends State<_Header> {
   double _titleHeight = 0.0;
+  double tapCount = 0.0;
 
   /// https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
@@ -187,7 +190,10 @@ class __HeaderState extends State<_Header> {
               controller: widget.logoController,
               offset: .25,
               fadeDirection: FadeDirection.topToBottom,
-              child: logo,
+              child: GestureDetector(
+                onTap: widget.onLogoTapFunction,
+                child: logo,
+              ),
             ),
           SizedBox(height: gap),
           FadeIn(
@@ -218,6 +224,8 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
+    this.hideSignUpFunction = false,
+    this.logoTapFunction,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -269,6 +277,12 @@ class FlutterLogin extends StatefulWidget {
   /// passed in
   final bool showDebugButtons;
 
+  /// set to true to hide sign up functions
+  final bool hideSignUpFunction;
+
+  /// functions calls on logo tap
+  final Function logoTapFunction;
+
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
@@ -287,8 +301,7 @@ class FlutterLogin extends StatefulWidget {
   _FlutterLoginState createState() => _FlutterLoginState();
 }
 
-class _FlutterLoginState extends State<FlutterLogin>
-    with TickerProviderStateMixin {
+class _FlutterLoginState extends State<FlutterLogin> with TickerProviderStateMixin {
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
   static const loadingDuration = const Duration(milliseconds: 400);
   AnimationController _loadingController;
@@ -354,6 +367,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       title: widget.title,
       titleTag: widget.titleTag,
       loginTheme: loginTheme,
+      onLogoTapFunction: widget.logoTapFunction,
     );
   }
 
@@ -379,9 +393,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                     initialValue: _selectTimeDilation,
                     onChanged: (int index) {
                       setState(() {
-                        _selectTimeDilation = _AnimationTimeDilationDropdown
-                            .animationSpeeds[index]
-                            .toDouble();
+                        _selectTimeDilation =
+                            _AnimationTimeDilationDropdown.animationSpeeds[index].toDouble();
                       });
                     },
                   );
@@ -421,36 +434,30 @@ class _FlutterLoginState extends State<FlutterLogin>
   ThemeData _mergeTheme({ThemeData theme, LoginTheme loginTheme}) {
     final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
     final primaryDarkShades = getDarkShades(originalPrimaryColor);
-    final primaryColor = primaryDarkShades.length == 1
-        ? lighten(primaryDarkShades.first)
-        : primaryDarkShades.first;
-    final primaryColorDark = primaryDarkShades.length >= 3
-        ? primaryDarkShades[2]
-        : primaryDarkShades.last;
+    final primaryColor =
+        primaryDarkShades.length == 1 ? lighten(primaryDarkShades.first) : primaryDarkShades.first;
+    final primaryColorDark =
+        primaryDarkShades.length >= 3 ? primaryDarkShades[2] : primaryDarkShades.last;
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
-    final isDefaultBlackText = theme.textTheme.display2.color ==
-        Typography.blackMountainView.display2.color;
+    final isDefaultBlackText =
+        theme.textTheme.display2.color == Typography.blackMountainView.display2.color;
     final titleStyle = theme.textTheme.display2
         .copyWith(
           color: loginTheme.accentColor ??
-              (isDefaultBlackText
-                  ? Colors.white
-                  : theme.textTheme.display2.color),
+              (isDefaultBlackText ? Colors.white : theme.textTheme.display2.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
-    final textStyle = theme.textTheme.body1
-        .copyWith(color: Colors.black54)
-        .merge(loginTheme.bodyStyle);
+    final textStyle =
+        theme.textTheme.body1.copyWith(color: Colors.black54).merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subhead
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
         .merge(loginTheme.textFieldStyle);
-    final buttonStyle = theme.textTheme.button
-        .copyWith(color: Colors.white)
-        .merge(loginTheme.buttonStyle);
+    final buttonStyle =
+        theme.textTheme.button.copyWith(color: Colors.white).merge(loginTheme.buttonStyle);
     final cardTheme = loginTheme.cardTheme;
     final inputTheme = loginTheme.inputTheme;
     final buttonTheme = loginTheme.buttonTheme;
@@ -468,8 +475,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
         margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
-        shape: cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        shape: cardTheme.shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       ),
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         filled: inputTheme.filled,
@@ -478,8 +484,7 @@ class _FlutterLoginState extends State<FlutterLogin>
               primaryColor.withOpacity(.07),
               Colors.grey.withOpacity(.04),
             ),
-        contentPadding: inputTheme.contentPadding ??
-            const EdgeInsets.symmetric(vertical: 4.0),
+        contentPadding: inputTheme.contentPadding ?? const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
         labelStyle: inputTheme.labelStyle,
         enabledBorder: inputTheme.enabledBorder ??
@@ -516,8 +521,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         shape: buttonTheme.shape ?? StadiumBorder(),
       ),
       // put it here because floatingActionButtonTheme doesnt have highlightColor property
-      highlightColor:
-          loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
+      highlightColor: loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
         display2: titleStyle,
         body1: textStyle,
@@ -536,10 +540,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final headerHeight = cardTopPosition - headerMargin;
-    final emailValidator =
-        widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
-    final passwordValidator =
-        widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
+    final emailValidator = widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
+    final passwordValidator = widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
     return MultiProvider(
       providers: [
@@ -549,7 +551,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         ChangeNotifierProvider(
           create: (context) => Auth(
             onLogin: widget.onLogin,
-            onSignup: widget.onSignup,
+            onSignup: widget.hideSignUpFunction ? null : widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
           ),
         ),
@@ -591,8 +593,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                 ),
               ),
             ),
-            if (!kReleaseMode && widget.showDebugButtons)
-              _buildDebugAnimationButtons(),
+            if (!kReleaseMode && widget.showDebugButtons) _buildDebugAnimationButtons(),
           ],
         ),
       ),
