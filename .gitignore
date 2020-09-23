@@ -74,3 +74,11 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+example/web/manifest.json
+example/web/favicon.png
+example/web/icons/Icon-192.png
+example/web/icons/Icon-512.png
+example/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+example/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+example/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+example/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
