@@ -15,6 +15,8 @@ class LoginMessages with ChangeNotifier {
     this.goBackButton: defaultGoBackButton,
     this.confirmPasswordError: defaultConfirmPasswordError,
     this.recoverPasswordSuccess: defaultRecoverPasswordSuccess,
+    this.successTitle: '',
+    this.errorTitle: '',
   });
 
   static const defaultUsernameHint = 'Email';
@@ -71,4 +73,7 @@ class LoginMessages with ChangeNotifier {
 
   /// The success message to show after submitting recover password
   final String recoverPasswordSuccess;
+
+  final String successTitle;
+  final String errorTitle;
 }
