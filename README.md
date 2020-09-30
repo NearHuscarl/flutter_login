@@ -11,7 +11,7 @@ demonstrate the capabilities of Flutter
 
 ## Installation
 
-Follow the install instructions [here](https://pub.dev/packages/flutter_login#-installing-tab-)
+Follow the install instructions in the next LInk: [here](https://pub.dev/packages/flutter_login#-installing-tab-)
 
 ## Reference
 
