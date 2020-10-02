@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Login Demo',
       theme: ThemeData(
         // brightness: Brightness.dark,
@@ -54,8 +55,7 @@ class MyApp extends StatelessWidget {
           overline: TextStyle(fontFamily: 'NotoSans'),
         ),
       ),
-      home: LoginScreen(),
-      navigatorObservers: [TransitionRouteObserver()],
+      initialRoute: "login_screen",
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         DashboardScreen.routeName: (context) => DashboardScreen(),
