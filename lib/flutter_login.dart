@@ -217,6 +217,7 @@ class FlutterLogin extends StatefulWidget {
     this.onSubmitAnimationCompleted,
     this.logoTag,
     this.titleTag,
+    this.child,
     this.showDebugButtons = false,
   }) : super(key: key);
 
@@ -263,6 +264,8 @@ class FlutterLogin extends StatefulWidget {
   /// and `LoginTheme.afterHeroFontSize` if you want different font size before
   /// and after hero animation
   final String titleTag;
+
+  final Widget child;
 
   /// Display the debug buttons to quickly forward/reverse login animations. In
   /// release mode, this will be overrided to false regardless of the value
@@ -591,6 +594,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                 ),
               ),
             ),
+            widget.child,
             if (!kReleaseMode && widget.showDebugButtons)
               _buildDebugAnimationButtons(),
           ],
