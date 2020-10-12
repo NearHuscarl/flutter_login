@@ -455,6 +455,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     // textfields and buttons again before going to new route
     FocusScope.of(context).requestFocus(FocusNode());
 
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
     if (!_formKey.currentState.validate()) {
       return false;
     }
@@ -486,7 +488,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarErrorTitle, error);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
