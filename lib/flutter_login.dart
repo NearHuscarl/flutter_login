@@ -76,6 +76,7 @@ class _Header extends StatefulWidget {
     this.logoController,
     this.titleController,
     @required this.loginTheme,
+    this.copyright,
   });
 
   final String logoPath;
@@ -86,6 +87,7 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
+  final String copyright;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -218,6 +220,7 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
+    this.copyright
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -268,6 +271,8 @@ class FlutterLogin extends StatefulWidget {
   /// release mode, this will be overrided to false regardless of the value
   /// passed in
   final bool showDebugButtons;
+
+  final String copyright;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -541,6 +546,17 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
+    Widget copyrightWidget = SizedBox();
+    if (widget.copyright != null)
+      copyrightWidget = Container(
+      color: loginTheme.copyrightBackgroundColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(widget.copyright, style: loginTheme.copyrightTextStyle,)
+        ],
+      ),
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -556,6 +572,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ],
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
+        bottomNavigationBar: copyrightWidget,
         body: Stack(
           children: <Widget>[
             GradientBox(
