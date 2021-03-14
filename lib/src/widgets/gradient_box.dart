@@ -14,7 +14,6 @@ class GradientBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      child: SizedBox.expand(),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: colors,
@@ -23,6 +22,7 @@ class GradientBox extends StatelessWidget {
           stops: [0, 1],
         ),
       ),
+      child: SizedBox.expand(),
     );
   }
 }

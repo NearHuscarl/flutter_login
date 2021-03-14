@@ -82,7 +82,6 @@ class _RoundButtonState extends State<RoundButton>
                     // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
                     heroTag: null,
                     backgroundColor: primaryColor.shade400,
-                    child: widget.icon,
                     onPressed: () {
                       _pressController.forward().then((_) {
                         _pressController.reverse();
@@ -90,6 +89,7 @@ class _RoundButtonState extends State<RoundButton>
                       widget.onPressed();
                     },
                     foregroundColor: Colors.white,
+                    child: widget.icon,
                   ),
                 ),
               ),

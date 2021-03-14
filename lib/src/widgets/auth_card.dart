@@ -42,7 +42,7 @@ class AuthCard extends StatefulWidget {
 }
 
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
-  GlobalKey _cardKey = GlobalKey();
+  final GlobalKey _cardKey = GlobalKey();
 
   var _isLoadingFirstTime = true;
   var _pageIndex = 0;
@@ -160,7 +160,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           .reverse()
           .then((_) => widget.loadingController.reverse());
     }
-    return Future(null);
+    return null;
   }
 
   Future<void> _forwardChangeRouteAnimation() {
@@ -461,7 +461,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     _formKey.currentState.save();
-    _submitController.forward();
+    await _submitController.forward();
     setState(() => _isSubmitting = true);
     final auth = Provider.of<Auth>(context, listen: false);
     String error;
@@ -484,7 +484,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       setState(() => _showShadow = false);
     });
 
-    _submitController.reverse();
+    await _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, error);
@@ -572,12 +572,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       fadeDirection: FadeDirection.bottomToTop,
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
-      child: FlatButton(
-        child: Text(
-          messages.forgotPasswordButton,
-          style: theme.textTheme.bodyText2,
-          textAlign: TextAlign.left,
-        ),
+      child: TextButton(
         onPressed: buttonEnabled
             ? () {
                 // save state to populate email field on recovery card
@@ -585,6 +580,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 widget.onSwitchRecoveryPassword();
               }
             : null,
+        child: Text(
+          messages.forgotPasswordButton,
+          style: theme.textTheme.bodyText2,
+          textAlign: TextAlign.left,
+        ),
       ),
     );
   }
@@ -608,16 +608,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
-      child: FlatButton(
-        child: AnimatedText(
-          text: auth.isSignup ? messages.loginButton : messages.signupButton,
-          textRotation: AnimatedTextRotation.down,
-        ),
+      child: MaterialButton(
         disabledTextColor: theme.primaryColor,
         onPressed: buttonEnabled ? _switchAuthMode : null,
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
+        child: AnimatedText(
+          text: auth.isSignup ? messages.loginButton : messages.signupButton,
+          textRotation: AnimatedTextRotation.down,
+        ),
       ),
     );
   }
@@ -722,7 +722,7 @@ class _RecoverCardState extends State<_RecoverCard>
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = new TextEditingController(text: auth.email);
+    _nameController = TextEditingController(text: auth.email);
 
     _submitController = AnimationController(
       vsync: this,
@@ -744,19 +744,19 @@ class _RecoverCardState extends State<_RecoverCard>
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     _formRecoverKey.currentState.save();
-    _submitController.forward();
+    await _submitController.forward();
     setState(() => _isSubmitting = true);
     final error = await auth.onRecoverPassword(auth.email);
 
     if (error != null) {
       showErrorToast(context, error);
       setState(() => _isSubmitting = false);
-      _submitController.reverse();
+      await _submitController.reverse();
       return false;
     } else {
       showSuccessToast(context, messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
-      _submitController.reverse();
+      await _submitController.reverse();
       return true;
     }
   }
@@ -785,8 +785,7 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
-    return FlatButton(
-      child: Text(messages.goBackButton),
+    return MaterialButton(
       onPressed: !_isSubmitting
           ? () {
               _formRecoverKey.currentState.save();
@@ -796,6 +795,7 @@ class _RecoverCardState extends State<_RecoverCard>
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
+      child: Text(messages.goBackButton),
     );
   }
 

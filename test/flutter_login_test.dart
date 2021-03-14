@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'utils.dart';
-import '../lib/flutter_login.dart';
-import '../lib/src/constants.dart';
-import '../lib/src/widgets/animated_text.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/widgets/animated_text.dart';
 
 void main() {
   final TestWidgetsFlutterBinding binding =
@@ -228,7 +228,7 @@ void main() {
     expect(passwordTextFieldWidget(tester).decoration.errorText, null);
   });
 
-  testWidgets("Password recovery should show success message if email is valid",
+  testWidgets('Password recovery should show success message if email is valid',
       (WidgetTester tester) async {
     const users = ['near@gmail.com', 'hunter69@gmail.com'];
     final loginBuilder = () => widget(FlutterLogin(

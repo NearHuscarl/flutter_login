@@ -27,7 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   final routeObserver = TransitionRouteObserver<PageRoute>();
   static const headerAniInterval =
-      const Interval(.1, .3, curve: Curves.easeOut);
+      Interval(.1, .3, curve: Curves.easeOut);
   Animation<double> _headerScaleAnimation;
   AnimationController _loadingController;
 
@@ -102,19 +102,19 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     return AppBar(
       leading: FadeIn(
-        child: menuBtn,
         controller: _loadingController,
         offset: .3,
         curve: headerAniInterval,
         fadeDirection: FadeDirection.startToEnd,
+        child: menuBtn,
       ),
       actions: <Widget>[
         FadeIn(
-          child: signOutBtn,
           controller: _loadingController,
           offset: .3,
           curve: headerAniInterval,
           fadeDirection: FadeDirection.endToStart,
+          child: signOutBtn,
         ),
       ],
       title: title,
@@ -269,10 +269,10 @@ class _DashboardScreenState extends State<DashboardScreen>
           MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            child: Text('loading', style: textStyle),
             onPressed: () => _loadingController.value == 0
                 ? _loadingController.forward()
                 : _loadingController.reverse(),
+            child: Text('loading', style: textStyle),
           ),
         ],
       ),

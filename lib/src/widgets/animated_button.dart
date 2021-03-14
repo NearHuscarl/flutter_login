@@ -191,13 +191,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
           builder: (context, child) => Material(
             shape: buttonTheme.shape,
             color: _colorAnimation.value,
-            child: child,
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
                     ? buttonTheme.highlightElevation
                     : buttonTheme.elevation)
                 : 0,
+            child: child,
           ),
           child: InkWell(
             onTap: !_isLoading ? widget.onPressed : null,

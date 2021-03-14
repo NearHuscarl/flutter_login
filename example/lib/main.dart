@@ -23,9 +23,7 @@ class MyApp extends StatelessWidget {
         // brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.orange,
-        textSelectionTheme: TextSelectionThemeData(
-            cursorColor: Colors.orange
-        ),
+        textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.orange),
         // fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
           headline3: TextStyle(
