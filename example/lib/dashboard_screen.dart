@@ -26,8 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   final routeObserver = TransitionRouteObserver<PageRoute>();
-  static const headerAniInterval =
-      Interval(.1, .3, curve: Curves.easeOut);
+  static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
   Animation<double> _headerScaleAnimation;
   AnimationController _loadingController;
 
