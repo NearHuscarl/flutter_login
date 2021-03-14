@@ -158,7 +158,9 @@ class _AnimatedButtonState extends State<AnimatedButton>
     // button width is min 120.0 and max 240.0
     _width = textWidth > 120.0 && textWidth < 240.0
         ? textWidth
-        : textWidth >= 240.0 ? 240.0 : 120.0;
+        : textWidth >= 240.0
+            ? 240.0
+            : 120.0;
 
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
