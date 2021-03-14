@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'login_screen.dart';
+
 class FadePageRoute<T> extends MaterialPageRoute<T> {
   FadePageRoute({
     WidgetBuilder builder,
@@ -18,7 +20,7 @@ class FadePageRoute<T> extends MaterialPageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    if (settings.isInitialRoute) {
+    if (settings.name == LoginScreen.routeName) {
       return child;
     }
 
