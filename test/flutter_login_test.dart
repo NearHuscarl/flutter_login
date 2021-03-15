@@ -251,7 +251,8 @@ void main() {
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pump(); // First pump is to active the animation
-    await tester.pump(const Duration(seconds: 4)); // second pump is to open the flushbar
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(find.text('User not exists'), findsOneWidget);
 
@@ -261,7 +262,8 @@ void main() {
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pump(); // First pump is to active the animation
-    await tester.pump(const Duration(seconds: 4)); // second pump is to open the flushbar
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(
         find.text(LoginMessages.defaultRecoverPasswordSuccess), findsOneWidget);
@@ -367,7 +369,8 @@ void main() {
     clickSubmitButton();
 
     await tester.pump(); // First pump is to active the animation
-    await tester.pump(const Duration(seconds: 4)); // second pump is to open the flushbar
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(find.text(recoverSuccess), findsOneWidget);
     waitForFlushbarToClose(tester);
