@@ -21,9 +21,7 @@ jobs:
       run: flutter pub get
     - name: Format
       run: flutter format -n --set-exit-if-changed .
-#       run: dartfmt -n --set-exit-if-changed .
     - name: Linter
       run: flutter analyze
-#       run: dartanalyzer . --options=analysis_options.yaml --fatal-hints
     - name: Test
       run: flutter test
