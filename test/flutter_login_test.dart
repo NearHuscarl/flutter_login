@@ -251,7 +251,7 @@ void main() {
     await tester.pumpAndSettle();
     clickSubmitButton();
     tester.binding.scheduleWarmUpFrame(); // wait for flushbar to show up
-
+    await tester.pumpAndSettle();
     expect(find.text('User not exists'), findsOneWidget);
 
     // valid name

@@ -127,8 +127,8 @@ AnimatedButton submitButtonWidget() {
   return find.byType(AnimatedButton).evaluate().first.widget;
 }
 
-MaterialButton forgotPasswordButtonWidget() {
-  return find.byType(MaterialButton).evaluate().first.widget;
+TextButton forgotPasswordButtonWidget() {
+  return find.byType(TextButton).evaluate().first.widget;
 }
 
 MaterialButton switchAuthButtonWidget() {
