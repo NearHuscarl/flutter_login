@@ -19,6 +19,8 @@ jobs:
       run: flutter doctor -v
     - name: Install dependencies
       run: flutter pub get
+    - name: Install example app dependencies
+      run: cd example && flutter pub get && cd ..
     - name: Format
       run: dartfmt -n --set-exit-if-changed .
     - name: Linter
