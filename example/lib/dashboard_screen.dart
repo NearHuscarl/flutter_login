@@ -26,8 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   final routeObserver = TransitionRouteObserver<PageRoute>();
-  static const headerAniInterval =
-      const Interval(.1, .3, curve: Curves.easeOut);
+  static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
   Animation<double> _headerScaleAnimation;
   AnimationController _loadingController;
 
@@ -102,19 +101,19 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     return AppBar(
       leading: FadeIn(
-        child: menuBtn,
         controller: _loadingController,
         offset: .3,
         curve: headerAniInterval,
         fadeDirection: FadeDirection.startToEnd,
+        child: menuBtn,
       ),
       actions: <Widget>[
         FadeIn(
-          child: signOutBtn,
           controller: _loadingController,
           offset: .3,
           curve: headerAniInterval,
           fadeDirection: FadeDirection.endToStart,
+          child: signOutBtn,
         ),
       ],
       title: title,
@@ -150,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: <Widget>[
                 Text(
                   '\$',
-                  style: theme.textTheme.display2.copyWith(
+                  style: theme.textTheme.headline3.copyWith(
                     fontWeight: FontWeight.w300,
                     color: accentColor.shade400,
                   ),
@@ -161,7 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   targetValue: 3467.87,
                   curve: Interval(0, .5, curve: Curves.easeOut),
                   controller: _loadingController,
-                  style: theme.textTheme.display2.copyWith(
+                  style: theme.textTheme.headline3.copyWith(
                     foreground: Paint()..shader = linearGradient,
                   ),
                 ),
@@ -266,13 +265,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       right: 0,
       child: Row(
         children: <Widget>[
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            child: Text('loading', style: textStyle),
             onPressed: () => _loadingController.value == 0
                 ? _loadingController.forward()
                 : _loadingController.reverse(),
+            child: Text('loading', style: textStyle),
           ),
         ],
       ),

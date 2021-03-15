@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'utils.dart';
-import '../lib/flutter_login.dart';
-import '../lib/src/constants.dart';
-import '../lib/src/widgets/animated_text.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/widgets/animated_text.dart';
 
 void main() {
   final TestWidgetsFlutterBinding binding =
@@ -228,7 +228,7 @@ void main() {
     expect(passwordTextFieldWidget(tester).decoration.errorText, null);
   });
 
-  testWidgets("Password recovery should show success message if email is valid",
+  testWidgets('Password recovery should show success message if email is valid',
       (WidgetTester tester) async {
     const users = ['near@gmail.com', 'hunter69@gmail.com'];
     final loginBuilder = () => widget(FlutterLogin(
@@ -250,7 +250,9 @@ void main() {
     await tester.enterText(findNameTextField(), 'not.exists@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
-    tester.binding.scheduleWarmUpFrame(); // wait for flushbar to show up
+    await tester.pump(); // First pump is to active the animation
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(find.text('User not exists'), findsOneWidget);
 
@@ -259,7 +261,9 @@ void main() {
     await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
-    tester.binding.scheduleWarmUpFrame(); // wait for flushbar to show up
+    await tester.pump(); // First pump is to active the animation
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(
         find.text(LoginMessages.defaultRecoverPasswordSuccess), findsOneWidget);
@@ -364,9 +368,9 @@ void main() {
     await tester.pumpAndSettle();
     clickSubmitButton();
 
-    // For flushbar, pumpAndSettle() does not work. Use this instead
-    // https://stackoverflow.com/a/57758137/9449426
-    tester.binding.scheduleWarmUpFrame();
+    await tester.pump(); // First pump is to active the animation
+    await tester.pump(
+        const Duration(seconds: 4)); // second pump is to open the flushbar
 
     expect(find.text(recoverSuccess), findsOneWidget);
     waitForFlushbarToClose(tester);
