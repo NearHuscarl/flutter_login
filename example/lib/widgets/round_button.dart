@@ -54,8 +54,8 @@ class _RoundButtonState extends State<RoundButton>
 
   @override
   void dispose() {
-    super.dispose();
     _pressController.dispose();
+    super.dispose();
   }
 
   @override
