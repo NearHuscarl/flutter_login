@@ -50,7 +50,6 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   void initState() {
     super.initState();
 
-
     // _colorAnimation
     // _width, _sizeAnimation
 

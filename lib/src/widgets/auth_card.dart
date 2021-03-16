@@ -370,8 +370,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   AnimationController _submitController;
 
   ///list of AnimationController each one responsible for a authentication provider icon
-  List<AnimationController> _providerControllerList =
-      <AnimationController>[];
+  List<AnimationController> _providerControllerList = <AnimationController>[];
 
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
