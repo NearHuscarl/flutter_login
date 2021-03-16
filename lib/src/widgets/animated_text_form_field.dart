@@ -158,7 +158,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     widget.inertiaController?.removeStatusListener(handleAnimationStatus);
     super.dispose();
   }

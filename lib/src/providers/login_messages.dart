@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
   LoginMessages({
-    this.usernameHint: defaultUsernameHint,
-    this.passwordHint: defaultPasswordHint,
-    this.confirmPasswordHint: defaultConfirmPasswordHint,
-    this.forgotPasswordButton: defaultForgotPasswordButton,
-    this.loginButton: defaultLoginButton,
-    this.signupButton: defaultSignupButton,
-    this.recoverPasswordButton: defaultRecoverPasswordButton,
-    this.recoverPasswordIntro: defaultRecoverPasswordIntro,
-    this.recoverPasswordDescription: defaultRecoverPasswordDescription,
-    this.goBackButton: defaultGoBackButton,
-    this.confirmPasswordError: defaultConfirmPasswordError,
-    this.recoverPasswordSuccess: defaultRecoverPasswordSuccess,
+    this.usernameHint = defaultUsernameHint,
+    this.passwordHint = defaultPasswordHint,
+    this.confirmPasswordHint = defaultConfirmPasswordHint,
+    this.forgotPasswordButton = defaultForgotPasswordButton,
+    this.loginButton = defaultLoginButton,
+    this.signupButton = defaultSignupButton,
+    this.recoverPasswordButton = defaultRecoverPasswordButton,
+    this.recoverPasswordIntro = defaultRecoverPasswordIntro,
+    this.recoverPasswordDescription = defaultRecoverPasswordDescription,
+    this.goBackButton = defaultGoBackButton,
+    this.confirmPasswordError = defaultConfirmPasswordError,
+    this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
   });
 
   static const defaultUsernameHint = 'Email';
