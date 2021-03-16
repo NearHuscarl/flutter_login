@@ -724,4 +724,25 @@ void main() {
 
     expect(true, true);
   });
+
+  testWidgets(
+      'hideButtonSignUp & hideButtonForgotPassword should hide SignUp and forgot password button',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
+          hideButtonSignUp: true,
+          hideButtonForgotPassword: true,
+          messages: LoginMessages(
+            signupButton: 'REGISTER',
+            forgotPasswordButton: 'Forgot huh?',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.text('REGISTER'), findsNothing);
+    expect(find.text('Forgot huh?'), findsNothing);
+  });
 }
