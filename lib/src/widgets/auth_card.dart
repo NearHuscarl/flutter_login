@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
 import '../constants.dart';
 import 'animated_button.dart';
+import 'animated_icon.dart';
 import 'animated_text.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
@@ -368,6 +369,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   AnimationController _postSwitchAuthController;
   AnimationController _submitController;
 
+  ///list of AnimationController each one responsible for a authentication provider icon
+  List<AnimationController> _providerControllerList = <AnimationController>[];
+
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
   Interval _textButtonLoadingAnimationInterval;
@@ -405,6 +409,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
+    _providerControllerList = auth.loginProvidersList
+        .map(
+          (e) => AnimationController(
+            vsync: this,
+            duration: Duration(milliseconds: 1000),
+          ),
+        )
+        .toList();
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
@@ -437,6 +449,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _switchAuthController.dispose();
     _postSwitchAuthController.dispose();
     _submitController.dispose();
+
+    _providerControllerList.forEach((controller) {
+      controller.dispose();
+    });
   }
 
   void _switchAuthMode() {
@@ -492,6 +508,35 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         setState(() => _showShadow = true);
       });
       setState(() => _isSubmitting = false);
+      return false;
+    }
+
+    widget?.onSubmitCompleted();
+
+    return true;
+  }
+
+  Future<bool> _loginProviderSubmit(
+      {AnimationController control, ProviderAuthCallback callback}) async {
+    await control.forward();
+
+    String error;
+
+    error = await callback();
+
+    // workaround to run after _cardSizeAnimation in parent finished
+    // need a cleaner way but currently it works so..
+    Future.delayed(const Duration(milliseconds: 270), () {
+      setState(() => _showShadow = false);
+    });
+
+    await control.reverse();
+
+    if (!DartHelper.isNullOrEmpty(error)) {
+      showErrorToast(context, error);
+      Future.delayed(const Duration(milliseconds: 271), () {
+        setState(() => _showShadow = true);
+      });
       return false;
     }
 
@@ -622,6 +667,33 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildProvidersLogInButton(
+      ThemeData theme, LoginMessages messages, Auth auth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: auth.loginProvidersList.map((loginProvider) {
+        var index = auth.loginProvidersList.indexOf(loginProvider);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+          child: ScaleTransition(
+            scale: _buttonScaleAnimation,
+            child: AnimatedIconButton(
+              icon: loginProvider.icon,
+              controller: _providerControllerList[index],
+              tooltip: '',
+              onPressed: () => _loginProviderSubmit(
+                control: _providerControllerList[index],
+                callback: () {
+                  return loginProvider.callback();
+                },
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
@@ -677,6 +749,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 _buildForgotPassword(theme, messages),
                 _buildSubmitButton(theme, messages, auth),
                 _buildSwitchAuthButton(theme, messages, auth),
+                _buildProvidersLogInButton(theme, messages, auth),
               ],
             ),
           ),
