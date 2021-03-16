@@ -368,8 +368,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   AnimationController _switchAuthController;
   AnimationController _postSwitchAuthController;
   AnimationController _submitController;
+
   ///list of AnimationController each one responsible for a authentication provider icon
-  List<AnimationController> _providerControllerList = List<AnimationController>();
+  List<AnimationController> _providerControllerList =
+      <AnimationController>[];
 
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
@@ -517,7 +519,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Future<bool> _loginProviderSubmit(
       {AnimationController control, ProviderAuthCallback callback}) async {
-    control.forward();
+    await control.forward();
 
     String error;
 
@@ -529,7 +531,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       setState(() => _showShadow = false);
     });
 
-    control.reverse();
+    await control.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, error);
@@ -666,11 +668,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages, Auth auth) {
+  Widget _buildProvidersLogInButton(
+      ThemeData theme, LoginMessages messages, Auth auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: auth.loginProvidersList.map((loginProvider) {
-        int index = auth.loginProvidersList.indexOf(loginProvider);
+        var index = auth.loginProvidersList.indexOf(loginProvider);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3.0),
           child: ScaleTransition(

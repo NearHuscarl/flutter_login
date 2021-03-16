@@ -31,7 +31,6 @@ class AnimatedIconButton extends StatefulWidget {
 class _AnimatedIconButtonState extends State<AnimatedIconButton>
     with SingleTickerProviderStateMixin {
   Animation<double> _sizeAnimation;
-  Animation<double> _textOpacityAnimation;
   Animation<double> _buttonOpacityAnimation;
   Animation<double> _ringThicknessAnimation;
   Animation<double> _ringOpacityAnimation;
@@ -51,17 +50,12 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   void initState() {
     super.initState();
 
-    _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: widget.controller,
-        curve: Interval(0.0, .25),
-      ),
-    );
 
     // _colorAnimation
     // _width, _sizeAnimation
 
-    _buttonOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+    _buttonOpacityAnimation =
+        Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
       curve: Threshold(.65),
     ));
@@ -72,7 +66,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
       parent: widget.controller,
       curve: Interval(.65, .85),
     ));
-    _ringOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+    _ringOpacityAnimation =
+        Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
       curve: Interval(.85, 1.0),
     ));
@@ -109,7 +104,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   void didUpdateWidget(AnimatedIconButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.color != widget.color || oldWidget.loadingColor != widget.loadingColor) {
+    if (oldWidget.color != widget.color ||
+        oldWidget.loadingColor != widget.loadingColor) {
       _updateColorAnimation();
     }
 
@@ -153,13 +149,18 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     renderParagraph.layout(BoxConstraints(minWidth: 120.0));
 
     // text width based on fontSize, plus 45.0 for padding
-    var textWidth = renderParagraph.getMinIntrinsicWidth(fontSize).ceilToDouble() + 45.0;
+    var textWidth =
+        renderParagraph.getMinIntrinsicWidth(fontSize).ceilToDouble() + 45.0;
 
     // button width is min 120.0 and max 240.0
-    _width =
-        textWidth > 120.0 && textWidth < 240.0 ? textWidth : textWidth >= 240.0 ? 240.0 : 120.0;
+    _width = textWidth > 120.0 && textWidth < 240.0
+        ? textWidth
+        : textWidth >= 240.0
+            ? 240.0
+            : 120.0;
 
-    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width).animate(CurvedAnimation(
+    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
+        .animate(CurvedAnimation(
       parent: widget.controller,
       curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
@@ -176,10 +177,13 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
           builder: (context, child) => Material(
             shape: buttonTheme.shape,
             color: _colorAnimation.value,
-            child: child,
             shadowColor: _color,
-            elevation:
-                !_isLoading ? (_hover ? buttonTheme.highlightElevation : buttonTheme.elevation) : 0,
+            elevation: !_isLoading
+                ? (_hover
+                    ? buttonTheme.highlightElevation
+                    : buttonTheme.elevation)
+                : 0,
+            child: child,
           ),
           child: InkWell(
             onTap: !_isLoading ? widget.onPressed : null,

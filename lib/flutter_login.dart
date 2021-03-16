@@ -29,7 +29,8 @@ class LoginProvider {
   final ProviderAuthCallback callback;
 
   LoginProvider({@required this.icon, @required this.callback})
-      : assert((icon != null && callback != null), ' callback and icon should not be null');
+      : assert((icon != null && callback != null),
+            ' callback and icon should not be null');
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
