@@ -6,19 +6,20 @@ import 'package:provider/provider.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
 
 import '../constants.dart';
-import '../dart_helper.dart';
-import '../matrix.dart';
-import '../models/login_data.dart';
 import '../paddings.dart';
-import '../providers/auth.dart';
-import '../providers/login_messages.dart';
-import '../widget_helper.dart';
 import 'animated_button.dart';
 import 'animated_text.dart';
 import 'animated_text_form_field.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
+import 'animated_text_form_field.dart';
+import '../providers/auth.dart';
+import '../providers/login_messages.dart';
+import '../models/login_data.dart';
+import '../dart_helper.dart';
+import '../matrix.dart';
+import '../widget_helper.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -29,6 +30,8 @@ class AuthCard extends StatefulWidget {
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -37,6 +40,8 @@ class AuthCard extends StatefulWidget {
   final FormFieldValidator<String> passwordValidator;
   final Function onSubmit;
   final Function onSubmitCompleted;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -295,6 +300,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                         widget?.onSubmitCompleted();
                       });
                     },
+                    hideSignUpButton: widget.hideSignUpButton,
+                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
                   ),
                 )
               : _RecoverCard(
@@ -335,6 +342,8 @@ class _LoginCard extends StatefulWidget {
     @required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
     this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -343,6 +352,8 @@ class _LoginCard extends StatefulWidget {
   final Function onSwitchRecoveryPassword;
   final Function onSwitchAuth;
   final Function onSubmitCompleted;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -508,7 +519,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -674,9 +684,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                _buildForgotPassword(theme, messages),
+                !widget.hideForgotPasswordButton
+                    ? _buildForgotPassword(theme, messages)
+                    : SizedBox.fromSize(
+                        size: Size.fromHeight(16),
+                      ),
                 _buildSubmitButton(theme, messages, auth),
-                _buildSwitchAuthButton(theme, messages, auth),
+                !widget.hideSignUpButton
+                    ? _buildSwitchAuthButton(theme, messages, auth)
+                    : SizedBox.fromSize(
+                        size: Size.fromHeight(10),
+                      ),
               ],
             ),
           ),
