@@ -30,8 +30,8 @@ passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
 showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overrided to `false` regardless of the value passed in</sub>
-hideButtonForgotPassword |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
-hideButtonSignUp |   `bool`     | <sub>Hides the Sign-up button if set to true</sub>
+hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
+hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 
 
 

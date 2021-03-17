@@ -28,8 +28,8 @@ class AuthCard extends StatefulWidget {
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
-    this.hideButtonForgotPassword = false,
-    this.hideButtonSignUp = false,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -38,8 +38,8 @@ class AuthCard extends StatefulWidget {
   final FormFieldValidator<String> passwordValidator;
   final Function onSubmit;
   final Function onSubmitCompleted;
-  final bool hideButtonForgotPassword;
-  final bool hideButtonSignUp;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -298,8 +298,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                         widget?.onSubmitCompleted();
                       });
                     },
-                    hideButtonSignUp: widget.hideButtonSignUp,
-                    hideButtonForgotPassword: widget.hideButtonForgotPassword,
+                    hideSignUpButton: widget.hideSignUpButton,
+                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
                   ),
                 )
               : _RecoverCard(
@@ -340,8 +340,8 @@ class _LoginCard extends StatefulWidget {
     @required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
     this.onSubmitCompleted,
-    this.hideButtonForgotPassword = false,
-    this.hideButtonSignUp = false,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -350,8 +350,8 @@ class _LoginCard extends StatefulWidget {
   final Function onSwitchRecoveryPassword;
   final Function onSwitchAuth;
   final Function onSubmitCompleted;
-  final bool hideButtonForgotPassword;
-  final bool hideButtonSignUp;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -682,13 +682,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                !widget.hideButtonForgotPassword
+                !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)
                     : SizedBox.fromSize(
                         size: Size.fromHeight(16),
                       ),
                 _buildSubmitButton(theme, messages, auth),
-                !widget.hideButtonSignUp
+                !widget.hideSignUpButton
                     ? _buildSwitchAuthButton(theme, messages, auth)
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),

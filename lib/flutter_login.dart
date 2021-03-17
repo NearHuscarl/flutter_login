@@ -218,8 +218,8 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
-    this.hideButtonForgotPassword = false,
-    this.hideButtonSignUp = false,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -272,10 +272,10 @@ class FlutterLogin extends StatefulWidget {
   final bool showDebugButtons;
 
   /// Hide the Button Forgot Password
-  final bool hideButtonForgotPassword;
+  final bool hideForgotPasswordButton;
 
   /// Hide the Button SignUp
-  final bool hideButtonSignUp;
+  final bool hideSignUpButton;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -588,9 +588,9 @@ class _FlutterLoginState extends State<FlutterLogin>
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
-                        hideButtonSignUp: widget.hideButtonSignUp,
-                        hideButtonForgotPassword:
-                            widget.hideButtonForgotPassword,
+                        hideSignUpButton: widget.hideSignUpButton,
+                        hideForgotPasswordButton:
+                            widget.hideForgotPasswordButton,
                       ),
                     ),
                     Positioned(

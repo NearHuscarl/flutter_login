@@ -726,15 +726,15 @@ void main() {
   });
 
   testWidgets(
-      'hideButtonSignUp & hideButtonForgotPassword should hide SignUp and forgot password button',
+      'hideSignUpButton & hideForgotPasswordButton should hide SignUp and forgot password button',
       (WidgetTester tester) async {
     final loginBuilder = () => widget(FlutterLogin(
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
-          hideButtonSignUp: true,
-          hideButtonForgotPassword: true,
+          hideSignUpButton: true,
+          hideForgotPasswordButton: true,
           messages: LoginMessages(
             signupButton: 'REGISTER',
             forgotPasswordButton: 'Forgot huh?',

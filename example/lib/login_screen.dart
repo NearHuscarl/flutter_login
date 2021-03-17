@@ -39,8 +39,8 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
-      // hideButtonForgotPassword: true,
-      // hideButtonSignUp: true,
+      // hideForgotPasswordButton: true,
+      // hideSignUpButton: true,
       // messages: LoginMessages(
       //   usernameHint: 'Username',
       //   passwordHint: 'Pass',
