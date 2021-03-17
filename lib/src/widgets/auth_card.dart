@@ -773,7 +773,8 @@ class _RecoverCardState extends State<_RecoverCard>
       await _submitController.reverse();
       return false;
     } else {
-      showSuccessToast(context, messages.flushbarSuccessTitle, messages.recoverPasswordSuccess);
+      showSuccessToast(context, messages.flushbarSuccessTitle,
+          messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return true;
