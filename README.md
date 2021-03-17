@@ -61,8 +61,8 @@ recoverPasswordDescription | `String` | Description in password recovery form
 goBackButton | `String` | Go back button's label. Go back button is used to go back to to login/signup form from the recover password form
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
-flushbarErrorTitle | `String` | The Flushbar title on errors
-flushbarSuccessTitle | `String` | The Flushbar title on sucesses
+flushbarTitleError | `String` | The Flushbar title on errors
+flushbarTitleSuccess | `String` | The Flushbar title on sucesses
 
 ### LoginTheme
 
