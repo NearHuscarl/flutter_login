@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
+
 import '../constants.dart';
 import 'animated_button.dart';
 import 'animated_icon.dart';
 import 'animated_text.dart';
+import 'animated_text_form_field.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
-import 'animated_text_form_field.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
 import '../models/login_data.dart';
@@ -29,6 +30,8 @@ class AuthCard extends StatefulWidget {
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -37,6 +40,8 @@ class AuthCard extends StatefulWidget {
   final FormFieldValidator<String> passwordValidator;
   final Function onSubmit;
   final Function onSubmitCompleted;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -123,11 +128,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
-
     _formLoadingController.dispose();
     _pageController.dispose();
     _routeTransitionController.dispose();
+    super.dispose();
   }
 
   void _switchRecovery(bool recovery) {
@@ -296,6 +300,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                         widget?.onSubmitCompleted();
                       });
                     },
+                    hideSignUpButton: widget.hideSignUpButton,
+                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
                   ),
                 )
               : _RecoverCard(
@@ -336,6 +342,8 @@ class _LoginCard extends StatefulWidget {
     @required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
     this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -344,6 +352,8 @@ class _LoginCard extends StatefulWidget {
   final Function onSwitchRecoveryPassword;
   final Function onSwitchAuth;
   final Function onSubmitCompleted;
+  final bool hideForgotPasswordButton;
+  final bool hideSignUpButton;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -440,8 +450,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
-
     _loadingController?.removeStatusListener(handleLoadingAnimationStatus);
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
@@ -453,6 +461,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _providerControllerList.forEach((controller) {
       controller.dispose();
     });
+    super.dispose();
   }
 
   void _switchAuthMode() {
@@ -746,9 +755,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                _buildForgotPassword(theme, messages),
+                !widget.hideForgotPasswordButton
+                    ? _buildForgotPassword(theme, messages)
+                    : SizedBox.fromSize(
+                        size: Size.fromHeight(16),
+                      ),
                 _buildSubmitButton(theme, messages, auth),
-                _buildSwitchAuthButton(theme, messages, auth),
+                !widget.hideSignUpButton
+                    ? _buildSwitchAuthButton(theme, messages, auth)
+                    : SizedBox.fromSize(
+                        size: Size.fromHeight(10),
+                      ),
                 _buildProvidersLogInButton(theme, messages, auth),
               ],
             ),
@@ -805,8 +822,8 @@ class _RecoverCardState extends State<_RecoverCard>
 
   @override
   void dispose() {
-    super.dispose();
     _submitController.dispose();
+    super.dispose();
   }
 
   Future<bool> _submit() async {
@@ -842,6 +859,7 @@ class _RecoverCardState extends State<_RecoverCard>
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
+      autocorrect: false,
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
