@@ -32,7 +32,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
   final Function onChanged;
   final double initialValue;
-  static const animationSpeeds = const [1, 2, 5, 10];
+  static const animationSpeeds = [1, 2, 5, 10];
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +104,7 @@ class __HeaderState extends State<_Header> {
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.title,
-        style: theme.textTheme.display2.copyWith(
+        style: theme.textTheme.headline3.copyWith(
           fontSize: widget.loginTheme.beforeHeroFontSize,
         ),
       ),
@@ -141,7 +141,7 @@ class __HeaderState extends State<_Header> {
     final logoHeight = min(widget.height - _titleHeight - gap, kMaxLogoHeight);
     final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
 
-    Widget logo = displayLogo
+    var logo = displayLogo
         ? Image.asset(
             widget.logoPath,
             filterQuality: FilterQuality.high,
@@ -164,14 +164,14 @@ class __HeaderState extends State<_Header> {
         tag: widget.titleTag,
         largeFontSize: widget.loginTheme.beforeHeroFontSize,
         smallFontSize: widget.loginTheme.afterHeroFontSize,
-        style: theme.textTheme.display2,
+        style: theme.textTheme.headline3,
         viewState: ViewState.enlarged,
       );
     } else if (!DartHelper.isNullOrEmpty(widget.title)) {
       title = Text(
         widget.title,
         key: kTitleKey,
-        style: theme.textTheme.display2,
+        style: theme.textTheme.headline3,
       );
     } else {
       title = null;
@@ -218,6 +218,8 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -269,6 +271,12 @@ class FlutterLogin extends StatefulWidget {
   /// passed in
   final bool showDebugButtons;
 
+  /// Set to true to hide the Forgot Password button
+  final bool hideForgotPasswordButton;
+
+  /// Set to true to hide the SignUp button
+  final bool hideSignUpButton;
+
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
@@ -290,7 +298,7 @@ class FlutterLogin extends StatefulWidget {
 class _FlutterLoginState extends State<FlutterLogin>
     with TickerProviderStateMixin {
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
-  static const loadingDuration = const Duration(milliseconds: 400);
+  static const loadingDuration = Duration(milliseconds: 400);
   AnimationController _loadingController;
   AnimationController _logoController;
   AnimationController _titleController;
@@ -329,10 +337,10 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   @override
   void dispose() {
-    super.dispose();
     _loadingController.dispose();
     _logoController.dispose();
     _titleController.dispose();
+    super.dispose();
   }
 
   void _reverseHeaderAnimation() {
@@ -366,12 +374,10 @@ class _FlutterLoginState extends State<FlutterLogin>
       child: Row(
         key: kDebugToolbarKey,
         children: <Widget>[
-          RaisedButton(
+          MaterialButton(
             color: Colors.green,
-            child: Text('OPTIONS', style: textStyle),
             onPressed: () {
               timeDilation = 1.0;
-
               showModalBottomSheet(
                 context: context,
                 builder: (_) {
@@ -394,24 +400,25 @@ class _FlutterLoginState extends State<FlutterLogin>
                 });
               });
             },
+            child: Text('OPTIONS', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.blue,
-            child: Text('LOADING', style: textStyle),
             onPressed: () => authCardKey.currentState.runLoadingAnimation(),
+            child: Text('LOADING', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.orange,
-            child: Text('PAGE', style: textStyle),
             onPressed: () => authCardKey.currentState.runChangePageAnimation(),
+            child: Text('PAGE', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            child: Text('NAV', style: textStyle),
             onPressed: () => authCardKey.currentState.runChangeRouteAnimation(),
+            child: Text('NAV', style: textStyle),
           ),
         ],
       ),
@@ -430,22 +437,22 @@ class _FlutterLoginState extends State<FlutterLogin>
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
-    final isDefaultBlackText = theme.textTheme.display2.color ==
-        Typography.blackMountainView.display2.color;
-    final titleStyle = theme.textTheme.display2
+    final isDefaultBlackText = theme.textTheme.headline3.color ==
+        Typography.blackMountainView.headline3.color;
+    final titleStyle = theme.textTheme.headline3
         .copyWith(
           color: loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
-                  : theme.textTheme.display2.color),
+                  : theme.textTheme.headline3.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
-    final textStyle = theme.textTheme.body1
+    final textStyle = theme.textTheme.bodyText2
         .copyWith(color: Colors.black54)
         .merge(loginTheme.bodyStyle);
-    final textFieldStyle = theme.textTheme.subhead
+    final textFieldStyle = theme.textTheme.subtitle1
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button
@@ -519,9 +526,9 @@ class _FlutterLoginState extends State<FlutterLogin>
       highlightColor:
           loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
-        display2: titleStyle,
-        body1: textStyle,
-        subhead: textFieldStyle,
+        headline3: titleStyle,
+        bodyText2: textStyle,
+        subtitle1: textFieldStyle,
         button: buttonStyle,
       ),
     );
@@ -581,6 +588,9 @@ class _FlutterLoginState extends State<FlutterLogin>
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
+                        hideSignUpButton: widget.hideSignUpButton,
+                        hideForgotPasswordButton:
+                            widget.hideForgotPasswordButton,
                       ),
                     ),
                     Positioned(

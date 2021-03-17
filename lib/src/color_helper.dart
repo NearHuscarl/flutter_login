@@ -13,7 +13,7 @@ enum ColorShade {
   darkest,
 }
 
-const shades = const {
+const shades = {
   ColorShade.lightest: 50,
   ColorShade.secondLightest: 100,
   ColorShade.thirdLightest: 200,
@@ -53,10 +53,11 @@ MaterialColor getMaterialColor(Color color) {
 /// change [kThreshold] from 0.15 to 0.45 to accept more color
 /// with [Brightness.dark]
 Brightness estimateBrightnessForColor(Color color) {
-  final double relativeLuminance = color.computeLuminance();
-  const double kThreshold = 0.45;
-  if ((relativeLuminance + 0.05) * (relativeLuminance + 0.05) > kThreshold)
+  final relativeLuminance = color.computeLuminance();
+  const kThreshold = 0.45;
+  if ((relativeLuminance + 0.05) * (relativeLuminance + 0.05) > kThreshold) {
     return Brightness.light;
+  }
   return Brightness.dark;
 }
 
@@ -76,7 +77,7 @@ List<Color> getDarkShades(Color color,
     }
   }
 
-  return darkShades.length > 0
+  return darkShades.isNotEmpty
       ? darkShades
       : [materialColor[shades[ColorShade.darkest]]];
 }

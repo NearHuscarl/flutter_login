@@ -119,8 +119,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   @override
   void dispose() {
-    super.dispose();
     widget.controller.removeStatusListener(handleStatusChanged);
+    super.dispose();
   }
 
   void handleStatusChanged(status) {
@@ -158,7 +158,9 @@ class _AnimatedButtonState extends State<AnimatedButton>
     // button width is min 120.0 and max 240.0
     _width = textWidth > 120.0 && textWidth < 240.0
         ? textWidth
-        : textWidth >= 240.0 ? 240.0 : 120.0;
+        : textWidth >= 240.0
+            ? 240.0
+            : 120.0;
 
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
@@ -189,13 +191,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
           builder: (context, child) => Material(
             shape: buttonTheme.shape,
             color: _colorAnimation.value,
-            child: child,
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
                     ? buttonTheme.highlightElevation
                     : buttonTheme.elevation)
                 : 0,
+            child: child,
           ),
           child: InkWell(
             onTap: !_isLoading ? widget.onPressed : null,
