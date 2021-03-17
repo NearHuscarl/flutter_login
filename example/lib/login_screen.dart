@@ -54,6 +54,8 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
+      //   flushbarTitleError: 'Oh no!',
+      //   flushbarTitleSuccess: 'Succes!',
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,

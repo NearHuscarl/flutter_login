@@ -465,6 +465,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     // textfields and buttons again before going to new route
     FocusScope.of(context).requestFocus(FocusNode());
 
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
     if (!_formKey.currentState.validate()) {
       return false;
     }
@@ -496,7 +498,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     await _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
@@ -766,12 +768,13 @@ class _RecoverCardState extends State<_RecoverCard>
     final error = await auth.onRecoverPassword(auth.email);
 
     if (error != null) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return false;
     } else {
-      showSuccessToast(context, messages.recoverPasswordSuccess);
+      showSuccessToast(context, messages.flushbarTitleSuccess,
+          messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return true;

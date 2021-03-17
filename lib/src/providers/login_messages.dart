@@ -14,6 +14,8 @@ class LoginMessages with ChangeNotifier {
     this.goBackButton = defaultGoBackButton,
     this.confirmPasswordError = defaultConfirmPasswordError,
     this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
+    this.flushbarTitleError = defaultflushbarTitleError,
+    this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
   });
 
   static const defaultUsernameHint = 'Email';
@@ -29,6 +31,8 @@ class LoginMessages with ChangeNotifier {
   static const defaultGoBackButton = 'BACK';
   static const defaultConfirmPasswordError = 'Password do not match!';
   static const defaultRecoverPasswordSuccess = 'An email has been sent';
+  static const defaultflushbarTitleSuccess = 'Success';
+  static const defaultflushbarTitleError = 'Error';
 
   /// Hint text of the user name [TextField]
   final String usernameHint;
@@ -67,4 +71,10 @@ class LoginMessages with ChangeNotifier {
 
   /// The success message to show after submitting recover password
   final String recoverPasswordSuccess;
+
+  /// Title on top of Flushbar on errors
+  final String flushbarTitleError;
+
+  /// Title on top of Flushbar on successes
+  final String flushbarTitleSuccess;
 }
