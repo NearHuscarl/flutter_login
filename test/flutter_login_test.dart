@@ -745,4 +745,59 @@ void main() {
     expect(find.text('REGISTER'), findsNothing);
     expect(find.text('Forgot huh?'), findsNothing);
   });
+
+  testWidgets(
+      'Change flushbar title by setting flushbarTitleError & flushbarTitleSuccess.',
+      (WidgetTester tester) async {
+    const users = ['near@gmail.com', 'hunter69@gmail.com'];
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) =>
+              users.contains(data) ? null : Future.value('User not exists'),
+          onRecoverPassword: (data) =>
+              users.contains(data) ? null : Future.value('User not exists'),
+          passwordValidator: (value) => null,
+          messages: LoginMessages(
+            flushbarTitleError: 'Oh no!',
+            flushbarTitleSuccess: 'That went well!',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    await tester.pumpAndSettle();
+
+    // Test error flushbar by entering unknown name
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'not.exists@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), 'not.exists@gmail.com');
+    await tester.pumpAndSettle();
+    clickSubmitButton();
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations three times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+
+    expect(find.text('Oh no!'), findsOneWidget);
+
+    // Test success flushbar by going to the password recovery page and
+    // successfully request password change.
+    clickForgotPasswordButton();
+    await tester.pumpAndSettle();
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    clickSubmitButton();
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+
+    expect(find.text('That went well!'), findsOneWidget);
+    waitForFlushbarToClose(tester);
+  });
 }
