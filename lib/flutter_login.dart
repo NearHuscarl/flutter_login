@@ -271,10 +271,10 @@ class FlutterLogin extends StatefulWidget {
   /// passed in
   final bool showDebugButtons;
 
-  /// Hide the Button Forgot Password
+  /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
 
-  /// Hide the Button SignUp
+  /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
