@@ -33,6 +33,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.inertiaDirection,
     this.enabled = true,
     this.labelText,
+    this.labelHint,
     this.prefixIcon,
     this.suffixIcon,
     this.keyboardType,
@@ -206,6 +207,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget textField = TextFormField(
+      autofillHints: <String>[AutofillHints.widget.labelHint],
       controller: widget.controller,
       focusNode: widget.focusNode,
       decoration: _getInputDecoration(theme),
