@@ -517,6 +517,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
+      labelHint: messages.autoFillEmailHint,
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
@@ -534,6 +535,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       animatedWidth: width,
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
+      labelHint: messages.autoFillPasswordHint,
       labelText: messages.passwordHint,
       controller: _passController,
       textInputAction:
