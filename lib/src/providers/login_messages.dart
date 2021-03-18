@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
   LoginMessages({
+    this.autoFillEmailHint = autofillHintEmail,
+    this.autoFillPasswordHint = autofillHintPassword,
     this.usernameHint = defaultUsernameHint,
     this.passwordHint = defaultPasswordHint,
     this.confirmPasswordHint = defaultConfirmPasswordHint,
@@ -17,7 +19,9 @@ class LoginMessages with ChangeNotifier {
     this.flushbarTitleError = defaultflushbarTitleError,
     this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
   });
-
+  
+  static const autofillHintEmail = 'email';
+  static const autofillHintPassword = 'password';
   static const defaultUsernameHint = 'Email';
   static const defaultPasswordHint = 'Password';
   static const defaultConfirmPasswordHint = 'Confirm Password';
