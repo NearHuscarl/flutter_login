@@ -5,4 +5,4 @@ const mockUsers = {
   '@.com': '.',
 };
 
-const signupCode = '654321';
+const recoverPasswordCode = '654321';

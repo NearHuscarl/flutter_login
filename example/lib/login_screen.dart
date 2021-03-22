@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
 
   Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
     return Future.delayed(loginTime).then((_) {
-      if (code != signupCode) {
+      if (code != recoverPasswordCode) {
         return 'Wrong verification code. Try again.';
       }
       return null;
