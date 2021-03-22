@@ -174,7 +174,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           emailValidator: (value) => value.endsWith('.com') ? null : 'Invalid!',
         ));
     await tester.pumpWidget(loginBuilder());
@@ -205,7 +205,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
         ));
     await tester.pumpWidget(loginBuilder());
@@ -238,7 +238,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) =>
               users.contains(data) ? null : Future.value('User not exists'),
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           emailValidator: (value) => null,
         ));
     await tester.pumpWidget(loginBuilder());
@@ -283,7 +283,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           messages: LoginMessages(
             usernameHint: 'Username',
             passwordHint: 'Pass',
@@ -386,7 +386,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       showDebugButtons: true,
     ));
     await tester.pumpWidget(flutterLogin);
@@ -398,7 +398,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       showDebugButtons: false,
     ));
     await tester.pumpWidget(flutterLogin);
@@ -416,7 +416,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
     ));
     await tester.pumpWidget(flutterLogin);
     await tester.pumpAndSettle(loadingAnimationDuration);
@@ -427,7 +427,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       logo: 'assets/images/ecorp.png',
     ));
     await tester.pumpWidget(flutterLogin);
@@ -445,7 +445,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       title: '',
     ));
     await tester.pumpWidget(flutterLogin);
@@ -457,7 +457,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       title: null,
     ));
     await tester.pumpWidget(flutterLogin);
@@ -469,7 +469,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       title: 'My Login',
     ));
     await tester.pumpWidget(flutterLogin);
@@ -485,7 +485,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: mockCallback.onLogin,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           emailValidator: mockCallback.emailValidator,
           passwordValidator: mockCallback.passwordValidator,
           onSubmitAnimationCompleted: mockCallback.onSubmitAnimationCompleted,
@@ -559,7 +559,7 @@ void main() {
           onLogin: (data) => null,
           onSignup: mockCallback.onSignup,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           emailValidator: mockCallback.emailValidator,
           passwordValidator: mockCallback.passwordValidator,
           onSubmitAnimationCompleted: mockCallback.onSubmitAnimationCompleted,
@@ -694,7 +694,7 @@ void main() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
-      onConfirmRecover: (data,_) => null,
+      onConfirmRecover: (data, _) => null,
       logo: 'assets/images/ecorp.png',
       title: 'Yang2020',
     ));
@@ -746,7 +746,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
           hideSignUpButton: true,
           hideForgotPasswordButton: true,
@@ -771,7 +771,7 @@ void main() {
               users.contains(data) ? null : Future.value('User not exists'),
           onRecoverPassword: (data) =>
               users.contains(data) ? null : Future.value('User not exists'),
-          onConfirmRecover: (data,_) => null,
+          onConfirmRecover: (data, _) => null,
           passwordValidator: (value) => null,
           messages: LoginMessages(
             flushbarTitleError: 'Oh no!',

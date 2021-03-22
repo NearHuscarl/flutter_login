@@ -39,8 +39,7 @@ class LoginMessages with ChangeNotifier {
   static const defaultConfirmRecoverIntro =
       'The recovery code to set a new password was sent to your email.';
   static const defaultRecoveryCodeHint = 'Recovery Code';
-  static const defaultRecoveryCodeValidationError =
-      'Recovery code is empty';
+  static const defaultRecoveryCodeValidationError = 'Recovery code is empty';
   static const defaultSetPasswordButton = 'SET PASSWORD';
   static const defaultConfirmRecoverSuccess = 'Password recovered.';
   static const defaultflushbarTitleSuccess = 'Success';
