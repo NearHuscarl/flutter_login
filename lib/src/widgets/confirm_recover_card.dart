@@ -9,7 +9,6 @@ import '../models/login_data.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
 import '../widget_helper.dart';
-import '../paddings.dart';
 
 class ConfirmRecoverCard extends StatefulWidget {
   ConfirmRecoverCard({
@@ -77,13 +76,13 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     );
 
     if (error != null) {
-      showErrorToast(context, error);
+      showErrorToast(context, null, error);
       setState(() => _isSubmitting = false);
       _submitController.reverse();
       return false;
     }
 
-    showSuccessToast(context, messages.confirmRecoverSuccess);
+    showSuccessToast(context, null, messages.confirmRecoverSuccess);
     setState(() => _isSubmitting = false);
     _submitController.reverse();
     widget?.onSubmitCompleted();
@@ -152,12 +151,12 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   }
 
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
-    return FlatButton(
-      child: Text(messages.goBackButton),
+    return MaterialButton(
       onPressed: !_isSubmitting ? widget.onBack : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
+      child: Text(messages.goBackButton),
     );
   }
 
@@ -188,7 +187,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
                 Text(
                   messages.confirmRecoverIntro,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.body1,
+                  style: theme.textTheme.bodyText2,
                 ),
                 SizedBox(height: 20),
                 _buildVerificationCodeField(textFieldWidth, messages),

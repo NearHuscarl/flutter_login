@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import '../lib/flutter_login.dart';
-import '../lib/src/constants.dart';
-import '../lib/src/widgets/animated_button.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/widgets/animated_button.dart';
 
 // TODO: get this value from fluter_login package
-const loadingAnimationDuration = const Duration(seconds: 1);
+const loadingAnimationDuration = Duration(seconds: 1);
 
 class LoginCallback {
   Future<String> onLogin(LoginData data) => null;
@@ -50,6 +50,7 @@ Widget defaultFlutterLogin() {
       onSignup: (data) => null,
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
+      onConfirmRecover: (data,_) => null,
     ),
   );
 }
@@ -58,6 +59,21 @@ Widget widget(Widget widget) {
   return MaterialApp(
     home: widget,
   );
+}
+
+Future<void> simulateOpenSoftKeyboard(
+  WidgetTester tester,
+  Widget widget,
+) async {
+  // Open soft keyboard on small devices will rebuild the whole screen
+  // tester.enterText() seems to only insert text in [EditableText] without
+  // opening/closing the actual soft keyboard, hidding the side effects in
+  // the real environment
+  await tester.pumpWidget(widget);
+}
+
+bool isSignup(WidgetTester tester) {
+  return confirmPasswordTextFieldWidget(tester).enabled;
 }
 
 Finder findLogoImage() {
@@ -81,15 +97,19 @@ Finder findConfirmPasswordTextField() {
 }
 
 Finder findForgotPasswordButton() {
-  return find.byType(FlatButton).at(0);
+  return find.byType(MaterialButton).at(0);
 }
 
 Finder findSwitchAuthButton() {
-  return find.byType(FlatButton).at(1);
+  return find.byType(MaterialButton).at(1);
 }
 
 Finder findDebugToolbar() {
   return find.byKey(kDebugToolbarKey);
+}
+
+Image logoWidget(WidgetTester tester) {
+  return tester.widget<Image>(findLogoImage());
 }
 
 TextField nameTextFieldWidget(WidgetTester tester) {
@@ -108,16 +128,16 @@ AnimatedButton submitButtonWidget() {
   return find.byType(AnimatedButton).evaluate().first.widget;
 }
 
-FlatButton forgotPasswordButtonWidget() {
-  return find.byType(FlatButton).evaluate().first.widget;
+TextButton forgotPasswordButtonWidget() {
+  return find.byType(TextButton).evaluate().first.widget;
 }
 
-FlatButton switchAuthButtonWidget() {
-  return find.byType(FlatButton).evaluate().last.widget;
+MaterialButton switchAuthButtonWidget() {
+  return find.byType(MaterialButton).evaluate().last.widget;
 }
 
-FlatButton goBackButtonWidget() {
-  return find.byType(FlatButton).evaluate().last.widget;
+MaterialButton goBackButtonWidget() {
+  return find.byType(MaterialButton).evaluate().last.widget;
 }
 
 Text recoverIntroTextWidget() {

@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
 
   Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
     return Future.delayed(loginTime).then((_) {
-      if (false) {
+      if (code != signupCode) {
         return 'Wrong verification code. Try again.';
       }
       return null;
@@ -43,16 +43,13 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder = BorderRadius.vertical(
-      bottom: Radius.circular(10.0),
-      top: Radius.circular(20.0),
-    );
-
     return FlutterLogin(
       title: Constants.appName,
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      // hideForgotPasswordButton: true,
+      // hideSignUpButton: true,
       // messages: LoginMessages(
       //   usernameHint: 'Username',
       //   passwordHint: 'Pass',
@@ -66,6 +63,8 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
+      //   flushbarTitleError: 'Oh no!',
+      //   flushbarTitleSuccess: 'Succes!',
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,
@@ -179,7 +178,7 @@ class LoginScreen extends StatelessWidget {
         // Show new password dialog
       },
       onConfirmRecover: (code, loginData) {
-        print("Confirm recover info");
+        print('Confirm recover info');
         print('Code: $code, Name: ${loginData.name}');
         return _confirmRecoverPassword(code, loginData);
       },

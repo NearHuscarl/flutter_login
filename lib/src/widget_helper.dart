@@ -1,4 +1,4 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -7,9 +7,9 @@ Size getWidgetSize(GlobalKey key) {
   return renderBox?.size;
 }
 
-Flushbar showSuccessToast(BuildContext context, String message) {
+Flushbar showSuccessToast(BuildContext context, String title, String message) {
   return Flushbar(
-    title: 'Success',
+    title: title,
     message: message,
     icon: Icon(
       Icons.check,
@@ -24,9 +24,9 @@ Flushbar showSuccessToast(BuildContext context, String message) {
   )..show(context);
 }
 
-Flushbar showErrorToast(BuildContext context, String message) {
+Flushbar showErrorToast(BuildContext context, String title, String message) {
   return Flushbar(
-    title: 'Error',
+    title: title,
     message: message,
     icon: Icon(
       Icons.error,

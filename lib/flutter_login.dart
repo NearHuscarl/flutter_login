@@ -1,8 +1,10 @@
 library flutter_login;
 
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
@@ -30,7 +32,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
   final Function onChanged;
   final double initialValue;
-  static const animationSpeeds = const [1, 2, 5, 10];
+  static const animationSpeeds = [1, 2, 5, 10];
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatefulWidget {
   _Header({
     this.logoPath,
     this.logoTag,
@@ -86,63 +88,113 @@ class _Header extends StatelessWidget {
   final AnimationController titleController;
 
   @override
+  __HeaderState createState() => __HeaderState();
+}
+
+class __HeaderState extends State<_Header> {
+  double _titleHeight = 0.0;
+
+  /// https://stackoverflow.com/a/56997641/9449426
+  double getEstimatedTitleHeight() {
+    if (DartHelper.isNullOrEmpty(widget.title)) {
+      return 0.0;
+    }
+
+    final theme = Theme.of(context);
+    final renderParagraph = RenderParagraph(
+      TextSpan(
+        text: widget.title,
+        style: theme.textTheme.headline3.copyWith(
+          fontSize: widget.loginTheme.beforeHeroFontSize,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    );
+
+    renderParagraph.layout(BoxConstraints());
+
+    return renderParagraph
+        .getMinIntrinsicHeight(widget.loginTheme.beforeHeroFontSize)
+        .ceilToDouble();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _titleHeight = getEstimatedTitleHeight();
+  }
+
+  @override
+  void didUpdateWidget(_Header oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.title != oldWidget.title) {
+      _titleHeight = getEstimatedTitleHeight();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final displayLogo = logoPath != null;
-    Widget logo = displayLogo
+    const gap = 5.0;
+    final logoHeight = min(widget.height - _titleHeight - gap, kMaxLogoHeight);
+    final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
+
+    var logo = displayLogo
         ? Image.asset(
-            logoPath,
+            widget.logoPath,
             filterQuality: FilterQuality.high,
-            height: 125,
+            height: logoHeight,
           )
         : NullWidget();
 
-    if (logoTag != null) {
+    if (widget.logoTag != null) {
       logo = Hero(
-        tag: logoTag,
+        tag: widget.logoTag,
         child: logo,
       );
     }
 
-    Widget header;
-    if (titleTag != null && !DartHelper.isNullOrEmpty(title)) {
-      header = HeroText(
-        title,
+    Widget title;
+    if (widget.titleTag != null && !DartHelper.isNullOrEmpty(widget.title)) {
+      title = HeroText(
+        widget.title,
         key: kTitleKey,
-        tag: titleTag,
-        largeFontSize: loginTheme.beforeHeroFontSize,
-        smallFontSize: loginTheme.afterHeroFontSize,
-        style: theme.textTheme.display2,
+        tag: widget.titleTag,
+        largeFontSize: widget.loginTheme.beforeHeroFontSize,
+        smallFontSize: widget.loginTheme.afterHeroFontSize,
+        style: theme.textTheme.headline3,
         viewState: ViewState.enlarged,
       );
-    } else if (!DartHelper.isNullOrEmpty(title)) {
-      header = Text(
-        title,
+    } else if (!DartHelper.isNullOrEmpty(widget.title)) {
+      title = Text(
+        widget.title,
         key: kTitleKey,
-        style: theme.textTheme.display2,
+        style: theme.textTheme.headline3,
       );
     } else {
-      header = null;
+      title = null;
     }
 
     return SizedBox(
-      height: height,
+      height: widget.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           if (displayLogo)
             FadeIn(
-              controller: logoController,
+              controller: widget.logoController,
               offset: .25,
               fadeDirection: FadeDirection.topToBottom,
               child: logo,
             ),
-          SizedBox(height: 5),
+          SizedBox(height: gap),
           FadeIn(
-            controller: titleController,
+            controller: widget.titleController,
             offset: .5,
             fadeDirection: FadeDirection.topToBottom,
-            child: header,
+            child: title,
           ),
         ],
       ),
@@ -167,6 +219,8 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -221,6 +275,12 @@ class FlutterLogin extends StatefulWidget {
   /// passed in
   final bool showDebugButtons;
 
+  /// Set to true to hide the Forgot Password button
+  final bool hideForgotPasswordButton;
+
+  /// Set to true to hide the SignUp button
+  final bool hideSignUpButton;
+
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
@@ -242,7 +302,7 @@ class FlutterLogin extends StatefulWidget {
 class _FlutterLoginState extends State<FlutterLogin>
     with TickerProviderStateMixin {
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
-  static const loadingDuration = const Duration(milliseconds: 400);
+  static const loadingDuration = Duration(milliseconds: 400);
   AnimationController _loadingController;
   AnimationController _logoController;
   AnimationController _titleController;
@@ -281,10 +341,10 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   @override
   void dispose() {
-    super.dispose();
     _loadingController.dispose();
     _logoController.dispose();
     _titleController.dispose();
+    super.dispose();
   }
 
   void _reverseHeaderAnimation() {
@@ -318,12 +378,10 @@ class _FlutterLoginState extends State<FlutterLogin>
       child: Row(
         key: kDebugToolbarKey,
         children: <Widget>[
-          RaisedButton(
+          MaterialButton(
             color: Colors.green,
-            child: Text('OPTIONS', style: textStyle),
             onPressed: () {
               timeDilation = 1.0;
-
               showModalBottomSheet(
                 context: context,
                 builder: (_) {
@@ -346,24 +404,25 @@ class _FlutterLoginState extends State<FlutterLogin>
                 });
               });
             },
+            child: Text('OPTIONS', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.blue,
-            child: Text('LOADING', style: textStyle),
             onPressed: () => authCardKey.currentState.runLoadingAnimation(),
+            child: Text('LOADING', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.orange,
-            child: Text('PAGE', style: textStyle),
             onPressed: () => authCardKey.currentState.runChangePageAnimation(),
+            child: Text('PAGE', style: textStyle),
           ),
-          RaisedButton(
+          MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            child: Text('NAV', style: textStyle),
             onPressed: () => authCardKey.currentState.runChangeRouteAnimation(),
+            child: Text('NAV', style: textStyle),
           ),
         ],
       ),
@@ -382,22 +441,22 @@ class _FlutterLoginState extends State<FlutterLogin>
     final accentColor = loginTheme.accentColor ?? theme.accentColor;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
-    final isDefaultBlackText = theme.textTheme.display2.color ==
-        Typography.blackMountainView.display2.color;
-    final titleStyle = theme.textTheme.display2
+    final isDefaultBlackText = theme.textTheme.headline3.color ==
+        Typography.blackMountainView.headline3.color;
+    final titleStyle = theme.textTheme.headline3
         .copyWith(
           color: loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
-                  : theme.textTheme.display2.color),
+                  : theme.textTheme.headline3.color),
           fontSize: loginTheme.beforeHeroFontSize,
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
-    final textStyle = theme.textTheme.body1
+    final textStyle = theme.textTheme.bodyText2
         .copyWith(color: Colors.black54)
         .merge(loginTheme.bodyStyle);
-    final textFieldStyle = theme.textTheme.subhead
+    final textFieldStyle = theme.textTheme.subtitle1
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button
@@ -471,9 +530,9 @@ class _FlutterLoginState extends State<FlutterLogin>
       highlightColor:
           loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
-        display2: titleStyle,
-        body1: textStyle,
-        subhead: textFieldStyle,
+        headline3: titleStyle,
+        bodyText2: textStyle,
+        subtitle1: textFieldStyle,
         button: buttonStyle,
       ),
     );
@@ -484,10 +543,10 @@ class _FlutterLoginState extends State<FlutterLogin>
     final loginTheme = widget.theme ?? LoginTheme();
     final theme = _mergeTheme(theme: Theme.of(context), loginTheme: loginTheme);
     final deviceSize = MediaQuery.of(context).size;
-    final headerHeight = deviceSize.height * .3;
-    const logoMargin = 15;
+    const headerMargin = 15;
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
+    final headerHeight = cardTopPosition - headerMargin;
     final emailValidator =
         widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
     final passwordValidator =
@@ -499,7 +558,7 @@ class _FlutterLoginState extends State<FlutterLogin>
           value: widget.messages ?? LoginMessages(),
         ),
         ChangeNotifierProvider(
-          create: (_) => Auth(
+          create: (context) => Auth(
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
@@ -534,10 +593,13 @@ class _FlutterLoginState extends State<FlutterLogin>
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
+                        hideSignUpButton: widget.hideSignUpButton,
+                        hideForgotPasswordButton:
+                            widget.hideForgotPasswordButton,
                       ),
                     ),
                     Positioned(
-                      top: cardTopPosition - headerHeight - logoMargin,
+                      top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
                     ),
                   ],

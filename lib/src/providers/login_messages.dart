@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
   LoginMessages({
-    this.usernameHint: defaultUsernameHint,
-    this.passwordHint: defaultPasswordHint,
-    this.confirmPasswordHint: defaultConfirmPasswordHint,
-    this.forgotPasswordButton: defaultForgotPasswordButton,
-    this.loginButton: defaultLoginButton,
-    this.signupButton: defaultSignupButton,
-    this.recoverPasswordButton: defaultRecoverPasswordButton,
-    this.recoverPasswordIntro: defaultRecoverPasswordIntro,
-    this.recoverPasswordDescription: defaultRecoverPasswordDescription,
-    this.goBackButton: defaultGoBackButton,
-    this.confirmPasswordError: defaultConfirmPasswordError,
-    this.recoverPasswordSuccess: defaultRecoverPasswordSuccess,
-    this.confirmRecoverIntro: defaultConfirmRecoverIntro,
-    this.recoveryCodeHint: defaultRecoveryCodeHint,
-    this.recoveryCodeValidationError: defaultRecoveryCodeValidationError,
-    this.setPasswordButton: defaultSetPasswordButton,
-    this.confirmRecoverSuccess: defaultConfirmRecoverSuccess,
+    this.usernameHint = defaultUsernameHint,
+    this.passwordHint = defaultPasswordHint,
+    this.confirmPasswordHint = defaultConfirmPasswordHint,
+    this.forgotPasswordButton = defaultForgotPasswordButton,
+    this.loginButton = defaultLoginButton,
+    this.signupButton = defaultSignupButton,
+    this.recoverPasswordButton = defaultRecoverPasswordButton,
+    this.recoverPasswordIntro = defaultRecoverPasswordIntro,
+    this.recoverPasswordDescription = defaultRecoverPasswordDescription,
+    this.goBackButton = defaultGoBackButton,
+    this.confirmPasswordError = defaultConfirmPasswordError,
+    this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
+    this.confirmRecoverIntro = defaultConfirmRecoverIntro,
+    this.recoveryCodeHint = defaultRecoveryCodeHint,
+    this.recoveryCodeValidationError = defaultRecoveryCodeValidationError,
+    this.setPasswordButton = defaultSetPasswordButton,
+    this.confirmRecoverSuccess = defaultConfirmRecoverSuccess,
+    this.flushbarTitleError = defaultflushbarTitleError,
+    this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
   });
 
   static const defaultUsernameHint = 'Email';
@@ -41,6 +43,8 @@ class LoginMessages with ChangeNotifier {
       'Recovery code is empty';
   static const defaultSetPasswordButton = 'SET PASSWORD';
   static const defaultConfirmRecoverSuccess = 'Password recovered.';
+  static const defaultflushbarTitleSuccess = 'Success';
+  static const defaultflushbarTitleError = 'Error';
 
   /// Hint text of the user name [TextField]
   final String usernameHint;
@@ -94,4 +98,10 @@ class LoginMessages with ChangeNotifier {
 
   /// The success message to show after confirming recovered password
   final String confirmRecoverSuccess;
+
+  /// Title on top of Flushbar on errors
+  final String flushbarTitleError;
+
+  /// Title on top of Flushbar on successes
+  final String flushbarTitleSuccess;
 }
