@@ -65,7 +65,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     _formRecoverKey.currentState.save();
-    _submitController.forward();
+    await _submitController.forward();
     setState(() => _isSubmitting = true);
     final error = await auth.onConfirmRecover(
       _code,
@@ -78,13 +78,12 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     if (error != null) {
       showErrorToast(context, null, error);
       setState(() => _isSubmitting = false);
-      _submitController.reverse();
+      await _submitController.reverse();
       return false;
     }
 
     showSuccessToast(context, null, messages.confirmRecoverSuccess);
     setState(() => _isSubmitting = false);
-    _submitController.reverse();
     widget?.onSubmitCompleted();
     return true;
   }

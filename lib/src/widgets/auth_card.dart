@@ -800,7 +800,6 @@ class _RecoverCardState extends State<_RecoverCard>
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
-      _submitController.reverse();
       widget.onSwitchRecoverCode();
       return true;
     }
