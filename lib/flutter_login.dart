@@ -221,6 +221,7 @@ class FlutterLogin extends StatefulWidget {
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
     this.redirectAfterSignUp = true,
+    this.footer,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -266,6 +267,9 @@ class FlutterLogin extends StatefulWidget {
   /// and `LoginTheme.afterHeroFontSize` if you want different font size before
   /// and after hero animation
   final String titleTag;
+
+  /// add a custom footer
+  final Widget footer;
 
   /// Display the debug buttons to quickly forward/reverse login animations. In
   /// release mode, this will be overrided to false regardless of the value
@@ -367,6 +371,10 @@ class _FlutterLoginState extends State<FlutterLogin>
       titleTag: widget.titleTag,
       loginTheme: loginTheme,
     );
+  }
+
+  Widget _buildFooter() {
+    return widget.footer ?? SizedBox.shrink();
   }
 
   Widget _buildDebugAnimationButtons() {
@@ -567,6 +575,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ],
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
+        bottomNavigationBar: _buildFooter(),
         body: Stack(
           children: <Widget>[
             GradientBox(
