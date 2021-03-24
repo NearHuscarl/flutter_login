@@ -506,6 +506,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
+    if (!auth.isLogin && messages.signupSuccess.isNotEmpty) {
+      showSuccessToast(
+          context, messages.flushbarTitleSuccess, messages.signupSuccess);
+      _switchAuthMode();
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
     widget?.onSubmitCompleted();
 
     return true;
@@ -863,6 +871,7 @@ class _RecoverCardState extends State<_RecoverCard>
                 ),
                 SizedBox(height: 26),
                 _buildRecoverButton(theme, messages),
+                SizedBox(height: 5),
                 _buildBackButton(theme, messages),
               ],
             ),
