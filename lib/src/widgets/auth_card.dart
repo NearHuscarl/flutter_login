@@ -31,6 +31,7 @@ class AuthCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.redirectAfterSignUp = true,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -41,6 +42,7 @@ class AuthCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool redirectAfterSignUp;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -343,6 +345,7 @@ class _LoginCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.redirectAfterSignUp = true,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -353,6 +356,7 @@ class _LoginCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool redirectAfterSignUp;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -506,7 +510,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (!auth.isLogin && messages.signupSuccess.isNotEmpty) {
+    if (!auth.isLogin && !widget.redirectAfterSignUp) {
       showSuccessToast(
           context, messages.flushbarTitleSuccess, messages.signupSuccess);
       _switchAuthMode();

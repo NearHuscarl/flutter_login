@@ -220,6 +220,7 @@ class FlutterLogin extends StatefulWidget {
     this.showDebugButtons = false,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.redirectAfterSignUp = true,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -276,6 +277,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
+
+  /// Set to false to return back to sign in page after successful sign up
+  final bool redirectAfterSignUp;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -591,6 +595,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
+                        redirectAfterSignUp: widget.redirectAfterSignUp,
                       ),
                     ),
                     Positioned(
