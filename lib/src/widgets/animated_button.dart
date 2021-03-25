@@ -6,19 +6,19 @@ import 'ring.dart';
 
 class AnimatedButton extends StatefulWidget {
   AnimatedButton({
-    Key key,
-    @required this.text,
-    @required this.onPressed,
-    @required this.controller,
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    required this.controller,
     this.loadingColor,
     this.color,
   }) : super(key: key);
 
   final String text;
-  final Color color;
-  final Color loadingColor;
-  final Function onPressed;
-  final AnimationController controller;
+  final Color? color;
+  final Color? loadingColor;
+  final Function? onPressed;
+  final AnimationController? controller;
 
   @override
   _AnimatedButtonState createState() => _AnimatedButtonState();
@@ -26,18 +26,18 @@ class AnimatedButton extends StatefulWidget {
 
 class _AnimatedButtonState extends State<AnimatedButton>
     with SingleTickerProviderStateMixin {
-  Animation<double> _sizeAnimation;
-  Animation<double> _textOpacityAnimation;
-  Animation<double> _buttonOpacityAnimation;
-  Animation<double> _ringThicknessAnimation;
-  Animation<double> _ringOpacityAnimation;
-  Animation<Color> _colorAnimation;
+  late Animation<double> _sizeAnimation;
+  late Animation<double> _textOpacityAnimation;
+  late Animation<double> _buttonOpacityAnimation;
+  late Animation<double> _ringThicknessAnimation;
+  late Animation<double> _ringOpacityAnimation;
+  late Animation<Color?> _colorAnimation;
   var _isLoading = false;
   var _hover = false;
   var _width = 120.0;
 
-  Color _color;
-  Color _loadingColor;
+  Color? _color;
+  Color? _loadingColor;
 
   static const _height = 40.0;
   static const _loadingCircleRadius = _height / 2;
@@ -49,7 +49,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
     _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
-        parent: widget.controller,
+        parent: widget.controller!,
         curve: Interval(0.0, .25),
       ),
     );
@@ -59,23 +59,23 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-      parent: widget.controller,
+      parent: widget.controller!,
       curve: Threshold(.65),
     ));
 
     _ringThicknessAnimation =
         Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
             .animate(CurvedAnimation(
-      parent: widget.controller,
+      parent: widget.controller!,
       curve: Interval(.65, .85),
     ));
     _ringOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-      parent: widget.controller,
+      parent: widget.controller!,
       curve: Interval(.85, 1.0),
     ));
 
-    widget.controller.addStatusListener(handleStatusChanged);
+    widget.controller!.addStatusListener(handleStatusChanged);
   }
 
   @override
@@ -97,7 +97,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       end: _loadingColor,
     ).animate(
       CurvedAnimation(
-        parent: widget.controller,
+        parent: widget.controller!,
         curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
       ),
     );
@@ -119,7 +119,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   @override
   void dispose() {
-    widget.controller.removeStatusListener(handleStatusChanged);
+    widget.controller!.removeStatusListener(handleStatusChanged);
     super.dispose();
   }
 
@@ -135,14 +135,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
   /// sets width and size animation
   void _updateWidth() {
     final theme = Theme.of(context);
-    final fontSize = theme.textTheme.button.fontSize;
+    final fontSize = theme.textTheme.button!.fontSize!;
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.text,
         style: TextStyle(
           fontSize: fontSize,
-          fontWeight: theme.textTheme.button.fontWeight,
-          letterSpacing: theme.textTheme.button.letterSpacing,
+          fontWeight: theme.textTheme.button!.fontWeight,
+          letterSpacing: theme.textTheme.button!.letterSpacing,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -164,7 +164,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
-      parent: widget.controller,
+      parent: widget.controller!,
       curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
   }
@@ -194,13 +194,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
-                    ? buttonTheme.highlightElevation
-                    : buttonTheme.elevation)
+                    ? buttonTheme.highlightElevation!
+                    : buttonTheme.elevation!)
                 : 0,
             child: child,
           ),
           child: InkWell(
-            onTap: !_isLoading ? widget.onPressed : null,
+            onTap: !_isLoading ? widget.onPressed as void Function()? : null,
             splashColor: buttonTheme.splashColor,
             customBorder: buttonTheme.shape,
             onHighlightChanged: (value) => setState(() => _hover = value),
@@ -243,7 +243,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
             width: _height - _loadingCircleThickness,
             height: _height - _loadingCircleThickness,
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
+              valueColor: AlwaysStoppedAnimation<Color?>(widget.loadingColor),
               // backgroundColor: Colors.red,
               strokeWidth: _loadingCircleThickness,
             ),

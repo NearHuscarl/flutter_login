@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// A circle with a hole
 class Ring extends StatelessWidget {
   Ring({
-    Key key,
+    Key? key,
     this.color,
     this.size = 40.0,
     this.thickness = 2.0,
@@ -12,7 +12,7 @@ class Ring extends StatelessWidget {
         assert(thickness >= 0),
         super(key: key);
 
-  final Color color;
+  final Color? color;
   final double size;
   final double thickness;
   final double value;
@@ -25,7 +25,7 @@ class Ring extends StatelessWidget {
       child: thickness == 0
           ? null
           : CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(color),
+              valueColor: AlwaysStoppedAnimation<Color?>(color),
               strokeWidth: thickness,
               value: value,
             ),
