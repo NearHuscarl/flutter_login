@@ -518,6 +518,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.usernameHint,
+      autofillHints: [AutofillHints.email],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -535,6 +536,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
+      autofillHints: auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
       controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -790,6 +792,7 @@ class _RecoverCardState extends State<_RecoverCard>
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
+      autofillHints: [AutofillHints.email],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
