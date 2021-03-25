@@ -536,7 +536,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
-      autofillHints: auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
+      autofillHints:
+          auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
       controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
