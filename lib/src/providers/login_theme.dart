@@ -52,6 +52,8 @@ class LoginTheme with ChangeNotifier {
     this.buttonStyle,
     this.beforeHeroFontSize = 48.0,
     this.afterHeroFontSize = 15.0,
+    this.copyrightBackgroundColor,
+    this.copyrightTextStyle
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -102,4 +104,10 @@ class LoginTheme with ChangeNotifier {
   /// Defines the font size of the title in the screen after the login screen
   /// (after the hero transition)
   final double afterHeroFontSize;
+
+  /// Color of the copyright background
+  final Color copyrightBackgroundColor;
+
+  /// Text style for copyright text
+  final TextStyle copyrightTextStyle;
 }
