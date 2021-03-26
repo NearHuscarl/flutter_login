@@ -24,6 +24,15 @@ export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 import 'src/constants.dart';
 
+class LoginProvider {
+  final IconData icon;
+  final ProviderAuthCallback callback;
+
+  LoginProvider({@required this.icon, @required this.callback})
+      : assert((icon != null && callback != null),
+            ' callback and icon should not be null');
+}
+
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
     @required this.onChanged,
@@ -218,6 +227,7 @@ class FlutterLogin extends StatefulWidget {
       this.logoTag,
       this.titleTag,
       this.showDebugButtons = false,
+      this.loginProviders = const <LoginProvider>[],
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true})
@@ -228,6 +238,11 @@ class FlutterLogin extends StatefulWidget {
 
   /// Called when the user hit the submit button when in login mode
   final AuthCallback onLogin;
+
+  /// list of LoginProvider each have an icon and a callback that will be Called when
+  /// the user hit the provider icon button
+  /// if not specified nothing will be shown
+  final List<LoginProvider> loginProviders;
 
   /// Called when the user hit the submit button when in recover password mode
   final RecoverCallback onRecoverPassword;
@@ -562,6 +577,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
+            loginProviders: widget.loginProviders,
           ),
         ),
       ],
