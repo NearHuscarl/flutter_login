@@ -556,8 +556,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     await control.reverse();
 
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });

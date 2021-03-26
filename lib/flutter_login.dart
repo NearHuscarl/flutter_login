@@ -212,26 +212,26 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key key,
-    @required this.onSignup,
-    @required this.onLogin,
-    @required this.onRecoverPassword,
-    this.title = 'LOGIN',
-    this.logo,
-    this.messages,
-    this.theme,
-    this.emailValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.loginProviders = const <LoginProvider>[],
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true
-  }) : super(key: key);
+  FlutterLogin(
+      {Key key,
+      @required this.onSignup,
+      @required this.onLogin,
+      @required this.onRecoverPassword,
+      this.title = 'LOGIN',
+      this.logo,
+      this.messages,
+      this.theme,
+      this.emailValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.loginProviders = const <LoginProvider>[],
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
