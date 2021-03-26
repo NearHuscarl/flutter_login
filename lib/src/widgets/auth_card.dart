@@ -20,6 +20,7 @@ import '../dart_helper.dart';
 import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
+import 'confirm_recover_card.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -136,23 +137,23 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _switchRecovery(bool recovery) {
+  void _switchPage(bool forward) {
     final auth = Provider.of<Auth>(context, listen: false);
 
-    auth.isRecover = recovery;
-    if (recovery) {
+    if (forward) {
       _pageController.nextPage(
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
-      _pageIndex = 1;
     } else {
       _pageController.previousPage(
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
-      _pageIndex = 0;
     }
+
+    _pageIndex = forward ? ++_pageIndex : --_pageIndex;
+    auth.isRecover = _pageIndex > 0;
   }
 
   Future<void> runLoadingAnimation() {
@@ -214,8 +215,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   void runChangePageAnimation() {
-    final auth = Provider.of<Auth>(context, listen: false);
-    _switchRecovery(!auth.isRecover);
+    _switchPage(_pageIndex < 2);
   }
 
   Widget _buildLoadingAnimator({Widget child, ThemeData theme}) {
@@ -268,6 +268,49 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildCard(ThemeData theme, int index) {
+    switch (index) {
+      case 0:
+        return _buildLoadingAnimator(
+          theme: theme,
+          child: _LoginCard(
+            key: _cardKey,
+            loadingController: _isLoadingFirstTime
+                ? _formLoadingController
+                : (_formLoadingController..value = 1.0),
+            emailValidator: widget.emailValidator,
+            passwordValidator: widget.passwordValidator,
+            onSwitchRecoveryPassword: () => _switchPage(true),
+            onSubmitCompleted: () {
+              _forwardChangeRouteAnimation().then((_) {
+                widget?.onSubmitCompleted();
+              });
+            },
+            hideSignUpButton: widget.hideSignUpButton,
+            hideForgotPasswordButton: widget.hideForgotPasswordButton,
+          ),
+        );
+
+      case 1:
+        return _RecoverCard(
+          emailValidator: widget.emailValidator,
+          onBack: () => _switchPage(false),
+          onSwitchRecoverCode: () => _switchPage(true),
+        );
+
+      case 2:
+        return ConfirmRecoverCard(
+          passwordValidator: widget.passwordValidator,
+          onBack: () => _switchPage(false),
+          onSubmitCompleted: widget.onSubmitCompleted,
+        );
+
+      default:
+        // invalid index
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -286,35 +329,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         index: _pageIndex,
         transformer: CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
-          final child = (index == 0)
-              ? _buildLoadingAnimator(
-                  theme: theme,
-                  child: _LoginCard(
-                    key: _cardKey,
-                    loadingController: _isLoadingFirstTime
-                        ? _formLoadingController
-                        : (_formLoadingController..value = 1.0),
-                    emailValidator: widget.emailValidator,
-                    passwordValidator: widget.passwordValidator,
-                    onSwitchRecoveryPassword: () => _switchRecovery(true),
-                    onSubmitCompleted: () {
-                      _forwardChangeRouteAnimation().then((_) {
-                        widget?.onSubmitCompleted();
-                      });
-                    },
-                    hideSignUpButton: widget.hideSignUpButton,
-                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
-                    loginAfterSignUp: widget.loginAfterSignUp,
-                  ),
-                )
-              : _RecoverCard(
-                  emailValidator: widget.emailValidator,
-                  onSwitchLogin: () => _switchRecovery(false),
-                );
-
           return Align(
             alignment: Alignment.topCenter,
-            child: child,
+            child: _buildCard(theme, index),
           );
         },
       ),
@@ -649,6 +666,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: TextButton(
         onPressed: buttonEnabled
             ? () {
+                // close keyboard
+                FocusScope.of(context).requestFocus(FocusNode());
                 // save state to populate email field on recovery card
                 _formKey.currentState.save();
                 widget.onSwitchRecoveryPassword();
@@ -807,11 +826,13 @@ class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key key,
     @required this.emailValidator,
-    @required this.onSwitchLogin,
+    @required this.onBack,
+    @required this.onSwitchRecoverCode,
   }) : super(key: key);
 
   final FormFieldValidator<String> emailValidator;
-  final Function onSwitchLogin;
+  final Function onBack;
+  final Function onSwitchRecoverCode;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -847,6 +868,8 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   Future<bool> _submit() async {
+    FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+
     if (!_formRecoverKey.currentState.validate()) {
       return false;
     }
@@ -867,7 +890,7 @@ class _RecoverCardState extends State<_RecoverCard>
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
-      await _submitController.reverse();
+      widget.onSwitchRecoverCode();
       return true;
     }
   }
@@ -902,7 +925,7 @@ class _RecoverCardState extends State<_RecoverCard>
       onPressed: !_isSubmitting
           ? () {
               _formRecoverKey.currentState.save();
-              widget.onSwitchLogin();
+              widget.onBack();
             }
           : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),

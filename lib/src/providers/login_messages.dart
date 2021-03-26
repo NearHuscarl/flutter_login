@@ -14,6 +14,11 @@ class LoginMessages with ChangeNotifier {
     this.goBackButton = defaultGoBackButton,
     this.confirmPasswordError = defaultConfirmPasswordError,
     this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
+    this.confirmRecoverIntro = defaultConfirmRecoverIntro,
+    this.recoveryCodeHint = defaultRecoveryCodeHint,
+    this.recoveryCodeValidationError = defaultRecoveryCodeValidationError,
+    this.setPasswordButton = defaultSetPasswordButton,
+    this.confirmRecoverSuccess = defaultConfirmRecoverSuccess,
     this.flushbarTitleError = defaultflushbarTitleError,
     this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
     this.signUpSuccess = defaultSignUpSuccess,
@@ -28,10 +33,16 @@ class LoginMessages with ChangeNotifier {
   static const defaultRecoverPasswordButton = 'RECOVER';
   static const defaultRecoverPasswordIntro = 'Reset your password here';
   static const defaultRecoverPasswordDescription =
-      'We will send your plain-text password to this email account.';
+      'We will send a password recovery code to your email.';
   static const defaultGoBackButton = 'BACK';
-  static const defaultConfirmPasswordError = 'Password do not match!';
-  static const defaultRecoverPasswordSuccess = 'An email has been sent';
+  static const defaultConfirmPasswordError = 'Passwords do not match!';
+  static const defaultRecoverPasswordSuccess = 'An email has been sent.';
+  static const defaultConfirmRecoverIntro =
+      'The recovery code to set a new password was sent to your email.';
+  static const defaultRecoveryCodeHint = 'Recovery Code';
+  static const defaultRecoveryCodeValidationError = 'Recovery code is empty';
+  static const defaultSetPasswordButton = 'SET PASSWORD';
+  static const defaultConfirmRecoverSuccess = 'Password recovered.';
   static const defaultflushbarTitleSuccess = 'Success';
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';
@@ -73,6 +84,21 @@ class LoginMessages with ChangeNotifier {
 
   /// The success message to show after submitting recover password
   final String recoverPasswordSuccess;
+
+  /// The intro text for the confirm recover password card
+  final String confirmRecoverIntro;
+
+  /// Hint text of the password recovery code [TextField]
+  final String recoveryCodeHint;
+
+  /// The validation error message  to show for an empty recovery code
+  final String recoveryCodeValidationError;
+
+  /// Set password button's label for password recovery confirmation
+  final String setPasswordButton;
+
+  /// The success message to show after confirming recovered password
+  final String confirmRecoverSuccess;
 
   /// Title on top of Flushbar on errors
   final String flushbarTitleError;

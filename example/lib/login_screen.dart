@@ -32,6 +32,15 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
+  Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
+    return Future.delayed(loginTime).then((_) {
+      if (code != recoverPasswordCode) {
+        return 'Wrong verification code. Try again.';
+      }
+      return null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
@@ -168,6 +177,11 @@ class LoginScreen extends StatelessWidget {
         print('Name: $name');
         return _recoverPassword(name);
         // Show new password dialog
+      },
+      onConfirmRecover: (code, loginData) {
+        print('Confirm recover info');
+        print('Code: $code, Name: ${loginData.name}');
+        return _confirmRecoverPassword(code, loginData);
       },
       showDebugButtons: true,
     );

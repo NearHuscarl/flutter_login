@@ -4,3 +4,5 @@ const mockUsers = {
   'near.huscarl@gmail.com': 'subscribe to pewdiepie',
   '@.com': '.',
 };
+
+const recoverPasswordCode = '654321';
