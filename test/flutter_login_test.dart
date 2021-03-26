@@ -745,4 +745,52 @@ void main() {
     expect(find.text('REGISTER'), findsNothing);
     expect(find.text('Forgot huh?'), findsNothing);
   });
+
+  testWidgets('LoginProvider buttons should login or throw error.',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
+          loginProvidersList: [
+            LoginProvider(
+              icon: Icons.check,
+              callback: () async {
+                return 'No problems!';
+              },
+            ),
+            LoginProvider(
+              icon: Icons.warning,
+              callback: () async {
+                return 'Failed to login';
+              },
+            ),
+          ],
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.byIcon(Icons.check), findsOneWidget);
+    expect(find.byIcon(Icons.warning), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.warning));
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('Failed to login'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.check));
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('No problems!'), findsOneWidget);
+    await tester.pumpAndSettle();
+  });
 }
