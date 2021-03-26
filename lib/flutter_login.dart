@@ -205,25 +205,25 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key key,
-    @required this.onSignup,
-    @required this.onLogin,
-    @required this.onRecoverPassword,
-    this.title = 'LOGIN',
-    this.logo,
-    this.messages,
-    this.theme,
-    this.emailValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.footer
-  }) : super(key: key);
+  FlutterLogin(
+      {Key key,
+      @required this.onSignup,
+      @required this.onLogin,
+      @required this.onRecoverPassword,
+      this.title = 'LOGIN',
+      this.logo,
+      this.messages,
+      this.theme,
+      this.emailValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.footer})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
@@ -282,7 +282,6 @@ class FlutterLogin extends StatefulWidget {
 
   /// Optional footer text for example a copyright notice
   final String footer;
-
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -555,17 +554,21 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
-    Widget copyrightWidget = SizedBox();
-    if (widget.footer != null)
-      copyrightWidget = Container(
-      color: loginTheme.footerBackgroundColor,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(widget.footer, style: loginTheme.footerTextStyle,)
-        ],
-      ),
-    );
+    Widget footerWidget = SizedBox();
+    if (widget.footer != null) {
+      footerWidget = Container(
+        color: loginTheme.footerBackgroundColor ?? loginTheme.pageColorLight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget.footer,
+              style: loginTheme.footerTextStyle,
+            )
+          ],
+        ),
+      );
+    }
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -581,7 +584,6 @@ class _FlutterLoginState extends State<FlutterLogin>
       ],
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
-        bottomNavigationBar: copyrightWidget,
         body: Stack(
           children: <Widget>[
             GradientBox(
@@ -616,6 +618,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                       top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
                     ),
+                    Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: footerWidget))
                   ],
                 ),
               ),
