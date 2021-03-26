@@ -303,6 +303,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     },
                     hideSignUpButton: widget.hideSignUpButton,
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
+                    loginAfterSignUp: widget.loginAfterSignUp,
                   ),
                 )
               : _RecoverCard(
@@ -510,7 +511,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (!auth.isLogin && !widget.loginAfterSignUp) {
+    if (auth.isSignup && !widget.loginAfterSignUp) {
       showSuccessToast(
           context, messages.flushbarTitleSuccess, messages.signUpSuccess);
       _switchAuthMode();

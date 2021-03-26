@@ -595,6 +595,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
+                        loginAfterSignUp: widget.loginAfterSignUp,
                       ),
                     ),
                     Positioned(
