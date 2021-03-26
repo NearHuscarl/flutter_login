@@ -1,23 +1,24 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
 
-import '../constants.dart';
-import '../paddings.dart';
 import 'animated_button.dart';
+import 'animated_icon.dart';
 import 'animated_text.dart';
 import 'animated_text_form_field.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
+import '../constants.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
 import '../models/login_data.dart';
 import '../dart_helper.dart';
 import '../matrix.dart';
+import '../paddings.dart';
 import '../widget_helper.dart';
 import 'confirm_recover_card.dart';
 
@@ -32,6 +33,7 @@ class AuthCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -42,6 +44,7 @@ class AuthCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -361,6 +364,7 @@ class _LoginCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -371,6 +375,7 @@ class _LoginCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -395,6 +400,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   AnimationController _switchAuthController;
   AnimationController _postSwitchAuthController;
   AnimationController _submitController;
+
+  ///list of AnimationController each one responsible for a authentication provider icon
+  List<AnimationController> _providerControllerList = <AnimationController>[];
 
   Interval _nameTextFieldLoadingAnimationInterval;
   Interval _passTextFieldLoadingAnimationInterval;
@@ -433,6 +441,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
+    _providerControllerList = auth.loginProviders
+        .map(
+          (e) => AnimationController(
+            vsync: this,
+            duration: Duration(milliseconds: 1000),
+          ),
+        )
+        .toList();
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
@@ -463,6 +479,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _switchAuthController.dispose();
     _postSwitchAuthController.dispose();
     _submitController.dispose();
+
+    _providerControllerList.forEach((controller) {
+      controller.dispose();
+    });
     super.dispose();
   }
 
@@ -524,6 +544,45 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
+    if (auth.isSignup && !widget.loginAfterSignUp) {
+      showSuccessToast(
+          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+      _switchAuthMode();
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
+    widget?.onSubmitCompleted();
+
+    return true;
+  }
+
+  Future<bool> _loginProviderSubmit(
+      {AnimationController control, ProviderAuthCallback callback}) async {
+    await control.forward();
+
+    String error;
+
+    error = await callback();
+
+    // workaround to run after _cardSizeAnimation in parent finished
+    // need a cleaner way but currently it works so..
+    Future.delayed(const Duration(milliseconds: 270), () {
+      setState(() => _showShadow = false);
+    });
+
+    await control.reverse();
+
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
+    if (!DartHelper.isNullOrEmpty(error)) {
+      showErrorToast(context, messages.flushbarTitleError, error);
+      Future.delayed(const Duration(milliseconds: 271), () {
+        setState(() => _showShadow = true);
+      });
+      return false;
+    }
+
     widget?.onSubmitCompleted();
 
     return true;
@@ -536,6 +595,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.usernameHint,
+      autofillHints: [AutofillHints.email],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -553,6 +613,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
+      autofillHints:
+          auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
       controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -653,6 +715,33 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildProvidersLogInButton(
+      ThemeData theme, LoginMessages messages, Auth auth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: auth.loginProviders.map((loginProvider) {
+        var index = auth.loginProviders.indexOf(loginProvider);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+          child: ScaleTransition(
+            scale: _buttonScaleAnimation,
+            child: AnimatedIconButton(
+              icon: loginProvider.icon,
+              controller: _providerControllerList[index],
+              tooltip: '',
+              onPressed: () => _loginProviderSubmit(
+                control: _providerControllerList[index],
+                callback: () {
+                  return loginProvider.callback();
+                },
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
@@ -716,6 +805,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
+                _buildProvidersLogInButton(theme, messages, auth),
               ],
             ),
           ),
@@ -814,6 +904,7 @@ class _RecoverCardState extends State<_RecoverCard>
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
+      autofillHints: [AutofillHints.email],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,

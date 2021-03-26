@@ -24,6 +24,15 @@ export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 import 'src/constants.dart';
 
+class LoginProvider {
+  final IconData icon;
+  final ProviderAuthCallback callback;
+
+  LoginProvider({@required this.icon, @required this.callback})
+      : assert((icon != null && callback != null),
+            ' callback and icon should not be null');
+}
+
 class _AnimationTimeDilationDropdown extends StatelessWidget {
   _AnimationTimeDilationDropdown({
     @required this.onChanged,
@@ -76,6 +85,7 @@ class _Header extends StatefulWidget {
     this.logoController,
     this.titleController,
     @required this.loginTheme,
+    this.footer,
   });
 
   final String logoPath;
@@ -86,6 +96,7 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
+  final String footer;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -203,31 +214,39 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key key,
-    @required this.onSignup,
-    @required this.onLogin,
-    @required this.onRecoverPassword,
-    @required this.onConfirmRecover,
-    this.title = 'LOGIN',
-    this.logo,
-    this.messages,
-    this.theme,
-    this.emailValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-  }) : super(key: key);
+  FlutterLogin(
+      {Key key,
+      @required this.onSignup,
+      @required this.onLogin,
+      @required this.onRecoverPassword,
+      @required this.onConfirmRecover,
+      this.title = 'LOGIN',
+      this.logo,
+      this.messages,
+      this.theme,
+      this.emailValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.loginProviders = const <LoginProvider>[],
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.footer})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
 
   /// Called when the user hit the submit button when in login mode
   final AuthCallback onLogin;
+
+  /// list of LoginProvider each have an icon and a callback that will be Called when
+  /// the user hit the provider icon button
+  /// if not specified nothing will be shown
+  final List<LoginProvider> loginProviders;
 
   /// Called when the user hit the submit button when in recover password mode
   final RecoverCallback onRecoverPassword;
@@ -280,6 +299,12 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
+
+  /// Set to false to return back to sign in page after successful sign up
+  final bool loginAfterSignUp;
+
+  /// Optional footer text for example a copyright notice
+  final String footer;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -552,6 +577,17 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
+    Widget footerWidget = SizedBox();
+    if (widget.footer != null) {
+      footerWidget = Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Text(
+          widget.footer,
+          style: loginTheme.footerTextStyle,
+        ),
+      );
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -562,6 +598,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
+            loginProviders: widget.loginProviders,
             onConfirmRecover: widget.onConfirmRecover,
           ),
         ),
@@ -596,12 +633,17 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
+                        loginAfterSignUp: widget.loginAfterSignUp,
                       ),
                     ),
                     Positioned(
                       top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
                     ),
+                    Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: footerWidget))
                   ],
                 ),
               ),
