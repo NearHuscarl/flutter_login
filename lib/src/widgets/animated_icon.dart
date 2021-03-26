@@ -187,7 +187,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
           child: InkWell(
             onTap: !_isLoading ? widget.onPressed : null,
             splashColor: buttonTheme.splashColor,
-            //customBorder: buttonTheme.shape,
+            customBorder: buttonTheme.shape,
             onHighlightChanged: (value) => setState(() => _hover = value),
             child: SizeTransition(
               sizeFactor: _sizeAnimation,
