@@ -35,26 +35,25 @@ class LoginButtonTheme {
 }
 
 class LoginTheme with ChangeNotifier {
-  LoginTheme({
-    this.pageColorLight,
-    this.pageColorDark,
-    this.primaryColor,
-    this.accentColor,
-    this.errorColor,
-    this.cardTheme = const CardTheme(),
-    this.inputTheme = const InputDecorationTheme(
-      filled: true,
-    ),
-    this.buttonTheme = const LoginButtonTheme(),
-    this.titleStyle,
-    this.bodyStyle,
-    this.textFieldStyle,
-    this.buttonStyle,
-    this.beforeHeroFontSize = 48.0,
-    this.afterHeroFontSize = 15.0,
-    this.footerBackgroundColor,
-    this.footerTextStyle
-  });
+  LoginTheme(
+      {this.pageColorLight,
+      this.pageColorDark,
+      this.primaryColor,
+      this.accentColor,
+      this.errorColor,
+      this.cardTheme = const CardTheme(),
+      this.inputTheme = const InputDecorationTheme(
+        filled: true,
+      ),
+      this.buttonTheme = const LoginButtonTheme(),
+      this.titleStyle,
+      this.bodyStyle,
+      this.textFieldStyle,
+      this.buttonStyle,
+      this.beforeHeroFontSize = 48.0,
+      this.afterHeroFontSize = 15.0,
+      this.footerBackgroundColor,
+      this.footerTextStyle});
 
   /// The background color of the login page for light gradient; if provided,
   /// overrides the [primaryColor] for page background
