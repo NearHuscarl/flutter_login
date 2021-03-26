@@ -746,6 +746,54 @@ void main() {
     expect(find.text('Forgot huh?'), findsNothing);
   });
 
+  testWidgets('LoginProvider buttons should login or throw error.',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
+          loginProviders: [
+            LoginProvider(
+              icon: Icons.check,
+              callback: () async {
+                return 'No problems!';
+              },
+            ),
+            LoginProvider(
+              icon: Icons.warning,
+              callback: () async {
+                return 'Failed to login';
+              },
+            ),
+          ],
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.byIcon(Icons.check), findsOneWidget);
+    expect(find.byIcon(Icons.warning), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.warning));
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('Failed to login'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.check));
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text('No problems!'), findsOneWidget);
+    await tester.pumpAndSettle();
+  });
+
   testWidgets(
       'Change flushbar title by setting flushbarTitleError & flushbarTitleSuccess.',
       (WidgetTester tester) async {
@@ -799,5 +847,34 @@ void main() {
 
     expect(find.text('That went well!'), findsOneWidget);
     waitForFlushbarToClose(tester);
+  });
+
+  testWidgets('Redirect to login page after sign up.',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          loginAfterSignUp: false,
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => null,
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickSwitchAuthButton();
+    await tester.pumpAndSettle();
+    expect(isSignup(tester), true);
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+    await tester.enterText(findConfirmPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+    expect(isSignup(tester), false);
   });
 }
