@@ -575,19 +575,16 @@ class _FlutterLoginState extends State<FlutterLogin>
 
     Widget footerWidget = SizedBox();
     if (widget.footer != null) {
-      footerWidget = Container(
-        color: loginTheme.footerBackgroundColor ?? loginTheme.pageColorLight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
+      footerWidget =
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
               widget.footer,
               style: loginTheme.footerTextStyle,
-            )
-          ],
-        ),
-      );
+            ),
+          );
     }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
