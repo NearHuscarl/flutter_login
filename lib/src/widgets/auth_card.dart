@@ -31,6 +31,7 @@ class AuthCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -41,6 +42,7 @@ class AuthCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -301,6 +303,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     },
                     hideSignUpButton: widget.hideSignUpButton,
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
+                    loginAfterSignUp: widget.loginAfterSignUp,
                   ),
                 )
               : _RecoverCard(
@@ -343,6 +346,7 @@ class _LoginCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -353,6 +357,7 @@ class _LoginCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -502,6 +507,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
+    if (auth.isSignup && !widget.loginAfterSignUp) {
+      showSuccessToast(
+          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+      _switchAuthMode();
       setState(() => _isSubmitting = false);
       return false;
     }

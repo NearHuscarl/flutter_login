@@ -203,24 +203,25 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key key,
-    @required this.onSignup,
-    @required this.onLogin,
-    @required this.onRecoverPassword,
-    this.title = 'LOGIN',
-    this.logo,
-    this.messages,
-    this.theme,
-    this.emailValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-  }) : super(key: key);
+  FlutterLogin(
+      {Key key,
+      @required this.onSignup,
+      @required this.onLogin,
+      @required this.onRecoverPassword,
+      this.title = 'LOGIN',
+      this.logo,
+      this.messages,
+      this.theme,
+      this.emailValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
@@ -276,6 +277,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
+
+  /// Set to false to return back to sign in page after successful sign up
+  final bool loginAfterSignUp;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -591,6 +595,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
+                        loginAfterSignUp: widget.loginAfterSignUp,
                       ),
                     ),
                     Positioned(
