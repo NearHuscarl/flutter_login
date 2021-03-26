@@ -76,7 +76,7 @@ class _Header extends StatefulWidget {
     this.logoController,
     this.titleController,
     @required this.loginTheme,
-    this.copyright,
+    this.footer,
   });
 
   final String logoPath;
@@ -87,7 +87,7 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
-  final String copyright;
+  final String footer;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -222,7 +222,7 @@ class FlutterLogin extends StatefulWidget {
     this.showDebugButtons = false,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
-    this.copyright
+    this.footer
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -280,7 +280,8 @@ class FlutterLogin extends StatefulWidget {
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
 
-  final String copyright;
+  /// Optional footer text for example a copyright notice
+  final String footer;
 
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
@@ -555,13 +556,13 @@ class _FlutterLoginState extends State<FlutterLogin>
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
     Widget copyrightWidget = SizedBox();
-    if (widget.copyright != null)
+    if (widget.footer != null)
       copyrightWidget = Container(
-      color: loginTheme.copyrightBackgroundColor,
+      color: loginTheme.footerBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(widget.copyright, style: loginTheme.copyrightTextStyle,)
+          Text(widget.footer, style: loginTheme.footerTextStyle,)
         ],
       ),
     );
