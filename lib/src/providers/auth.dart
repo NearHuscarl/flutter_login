@@ -16,7 +16,7 @@ typedef RecoverCallback = Future<String> Function(String);
 
 class Auth with ChangeNotifier {
   Auth({
-    this.loginProvidersList,
+    this.loginProviders,
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
@@ -30,7 +30,7 @@ class Auth with ChangeNotifier {
   final AuthCallback onLogin;
   final AuthCallback onSignup;
   final RecoverCallback onRecoverPassword;
-  final List<LoginProvider> loginProvidersList;
+  final List<LoginProvider> loginProviders;
 
   AuthMode _mode = AuthMode.Login;
 

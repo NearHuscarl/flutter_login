@@ -419,7 +419,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
-    _providerControllerList = auth.loginProvidersList
+    _providerControllerList = auth.loginProviders
         .map(
           (e) => AnimationController(
             vsync: this,
@@ -680,8 +680,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       ThemeData theme, LoginMessages messages, Auth auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProvidersList.map((loginProvider) {
-        var index = auth.loginProvidersList.indexOf(loginProvider);
+      children: auth.loginProviders.map((loginProvider) {
+        var index = auth.loginProviders.indexOf(loginProvider);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3.0),
           child: ScaleTransition(

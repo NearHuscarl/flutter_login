@@ -753,7 +753,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           passwordValidator: (value) => value.length == 5 ? null : 'Invalid!',
-          loginProvidersList: [
+          loginProviders: [
             LoginProvider(
               icon: Icons.check,
               callback: () async {

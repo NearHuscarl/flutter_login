@@ -193,7 +193,7 @@ class LoginScreen extends StatelessWidget {
       onLogin: _authUser,
       onSignup: _authUser,
       
-        loginProvidersList: <LoginProvider>[
+        loginProviders: <LoginProvider>[
           LoginProvider(
             icon: FontAwesomeIcons.google,
             callback: () async {

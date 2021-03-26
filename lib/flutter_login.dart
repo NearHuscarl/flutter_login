@@ -227,7 +227,7 @@ class FlutterLogin extends StatefulWidget {
     this.logoTag,
     this.titleTag,
     this.showDebugButtons = false,
-    this.loginProvidersList = const <LoginProvider>[],
+    this.loginProviders = const <LoginProvider>[],
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
   }) : super(key: key);
@@ -241,7 +241,7 @@ class FlutterLogin extends StatefulWidget {
   /// list of LoginProvider each have an icon and a callback that will be Called when
   /// the user hit the provider icon button
   /// if not specified nothing will be shown
-  final List<LoginProvider> loginProvidersList;
+  final List<LoginProvider> loginProviders;
 
   /// Called when the user hit the submit button when in recover password mode
   final RecoverCallback onRecoverPassword;
@@ -573,7 +573,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
-            loginProvidersList: widget.loginProvidersList,
+            loginProviders: widget.loginProviders,
           ),
         ),
       ],
