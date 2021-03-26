@@ -39,6 +39,7 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
       // messages: LoginMessages(
@@ -54,6 +55,8 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
+      //   flushbarTitleError: 'Oh no!',
+      //   flushbarTitleSuccess: 'Succes!',
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,

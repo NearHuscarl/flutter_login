@@ -793,4 +793,88 @@ void main() {
     expect(find.text('No problems!'), findsOneWidget);
     await tester.pumpAndSettle();
   });
+
+  testWidgets(
+      'Change flushbar title by setting flushbarTitleError & flushbarTitleSuccess.',
+      (WidgetTester tester) async {
+    const users = ['near@gmail.com', 'hunter69@gmail.com'];
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) =>
+              users.contains(data) ? null : Future.value('User not exists'),
+          onRecoverPassword: (data) =>
+              users.contains(data) ? null : Future.value('User not exists'),
+          passwordValidator: (value) => null,
+          messages: LoginMessages(
+            flushbarTitleError: 'Oh no!',
+            flushbarTitleSuccess: 'That went well!',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    await tester.pumpAndSettle();
+
+    // Test error flushbar by entering unknown name
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'not.exists@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), 'not.exists@gmail.com');
+    await tester.pumpAndSettle();
+    clickSubmitButton();
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations three times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
+
+    expect(find.text('Oh no!'), findsOneWidget);
+
+    // Test success flushbar by going to the password recovery page and
+    // successfully request password change.
+    clickForgotPasswordButton();
+    await tester.pumpAndSettle();
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    clickSubmitButton();
+
+    // Because of multiple animations, in order to get to the flushbar we need
+    // to pump the animations two times.
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 4));
+
+    expect(find.text('That went well!'), findsOneWidget);
+    waitForFlushbarToClose(tester);
+  });
+
+  testWidgets('Redirect to login page after sign up.',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          loginAfterSignUp: false,
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => null,
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickSwitchAuthButton();
+    await tester.pumpAndSettle();
+    expect(isSignup(tester), true);
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+    await tester.enterText(findConfirmPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+    expect(isSignup(tester), false);
+  });
 }

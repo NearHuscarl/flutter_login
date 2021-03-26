@@ -32,6 +32,7 @@ class AuthCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -42,6 +43,7 @@ class AuthCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -302,6 +304,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     },
                     hideSignUpButton: widget.hideSignUpButton,
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
+                    loginAfterSignUp: widget.loginAfterSignUp,
                   ),
                 )
               : _RecoverCard(
@@ -344,6 +347,7 @@ class _LoginCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final AnimationController loadingController;
@@ -354,6 +358,7 @@ class _LoginCard extends StatefulWidget {
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
+  final bool loginAfterSignUp;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -481,6 +486,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     // textfields and buttons again before going to new route
     FocusScope.of(context).requestFocus(FocusNode());
 
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
     if (!_formKey.currentState.validate()) {
       return false;
     }
@@ -512,10 +519,18 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     await _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
+    if (auth.isSignup && !widget.loginAfterSignUp) {
+      showSuccessToast(
+          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+      _switchAuthMode();
       setState(() => _isSubmitting = false);
       return false;
     }
@@ -561,6 +576,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.usernameHint,
+      autofillHints: [AutofillHints.email],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -578,6 +594,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
+      autofillHints:
+          auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
       controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -839,12 +857,13 @@ class _RecoverCardState extends State<_RecoverCard>
     final error = await auth.onRecoverPassword(auth.email);
 
     if (error != null) {
-      showErrorToast(context, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return false;
     } else {
-      showSuccessToast(context, messages.recoverPasswordSuccess);
+      showSuccessToast(context, messages.flushbarTitleSuccess,
+          messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return true;
@@ -860,6 +879,7 @@ class _RecoverCardState extends State<_RecoverCard>
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
+      autofillHints: [AutofillHints.email],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,

@@ -230,6 +230,7 @@ class FlutterLogin extends StatefulWidget {
     this.loginProviders = const <LoginProvider>[],
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.loginAfterSignUp = true
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -291,6 +292,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
+
+  /// Set to false to return back to sign in page after successful sign up
+  final bool loginAfterSignUp;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -607,6 +611,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
+                        loginAfterSignUp: widget.loginAfterSignUp,
                       ),
                     ),
                     Positioned(
