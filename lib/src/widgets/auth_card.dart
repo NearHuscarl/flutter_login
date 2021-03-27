@@ -191,7 +191,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     widget.onSubmit!();
 
-    return _formLoadingController.reverse()
+    return _formLoadingController
+        .reverse()
         .then((_) => _routeTransitionController.forward());
   }
 
