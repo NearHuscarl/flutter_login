@@ -33,11 +33,11 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
   when(mockCallback.passwordValidator(user.password)).thenReturn(null);
   when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
 
-  when(mockCallback.onLogin(user)).thenAnswer((_) => Future.value(null));
+  when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
-  when(mockCallback.onSignup(user)).thenAnswer((_) => Future.value(null));
+  when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
@@ -144,7 +144,8 @@ Text recoverIntroTextWidget() {
 }
 
 Text recoverDescriptionTextWidget() {
-  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget as Text;
+  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget
+      as Text;
 }
 
 // tester.tap() not working for some reasons. Workaround:

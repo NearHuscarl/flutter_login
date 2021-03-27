@@ -480,12 +480,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       error = await auth.onLogin!(LoginData(
         name: auth.email,
         password: auth.password,
-      ))!;
+      ));
     } else {
       error = await auth.onSignup!(LoginData(
         name: auth.email,
         password: auth.password,
-      ))!;
+      ));
     }
 
     // workaround to run after _cardSizeAnimation in parent finished
@@ -497,7 +497,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     await _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
