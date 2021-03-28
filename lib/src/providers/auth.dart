@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../flutter_login.dart';
 import '../models/login_data.dart';
 
 enum AuthMode { Signup, Login }
@@ -8,40 +9,40 @@ enum AuthMode { Signup, Login }
 typedef AuthCallback = Future<String> Function(LoginData);
 
 /// The result is an error message, callback successes if message is null
+typedef ProviderAuthCallback = Future<String> Function();
+
+/// The result is an error message, callback successes if message is null
 typedef RecoverCallback = Future<String> Function(String);
 
 /// The result is an error message, callback successes if message is null
-typedef ConfirmSignupCallback = Future<String> Function(String code, LoginData);
+typedef ConfirmSignupCallback = Future<String> Function(String, LoginData);
+
+/// The result is an error message, callback successes if message is null
+typedef ConfirmRecoverCallback = Future<String> Function(String, LoginData);
 
 class Auth with ChangeNotifier {
   Auth({
+    this.loginProviders,
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
+    this.onConfirmRecover,
     this.onConfirmSignup,
     this.onResendCode,
-    Auth previous,
-  }) {
-    if (previous != null) {
-      _mode = previous.mode;
-    }
-  }
-
-  Auth.empty()
-      : this(
-          onLogin: null,
-          onSignup: null,
-          onRecoverPassword: null,
-          onConfirmSignup: null,
-          onResendCode: null,
-          previous: null,
-        );
+    String email = '',
+    String password = '',
+    String confirmPassword = '',
+  })  : _email = email,
+        _password = password,
+        _confirmPassword = confirmPassword;
 
   final AuthCallback onLogin;
   final AuthCallback onSignup;
   final RecoverCallback onRecoverPassword;
+  final ConfirmRecoverCallback onConfirmRecover;
   final ConfirmSignupCallback onConfirmSignup;
   final AuthCallback onResendCode;
+  final List<LoginProvider> loginProviders;
 
   AuthMode _mode = AuthMode.Login;
 
@@ -66,5 +67,26 @@ class Auth with ChangeNotifier {
       mode = AuthMode.Login;
     }
     return mode;
+  }
+
+  String _email = '';
+  String get email => _email;
+  set email(String email) {
+    _email = email;
+    notifyListeners();
+  }
+
+  String _password = '';
+  String get password => _password;
+  set password(String password) {
+    _password = password;
+    notifyListeners();
+  }
+
+  String _confirmPassword = '';
+  String get confirmPassword => _confirmPassword;
+  set confirmPassword(String confirmPassword) {
+    _confirmPassword = confirmPassword;
+    notifyListeners();
   }
 }

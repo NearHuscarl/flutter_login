@@ -22,7 +22,8 @@ onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the s
 onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
-title |   `String`     | <sub>The large text above the login [Card], usually the app or company name</sub>
+onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode</sub>
+title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
 logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
@@ -32,6 +33,8 @@ passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
 showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overrided to `false` regardless of the value passed in</sub>
+hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
+hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 
 
 
@@ -56,6 +59,7 @@ forgotPasswordButton | `String` | Forgot password button's label
 loginButton | `String` | Login button's label
 signupButton | `String` | Signup button's label
 recoverPasswordButton | `String` | Recover password button's label
+recoverPasswordIntro | `String` | Intro in password recovery form
 recoverPasswordDescription | `String` | Description in password recovery form
 goBackButton | `String` | Go back button's label. Go back button is used to go back to to login/signup form from the recover password form
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
@@ -67,6 +71,13 @@ resendCodeButton | `String` | Resend code button's label
 resendCodeSuccess | `String` | The success message to show after resending a confirmation code
 confirmSignupButton | `String` | Confirm signup button's label
 confirmSignupSuccess | `String` | The success message to show after confirming signup
+confirmRecoverIntro | `String` | The intro text for the confirm recover password card
+recoveryCodeHint | `String` | Hint text of the recovery code [TextField]
+recoveryCodeValidationError | `String` | The error message to show if recovery code is empty
+setPasswordButton | `String` | Set password button's label for password recovery
+confirmRecoverSuccess | `String` | The success message to show after confirming recovered password
+flushbarTitleError | `String` | The Flushbar title on errors
+flushbarTitleSuccess | `String` | The Flushbar title on sucesses
 
 ### LoginTheme
 
@@ -84,6 +95,9 @@ textFieldStyle | `TextStyle` | Text style for [TextField] input text
 buttonStyle | `TextStyle` | Text style for button text
 beforeHeroFontSize | `double` | Defines the font size of the title in the login screen (before the hero transition)
 afterHeroFontSize | `double` | Defines the font size of the title in the screen after the login screen (after the hero transition)
+pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
+pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
+
 
 ## Examples
 
@@ -148,6 +162,107 @@ class LoginScreen extends StatelessWidget {
 
 <img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/basic.png" width="300">
 
+
+
+### Basic example with sign in providers
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'dashboard_screen.dart';
+
+const users = const {
+  'dribbble@gmail.com': '12345',
+  'hunter@gmail.com': 'hunter',
+};
+
+class LoginScreen extends StatelessWidget {
+  Duration get loginTime => Duration(milliseconds: 2250);
+
+  Future<String> _authUser(LoginData data) {
+    print('Name: ${data.name}, Password: ${data.password}');
+    return Future.delayed(loginTime).then((_) {
+      if (!users.containsKey(data.name)) {
+        return 'Username not exists';
+      }
+      if (users[data.name] != data.password) {
+        return 'Password does not match';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _recoverPassword(String name) {
+    print('Name: $name');
+    return Future.delayed(loginTime).then((_) {
+      if (!users.containsKey(name)) {
+        return 'Username not exists';
+      }
+      return null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FlutterLogin(
+      title: 'ECORP',
+      logo: 'assets/images/ecorp-lightblue.png',
+      onLogin: _authUser,
+      onSignup: _authUser,
+      
+        loginProviders: <LoginProvider>[
+          LoginProvider(
+            icon: FontAwesomeIcons.google,
+            callback: () async {
+              print('start google sign in');
+              await Future.delayed(loginTime);
+              print('stop google sign in');              
+              return null;
+            },
+          ),
+          LoginProvider(
+            icon: FontAwesomeIcons.facebookF,
+            callback: () async {            
+              print('start facebook sign in');
+              await Future.delayed(loginTime);
+              print('stop facebook sign in');              
+              return null;
+            },
+          ),
+          LoginProvider(
+            icon: FontAwesomeIcons.linkedinIn,
+            callback: () async {         
+              print('start linkdin sign in');
+              await Future.delayed(loginTime);         
+              print('stop linkdin sign in');              
+              return null;
+            },
+          ),
+          LoginProvider(
+            icon: FontAwesomeIcons.githubAlt,
+            callback: () async {
+              print('start github sign in');
+              await Future.delayed(loginTime);
+              print('stop github sign in');              
+              return null;
+            },
+          ),
+        ],
+      onSubmitAnimationCompleted: () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => DashboardScreen(),
+        ));
+      },
+      onRecoverPassword: _recoverPassword,
+    );
+  }
+}
+```
+
+<img src="https://github.com/xnio94/flutter_login/raw/master/demo/sign_in_providers.png" width="300">
+
+
+
 ### Theming via `ThemeData`
 
 Login theme can be customized indectly by using `ThemeData` like this
@@ -169,7 +284,7 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.orange,
         cursorColor: Colors.orange,
         textTheme: TextTheme(
-          display2: TextStyle(
+          headline3: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 45.0,
             color: Colors.orange,
@@ -177,8 +292,8 @@ class MyApp extends StatelessWidget {
           button: TextStyle(
             fontFamily: 'OpenSans',
           ),
-          subhead: TextStyle(fontFamily: 'NotoSans'),
-          body1: TextStyle(fontFamily: 'NotoSans'),
+          subtitle1: TextStyle(fontFamily: 'NotoSans'),
+          bodyText2: TextStyle(fontFamily: 'NotoSans'),
         ),
       ),
       home: LoginScreen(),

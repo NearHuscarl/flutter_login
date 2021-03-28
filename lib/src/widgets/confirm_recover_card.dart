@@ -5,29 +5,34 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'animated_button.dart';
 import 'animated_text_form_field.dart';
-
 import '../models/login_data.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
 import '../widget_helper.dart';
 
-class ConfirmSignupCard extends StatefulWidget {
-  ConfirmSignupCard({
+class ConfirmRecoverCard extends StatefulWidget {
+  ConfirmRecoverCard({
     Key key,
+    @required this.passwordValidator,
     @required this.onBack,
     @required this.onSubmitCompleted,
   }) : super(key: key);
 
+  final FormFieldValidator<String> passwordValidator;
   final Function onBack;
   final Function onSubmitCompleted;
 
   @override
-  ConfirmSignupCardState createState() => ConfirmSignupCardState();
+  ConfirmRecoverCardState createState() => ConfirmRecoverCardState();
 }
 
-class ConfirmSignupCardState extends State<ConfirmSignupCard>
+class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
+
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+  final _passwordController = TextEditingController();
 
   var _isSubmitting = false;
   var _code = '';
@@ -51,7 +56,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
   }
 
   Future<bool> _submit() async {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
 
     if (!_formRecoverKey.currentState.validate()) {
       return false;
@@ -62,12 +67,13 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     _formRecoverKey.currentState.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onConfirmSignup(
-        _code,
-        LoginData(
-          name: auth.email,
-          password: auth.password,
-        ));
+    final error = await auth.onConfirmRecover(
+      _code,
+      LoginData(
+        name: auth.email,
+        password: auth.password,
+      ),
+    );
 
     if (error != null) {
       showErrorToast(context, null, error);
@@ -76,49 +82,24 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
       return false;
     }
 
-    showSuccessToast(context, null, messages.confirmSignupSuccess);
+    showSuccessToast(context, null, messages.confirmRecoverSuccess);
     setState(() => _isSubmitting = false);
-    await _submitController.reverse();
     widget?.onSubmitCompleted();
     return true;
   }
 
-  Future<bool> _resendCode() async {
-    FocusScope.of(context).requestFocus(FocusNode());
-
-    final auth = Provider.of<Auth>(context, listen: false);
-    final messages = Provider.of<LoginMessages>(context, listen: false);
-
-    await _submitController.forward();
-    setState(() => _isSubmitting = true);
-    final error = await auth.onResendCode(LoginData(
-      name: auth.email,
-      password: auth.password,
-    ));
-
-    if (error != null) {
-      showErrorToast(context, null, error);
-      setState(() => _isSubmitting = false);
-      await _submitController.reverse();
-      return false;
-    }
-
-    showSuccessToast(context, null, messages.resendCodeSuccess);
-    setState(() => _isSubmitting = false);
-    await _submitController.reverse();
-    return true;
-  }
-
-  Widget _buildConfirmationCodeField(double width, LoginMessages messages) {
+  Widget _buildVerificationCodeField(double width, LoginMessages messages) {
     return AnimatedTextFormField(
       width: width,
-      labelText: messages.confirmationCodeHint,
+      labelText: messages.recoveryCodeHint,
       prefixIcon: Icon(FontAwesomeIcons.solidCheckCircle),
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (value) => _submit(),
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
       validator: (value) {
         if (value.isEmpty) {
-          return messages.confirmationCodeValidationError;
+          return messages.recoveryCodeValidationError;
         }
         return null;
       },
@@ -126,21 +107,44 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     );
   }
 
-  Widget _buildResendCode(ThemeData theme, LoginMessages messages) {
-    return MaterialButton(
-      onPressed: !_isSubmitting ? _resendCode : null,
-      child: Text(
-        messages.resendCodeButton,
-        style: theme.textTheme.bodyText2,
-        textAlign: TextAlign.left,
-      ),
+  Widget _buildPasswordField(double width, LoginMessages messages) {
+    return AnimatedPasswordTextFormField(
+      animatedWidth: width,
+      labelText: messages.passwordHint,
+      controller: _passwordController,
+      textInputAction: TextInputAction.next,
+      focusNode: _passwordFocusNode,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+      },
+      validator: widget.passwordValidator,
+      onSaved: (value) {
+        final auth = Provider.of<Auth>(context, listen: false);
+        auth.password = value;
+      },
     );
   }
 
-  Widget _buildConfirmButton(ThemeData theme, LoginMessages messages) {
+  Widget _buildConfirmPasswordField(double width, LoginMessages messages) {
+    return AnimatedPasswordTextFormField(
+      animatedWidth: width,
+      labelText: messages.confirmPasswordHint,
+      textInputAction: TextInputAction.done,
+      focusNode: _confirmPasswordFocusNode,
+      onFieldSubmitted: (value) => _submit(),
+      validator: (value) {
+        if (value != _passwordController.text) {
+          return messages.confirmPasswordError;
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildSetPasswordButton(ThemeData theme, LoginMessages messages) {
     return AnimatedButton(
       controller: _submitController,
-      text: messages.confirmSignupButton,
+      text: messages.setPasswordButton,
       onPressed: !_isSubmitting ? _submit : null,
     );
   }
@@ -180,15 +184,18 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
             child: Column(
               children: <Widget>[
                 Text(
-                  messages.confirmSignupIntro,
+                  messages.confirmRecoverIntro,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
                 SizedBox(height: 20),
-                _buildConfirmationCodeField(textFieldWidth, messages),
-                SizedBox(height: 10),
-                _buildResendCode(theme, messages),
-                _buildConfirmButton(theme, messages),
+                _buildVerificationCodeField(textFieldWidth, messages),
+                SizedBox(height: 20),
+                _buildPasswordField(textFieldWidth, messages),
+                SizedBox(height: 20),
+                _buildConfirmPasswordField(textFieldWidth, messages),
+                SizedBox(height: 26),
+                _buildSetPasswordButton(theme, messages),
                 _buildBackButton(theme, messages),
               ],
             ),

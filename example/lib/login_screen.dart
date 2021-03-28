@@ -23,18 +23,9 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _recoverPassword(String name) {
-    return Future.delayed(loginTime).then((_) {
-      if (!mockUsers.containsKey(name)) {
-        return 'Username not exists';
-      }
-      return null;
-    });
-  }
-
   Future<String> _confirmSignup(String code, LoginData data) {
     return Future.delayed(loginTime).then((_) {
-      if (false) {
+      if (code != confirmSignupCode) {
         return 'Wrong confirmation code. Try again.';
       }
       return null;
@@ -43,9 +34,26 @@ class LoginScreen extends StatelessWidget {
 
   Future<String> _resendCode(LoginData data) {
     return Future.delayed(loginTime).then((_) {
-      //if (!mockUsers.containsKey(data.name)) {
-      if (false) {
-        return 'Username not exists';
+      if (!mockUsers.containsKey(data.name)) {
+        return 'Username does not exist.';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _recoverPassword(String name) {
+    return Future.delayed(loginTime).then((_) {
+      if (!mockUsers.containsKey(name)) {
+        return 'Username does not exist.';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
+    return Future.delayed(loginTime).then((_) {
+      if (code != recoverPasswordCode) {
+        return 'Wrong verification code. Try again.';
       }
       return null;
     });
@@ -53,16 +61,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder = BorderRadius.vertical(
-      bottom: Radius.circular(10.0),
-      top: Radius.circular(20.0),
-    );
-
     return FlutterLogin(
       title: Constants.appName,
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      // loginAfterSignUp: false,
+      // hideForgotPasswordButton: true,
+      // hideSignUpButton: true,
       // messages: LoginMessages(
       //   usernameHint: 'Username',
       //   passwordHint: 'Pass',
@@ -73,13 +79,18 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordButton: 'HELP ME',
       //   goBackButton: 'GO BACK',
       //   confirmPasswordError: 'Not match!',
+      //   recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
       //   recoverPasswordDescription: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
       //   recoverPasswordSuccess: 'Password rescued successfully',
+      //   flushbarTitleError: 'Oh no!',
+      //   flushbarTitleSuccess: 'Succes!',
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,
       //   accentColor: Colors.yellow,
       //   errorColor: Colors.deepOrange,
+      //   pageColorLight: Colors.indigo.shade300,
+      //   pageColorDark: Colors.indigo.shade500,
       //   titleStyle: TextStyle(
       //     color: Colors.greenAccent,
       //     fontFamily: 'Quicksand',
@@ -185,14 +196,19 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
+      onConfirmRecover: (code, loginData) {
+        print('Confirm recover info');
+        print('Code: $code, Name: ${loginData.name}');
+        return _confirmRecoverPassword(code, loginData);
+      },
       onConfirmSignup: (code, loginData) {
         print('Confirm signup info');
-        print('Code: $code'); //, Name: ${loginData.name}');
+        print('Code: $code, Name: ${loginData.name}');
         return _confirmSignup(code, loginData);
       },
       onResendCode: (loginData) {
-        //print('Resend code info');
-        //print('Name: ${loginData.name}');
+        print('Resend code info');
+        print('Name: ${loginData.name}');
         return _resendCode(loginData);
       },
       showDebugButtons: true,

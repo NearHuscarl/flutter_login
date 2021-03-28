@@ -1,33 +1,36 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'animated_text.dart';
+
 import 'ring.dart';
 
-class AnimatedButton extends StatefulWidget {
-  AnimatedButton({
+///similar a AnimatedButton but has an icon instead of textButton
+//(basically its a modified version of the AnimatedButton Widget and may need to be cleaned up)
+class AnimatedIconButton extends StatefulWidget {
+  AnimatedIconButton({
     Key key,
-    @required this.text,
+    @required this.tooltip,
     @required this.onPressed,
     @required this.controller,
+    @required this.icon,
     this.loadingColor,
     this.color,
   }) : super(key: key);
 
-  final String text;
+  final String tooltip;
   final Color color;
   final Color loadingColor;
   final Function onPressed;
   final AnimationController controller;
+  final IconData icon;
 
   @override
-  _AnimatedButtonState createState() => _AnimatedButtonState();
+  _AnimatedIconButtonState createState() => _AnimatedIconButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
+class _AnimatedIconButtonState extends State<AnimatedIconButton>
     with SingleTickerProviderStateMixin {
   Animation<double> _sizeAnimation;
-  Animation<double> _textOpacityAnimation;
   Animation<double> _buttonOpacityAnimation;
   Animation<double> _ringThicknessAnimation;
   Animation<double> _ringOpacityAnimation;
@@ -46,13 +49,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   void initState() {
     super.initState();
-
-    _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: widget.controller,
-        curve: Interval(0.0, .25),
-      ),
-    );
 
     // _colorAnimation
     // _width, _sizeAnimation
@@ -104,7 +100,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   }
 
   @override
-  void didUpdateWidget(AnimatedButton oldWidget) {
+  void didUpdateWidget(AnimatedIconButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.color != widget.color ||
@@ -112,15 +108,15 @@ class _AnimatedButtonState extends State<AnimatedButton>
       _updateColorAnimation();
     }
 
-    if (oldWidget.text != widget.text) {
+    if (oldWidget.tooltip != widget.tooltip) {
       _updateWidth();
     }
   }
 
   @override
   void dispose() {
-    widget.controller.removeStatusListener(handleStatusChanged);
     super.dispose();
+    widget.controller.removeStatusListener(handleStatusChanged);
   }
 
   void handleStatusChanged(status) {
@@ -138,7 +134,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     final fontSize = theme.textTheme.button.fontSize;
     final renderParagraph = RenderParagraph(
       TextSpan(
-        text: widget.text,
+        text: widget.tooltip,
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: theme.textTheme.button.fontWeight,
@@ -169,19 +165,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
     ));
   }
 
-  Widget _buildButtonText(ThemeData theme) {
-    return FadeTransition(
-      opacity: _textOpacityAnimation,
-      child: AnimatedText(
-        text: widget.text,
-        style: theme.textTheme.button,
-      ),
-    );
-  }
-
   Widget _buildButton(ThemeData theme) {
     final buttonTheme = theme.floatingActionButtonTheme;
-
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
       child: AnimatedContainer(
@@ -208,10 +193,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
               sizeFactor: _sizeAnimation,
               axis: Axis.horizontal,
               child: Container(
-                width: _width,
+                width: _height,
                 height: _height,
                 alignment: Alignment.center,
-                child: _buildButtonText(theme),
+                child: Icon(widget.icon, color: Colors.white),
+                //_buildButtonText(theme),
               ),
             ),
           ),
@@ -223,7 +209,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    //return Icon(FontAwesomeIcons.facebook);
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[

@@ -1,6 +1,7 @@
 name: login_example
 description: Example of flutter_login package.
 version: 1.0.0+1
+publish_to: none
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -12,7 +13,9 @@ dependencies:
     path: ../
   cupertino_icons: ^0.1.2
   font_awesome_flutter: ^8.5.0
-  intl: ^0.16.0
+  intl: ^0.16.1
+  # dummy package to test https://github.com/NearHuscarl/flutter_login/issues/35
+  provider: ^4.0.1
 
 dev_dependencies:
   flutter_test:
