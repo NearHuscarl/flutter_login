@@ -188,26 +188,28 @@ class __HeaderState extends State<_Header> {
       title = null;
     }
 
-    return SizedBox(
-      height: widget.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (displayLogo)
+    return SafeArea(
+      child: SizedBox(
+        height: (widget.height - MediaQuery.of(context).padding.top),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            if (displayLogo)
+              FadeIn(
+                controller: widget.logoController,
+                offset: .25,
+                fadeDirection: FadeDirection.topToBottom,
+                child: logo,
+              ),
+            SizedBox(height: gap),
             FadeIn(
-              controller: widget.logoController,
-              offset: .25,
+              controller: widget.titleController,
+              offset: .5,
               fadeDirection: FadeDirection.topToBottom,
-              child: logo,
+              child: title,
             ),
-          SizedBox(height: gap),
-          FadeIn(
-            controller: widget.titleController,
-            offset: .5,
-            fadeDirection: FadeDirection.topToBottom,
-            child: title,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -219,7 +221,7 @@ class FlutterLogin extends StatefulWidget {
       @required this.onSignup,
       @required this.onLogin,
       @required this.onRecoverPassword,
-      this.title = 'LOGIN',
+      this.title,
       this.logo,
       this.messages,
       this.theme,
