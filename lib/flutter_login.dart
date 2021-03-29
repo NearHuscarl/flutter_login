@@ -601,7 +601,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         ),
       ],
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
             GradientBox(
