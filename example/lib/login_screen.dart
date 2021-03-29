@@ -32,14 +32,14 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
-    return Future.delayed(loginTime).then((_) {
-      if (code != recoverPasswordCode) {
-        return 'Wrong verification code. Try again.';
-      }
-      return null;
-    });
-  }
+  // Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
+  //   return Future.delayed(loginTime).then((_) {
+  //     if (code != recoverPasswordCode) {
+  //       return 'Wrong verification code. Try again.';
+  //     }
+  //     return null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
