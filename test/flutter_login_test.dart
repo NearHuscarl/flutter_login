@@ -675,7 +675,6 @@ void main() {
       mockCallback.emailValidator(user.name),
       mockCallback.passwordValidator(user.password),
       mockCallback.onSignup(any),
-      mockCallback.onSubmitAnimationCompleted(),
     ]);
 
     addTearDown(() => reset(mockCallback));
@@ -928,6 +927,11 @@ void main() {
     await tester.pumpAndSettle();
 
     clickSubmitButton();
+    await tester.pumpAndSettle();
+    await tester.enterText(findSignupConfirmationCodeTextField(), '123456');
+    await tester.pumpAndSettle();
+
+    clickConfirmButton();
     await tester.pumpAndSettle();
     expect(isSignup(tester), false);
   });

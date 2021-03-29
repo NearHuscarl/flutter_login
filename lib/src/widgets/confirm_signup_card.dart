@@ -16,8 +16,10 @@ class ConfirmSignupCard extends StatefulWidget {
     Key key,
     @required this.onBack,
     @required this.onSubmitCompleted,
+    this.loginAfterSignUp = true,
   }) : super(key: key);
 
+  final bool loginAfterSignUp;
   final Function onBack;
   final Function onSubmitCompleted;
 
@@ -79,6 +81,13 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     showSuccessToast(context, null, messages.confirmSignupSuccess);
     setState(() => _isSubmitting = false);
     await _submitController.reverse();
+
+    if (!widget.loginAfterSignUp) {
+      auth.mode = AuthMode.Login;
+      widget?.onBack();
+      return false;
+    }
+
     widget?.onSubmitCompleted();
     return true;
   }

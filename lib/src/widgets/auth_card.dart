@@ -389,6 +389,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             },
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
+            loginAfterSignUp: widget.loginAfterSignUp,
           ),
         );
 
@@ -408,11 +409,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
       case CardType.confirmSignup:
         return ConfirmSignupCard(
-          onBack: () => _jumpToCard(
-            theme,
-            _cardIndex[CardType.login],
-          ),
+          onBack: () {
+            _jumpToCard(
+              theme,
+              _cardIndex[CardType.login],
+            );
+          },
           onSubmitCompleted: widget.onSubmitCompleted,
+          loginAfterSignUp: widget.loginAfterSignUp,
         );
 
       default:
@@ -652,14 +656,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
-      setState(() => _isSubmitting = false);
-      return false;
-    }
-
-    if (auth.isSignup && !widget.loginAfterSignUp) {
-      showSuccessToast(
-          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
-      _switchAuthMode();
       setState(() => _isSubmitting = false);
       return false;
     }
