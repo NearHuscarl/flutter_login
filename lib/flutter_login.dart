@@ -85,6 +85,7 @@ class _Header extends StatefulWidget {
     this.logoController,
     this.titleController,
     @required this.loginTheme,
+    this.footer,
   });
 
   final String logoPath;
@@ -95,6 +96,7 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController logoController;
   final AnimationController titleController;
+  final String footer;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -230,7 +232,8 @@ class FlutterLogin extends StatefulWidget {
       this.loginProviders = const <LoginProvider>[],
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
-      this.loginAfterSignUp = true})
+      this.loginAfterSignUp = true,
+      this.footer})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -295,6 +298,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to false to return back to sign in page after successful sign up
   final bool loginAfterSignUp;
+
+  /// Optional footer text for example a copyright notice
+  final String footer;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -567,6 +573,17 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
+    Widget footerWidget = SizedBox();
+    if (widget.footer != null) {
+      footerWidget = Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Text(
+          widget.footer,
+          style: loginTheme.footerTextStyle,
+        ),
+      );
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -618,6 +635,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                       top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
                     ),
+                    Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: footerWidget))
                   ],
                 ),
               ),

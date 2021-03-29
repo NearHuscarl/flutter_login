@@ -877,4 +877,17 @@ void main() {
     await tester.pumpAndSettle();
     expect(isSignup(tester), false);
   });
+
+  testWidgets('Check if footer text is visible.', (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+        onSignup: (data) => null,
+        onLogin: (data) => null,
+        onRecoverPassword: (data) => null,
+        passwordValidator: (value) => null,
+        footer: 'Copyright flutter_login'));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    expect(find.text('Copyright flutter_login'), findsOneWidget);
+  });
 }
