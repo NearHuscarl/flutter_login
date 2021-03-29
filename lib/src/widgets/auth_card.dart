@@ -288,6 +288,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             },
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
+            loginAfterSignUp: widget.loginAfterSignUp,
           ),
         );
 
