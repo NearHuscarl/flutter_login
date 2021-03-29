@@ -178,11 +178,11 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
-      onConfirmRecover: (code, loginData) {
-        print('Confirm recover info');
-        print('Code: $code, Name: ${loginData.name}');
-        return _confirmRecoverPassword(code, loginData);
-      },
+      // onConfirmRecover: (code, loginData) {
+      //   print('Confirm recover info');
+      //   print('Code: $code, Name: ${loginData.name}');
+      //   return _confirmRecoverPassword(code, loginData);
+      // },
       showDebugButtons: true,
     );
   }

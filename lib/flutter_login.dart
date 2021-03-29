@@ -219,7 +219,7 @@ class FlutterLogin extends StatefulWidget {
       @required this.onSignup,
       @required this.onLogin,
       @required this.onRecoverPassword,
-      @required this.onConfirmRecover,
+      this.onConfirmRecover,
       this.title = 'LOGIN',
       this.logo,
       this.messages,

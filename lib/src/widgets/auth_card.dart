@@ -295,7 +295,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return _RecoverCard(
           emailValidator: widget.emailValidator,
           onBack: () => _switchPage(false),
-          onSwitchRecoverCode: () => _switchPage(true),
+          onSwitchRecoverCode: () =>
+              (Provider.of<Auth>(context, listen: false).onConfirmRecover !=
+                      null)
+                  ? _switchPage(true)
+                  : _switchPage(false),
         );
 
       case 2:
