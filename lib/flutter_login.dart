@@ -149,7 +149,11 @@ class __HeaderState extends State<_Header> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     const gap = 5.0;
-    final logoHeight = min(widget.height - _titleHeight - gap, kMaxLogoHeight);
+    final logoHeight = min(
+        (widget.height - MediaQuery.of(context).padding.top) -
+            _titleHeight -
+            gap,
+        kMaxLogoHeight);
     final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
 
     var logo = displayLogo
@@ -157,6 +161,7 @@ class __HeaderState extends State<_Header> {
             widget.logoPath,
             filterQuality: FilterQuality.high,
             height: logoHeight,
+            width: MediaQuery.of(context).size.width * 0.75,
           )
         : NullWidget();
 
