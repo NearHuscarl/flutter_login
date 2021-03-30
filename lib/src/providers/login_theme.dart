@@ -35,25 +35,28 @@ class LoginButtonTheme {
 }
 
 class LoginTheme with ChangeNotifier {
-  LoginTheme(
-      {this.pageColorLight,
-      this.pageColorDark,
-      this.primaryColor,
-      this.accentColor,
-      this.errorColor,
-      this.cardTheme = const CardTheme(),
-      this.inputTheme = const InputDecorationTheme(
-        filled: true,
-      ),
-      this.buttonTheme = const LoginButtonTheme(),
-      this.titleStyle,
-      this.bodyStyle,
-      this.textFieldStyle,
-      this.buttonStyle,
-      this.beforeHeroFontSize = 48.0,
-      this.afterHeroFontSize = 15.0,
-      this.footerBackgroundColor,
-      this.footerTextStyle});
+  LoginTheme({
+    this.pageColorLight,
+    this.pageColorDark,
+    this.primaryColor,
+    this.accentColor,
+    this.errorColor,
+    this.cardTheme = const CardTheme(),
+    this.inputTheme = const InputDecorationTheme(
+      filled: true,
+    ),
+    this.buttonTheme = const LoginButtonTheme(),
+    this.titleStyle,
+    this.bodyStyle,
+    this.textFieldStyle,
+    this.buttonStyle,
+    this.beforeHeroFontSize = 48.0,
+    this.afterHeroFontSize = 15.0,
+    this.footerBackgroundColor,
+    this.footerTextStyle,
+    this.authButtonPadding,
+    this.providerButtonPadding,
+  });
 
   /// The background color of the login page for light gradient; if provided,
   /// overrides the [primaryColor] for page background
@@ -109,4 +112,10 @@ class LoginTheme with ChangeNotifier {
 
   /// Text style for footer text
   final TextStyle footerTextStyle;
+
+  /// Provide custom padding for the switch signUp / login button
+  final EdgeInsets authButtonPadding;
+
+  /// Provide custom padding for the provider buttons
+  final EdgeInsets providerButtonPadding;
 }

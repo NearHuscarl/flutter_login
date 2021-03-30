@@ -15,6 +15,7 @@ import 'fade_in.dart';
 import '../constants.dart';
 import '../providers/auth.dart';
 import '../providers/login_messages.dart';
+import '../providers/login_theme.dart';
 import '../models/login_data.dart';
 import '../dart_helper.dart';
 import '../matrix.dart';
@@ -675,8 +676,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSwitchAuthButton(
-      ThemeData theme, LoginMessages messages, Auth auth) {
+  Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages,
+      Auth auth, LoginTheme loginTheme) {
     return FadeIn(
       controller: _loadingController,
       offset: .5,
@@ -685,7 +686,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: MaterialButton(
         disabledTextColor: theme.primaryColor,
         onPressed: buttonEnabled ? _switchAuthMode : null,
-        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        padding: loginTheme.authButtonPadding ??
+            EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
         child: AnimatedText(
@@ -696,14 +698,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProvidersLogInButton(
-      ThemeData theme, LoginMessages messages, Auth auth) {
+  Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
+      Auth auth, LoginTheme loginTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: auth.loginProviders.map((loginProvider) {
         var index = auth.loginProviders.indexOf(loginProvider);
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+          padding: loginTheme.providerButtonPadding ??
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
             child: AnimatedIconButton(
@@ -728,6 +731,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: true);
     final isLogin = auth.isLogin;
     final messages = Provider.of<LoginMessages>(context, listen: false);
+    final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = min(deviceSize.width * 0.75, 360.0);
@@ -782,11 +786,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                       ),
                 _buildSubmitButton(theme, messages, auth),
                 !widget.hideSignUpButton
-                    ? _buildSwitchAuthButton(theme, messages, auth)
+                    ? _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
-                _buildProvidersLogInButton(theme, messages, auth),
+                _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
           ),
