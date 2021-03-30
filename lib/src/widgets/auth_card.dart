@@ -687,7 +687,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         disabledTextColor: theme.primaryColor,
         onPressed: buttonEnabled ? _switchAuthMode : null,
         padding: loginTheme.authButtonPadding ??
-            EdgeInsets.only(left: 30.0, right: 30.0, top: 8.0, bottom: 16),
+            EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
         child: AnimatedText(
@@ -706,7 +706,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         var index = auth.loginProviders.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0),
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
             child: AnimatedIconButton(
