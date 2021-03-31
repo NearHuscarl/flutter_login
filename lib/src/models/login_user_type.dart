@@ -1,0 +1,4 @@
+enum LoginUserType {
+  email,
+  name
+}
