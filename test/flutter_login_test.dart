@@ -282,7 +282,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           messages: LoginMessages(
-            usernameHint: 'User',
+            userHint: 'User',
             passwordHint: 'Pass',
             confirmPasswordHint: 'Confirm',
             loginButton: 'LOG IN',

@@ -306,7 +306,6 @@ class _AnimatedPasswordTextFormFieldState
       inertiaController: widget.inertiaController,
       width: widget.animatedWidth,
       enabled: widget.enabled,
-      autocorrect: false,
       autofillHints: widget.autofillHints,
       labelText: widget.labelText,
       prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),

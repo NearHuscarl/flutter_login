@@ -590,14 +590,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: messages.usernameHint,
+      labelText: messages.userHint,
       autofillHints: [
-        widget.userType == LoginUserType.name
+        (widget.userType == LoginUserType.name)
             ? AutofillHints.username
             : AutofillHints.email
       ],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: (widget.userType == LoginUserType.name)
+          ? TextInputType.name
+          : TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -899,12 +901,13 @@ class _RecoverCardState extends State<_RecoverCard>
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
-      labelText: messages.usernameHint,
+      labelText: messages.userHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
+      keyboardType: (widget.userType == LoginUserType.name)
+          ? TextInputType.name
+          : TextInputType.emailAddress,
       autofillHints: [
-        widget.userType == LoginUserType.name
+        (widget.userType == LoginUserType.name)
             ? AutofillHints.username
             : AutofillHints.email
       ],

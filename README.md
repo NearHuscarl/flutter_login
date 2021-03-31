@@ -49,7 +49,7 @@ import 'package:flutter_login/theme.dart';
 
 Property |   Type     | Desciption
 -------- |------------| ---------------
-usernameHint | `String` | Hint text of the user name [TextField]
+userHint | `String` | Hint text of the user name [TextField]
 passwordHint | `String` | Hint text of the password [TextField]
 confirmPasswordHint | `String` | Hint text of the confirm password [TextField]
 forgotPasswordButton | `String` | Forgot password button's label
@@ -334,7 +334,7 @@ class LoginScreen extends StatelessWidget {
       },
       onRecoverPassword: (_) => Future(null),
       messages: LoginMessages(
-        usernameHint: 'User',
+        userHint: 'User',
         passwordHint: 'Pass',
         confirmPasswordHint: 'Confirm',
         loginButton: 'LOG IN',
