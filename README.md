@@ -111,7 +111,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'User name not exists';
+        return 'User not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
