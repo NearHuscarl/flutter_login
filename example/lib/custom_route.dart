@@ -4,8 +4,8 @@ import 'login_screen.dart';
 
 class FadePageRoute<T> extends MaterialPageRoute<T> {
   FadePageRoute({
-    WidgetBuilder builder,
-    RouteSettings settings,
+    required WidgetBuilder builder,
+    RouteSettings? settings,
   }) : super(
           builder: builder,
           settings: settings,
