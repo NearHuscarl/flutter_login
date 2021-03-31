@@ -48,7 +48,7 @@ import 'package:flutter_login/theme.dart';
 
 ### LoginMessages
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 userHint | `String` | Hint text of the user name or email [TextField]
 passwordHint | `String` | Hint text of the password [TextField]
@@ -67,7 +67,7 @@ flushbarTitleSuccess | `String` | The Flushbar title on sucesses
 
 ### LoginTheme
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 primaryColor | `Color` | The background color of major parts of the widget like the login screen and buttons
 accentColor | `Color` | The secondary color, used for title text color, loading icon, etc. Should be contrast with the [primaryColor]
@@ -85,7 +85,11 @@ pageColorLight | `Color` | The optional light background color of login screen; 
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 
 ### LoginUserType
-enum of type of user field. Can be [email] or [name]. If not set, it will be [email]
+
+Enum     |   Description |
+-------- |---------------|
+email | The User Field will be set to be email
+name  | The User Field will be set to be username
 
 ## Examples
 
