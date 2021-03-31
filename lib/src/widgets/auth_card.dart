@@ -371,7 +371,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
-  TextEditingController? _nameController;
+  TextEditingController? _emailController;
   TextEditingController? _passController;
   TextEditingController? _confirmPassController;
 
@@ -388,7 +388,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   ///list of AnimationController each one responsible for a authentication provider icon
   List<AnimationController> _providerControllerList = <AnimationController>[];
 
-  Interval? _nameTextFieldLoadingAnimationInterval;
+  Interval? _emailTextFieldLoadingAnimationInterval;
   Interval? _passTextFieldLoadingAnimationInterval;
   Interval? _textButtonLoadingAnimationInterval;
   late Animation<double> _buttonScaleAnimation;
@@ -400,7 +400,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = TextEditingController(text: auth.email);
+    _emailController = TextEditingController(text: auth.email);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
 
@@ -434,7 +434,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         )
         .toList();
 
-    _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
+    _emailTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
     _textButtonLoadingAnimationInterval =
         const Interval(.6, 1.0, curve: Curves.easeOut);
@@ -573,14 +573,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
-  Widget _buildNameField(double width, LoginMessages messages, Auth auth) {
+  Widget _buildEmailField(double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
-      controller: _nameController,
+      controller: _emailController,
       width: width,
       loadingController: _loadingController,
-      interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: messages.usernameHint,
-      autofillHints: [AutofillHints.username],
+      interval: _emailTextFieldLoadingAnimationInterval,
+      labelText: messages.emailHint,
+      autofillHints: [AutofillHints.email],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -752,7 +752,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildNameField(textFieldWidth, messages, auth),
+                _buildEmailField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
                 _buildPasswordField(textFieldWidth, messages, auth),
                 SizedBox(height: 10),
@@ -826,7 +826,7 @@ class _RecoverCardState extends State<_RecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
-  TextEditingController? _nameController;
+  TextEditingController? _emailController;
 
   var _isSubmitting = false;
 
@@ -837,7 +837,7 @@ class _RecoverCardState extends State<_RecoverCard>
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = TextEditingController(text: auth.email);
+    _emailController = TextEditingController(text: auth.email);
 
     _submitController = AnimationController(
       vsync: this,
@@ -880,7 +880,7 @@ class _RecoverCardState extends State<_RecoverCard>
   Widget _buildRecoverNameField(
       double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
-      controller: _nameController,
+      controller: _emailController,
       width: width,
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),

@@ -36,8 +36,8 @@ class LoginMessages with ChangeNotifier {
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';
 
-  /// Hint text of the user name [TextField]
-  final String usernameHint;
+  /// Hint text of the email [TextField]
+  final String emailHint;
 
   /// Hint text of the password [TextField]
   final String passwordHint;
