@@ -8,18 +8,18 @@ import 'ring.dart';
 //(basically its a modified version of the AnimatedButton Widget and may need to be cleaned up)
 class AnimatedIconButton extends StatefulWidget {
   AnimatedIconButton({
-    Key key,
-    @required this.tooltip,
-    @required this.onPressed,
-    @required this.controller,
-    @required this.icon,
+    Key? key,
+    required this.tooltip,
+    required this.onPressed,
+    required this.controller,
+    required this.icon,
     this.loadingColor,
     this.color,
   }) : super(key: key);
 
   final String tooltip;
-  final Color color;
-  final Color loadingColor;
+  final Color? color;
+  final Color? loadingColor;
   final Function onPressed;
   final AnimationController controller;
   final IconData icon;
@@ -30,17 +30,17 @@ class AnimatedIconButton extends StatefulWidget {
 
 class _AnimatedIconButtonState extends State<AnimatedIconButton>
     with SingleTickerProviderStateMixin {
-  Animation<double> _sizeAnimation;
-  Animation<double> _buttonOpacityAnimation;
-  Animation<double> _ringThicknessAnimation;
-  Animation<double> _ringOpacityAnimation;
-  Animation<Color> _colorAnimation;
+  late Animation<double> _sizeAnimation;
+  late Animation<double> _buttonOpacityAnimation;
+  late Animation<double> _ringThicknessAnimation;
+  late Animation<double> _ringOpacityAnimation;
+  late Animation<Color?> _colorAnimation;
   var _isLoading = false;
   var _hover = false;
   var _width = 120.0;
 
-  Color _color;
-  Color _loadingColor;
+  Color? _color;
+  Color? _loadingColor;
 
   static const _height = 40.0;
   static const _loadingCircleRadius = _height / 2;
@@ -131,14 +131,14 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   /// sets width and size animation
   void _updateWidth() {
     final theme = Theme.of(context);
-    final fontSize = theme.textTheme.button.fontSize;
+    final fontSize = theme.textTheme.button!.fontSize!;
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.tooltip,
         style: TextStyle(
           fontSize: fontSize,
-          fontWeight: theme.textTheme.button.fontWeight,
-          letterSpacing: theme.textTheme.button.letterSpacing,
+          fontWeight: theme.textTheme.button!.fontWeight,
+          letterSpacing: theme.textTheme.button!.letterSpacing,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -179,13 +179,13 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
-                    ? buttonTheme.highlightElevation
-                    : buttonTheme.elevation)
+                    ? buttonTheme.highlightElevation!
+                    : buttonTheme.elevation!)
                 : 0,
             child: child,
           ),
           child: InkWell(
-            onTap: !_isLoading ? widget.onPressed : null,
+            onTap: !_isLoading ? widget.onPressed as void Function()? : null,
             splashColor: buttonTheme.splashColor,
             customBorder: buttonTheme.shape,
             onHighlightChanged: (value) => setState(() => _hover = value),
@@ -229,7 +229,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
             width: _height - _loadingCircleThickness,
             height: _height - _loadingCircleThickness,
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(widget.loadingColor),
+              valueColor: AlwaysStoppedAnimation<Color?>(widget.loadingColor),
               // backgroundColor: Colors.red,
               strokeWidth: _loadingCircleThickness,
             ),

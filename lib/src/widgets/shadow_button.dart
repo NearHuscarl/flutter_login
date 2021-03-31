@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ShadowButton extends StatelessWidget {
   ShadowButton({
-    Key key,
+    Key? key,
     this.text,
     this.borderRadius = const BorderRadius.all(Radius.circular(0.0)),
     this.color,
@@ -14,15 +14,15 @@ class ShadowButton extends StatelessWidget {
     this.boxShadow,
   }) : super(key: key);
 
-  final String text;
+  final String? text;
   final BorderRadius borderRadius;
-  final Color color;
-  final Function onPressed;
-  final ValueChanged<bool> onHighlightChanged;
-  final Color splashColor;
-  final double width;
-  final double height;
-  final BoxShadow boxShadow;
+  final Color? color;
+  final Function? onPressed;
+  final ValueChanged<bool>? onHighlightChanged;
+  final Color? splashColor;
+  final double? width;
+  final double? height;
+  final BoxShadow? boxShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,13 @@ class ShadowButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         color: Colors.transparent,
-        boxShadow: [if (boxShadow != null) boxShadow],
+        boxShadow: [if (boxShadow != null) boxShadow!],
       ),
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: borderRadius),
         color: color,
         child: InkWell(
-          onTap: onPressed,
+          onTap: onPressed as void Function()?,
           onHighlightChanged: onHighlightChanged,
           splashColor: splashColor,
           borderRadius: borderRadius,
@@ -47,8 +47,8 @@ class ShadowButton extends StatelessWidget {
             height: height,
             alignment: Alignment.center,
             child: Text(
-              text,
-              style: TextStyle(color: theme.primaryTextTheme.button.color),
+              text!,
+              style: TextStyle(color: theme.primaryTextTheme.button!.color),
               overflow: TextOverflow.visible,
               softWrap: false,
             ),

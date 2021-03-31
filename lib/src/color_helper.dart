@@ -32,16 +32,16 @@ MaterialColor getMaterialColor(Color color) {
     orElse: () => MaterialColor(
       color.value,
       <int, Color>{
-        shades[ColorShade.lightest]: color,
-        shades[ColorShade.secondLightest]: color,
-        shades[ColorShade.thirdLightest]: color,
-        shades[ColorShade.fourthLightest]: color,
-        shades[ColorShade.fifthLightest]: color,
-        shades[ColorShade.normal]: color,
-        shades[ColorShade.fourthDarkest]: color,
-        shades[ColorShade.thirdDarkest]: color,
-        shades[ColorShade.secondDarkest]: color,
-        shades[ColorShade.darkest]: color,
+        shades[ColorShade.lightest]!: color,
+        shades[ColorShade.secondLightest]!: color,
+        shades[ColorShade.thirdLightest]!: color,
+        shades[ColorShade.fourthLightest]!: color,
+        shades[ColorShade.fifthLightest]!: color,
+        shades[ColorShade.normal]!: color,
+        shades[ColorShade.fourthDarkest]!: color,
+        shades[ColorShade.thirdDarkest]!: color,
+        shades[ColorShade.secondDarkest]!: color,
+        shades[ColorShade.darkest]!: color,
       },
     ),
   );
@@ -62,16 +62,16 @@ Brightness estimateBrightnessForColor(Color color) {
 }
 
 /// get the dark shades version of current color,
-List<Color> getDarkShades(Color color,
+List<Color?> getDarkShades(Color color,
     [ColorShade minShade = ColorShade.fifthLightest]) {
   final materialColor =
       color is MaterialColor ? color : getMaterialColor(color);
   final darkShades = <Color>[];
 
   for (final shade in shades.values) {
-    if (shade < shades[minShade]) continue;
+    if (shade < shades[minShade]!) continue;
 
-    final colorShade = materialColor[shade];
+    final colorShade = materialColor[shade]!;
     if (estimateBrightnessForColor(colorShade) == Brightness.dark) {
       darkShades.add(colorShade);
     }
@@ -79,7 +79,7 @@ List<Color> getDarkShades(Color color,
 
   return darkShades.isNotEmpty
       ? darkShades
-      : [materialColor[shades[ColorShade.darkest]]];
+      : [materialColor[shades[ColorShade.darkest]!]];
 }
 
 Color darken(Color color, [double amount = .1]) {
