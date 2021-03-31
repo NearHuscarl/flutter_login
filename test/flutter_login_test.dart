@@ -282,7 +282,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           messages: LoginMessages(
-            usernameHint: 'Username',
+            usernameHint: 'User',
             passwordHint: 'Pass',
             confirmPasswordHint: 'Confirm',
             loginButton: 'LOG IN',
@@ -300,8 +300,8 @@ void main() {
     await tester.pumpAndSettle(loadingAnimationDuration);
 
     var nameTextField = nameTextFieldWidget(tester);
-    expect(nameTextField.decoration!.labelText, 'Username');
-    expect(find.text('Username'), findsOneWidget);
+    expect(nameTextField.decoration!.labelText, 'User');
+    expect(find.text('User'), findsOneWidget);
 
     final passwordTextField = passwordTextFieldWidget(tester);
     expect(passwordTextField.decoration!.labelText, 'Pass');
@@ -344,8 +344,8 @@ void main() {
     await tester.pumpAndSettle();
 
     nameTextField = nameTextFieldWidget(tester);
-    expect(nameTextField.decoration!.labelText, 'Username');
-    expect(find.text('Username'), findsOneWidget);
+    expect(nameTextField.decoration!.labelText, 'User');
+    expect(find.text('User'), findsOneWidget);
 
     submitButton = submitButtonWidget();
     expect(submitButton.text, 'HELP ME');

@@ -108,7 +108,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User name not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
@@ -121,7 +121,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       return null;
     });
@@ -168,7 +168,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
@@ -181,7 +181,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       return null;
     });
@@ -334,7 +334,7 @@ class LoginScreen extends StatelessWidget {
       },
       onRecoverPassword: (_) => Future(null),
       messages: LoginMessages(
-        usernameHint: 'Username',
+        usernameHint: 'User',
         passwordHint: 'Pass',
         confirmPasswordHint: 'Confirm',
         loginButton: 'LOG IN',
