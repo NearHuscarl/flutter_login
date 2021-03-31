@@ -43,6 +43,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
+    this.autocorrect = false,
     this.autofillHints,
   })  : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
