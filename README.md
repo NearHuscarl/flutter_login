@@ -15,7 +15,7 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 
 ## Reference
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
@@ -29,7 +29,7 @@ passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `
 <sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here</sub>
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
-showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overrided to `false` regardless of the value passed in</sub>
+showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overridden to `false` regardless of the value passed in</sub>
 hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
 hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 
@@ -47,7 +47,7 @@ import 'package:flutter_login/theme.dart';
 
 ### LoginMessages
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 usernameHint | `String` | Hint text of the user name [TextField]
 passwordHint | `String` | Hint text of the password [TextField]
@@ -62,11 +62,11 @@ goBackButton | `String` | Go back button's label. Go back button is used to go b
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
 flushbarTitleError | `String` | The Flushbar title on errors
-flushbarTitleSuccess | `String` | The Flushbar title on sucesses
+flushbarTitleSuccess | `String` | The Flushbar title on successes
 
 ### LoginTheme
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 primaryColor | `Color` | The background color of major parts of the widget like the login screen and buttons
 accentColor | `Color` | The secondary color, used for title text color, loading icon, etc. Should be contrast with the [primaryColor]
