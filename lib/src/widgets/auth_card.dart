@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../flutter_login.dart';
 import 'animated_button.dart';
 import 'animated_icon.dart';
 import 'animated_text.dart';
@@ -699,25 +700,91 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
-      Auth auth, LoginTheme loginTheme) {
+  Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages, Auth auth, LoginTheme loginTheme) {
+    // ignore: omit_local_variable_types
+    List<LoginProvider> buttonProvidersList = [];
+    // ignore: omit_local_variable_types
+    List<LoginProvider> iconProvidersList = [];
+    auth.loginProviders?.forEach((LoginProvider loginProvider) {
+      if(loginProvider.button != null){
+        buttonProvidersList.add( 
+          LoginProvider(
+            icon: loginProvider.icon,
+            button: loginProvider.button,
+            callback: loginProvider.callback,
+          )
+        );
+      } else if (loginProvider.icon != null){
+        iconProvidersList.add( 
+          LoginProvider(
+            icon: loginProvider.icon,
+            button: loginProvider.button,
+            callback: loginProvider.callback,
+          )
+        );
+      }
+    });
+    if(buttonProvidersList.isNotEmpty){
+      return Column(
+        children: [
+          _buildButtonColumn(theme, messages, buttonProvidersList, loginTheme),
+          iconProvidersList.isNotEmpty ? Row(
+            children: <Widget>[
+                Expanded(
+                    child: Divider()
+                ),       
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('OR'),
+                ),        
+                Expanded(
+                    child: Divider()
+                ),
+              ]
+          ) : Container(),
+          _buildIconRow(theme, messages, iconProvidersList, loginTheme),
+        ],
+      );
+    } else if (iconProvidersList.isNotEmpty){
+      return _buildIconRow(theme, messages, iconProvidersList, loginTheme);
+    }
+    return Container();
+  }
+
+  Widget _buildButtonColumn(ThemeData theme, LoginMessages messages, List<LoginProvider> buttonProvidersList, LoginTheme loginTheme){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: buttonProvidersList.map((loginProvider) {
+        return Padding(
+          padding: loginTheme.providerButtonPadding ??
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+          child: ScaleTransition(
+            scale: _buttonScaleAnimation,
+            child: loginProvider.button,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildIconRow(ThemeData theme, LoginMessages messages, List<LoginProvider> iconProvidersList, LoginTheme loginTheme){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProviders!.map((loginProvider) {
-        var index = auth.loginProviders!.indexOf(loginProvider);
+      children: iconProvidersList.map((loginProvider) {
+        var index = iconProvidersList.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
             child: AnimatedIconButton(
-              icon: loginProvider.icon,
+              icon: loginProvider.icon!,
               controller: _providerControllerList[index],
               tooltip: '',
               onPressed: () => _loginProviderSubmit(
                 control: _providerControllerList[index],
                 callback: () {
-                  return loginProvider.callback();
+                  return loginProvider.callback!();
                 },
               ),
             ),
@@ -791,6 +858,20 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
+                 auth.loginProviders!.isNotEmpty ? Row(
+                  children: <Widget>[
+                      Expanded(
+                          child: Divider()
+                      ),       
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(messages.providersText),
+                      ),        
+                      Expanded(
+                          child: Divider()
+                      ),
+                    ]
+                ) : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),

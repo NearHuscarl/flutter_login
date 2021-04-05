@@ -25,10 +25,15 @@ export 'src/providers/login_theme.dart';
 import 'src/constants.dart';
 
 class LoginProvider {
-  final IconData icon;
-  final ProviderAuthCallback callback;
+  final IconData? icon;
+  final Widget? button;
+  final ProviderAuthCallback? callback;
 
-  LoginProvider({required this.icon, required this.callback});
+  LoginProvider({
+    this.button,
+    this.icon, 
+    this.callback,
+    });
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {

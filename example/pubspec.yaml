@@ -16,6 +16,8 @@ dependencies:
   intl: ^0.17.0
   # dummy package to test https://github.com/NearHuscarl/flutter_login/issues/35
   provider: ^5.0.0
+  # Package for Provider Buttons PR
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -32,6 +32,7 @@ titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `Log
 showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overrided to `false` regardless of the value passed in</sub>
 hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
 hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
+loginProviders |   <sub>`List<LoginProvider>`</sub>    | <sub>Creates either `button` or `icon` for Authenication Providers (e.g. Facebook, Google etc</sub>
 
 
 
@@ -63,6 +64,7 @@ confirmPasswordError | `String` | The error message to show when the confirm pas
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
 flushbarTitleError | `String` | The Flushbar title on errors
 flushbarTitleSuccess | `String` | The Flushbar title on sucesses
+providersText | `String` | Text for LoginProviders - defaulted to `or login with`
 
 ### LoginTheme
 
@@ -83,6 +85,15 @@ afterHeroFontSize | `double` | Defines the font size of the title in the screen 
 pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 
+### LoginProvider
+
+Property |   Type     | Desciption
+-------- |------------| ---------------
+button | `Widget` | Used for Buttons for [LoginProvider] - see example uses [SignInButton] package
+icon | `IconData` | Icon that is used for a button for [LoginProvider]
+callback | `ProviderAuthCallback` | To be used as a callback if [LoginProvider] is only using [icon]
+
+*NOTE:* Both [button] and [icon] can be added to [LoginProvider], but [button] will take preference over [icon]
 
 ## Examples
 
@@ -153,6 +164,8 @@ class LoginScreen extends StatelessWidget {
 
 ```dart
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'dashboard_screen.dart';
 
@@ -191,26 +204,28 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp-lightblue.png',
+      logo: 'assets/images/ecorp.png',
       onLogin: _authUser,
       onSignup: _authUser,
       
         loginProviders: <LoginProvider>[
+          LoginProvider(
+          button: SignInButton(
+                Buttons.FacebookNew,
+                onPressed: () {
+                  print('start facebook sign in');
+                  await Future.delayed(loginTime);
+                  print('stop facebook sign in');              
+                  return null;
+                },
+              ),
+          ),
           LoginProvider(
             icon: FontAwesomeIcons.google,
             callback: () async {
               print('start google sign in');
               await Future.delayed(loginTime);
               print('stop google sign in');              
-              return null;
-            },
-          ),
-          LoginProvider(
-            icon: FontAwesomeIcons.facebookF,
-            callback: () async {            
-              print('start facebook sign in');
-              await Future.delayed(loginTime);
-              print('stop facebook sign in');              
               return null;
             },
           ),
@@ -244,7 +259,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="https://github.com/xnio94/flutter_login/raw/master/demo/sign_in_providers.png" width="300">
+<img src="https://i.ibb.co/smvy4bS/Screenshot-1617591971.png" width="300">
 
 
 
