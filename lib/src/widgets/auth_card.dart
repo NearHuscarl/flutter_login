@@ -30,7 +30,7 @@ class AuthCard extends StatefulWidget {
     required this.userType,
     this.padding = const EdgeInsets.all(0),
     this.loadingController,
-    this.emailValidator,
+    this.userValidator,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -41,7 +41,7 @@ class AuthCard extends StatefulWidget {
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function? onSubmit;
   final Function? onSubmitCompleted;
@@ -300,7 +300,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     loadingController: _isLoadingFirstTime
                         ? _formLoadingController
                         : (_formLoadingController..value = 1.0),
-                    emailValidator: widget.emailValidator,
+                    userValidator: widget.userValidator,
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
                     onSubmitCompleted: () {
@@ -314,7 +314,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   ),
                 )
               : _RecoverCard(
-                  emailValidator: widget.emailValidator,
+                  userValidator: widget.userValidator,
                   userType: widget.userType,
                   onSwitchLogin: () => _switchRecovery(false),
                 );
@@ -348,7 +348,7 @@ class _LoginCard extends StatefulWidget {
   _LoginCard({
     Key? key,
     this.loadingController,
-    required this.emailValidator,
+    required this.userValidator,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
     required this.userType,
@@ -360,7 +360,7 @@ class _LoginCard extends StatefulWidget {
   }) : super(key: key);
 
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function? onSwitchAuth;
@@ -628,7 +628,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
-      validator: widget.emailValidator,
+      validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
     );
   }
@@ -853,12 +853,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key? key,
-    required this.emailValidator,
+    required this.userValidator,
     required this.onSwitchLogin,
     required this.userType,
   }) : super(key: key);
 
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final Function onSwitchLogin;
   final LoginUserType userType;
 
@@ -960,7 +960,7 @@ class _RecoverCardState extends State<_RecoverCard>
       autofillHints: [_getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
-      validator: widget.emailValidator,
+      validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
     );
   }

@@ -229,7 +229,7 @@ class FlutterLogin extends StatefulWidget {
       this.logo,
       this.messages,
       this.theme,
-      this.emailValidator,
+      this.userValidator,
       this.passwordValidator,
       this.onSubmitAnimationCompleted,
       this.logoTag,
@@ -278,9 +278,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
 
-  /// Same as [emailValidator] but for password
+  /// Same as [userValidator] but for password
   final FormFieldValidator<String>? passwordValidator;
 
   /// Called after the submit animation's completed. Put your route transition
@@ -581,8 +581,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final headerHeight = cardTopPosition - headerMargin;
-    final emailValidator =
-        widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
+    final userValidator =
+        widget.userValidator ?? FlutterLogin.defaultEmailValidator;
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
@@ -638,7 +638,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         userType: widget.userType,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
-                        emailValidator: emailValidator,
+                        userValidator: userValidator,
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,

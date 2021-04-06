@@ -12,7 +12,7 @@ class LoginCallback {
   Future<String>? onLogin(LoginData? data) => null;
   Future<String>? onSignup(LoginData? data) => null;
   Future<String>? onRecoverPassword(String? data) => null;
-  String? emailValidator(String? value) => null;
+  String? userValidator(String? value) => null;
   String? passwordValidator(String? value) => null;
   void onSubmitAnimationCompleted() {}
 }
@@ -27,8 +27,8 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
   final user = LoginData(name: 'near@gmail.com', password: '12345');
   final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
 
-  when(mockCallback.emailValidator(user.name)).thenReturn(null);
-  when(mockCallback.emailValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.userValidator(user.name)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
 
   when(mockCallback.passwordValidator(user.password)).thenReturn(null);
   when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
