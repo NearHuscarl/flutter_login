@@ -583,6 +583,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function
   String _getAutofillHints(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
@@ -592,6 +593,20 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       case LoginUserType.email:
       default:
         return AutofillHints.email;
+    }
+  }
+
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function
+  TextInputType _getKeyboardType(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return TextInputType.name;
+      case LoginUserType.phone:
+        return TextInputType.number;
+      case LoginUserType.email:
+      default:
+        return TextInputType.emailAddress;
     }
   }
 
@@ -608,9 +623,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       labelText: messages.userHint,
       autofillHints: [_getAutofillHints(widget.userType)],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: (widget.userType == LoginUserType.name)
-          ? TextInputType.name
-          : TextInputType.emailAddress,
+      keyboardType: _getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -908,7 +921,6 @@ class _RecoverCardState extends State<_RecoverCard>
     }
   }
 
-
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
   String _getAutofillHints(LoginUserType userType) {
     switch (userType) {
@@ -922,6 +934,20 @@ class _RecoverCardState extends State<_RecoverCard>
     }
   }
 
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function
+  TextInputType _getKeyboardType(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return TextInputType.name;
+      case LoginUserType.phone:
+        return TextInputType.number;
+      case LoginUserType.email:
+      default:
+        return TextInputType.emailAddress;
+    }
+  }
+
   Widget _buildRecoverNameField(
       double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
@@ -929,9 +955,7 @@ class _RecoverCardState extends State<_RecoverCard>
       width: width,
       labelText: messages.userHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: (widget.userType == LoginUserType.name)
-          ? TextInputType.name
-          : TextInputType.emailAddress,
+      keyboardType: _getKeyboardType(widget.userType),
       autofillHints: [_getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
