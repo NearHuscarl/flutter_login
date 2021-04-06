@@ -88,8 +88,9 @@ pageColorDark | `Color` | The optional dark background color of login screen; if
 
 Enum     |   Description |
 -------- |---------------|
-email | The User Field will be set to be email
-name  | The User Field will be set to be username
+EMAIL | The User Field will be set to be email
+NAME  | The User Field will be set to be username
+PHONE  | The User Field will be set to be phone
 
 ## Examples
 

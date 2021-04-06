@@ -23,6 +23,7 @@ import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
 
+// TODO Improvement: Keep just this in auth_card.dart
 class AuthCard extends StatefulWidget {
   AuthCard({
     Key? key,
@@ -342,6 +343,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 }
 
+// TODO Improvement: Modularize this in a login_card.dart
 class _LoginCard extends StatefulWidget {
   _LoginCard({
     Key? key,
@@ -580,6 +582,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  String _getAutofillHints(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return AutofillHints.username;
+      case LoginUserType.phone:
+        return AutofillHints.telephoneNumber;
+      case LoginUserType.email:
+      default:
+        return AutofillHints.email;
+    }
+  }
+
   Widget _buildUserField(
     double width,
     LoginMessages messages,
@@ -591,11 +606,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.userHint,
-      autofillHints: [
-        (widget.userType == LoginUserType.name)
-            ? AutofillHints.username
-            : AutofillHints.email
-      ],
+      autofillHints: [_getAutofillHints(widget.userType)],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: (widget.userType == LoginUserType.name)
           ? TextInputType.name
@@ -825,6 +836,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 }
 
+// TODO Improvement: Modularize this in a recover_card.dart
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key? key,
@@ -896,6 +908,20 @@ class _RecoverCardState extends State<_RecoverCard>
     }
   }
 
+
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  String _getAutofillHints(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return AutofillHints.username;
+      case LoginUserType.phone:
+        return AutofillHints.telephoneNumber;
+      case LoginUserType.email:
+      default:
+        return AutofillHints.email;
+    }
+  }
+
   Widget _buildRecoverNameField(
       double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
@@ -906,11 +932,7 @@ class _RecoverCardState extends State<_RecoverCard>
       keyboardType: (widget.userType == LoginUserType.name)
           ? TextInputType.name
           : TextInputType.emailAddress,
-      autofillHints: [
-        (widget.userType == LoginUserType.name)
-            ? AutofillHints.username
-            : AutofillHints.email
-      ],
+      autofillHints: [_getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
