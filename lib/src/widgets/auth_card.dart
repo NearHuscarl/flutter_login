@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:transformer_page_view/transformer_page_view.dart';
 
 import 'animated_button.dart';
 import 'animated_icon.dart';
@@ -24,7 +24,7 @@ import '../widget_helper.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({
-    Key key,
+    Key? key,
     this.padding = const EdgeInsets.all(0),
     this.loadingController,
     this.emailValidator,
@@ -37,11 +37,11 @@ class AuthCard extends StatefulWidget {
   }) : super(key: key);
 
   final EdgeInsets padding;
-  final AnimationController loadingController;
-  final FormFieldValidator<String> emailValidator;
-  final FormFieldValidator<String> passwordValidator;
-  final Function onSubmit;
-  final Function onSubmitCompleted;
+  final AnimationController? loadingController;
+  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? passwordValidator;
+  final Function? onSubmit;
+  final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
@@ -57,16 +57,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _pageIndex = 0;
   static const cardSizeScaleEnd = .2;
 
-  TransformerPageController _pageController;
-  AnimationController _formLoadingController;
-  AnimationController _routeTransitionController;
-  Animation<double> _flipAnimation;
-  Animation<double> _cardSizeAnimation;
-  Animation<double> _cardSize2AnimationX;
-  Animation<double> _cardSize2AnimationY;
-  Animation<double> _cardRotationAnimation;
-  Animation<double> _cardOverlayHeightFactorAnimation;
-  Animation<double> _cardOverlaySizeAndOpacityAnimation;
+  TransformerPageController? _pageController;
+  late AnimationController _formLoadingController;
+  late AnimationController _routeTransitionController;
+  late Animation<double> _flipAnimation;
+  late Animation<double> _cardSizeAnimation;
+  late Animation<double> _cardSize2AnimationX;
+  late Animation<double> _cardSize2AnimationY;
+  late Animation<double> _cardRotationAnimation;
+  late Animation<double> _cardOverlayHeightFactorAnimation;
+  late Animation<double> _cardOverlaySizeAndOpacityAnimation;
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _pageController = TransformerPageController();
 
-    widget.loadingController.addStatusListener((status) {
+    widget.loadingController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
         _formLoadingController.forward();
@@ -83,7 +83,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
       CurvedAnimation(
-        parent: widget.loadingController,
+        parent: widget.loadingController!,
         curve: Curves.easeOutBack,
         reverseCurve: Curves.easeIn,
       ),
@@ -132,7 +132,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   void dispose() {
     _formLoadingController.dispose();
-    _pageController.dispose();
+    _pageController!.dispose();
     _routeTransitionController.dispose();
     super.dispose();
   }
@@ -142,13 +142,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     auth.isRecover = recovery;
     if (recovery) {
-      _pageController.nextPage(
+      _pageController!.nextPage(
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
       _pageIndex = 1;
     } else {
-      _pageController.previousPage(
+      _pageController!.previousPage(
         duration: Duration(milliseconds: 500),
         curve: Curves.ease,
       );
@@ -156,17 +156,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> runLoadingAnimation() {
-    if (widget.loadingController.isDismissed) {
-      return widget.loadingController.forward().then((_) {
+  Future<void>? runLoadingAnimation() {
+    if (widget.loadingController!.isDismissed) {
+      return widget.loadingController!.forward().then((_) {
         if (!_isLoadingFirstTime) {
           _formLoadingController.forward();
         }
       });
-    } else if (widget.loadingController.isCompleted) {
+    } else if (widget.loadingController!.isCompleted) {
       return _formLoadingController
           .reverse()
-          .then((_) => widget.loadingController.reverse());
+          .then((_) => widget.loadingController!.reverse());
     }
     return null;
   }
@@ -174,7 +174,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   Future<void> _forwardChangeRouteAnimation() {
     final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
     final deviceSize = MediaQuery.of(context).size;
-    final cardSize = getWidgetSize(_cardKey);
+    final cardSize = getWidgetSize(_cardKey)!;
     // add .25 to make sure the scaling will cover the whole screen
     final widthRatio =
         deviceSize.width / cardSize.height + (isLogin ? .25 : .65);
@@ -193,7 +193,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
     ));
 
-    widget?.onSubmit();
+    widget.onSubmit!();
 
     return _formLoadingController
         .reverse()
@@ -219,7 +219,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _switchRecovery(!auth.isRecover);
   }
 
-  Widget _buildLoadingAnimator({Widget child, ThemeData theme}) {
+  Widget _buildLoadingAnimator({Widget? child, required ThemeData theme}) {
     Widget card;
     Widget overlay;
 
@@ -236,11 +236,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     // change-route transition
     overlay = Padding(
-      padding: theme.cardTheme.margin,
+      padding: theme.cardTheme.margin!,
       child: AnimatedBuilder(
         animation: _cardOverlayHeightFactorAnimation,
         builder: (context, child) => ClipPath.shape(
-          shape: theme.cardTheme.shape,
+          shape: theme.cardTheme.shape!,
           child: FractionallySizedBox(
             heightFactor: _cardOverlayHeightFactorAnimation.value,
             alignment: Alignment.topCenter,
@@ -300,7 +300,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
                     onSubmitCompleted: () {
                       _forwardChangeRouteAnimation().then((_) {
-                        widget?.onSubmitCompleted();
+                        widget.onSubmitCompleted!();
                       });
                     },
                     hideSignUpButton: widget.hideSignUpButton,
@@ -339,11 +339,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
 class _LoginCard extends StatefulWidget {
   _LoginCard({
-    Key key,
+    Key? key,
     this.loadingController,
-    @required this.emailValidator,
-    @required this.passwordValidator,
-    @required this.onSwitchRecoveryPassword,
+    required this.emailValidator,
+    required this.passwordValidator,
+    required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -351,12 +351,12 @@ class _LoginCard extends StatefulWidget {
     this.loginAfterSignUp = true,
   }) : super(key: key);
 
-  final AnimationController loadingController;
-  final FormFieldValidator<String> emailValidator;
-  final FormFieldValidator<String> passwordValidator;
+  final AnimationController? loadingController;
+  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
-  final Function onSwitchAuth;
-  final Function onSubmitCompleted;
+  final Function? onSwitchAuth;
+  final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
@@ -371,27 +371,27 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
-  TextEditingController _nameController;
-  TextEditingController _passController;
-  TextEditingController _confirmPassController;
+  TextEditingController? _nameController;
+  TextEditingController? _passController;
+  TextEditingController? _confirmPassController;
 
   var _isLoading = false;
   var _isSubmitting = false;
   var _showShadow = true;
 
   /// switch between login and signup
-  AnimationController _loadingController;
-  AnimationController _switchAuthController;
-  AnimationController _postSwitchAuthController;
-  AnimationController _submitController;
+  late AnimationController _loadingController;
+  late AnimationController _switchAuthController;
+  late AnimationController _postSwitchAuthController;
+  late AnimationController _submitController;
 
   ///list of AnimationController each one responsible for a authentication provider icon
   List<AnimationController> _providerControllerList = <AnimationController>[];
 
-  Interval _nameTextFieldLoadingAnimationInterval;
-  Interval _passTextFieldLoadingAnimationInterval;
-  Interval _textButtonLoadingAnimationInterval;
-  Animation<double> _buttonScaleAnimation;
+  Interval? _nameTextFieldLoadingAnimationInterval;
+  Interval? _passTextFieldLoadingAnimationInterval;
+  Interval? _textButtonLoadingAnimationInterval;
+  late Animation<double> _buttonScaleAnimation;
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
 
@@ -411,7 +411,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           reverseDuration: Duration(milliseconds: 300),
         )..value = 1.0);
 
-    _loadingController?.addStatusListener(handleLoadingAnimationStatus);
+    _loadingController.addStatusListener(handleLoadingAnimationStatus);
 
     _switchAuthController = AnimationController(
       vsync: this,
@@ -425,7 +425,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
-    _providerControllerList = auth.loginProviders
+    _providerControllerList = auth.loginProviders!
         .map(
           (e) => AnimationController(
             vsync: this,
@@ -456,7 +456,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _loadingController?.removeStatusListener(handleLoadingAnimationStatus);
+    _loadingController.removeStatusListener(handleLoadingAnimationStatus);
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 
@@ -489,23 +489,23 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState!.validate()) {
       return false;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
     final auth = Provider.of<Auth>(context, listen: false);
-    String error;
+    String? error;
 
     if (auth.isLogin) {
-      error = await auth.onLogin(LoginData(
+      error = await auth.onLogin!(LoginData(
         name: auth.email,
         password: auth.password,
       ));
     } else {
-      error = await auth.onSignup(LoginData(
+      error = await auth.onSignup!(LoginData(
         name: auth.email,
         password: auth.password,
       ));
@@ -520,7 +520,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     await _submitController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
@@ -536,16 +536,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    widget?.onSubmitCompleted();
+    widget.onSubmitCompleted!();
 
     return true;
   }
 
   Future<bool> _loginProviderSubmit(
-      {AnimationController control, ProviderAuthCallback callback}) async {
+      {required AnimationController control,
+      required ProviderAuthCallback callback}) async {
     await control.forward();
 
-    String error;
+    String? error;
 
     error = await callback();
 
@@ -560,14 +561,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
       return false;
     }
 
-    widget?.onSubmitCompleted();
+    widget.onSubmitCompleted!();
 
     return true;
   }
@@ -587,7 +588,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
       validator: widget.emailValidator,
-      onSaved: (value) => auth.email = value,
+      onSaved: (value) => auth.email = value!,
     );
   }
 
@@ -612,7 +613,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         }
       },
       validator: widget.passwordValidator,
-      onSaved: (value) => auth.password = value,
+      onSaved: (value) => auth.password = value!,
     );
   }
 
@@ -631,13 +632,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-              if (value != _passController.text) {
+              if (value != _passController!.text) {
                 return messages.confirmPasswordError;
               }
               return null;
             }
           : (value) => null,
-      onSaved: (value) => auth.confirmPassword = value,
+      onSaved: (value) => auth.confirmPassword = value!,
     );
   }
 
@@ -651,7 +652,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         onPressed: buttonEnabled
             ? () {
                 // save state to populate email field on recovery card
-                _formKey.currentState.save();
+                _formKey.currentState!.save();
                 widget.onSwitchRecoveryPassword();
               }
             : null,
@@ -702,8 +703,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       Auth auth, LoginTheme loginTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProviders.map((loginProvider) {
-        var index = auth.loginProviders.indexOf(loginProvider);
+      children: auth.loginProviders!.map((loginProvider) {
+        var index = auth.loginProviders!.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
@@ -809,12 +810,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
-    Key key,
-    @required this.emailValidator,
-    @required this.onSwitchLogin,
+    Key? key,
+    required this.emailValidator,
+    required this.onSwitchLogin,
   }) : super(key: key);
 
-  final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String>? emailValidator;
   final Function onSwitchLogin;
 
   @override
@@ -825,11 +826,11 @@ class _RecoverCardState extends State<_RecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
-  TextEditingController _nameController;
+  TextEditingController? _nameController;
 
   var _isSubmitting = false;
 
-  AnimationController _submitController;
+  AnimationController? _submitController;
 
   @override
   void initState() {
@@ -846,32 +847,32 @@ class _RecoverCardState extends State<_RecoverCard>
 
   @override
   void dispose() {
-    _submitController.dispose();
+    _submitController!.dispose();
     super.dispose();
   }
 
   Future<bool> _submit() async {
-    if (!_formRecoverKey.currentState.validate()) {
+    if (!_formRecoverKey.currentState!.validate()) {
       return false;
     }
     final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
-    _formRecoverKey.currentState.save();
-    await _submitController.forward();
+    _formRecoverKey.currentState!.save();
+    await _submitController!.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword(auth.email);
+    final error = await auth.onRecoverPassword!(auth.email);
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
       setState(() => _isSubmitting = false);
-      await _submitController.reverse();
+      await _submitController!.reverse();
       return false;
     } else {
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
-      await _submitController.reverse();
+      await _submitController!.reverse();
       return true;
     }
   }
@@ -889,7 +890,7 @@ class _RecoverCardState extends State<_RecoverCard>
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.emailValidator,
-      onSaved: (value) => auth.email = value,
+      onSaved: (value) => auth.email = value!,
     );
   }
 
@@ -905,7 +906,7 @@ class _RecoverCardState extends State<_RecoverCard>
     return MaterialButton(
       onPressed: !_isSubmitting
           ? () {
-              _formRecoverKey.currentState.save();
+              _formRecoverKey.currentState!.save();
               widget.onSwitchLogin();
             }
           : null,

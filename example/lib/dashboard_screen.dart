@@ -25,10 +25,10 @@ class _DashboardScreenState extends State<DashboardScreen>
         .then((_) => false);
   }
 
-  final routeObserver = TransitionRouteObserver<PageRoute>();
+  final routeObserver = TransitionRouteObserver<PageRoute?>();
   static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
-  Animation<double> _headerScaleAnimation;
-  AnimationController _loadingController;
+  late Animation<double> _headerScaleAnimation;
+  AnimationController? _loadingController;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     _headerScaleAnimation =
         Tween<double>(begin: .6, end: 1).animate(CurvedAnimation(
-      parent: _loadingController,
+      parent: _loadingController!,
       curve: headerAniInterval,
     ));
   }
@@ -49,18 +49,19 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
+    routeObserver.subscribe(
+        this, ModalRoute.of(context) as PageRoute<dynamic>?);
   }
 
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    _loadingController.dispose();
+    _loadingController!.dispose();
     super.dispose();
   }
 
   @override
-  void didPushAfterTransition() => _loadingController.forward();
+  void didPushAfterTransition() => _loadingController!.forward();
 
   AppBar _buildAppBar(ThemeData theme) {
     final menuBtn = IconButton(
@@ -149,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: <Widget>[
                 Text(
                   '\$',
-                  style: theme.textTheme.headline3.copyWith(
+                  style: theme.textTheme.headline3!.copyWith(
                     fontWeight: FontWeight.w300,
                     color: accentColor.shade400,
                   ),
@@ -159,8 +160,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   initialValue: 14,
                   targetValue: 3467.87,
                   curve: Interval(0, .5, curve: Curves.easeOut),
-                  controller: _loadingController,
-                  style: theme.textTheme.headline3.copyWith(
+                  controller: _loadingController!,
+                  style: theme.textTheme.headline3!.copyWith(
                     foreground: Paint()..shader = linearGradient,
                   ),
                 ),
@@ -173,7 +174,8 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildButton({Widget icon, String label, Interval interval}) {
+  Widget _buildButton(
+      {Widget? icon, String? label, required Interval interval}) {
     return RoundButton(
       icon: icon,
       label: label,
@@ -268,9 +270,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             color: Colors.red,
-            onPressed: () => _loadingController.value == 0
-                ? _loadingController.forward()
-                : _loadingController.reverse(),
+            onPressed: () => _loadingController!.value == 0
+                ? _loadingController!.forward()
+                : _loadingController!.reverse(),
             child: Text('loading', style: textStyle),
           ),
         ],

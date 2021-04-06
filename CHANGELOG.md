@@ -1,3 +1,6 @@
+## 2.0.0-nullsafety.0
+Migrated to null-safety
+
 ## 1.1.0
 Features (30/03/2021)
 * Possibility to hide the sign-up and forgot password button [#115](https://github.com/NearHuscarl/flutter_login/pull/115)
