@@ -583,7 +583,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
-  // Create a resource to import these function
+  // Create a resource to import these function and avoid duplicated code
   String _getAutofillHints(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
@@ -597,7 +597,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
-  // Create a resource to import these function
+  // Create a resource to import these function and avoid duplicated code
   TextInputType _getKeyboardType(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
@@ -922,6 +922,7 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function and avoid duplicated code
   String _getAutofillHints(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
@@ -935,7 +936,7 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   // TODO Improvement: Common function to login_card.dart and recover_card.dart
-  // Create a resource to import these function
+  // Create a resource to import these function and avoid duplicated code
   TextInputType _getKeyboardType(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
