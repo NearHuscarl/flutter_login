@@ -50,7 +50,7 @@ import 'package:flutter_login/theme.dart';
 
 Property |   Type     | Description
 -------- |------------| ---------------
-userHint | `String` | Hint text of the user name, email or phone [TextField]
+userHint | `String` | Hint text of the user field [TextField] (Note: user field can be name, email or phone. For more info check: [`LoginUserType`](#LoginUserType))
 passwordHint | `String` | Hint text of the password [TextField]
 confirmPasswordHint | `String` | Hint text of the confirm password [TextField]
 forgotPasswordButton | `String` | Forgot password button's label
