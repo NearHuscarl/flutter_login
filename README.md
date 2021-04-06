@@ -1,4 +1,7 @@
 # Flutter Login
+[![pub package](https://img.shields.io/pub/v/flutter_login?include_prereleases)](https://pub.dartlang.org/packages/flutter_login)
+[![Join the chat](https://img.shields.io/discord/817442412313051220)](https://discord.gg/kP7jXHeNtS)
+[![Workflow](https://github.com/NearHuscarl/flutter_login/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/NearHuscarl/flutter_login/actions)
 
 `FlutterLogin` is a ready-made login/signup widget with many animation effects to
 demonstrate the capabilities of Flutter
