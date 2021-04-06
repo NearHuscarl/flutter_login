@@ -546,7 +546,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       required ProviderAuthCallback callback}) async {
     await control.forward();
 
-    String error;
+    String? error;
 
     error = await callback();
 
@@ -561,7 +561,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
         setState(() => _showShadow = true);
       });
