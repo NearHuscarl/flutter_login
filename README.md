@@ -85,12 +85,13 @@ pageColorLight | `Color` | The optional light background color of login screen; 
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 
 ### LoginUserType
-
 Enum     |   Description |
 -------- |---------------|
 EMAIL | The User Field will be set to be email
 NAME  | The User Field will be set to be username
 PHONE  | The User Field will be set to be phone
+
+[LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 
 ## Examples
 
