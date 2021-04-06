@@ -250,7 +250,7 @@ class FlutterLogin extends StatefulWidget {
   final AuthCallback onLogin;
 
   /// [LoginUserType] can be email, name or phone, by default is email. It will change how
-  /// the edit text autofill and behave accordingly to you choice
+  /// the edit text autofill and behave accordingly to your choice
   final LoginUserType userType;
 
   /// list of LoginProvider each have an icon and a callback that will be Called when
