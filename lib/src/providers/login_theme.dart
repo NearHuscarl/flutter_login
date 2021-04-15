@@ -35,8 +35,6 @@ class LoginButtonTheme {
 }
 
 class LoginTheme with ChangeNotifier {
-
-
   LoginTheme({
     this.pageColorLight,
     this.pageColorDark,
