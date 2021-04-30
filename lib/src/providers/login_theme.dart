@@ -56,6 +56,7 @@ class LoginTheme with ChangeNotifier {
     this.footerTextStyle,
     this.authButtonPadding,
     this.providerButtonPadding,
+    this.footerBottomPadding = 0,
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -118,4 +119,7 @@ class LoginTheme with ChangeNotifier {
 
   /// Provide custom padding for the provider buttons
   final EdgeInsets? providerButtonPadding;
+
+  /// Provide custom bottom padding for the footer.
+  final double footerBottomPadding;
 }
