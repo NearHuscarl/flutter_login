@@ -113,7 +113,7 @@ class __HeaderState extends State<_Header> {
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.title,
-        style: theme.textTheme.headline3!.copyWith(
+        style: theme.textTheme.headline2!.copyWith(
           fontSize: widget.loginTheme.beforeHeroFontSize,
         ),
       ),
@@ -156,11 +156,11 @@ class __HeaderState extends State<_Header> {
 
     var logo = displayLogo
         ? Image.asset(
-            widget.logoPath!,
-            filterQuality: FilterQuality.high,
-            height: logoHeight,
-            width: MediaQuery.of(context).size.width * 0.75,
-          )
+      widget.logoPath!,
+      filterQuality: FilterQuality.high,
+      height: logoHeight,
+      width: MediaQuery.of(context).size.width * 0.75,
+    )
         : NullWidget();
 
     if (widget.logoTag != null) {
@@ -178,14 +178,14 @@ class __HeaderState extends State<_Header> {
         tag: widget.titleTag,
         largeFontSize: widget.loginTheme.beforeHeroFontSize,
         smallFontSize: widget.loginTheme.afterHeroFontSize,
-        style: theme.textTheme.headline3,
+        style: theme.textTheme.headline2,
         viewState: ViewState.enlarged,
       );
     } else if (!DartHelper.isNullOrEmpty(widget.title)) {
       title = Text(
         widget.title!,
         key: kTitleKey,
-        style: theme.textTheme.headline3,
+        style: theme.textTheme.headline2,
       );
     } else {
       title = null;
@@ -221,24 +221,24 @@ class __HeaderState extends State<_Header> {
 class FlutterLogin extends StatefulWidget {
   FlutterLogin(
       {Key? key,
-      required this.onSignup,
-      required this.onLogin,
-      required this.onRecoverPassword,
-      this.title,
-      this.logo,
-      this.messages,
-      this.theme,
-      this.emailValidator,
-      this.passwordValidator,
-      this.onSubmitAnimationCompleted,
-      this.logoTag,
-      this.titleTag,
-      this.showDebugButtons = false,
-      this.loginProviders = const <LoginProvider>[],
-      this.hideForgotPasswordButton = false,
-      this.hideSignUpButton = false,
-      this.loginAfterSignUp = true,
-      this.footer})
+        required this.onSignup,
+        required this.onLogin,
+        required this.onRecoverPassword,
+        this.title,
+        this.logo,
+        this.messages,
+        this.theme,
+        this.phoneValidator,
+        this.passwordValidator,
+        this.onSubmitAnimationCompleted,
+        this.logoTag,
+        this.titleTag,
+        this.showDebugButtons = false,
+        this.loginProviders = const <LoginProvider>[],
+        this.hideForgotPasswordButton = false,
+        this.hideSignUpButton = false,
+        this.loginAfterSignUp = true,
+        this.footer})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -272,9 +272,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? phoneValidator;
 
-  /// Same as [emailValidator] but for password
+  /// Same as [phoneValidator] but for password
   final FormFieldValidator<String>? passwordValidator;
 
   /// Called after the submit animation's completed. Put your route transition
@@ -307,9 +307,9 @@ class FlutterLogin extends StatefulWidget {
   /// Optional footer text for example a copyright notice
   final String? footer;
 
-  static final FormFieldValidator<String> defaultEmailValidator = (value) {
-    if (value!.isEmpty || !Regex.email.hasMatch(value)) {
-      return 'Invalid email!';
+  static final FormFieldValidator<String> defaultPhoneValidator = (value) {
+    if (value!.isEmpty || !Regex.phone.hasMatch(value)) {
+      return 'Invalid phoneNumber!';
     }
     return null;
   };
@@ -342,15 +342,15 @@ class _FlutterLoginState extends State<FlutterLogin>
       vsync: this,
       duration: loadingDuration,
     )..addStatusListener((status) {
-        if (status == AnimationStatus.forward) {
-          _logoController!.forward();
-          _titleController!.forward();
-        }
-        if (status == AnimationStatus.reverse) {
-          _logoController!.reverse();
-          _titleController!.reverse();
-        }
-      });
+      if (status == AnimationStatus.forward) {
+        _logoController!.forward();
+        _titleController!.forward();
+      }
+      if (status == AnimationStatus.reverse) {
+        _logoController!.reverse();
+        _titleController!.reverse();
+      }
+    });
     _logoController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -473,13 +473,13 @@ class _FlutterLoginState extends State<FlutterLogin>
         Typography.blackMountainView.headline3!.color;
     final titleStyle = theme.textTheme.headline3!
         .copyWith(
-          color: loginTheme.accentColor ??
-              (isDefaultBlackText
-                  ? Colors.white
-                  : theme.textTheme.headline3!.color),
-          fontSize: loginTheme.beforeHeroFontSize,
-          fontWeight: FontWeight.w300,
-        )
+      color: loginTheme.accentColor ??
+          (isDefaultBlackText
+              ? Colors.white
+              : theme.textTheme.headline3!.color),
+      fontSize: loginTheme.beforeHeroFontSize,
+      fontWeight: FontWeight.w300,
+    )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
         .copyWith(color: Colors.black54)
@@ -556,7 +556,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
       // put it here because floatingActionButtonTheme doesnt have highlightColor property
       highlightColor:
-          loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
+      loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
         headline3: titleStyle,
         bodyText2: textStyle,
@@ -575,8 +575,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final headerHeight = cardTopPosition - headerMargin;
-    final emailValidator =
-        widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
+    final phoneValidator =
+        widget.phoneValidator ?? FlutterLogin.defaultPhoneValidator;
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
@@ -631,13 +631,13 @@ class _FlutterLoginState extends State<FlutterLogin>
                         key: authCardKey,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
-                        emailValidator: emailValidator,
+                        phoneValidator: phoneValidator,
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
                         hideSignUpButton: widget.hideSignUpButton,
                         hideForgotPasswordButton:
-                            widget.hideForgotPasswordButton,
+                        widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                       ),
                     ),

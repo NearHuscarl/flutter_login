@@ -19,7 +19,7 @@ class LoginMessages with ChangeNotifier {
     this.signUpSuccess = defaultSignUpSuccess,
   });
 
-  static const defaultUsernameHint = 'Email';
+  static const defaultUsernameHint = 'PhoneNumber';
   static const defaultPasswordHint = 'Password';
   static const defaultConfirmPasswordHint = 'Confirm Password';
   static const defaultForgotPasswordButton = 'Forgot Password?';
@@ -28,10 +28,10 @@ class LoginMessages with ChangeNotifier {
   static const defaultRecoverPasswordButton = 'RECOVER';
   static const defaultRecoverPasswordIntro = 'Reset your password here';
   static const defaultRecoverPasswordDescription =
-      'We will send your plain-text password to this email account.';
+      'We will send your plain-text password to this phone number.';
   static const defaultGoBackButton = 'BACK';
   static const defaultConfirmPasswordError = 'Password do not match!';
-  static const defaultRecoverPasswordSuccess = 'An email has been sent';
+  static const defaultRecoverPasswordSuccess = 'An message has been sent';
   static const defaultflushbarTitleSuccess = 'Success';
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';

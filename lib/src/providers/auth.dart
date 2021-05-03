@@ -20,10 +20,10 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
-    String email = '',
+    String phone = '',
     String password = '',
     String confirmPassword = '',
-  })  : _email = email,
+  })  : _phone = phone,
         _password = password,
         _confirmPassword = confirmPassword;
 
@@ -57,10 +57,10 @@ class Auth with ChangeNotifier {
     return mode;
   }
 
-  String _email = '';
-  String get email => _email;
-  set email(String email) {
-    _email = email;
+  String _phone = '';
+  String get phone => _phone;
+  set phone(String phone) {
+    _phone = phone;
     notifyListeners();
   }
 

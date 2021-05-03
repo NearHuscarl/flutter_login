@@ -27,7 +27,7 @@ class AuthCard extends StatefulWidget {
     Key? key,
     this.padding = const EdgeInsets.all(0),
     this.loadingController,
-    this.emailValidator,
+    this.phoneValidator,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -38,7 +38,7 @@ class AuthCard extends StatefulWidget {
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? phoneValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function? onSubmit;
   final Function? onSubmitCompleted;
@@ -103,30 +103,30 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _cardSizeAnimation = Tween<double>(begin: 1.0, end: cardSizeScaleEnd)
         .animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(0, .27272727 /* ~300ms */, curve: Curves.easeInOutCirc),
+      curve: Interval(0, .27272727 /* ~300ms */, curve: Curves.bounceInOut),
     ));
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
     _cardOverlayHeightFactorAnimation =
         Tween<double>(begin: double.minPositive, end: 1.0)
             .animate(CurvedAnimation(
-      parent: _routeTransitionController,
-      curve: Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
-    ));
+          parent: _routeTransitionController,
+          curve: Interval(.27272727, .5 /* ~250ms */, curve: Curves.bounceInOut),
+        ));
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(CurvedAnimation(
-      parent: _routeTransitionController,
-      curve: Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
-    ));
+          parent: _routeTransitionController,
+          curve: Interval(.5, .72727272 /* ~250ms */, curve: Curves.bounceInOut),
+        ));
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
     _cardSize2AnimationY =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
     _cardRotationAnimation =
         Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
-      parent: _routeTransitionController,
-      curve: Interval(.72727272, 1 /* ~300ms */, curve: Curves.easeInOutCubic),
-    ));
+          parent: _routeTransitionController,
+          curve: Interval(.72727272, 1 /* ~300ms */, curve: Curves.easeInOutCubic),
+        ));
   }
 
   @override
@@ -183,15 +183,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _cardSize2AnimationX =
         Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
-      parent: _routeTransitionController,
-      curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-    ));
+          parent: _routeTransitionController,
+          curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+        ));
     _cardSize2AnimationY =
         Tween<double>(begin: 1.0, end: widthRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
-      parent: _routeTransitionController,
-      curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-    ));
+          parent: _routeTransitionController,
+          curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+        ));
 
     widget.onSubmit!();
 
@@ -289,29 +289,29 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           final child = (index == 0)
               ? _buildLoadingAnimator(
-                  theme: theme,
-                  child: _LoginCard(
-                    key: _cardKey,
-                    loadingController: _isLoadingFirstTime
-                        ? _formLoadingController
-                        : (_formLoadingController..value = 1.0),
-                    emailValidator: widget.emailValidator,
-                    passwordValidator: widget.passwordValidator,
-                    onSwitchRecoveryPassword: () => _switchRecovery(true),
-                    onSubmitCompleted: () {
-                      _forwardChangeRouteAnimation().then((_) {
-                        widget.onSubmitCompleted!();
-                      });
-                    },
-                    hideSignUpButton: widget.hideSignUpButton,
-                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
-                    loginAfterSignUp: widget.loginAfterSignUp,
-                  ),
-                )
+            theme: theme,
+            child: _LoginCard(
+              key: _cardKey,
+              loadingController: _isLoadingFirstTime
+                  ? _formLoadingController
+                  : (_formLoadingController..value = 1.0),
+              phoneValidator: widget.phoneValidator,
+              passwordValidator: widget.passwordValidator,
+              onSwitchRecoveryPassword: () => _switchRecovery(true),
+              onSubmitCompleted: () {
+                _forwardChangeRouteAnimation().then((_) {
+                  widget.onSubmitCompleted!();
+                });
+              },
+              hideSignUpButton: widget.hideSignUpButton,
+              hideForgotPasswordButton: widget.hideForgotPasswordButton,
+              loginAfterSignUp: widget.loginAfterSignUp,
+            ),
+          )
               : _RecoverCard(
-                  emailValidator: widget.emailValidator,
-                  onSwitchLogin: () => _switchRecovery(false),
-                );
+            phoneValidator: widget.phoneValidator,
+            onSwitchLogin: () => _switchRecovery(false),
+          );
 
           return Align(
             alignment: Alignment.topCenter,
@@ -341,7 +341,7 @@ class _LoginCard extends StatefulWidget {
   _LoginCard({
     Key? key,
     this.loadingController,
-    required this.emailValidator,
+    required this.phoneValidator,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
@@ -352,7 +352,7 @@ class _LoginCard extends StatefulWidget {
   }) : super(key: key);
 
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? phoneValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function? onSwitchAuth;
@@ -400,7 +400,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = TextEditingController(text: auth.email);
+    _nameController = TextEditingController(text: auth.phone);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
 
@@ -428,21 +428,21 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _providerControllerList = auth.loginProviders!
         .map(
           (e) => AnimationController(
-            vsync: this,
-            duration: Duration(milliseconds: 1000),
-          ),
-        )
+        vsync: this,
+        duration: Duration(milliseconds: 1000),
+      ),
+    )
         .toList();
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
     _textButtonLoadingAnimationInterval =
-        const Interval(.6, 1.0, curve: Curves.easeOut);
+    const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _loadingController,
-      curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
-    ));
+          parent: _loadingController,
+          curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
+        ));
   }
 
   void handleLoadingAnimationStatus(AnimationStatus status) {
@@ -501,12 +501,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (auth.isLogin) {
       error = await auth.onLogin!(LoginData(
-        name: auth.email,
+        phoneNumber: auth.phone,
         password: auth.password,
       ));
     } else {
       error = await auth.onSignup!(LoginData(
-        name: auth.email,
+        phoneNumber: auth.phone,
         password: auth.password,
       ));
     }
@@ -543,7 +543,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Future<bool> _loginProviderSubmit(
       {required AnimationController control,
-      required ProviderAuthCallback callback}) async {
+        required ProviderAuthCallback callback}) async {
     await control.forward();
 
     String? error;
@@ -580,15 +580,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.usernameHint,
-      autofillHints: [AutofillHints.username],
+      autofillHints: [AutofillHints.telephoneNumber],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.phone,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
-      validator: widget.emailValidator,
-      onSaved: (value) => auth.email = value!,
+      validator: widget.phoneValidator,
+      onSaved: (value) => auth.phone = value!,
     );
   }
 
@@ -599,10 +599,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
       autofillHints:
-          auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
+      auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
       controller: _passController,
       textInputAction:
-          auth.isLogin ? TextInputAction.done : TextInputAction.next,
+      auth.isLogin ? TextInputAction.done : TextInputAction.next,
       focusNode: _passwordFocusNode,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
@@ -632,11 +632,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-              if (value != _passController!.text) {
-                return messages.confirmPasswordError;
-              }
-              return null;
-            }
+        if (value != _passController!.text) {
+          return messages.confirmPasswordError;
+        }
+        return null;
+      }
           : (value) => null,
       onSaved: (value) => auth.confirmPassword = value!,
     );
@@ -651,14 +651,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: TextButton(
         onPressed: buttonEnabled
             ? () {
-                // save state to populate email field on recovery card
-                _formKey.currentState!.save();
-                widget.onSwitchRecoveryPassword();
-              }
+          // save state to populate email field on recovery card
+          _formKey.currentState!.save();
+          widget.onSwitchRecoveryPassword();
+        }
             : null,
         child: Text(
           messages.forgotPasswordButton,
-          style: theme.textTheme.bodyText2,
+          style: theme.textTheme.bodyText1,
           textAlign: TextAlign.left,
         ),
       ),
@@ -707,7 +707,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         var index = auth.loginProviders!.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+              const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
             child: AnimatedIconButton(
@@ -783,14 +783,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)
                     : SizedBox.fromSize(
-                        size: Size.fromHeight(16),
-                      ),
+                  size: Size.fromHeight(16),
+                ),
                 _buildSubmitButton(theme, messages, auth),
                 !widget.hideSignUpButton
                     ? _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                     : SizedBox.fromSize(
-                        size: Size.fromHeight(10),
-                      ),
+                  size: Size.fromHeight(10),
+                ),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
@@ -811,11 +811,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key? key,
-    required this.emailValidator,
+    required this.phoneValidator,
     required this.onSwitchLogin,
   }) : super(key: key);
 
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? phoneValidator;
   final Function onSwitchLogin;
 
   @override
@@ -837,7 +837,7 @@ class _RecoverCardState extends State<_RecoverCard>
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
-    _nameController = TextEditingController(text: auth.email);
+    _nameController = TextEditingController(text: auth.phone);
 
     _submitController = AnimationController(
       vsync: this,
@@ -861,7 +861,7 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState!.save();
     await _submitController!.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword!(auth.email);
+    final error = await auth.onRecoverPassword!(auth.phone);
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
@@ -884,13 +884,13 @@ class _RecoverCardState extends State<_RecoverCard>
       width: width,
       labelText: messages.usernameHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.phone,
       autocorrect: false,
       autofillHints: [AutofillHints.username],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
-      validator: widget.emailValidator,
-      onSaved: (value) => auth.email = value!,
+      validator: widget.phoneValidator,
+      onSaved: (value) => auth.phone = value!,
     );
   }
 
@@ -906,9 +906,9 @@ class _RecoverCardState extends State<_RecoverCard>
     return MaterialButton(
       onPressed: !_isSubmitting
           ? () {
-              _formRecoverKey.currentState!.save();
-              widget.onSwitchLogin();
-            }
+        _formRecoverKey.currentState!.save();
+        widget.onSwitchLogin();
+      }
           : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -947,7 +947,7 @@ class _RecoverCardState extends State<_RecoverCard>
                   messages.recoverPasswordIntro,
                   key: kRecoverPasswordIntroKey,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2,
+                  style: theme.textTheme.bodyText1,
                 ),
                 SizedBox(height: 20),
                 _buildRecoverNameField(textFieldWidth, messages, auth),
@@ -956,7 +956,7 @@ class _RecoverCardState extends State<_RecoverCard>
                   messages.recoverPasswordDescription,
                   key: kRecoverPasswordDescriptionKey,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2,
+                  style: theme.textTheme.bodyText1,
                 ),
                 SizedBox(height: 26),
                 _buildRecoverButton(theme, messages),
