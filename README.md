@@ -1,4 +1,7 @@
 # Flutter Login
+[![pub package](https://img.shields.io/pub/v/flutter_login?include_prereleases)](https://pub.dartlang.org/packages/flutter_login)
+[![Join the chat](https://img.shields.io/discord/817442412313051220)](https://discord.gg/kP7jXHeNtS)
+[![Workflow](https://github.com/NearHuscarl/flutter_login/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/NearHuscarl/flutter_login/actions)
 
 `FlutterLogin` is a ready-made login/signup widget with many animation effects to
 demonstrate the capabilities of Flutter
@@ -15,7 +18,7 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 
 ## Reference
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
@@ -30,7 +33,7 @@ passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `
 <sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here</sub>
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
-showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overrided to `false` regardless of the value passed in</sub>
+showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overridden to `false` regardless of the value passed in</sub>
 hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
 hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 
@@ -63,7 +66,7 @@ goBackButton | `String` | Go back button's label. Go back button is used to go b
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
 flushbarTitleError | `String` | The Flushbar title on errors
-flushbarTitleSuccess | `String` | The Flushbar title on sucesses
+flushbarTitleSuccess | `String` | The Flushbar title on successes
 
 ### LoginTheme
 
@@ -83,6 +86,7 @@ beforeHeroFontSize | `double` | Defines the font size of the title in the login 
 afterHeroFontSize | `double` | Defines the font size of the title in the screen after the login screen (after the hero transition)
 pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
+footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not provided.
 
 ### LoginUserType
 Enum     |   Description |
@@ -92,6 +96,7 @@ NAME  | The User Field will be set to be username
 PHONE  | The User Field will be set to be phone
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
+
 
 ## Examples
 
