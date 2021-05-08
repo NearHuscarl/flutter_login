@@ -709,7 +709,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.usernameHint,
       autofillHints: [AutofillHints.email],
-      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+      prefixIcon: Icon(FontAwesomeIcons.solidEnvelope),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
