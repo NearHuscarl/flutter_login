@@ -20,7 +20,22 @@ import '../dart_helper.dart';
 import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
+import 'confirm_signup_card.dart';
 import 'confirm_recover_card.dart';
+
+enum CardType {
+  login,
+  recoverPassword,
+  confirmRecover,
+  confirmSignup,
+}
+
+const Map<CardType, int> _cardIndex = {
+  CardType.login: 0,
+  CardType.recoverPassword: 1,
+  CardType.confirmRecover: 2,
+  CardType.confirmSignup: 3,
+};
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -56,6 +71,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _isLoadingFirstTime = true;
   var _pageIndex = 0;
   static const cardSizeScaleEnd = .2;
+
+  List<Widget> _allCards;
+  List<Widget> _visibleCards;
 
   TransformerPageController _pageController;
   AnimationController _formLoadingController;
@@ -127,6 +145,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       parent: _routeTransitionController,
       curve: Interval(.72727272, 1 /* ~300ms */, curve: Curves.easeInOutCubic),
     ));
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_visibleCards == null) {
+      final theme = Theme.of(context);
+      _allCards = _buildCards(theme);
+      _visibleCards = _buildCards(theme);
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -268,9 +296,76 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildCard(ThemeData theme, int index) {
-    switch (index) {
-      case 0:
+  /// jump to any card with animation; call this instead of _switchPage() when
+  /// you need to skip over cards; example: you can jump directly from index 0
+  /// to index 3 with smooth animation
+  void _jumpToCard(ThemeData theme, int targetIndex) async {
+    final auth = Provider.of<Auth>(context, listen: false);
+
+    final currentIndex = _pageController.page.round();
+    if (currentIndex == targetIndex) {
+      return;
+    }
+    _swapChildren(currentIndex, targetIndex);
+    await _quickJump(currentIndex, targetIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshChildren(theme);
+      _pageIndex = targetIndex;
+      auth.isRecover = true;
+    });
+  }
+
+  void _swapChildren(int currentIndex, int targetIndex) {
+    List<Widget> newVisibleCards;
+    newVisibleCards = [..._allCards];
+
+    if (targetIndex > currentIndex) {
+      newVisibleCards[currentIndex + 1] = _visibleCards[targetIndex];
+    } else if (targetIndex < currentIndex) {
+      newVisibleCards[currentIndex - 1] = _visibleCards[targetIndex];
+    }
+
+    setState(() {
+      _visibleCards = newVisibleCards;
+    });
+  }
+
+  Future _quickJump(int currentIndex, int targetIndex) async {
+    int quickJumpTarget;
+
+    if (targetIndex > currentIndex) {
+      quickJumpTarget = currentIndex + 1;
+    } else if (targetIndex < currentIndex) {
+      quickJumpTarget = currentIndex - 1;
+    }
+
+    await _pageController.animateToPage(
+      quickJumpTarget,
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 500),
+    );
+
+    _pageController.jumpToPage(targetIndex);
+  }
+
+  void _refreshChildren(ThemeData theme) {
+    setState(() {
+      _visibleCards = _buildCards(theme);
+    });
+  }
+
+  List<Widget> _buildCards(ThemeData theme) {
+    return <Widget>[
+      _buildCard(theme, CardType.login),
+      _buildCard(theme, CardType.recoverPassword),
+      _buildCard(theme, CardType.confirmRecover),
+      _buildCard(theme, CardType.confirmSignup),
+    ];
+  }
+
+  Widget _buildCard(ThemeData theme, CardType cardType) {
+    switch (cardType) {
+      case CardType.login:
         return _buildLoadingAnimator(
           theme: theme,
           child: _LoginCard(
@@ -281,6 +376,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             emailValidator: widget.emailValidator,
             passwordValidator: widget.passwordValidator,
             onSwitchRecoveryPassword: () => _switchPage(true),
+            onSwitchConfirmSignup: () => _jumpToCard(
+              theme,
+              _cardIndex[CardType.confirmSignup],
+            ),
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation().then((_) {
                 widget?.onSubmitCompleted();
@@ -292,7 +391,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         );
 
-      case 1:
+      case CardType.recoverPassword:
         return _RecoverCard(
           emailValidator: widget.emailValidator,
           onBack: () => _switchPage(false),
@@ -303,11 +402,23 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   : _switchPage(false),
         );
 
-      case 2:
+      case CardType.confirmRecover:
         return ConfirmRecoverCard(
           passwordValidator: widget.passwordValidator,
           onBack: () => _switchPage(false),
           onSubmitCompleted: widget.onSubmitCompleted,
+        );
+
+      case CardType.confirmSignup:
+        return ConfirmSignupCard(
+          onBack: () {
+            _jumpToCard(
+              theme,
+              _cardIndex[CardType.login],
+            );
+          },
+          onSubmitCompleted: widget.onSubmitCompleted,
+          loginAfterSignUp: widget.loginAfterSignUp,
         );
 
       default:
@@ -318,7 +429,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     Widget current = Container(
       height: deviceSize.height,
@@ -336,7 +446,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           return Align(
             alignment: Alignment.topCenter,
-            child: _buildCard(theme, index),
+            child: _visibleCards[index],
           );
         },
       ),
@@ -365,6 +475,7 @@ class _LoginCard extends StatefulWidget {
     @required this.emailValidator,
     @required this.passwordValidator,
     @required this.onSwitchRecoveryPassword,
+    @required this.onSwitchConfirmSignup,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -376,6 +487,7 @@ class _LoginCard extends StatefulWidget {
   final FormFieldValidator<String> emailValidator;
   final FormFieldValidator<String> passwordValidator;
   final Function onSwitchRecoveryPassword;
+  final Function onSwitchConfirmSignup;
   final Function onSwitchAuth;
   final Function onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -549,15 +661,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (auth.isSignup && !widget.loginAfterSignUp) {
-      showSuccessToast(
-          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
-      _switchAuthMode();
-      setState(() => _isSubmitting = false);
-      return false;
+    if (auth.isLogin) {
+      widget?.onSubmitCompleted();
+    } else {
+      widget?.onSwitchConfirmSignup();
     }
-
-    widget?.onSubmitCompleted();
 
     return true;
   }

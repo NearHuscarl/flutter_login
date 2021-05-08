@@ -220,6 +220,8 @@ class FlutterLogin extends StatefulWidget {
       @required this.onLogin,
       @required this.onRecoverPassword,
       this.onConfirmRecover,
+      @required this.onConfirmSignup,
+      @required this.onResendCode,
       this.title = 'LOGIN',
       this.logo,
       this.messages,
@@ -253,6 +255,12 @@ class FlutterLogin extends StatefulWidget {
 
   /// Called when the user submits confirmation code in recover password mode
   final ConfirmRecoverCallback onConfirmRecover;
+
+  /// Called when the user hits the submit button when in confirm signup mode
+  final ConfirmSignupCallback onConfirmSignup;
+
+  /// Called when the user hits the resend code button in confirm signup mode
+  final AuthCallback onResendCode;
 
   /// The large text above the login [Card], usually the app or company name
   final String title;
@@ -600,6 +608,8 @@ class _FlutterLoginState extends State<FlutterLogin>
             onRecoverPassword: widget.onRecoverPassword,
             loginProviders: widget.loginProviders,
             onConfirmRecover: widget.onConfirmRecover,
+            onConfirmSignup: widget.onConfirmSignup,
+            onResendCode: widget.onResendCode,
           ),
         ),
       ],

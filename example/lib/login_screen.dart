@@ -11,6 +11,37 @@ class LoginScreen extends StatelessWidget {
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
+  Future<String> _rec(String code,LoginData data) {
+    return Future.delayed(loginTime).then((_) {
+      if (!mockUsers.containsKey(data.name)) {
+        return 'Username not exists';
+      }
+      if (mockUsers[data.name] != data.password) {
+        return 'Password does not match';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _confirmSignup(String code, LoginData data) {
+    return Future.delayed(loginTime).then((_) {
+      if (code != confirmSignupCode) {
+        return 'Wrong confirmation code. Try again.';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _resendCode(LoginData data) {
+    return Future.delayed(loginTime).then((_) {
+      if (!mockUsers.containsKey(data.name)) {
+        return 'Username does not exist.';
+      }
+      return null;
+    });
+  }
+
+
   Future<String> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
@@ -18,6 +49,15 @@ class LoginScreen extends StatelessWidget {
       }
       if (mockUsers[data.name] != data.password) {
         return 'Password does not match';
+      }
+      return null;
+    });
+  }
+
+  Future<String> _signupUser(LoginData data) {
+    return Future.delayed(loginTime).then((_) {
+      if (mockUsers.containsKey(data.name)) {
+        return 'Username exists';
       }
       return null;
     });
@@ -32,14 +72,14 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  // Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
-  //   return Future.delayed(loginTime).then((_) {
-  //     if (code != recoverPasswordCode) {
-  //       return 'Wrong verification code. Try again.';
-  //     }
-  //     return null;
-  //   });
-  // }
+  Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
+    return Future.delayed(loginTime).then((_) {
+      if (code != recoverPasswordCode) {
+        return 'Wrong verification code. Try again.';
+      }
+      return null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +205,7 @@ class LoginScreen extends StatelessWidget {
         print('Signup info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
-        return _loginUser(loginData);
+        return _signupUser(loginData);
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
@@ -178,11 +218,21 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
-      // onConfirmRecover: (code, loginData) {
-      //   print('Confirm recover info');
-      //   print('Code: $code, Name: ${loginData.name}');
-      //   return _confirmRecoverPassword(code, loginData);
-      // },
+      onConfirmRecover: (code, loginData) {
+        print('Confirm recover info');
+        print('Code: $code, Name: ${loginData.name}');
+        return _confirmRecoverPassword(code, loginData);
+      },
+      onConfirmSignup: (code, loginData) {
+        print('Confirm signup info');
+        print('Code: $code, Name: ${loginData.name}');
+        return _confirmSignup(code, loginData);
+      },
+      onResendCode: (loginData) {
+        print('Resend code info');
+        print('Name: ${loginData.name}');
+        return _resendCode(loginData);
+      },
       showDebugButtons: true,
     );
   }
