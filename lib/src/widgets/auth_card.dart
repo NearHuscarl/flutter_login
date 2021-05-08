@@ -411,18 +411,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
       case CardType.confirmSignup:
         return ConfirmSignupCard(
-          key: _cardKey,
           onBack: () {
             _jumpToCard(
               theme,
               _cardIndex[CardType.login],
             );
           },
-          onSubmitCompleted: () {
-            _forwardChangeRouteAnimation().then((_) {
-              widget?.onSubmitCompleted();
-            });
-          },
+          onSubmitCompleted: widget.onSubmitCompleted,
           loginAfterSignUp: widget.loginAfterSignUp,
         );
 
