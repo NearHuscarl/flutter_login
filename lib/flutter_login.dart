@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
 import 'src/widgets/null_widget.dart';
@@ -228,10 +229,11 @@ class FlutterLogin extends StatefulWidget {
       this.logo,
       this.messages,
       this.theme,
-      this.emailValidator,
+      this.userValidator,
       this.passwordValidator,
       this.onSubmitAnimationCompleted,
       this.logoTag,
+      this.userType = LoginUserType.email,
       this.titleTag,
       this.showDebugButtons = false,
       this.loginProviders = const <LoginProvider>[],
@@ -246,6 +248,10 @@ class FlutterLogin extends StatefulWidget {
 
   /// Called when the user hit the submit button when in login mode
   final AuthCallback onLogin;
+
+  /// [LoginUserType] can be email, name or phone, by default is email. It will change how
+  /// the edit text autofill and behave accordingly to your choice
+  final LoginUserType userType;
 
   /// list of LoginProvider each have an icon and a callback that will be Called when
   /// the user hit the provider icon button
@@ -272,9 +278,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
 
-  /// Same as [emailValidator] but for password
+  /// Same as [userValidator] but for password
   final FormFieldValidator<String>? passwordValidator;
 
   /// Called after the submit animation's completed. Put your route transition
@@ -575,8 +581,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final headerHeight = cardTopPosition - headerMargin;
-    final emailValidator =
-        widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
+    final userValidator =
+        widget.userValidator ?? FlutterLogin.defaultEmailValidator;
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
@@ -629,9 +635,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                     Positioned(
                       child: AuthCard(
                         key: authCardKey,
+                        userType: widget.userType,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
-                        emailValidator: emailValidator,
+                        userValidator: userValidator,
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,

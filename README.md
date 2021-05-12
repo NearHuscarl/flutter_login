@@ -27,8 +27,9 @@ title |   `String`     | <sub>The large text above the login [Card], usually the
 logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
-emailValidator |   <sub>`FormFieldValidator<String>`</sub>     | <sub>Email validating logic, Returns an error string to display if the input is invalid, or null otherwise</sub>
-passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `emailValidator` but for password</sub>
+userType |   [`LoginUserType`](#LoginUserType)     | <sub>FlutterLogin's user type. If not specified, it will use the default user type as email</sub>
+userValidator |   <sub>`FormFieldValidator<String>`</sub>     | <sub>User field validating logic, add your custom validation here. The default is email validation logic. Expects to return an error message [String] to be display if validation fails or [null] if validation succeeds</sub>
+passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `userValidator` but for password</sub>
 <sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here</sub>
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
@@ -52,7 +53,7 @@ import 'package:flutter_login/theme.dart';
 
 Property |   Type     | Description
 -------- |------------| ---------------
-usernameHint | `String` | Hint text of the user name [TextField]
+userHint | `String` | Hint text of the user field [TextField] (Note: user field can be name, email or phone. For more info check: [`LoginUserType`](#LoginUserType))
 passwordHint | `String` | Hint text of the password [TextField]
 confirmPasswordHint | `String` | Hint text of the confirm password [TextField]
 forgotPasswordButton | `String` | Forgot password button's label
@@ -87,6 +88,16 @@ pageColorLight | `Color` | The optional light background color of login screen; 
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not provided.
 
+### LoginUserType
+Enum     |   Description |
+-------- |---------------|
+EMAIL | The User Field will be set to be email
+NAME  | The User Field will be set to be username
+PHONE  | The User Field will be set to be phone
+
+[LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
+
+
 ## Examples
 
 You can view the complete example in the [example project] which resulted in the
@@ -111,7 +122,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
@@ -124,7 +135,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       return null;
     });
@@ -171,7 +182,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
@@ -184,7 +195,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       return null;
     });
@@ -337,7 +348,7 @@ class LoginScreen extends StatelessWidget {
       },
       onRecoverPassword: (_) => Future(null),
       messages: LoginMessages(
-        usernameHint: 'Username',
+        userHint: 'User',
         passwordHint: 'Pass',
         confirmPasswordHint: 'Confirm',
         loginButton: 'LOG IN',

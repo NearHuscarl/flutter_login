@@ -168,14 +168,13 @@ void main() {
     expect(confirmPasswordTextFieldWidget(tester).decoration!.errorText, null);
   });
 
-  testWidgets('Custom emailValidator should show error when return a string',
+  testWidgets('Custom userValidator should show error when return a string',
       (WidgetTester tester) async {
     final loginBuilder = () => widget(FlutterLogin(
           onSignup: (data) => null,
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
-          emailValidator: (value) =>
-              value!.endsWith('.com') ? null : 'Invalid!',
+          userValidator: (value) => value!.endsWith('.com') ? null : 'Invalid!',
         ));
     await tester.pumpWidget(loginBuilder());
     await tester.pumpAndSettle(loadingAnimationDuration);
@@ -237,7 +236,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) =>
               users.contains(data) ? null : Future.value('User not exists'),
-          emailValidator: (value) => null,
+          userValidator: (value) => null,
         ));
     await tester.pumpWidget(loginBuilder());
     await tester.pumpAndSettle(loadingAnimationDuration);
@@ -282,7 +281,7 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           messages: LoginMessages(
-            usernameHint: 'Username',
+            userHint: 'User',
             passwordHint: 'Pass',
             confirmPasswordHint: 'Confirm',
             loginButton: 'LOG IN',
@@ -300,8 +299,8 @@ void main() {
     await tester.pumpAndSettle(loadingAnimationDuration);
 
     var nameTextField = nameTextFieldWidget(tester);
-    expect(nameTextField.decoration!.labelText, 'Username');
-    expect(find.text('Username'), findsOneWidget);
+    expect(nameTextField.decoration!.labelText, 'User');
+    expect(find.text('User'), findsOneWidget);
 
     final passwordTextField = passwordTextFieldWidget(tester);
     expect(passwordTextField.decoration!.labelText, 'Pass');
@@ -344,8 +343,8 @@ void main() {
     await tester.pumpAndSettle();
 
     nameTextField = nameTextFieldWidget(tester);
-    expect(nameTextField.decoration!.labelText, 'Username');
-    expect(find.text('Username'), findsOneWidget);
+    expect(nameTextField.decoration!.labelText, 'User');
+    expect(find.text('User'), findsOneWidget);
 
     submitButton = submitButtonWidget();
     expect(submitButton.text, 'HELP ME');
@@ -475,7 +474,7 @@ void main() {
           onSignup: (data) => null,
           onLogin: mockCallback.onLogin,
           onRecoverPassword: (data) => null,
-          emailValidator: mockCallback.emailValidator,
+          userValidator: mockCallback.userValidator,
           passwordValidator: mockCallback.passwordValidator,
           onSubmitAnimationCompleted: mockCallback.onSubmitAnimationCompleted,
         ));
@@ -496,7 +495,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator('invalid-name'),
+      mockCallback.userValidator('invalid-name'),
       mockCallback.passwordValidator(user.password),
     ]);
     verifyNever(mockCallback.onLogin(any));
@@ -514,7 +513,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator(invalidUser.name),
+      mockCallback.userValidator(invalidUser.name),
       mockCallback.passwordValidator(invalidUser.password),
       mockCallback.onLogin(any),
     ]);
@@ -532,7 +531,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator(user.name),
+      mockCallback.userValidator(user.name),
       mockCallback.passwordValidator(user.password),
       mockCallback.onLogin(any),
       mockCallback.onSubmitAnimationCompleted(),
@@ -548,7 +547,7 @@ void main() {
           onLogin: (data) => null,
           onSignup: mockCallback.onSignup,
           onRecoverPassword: (data) => null,
-          emailValidator: mockCallback.emailValidator,
+          userValidator: mockCallback.userValidator,
           passwordValidator: mockCallback.passwordValidator,
           onSubmitAnimationCompleted: mockCallback.onSubmitAnimationCompleted,
         ));
@@ -574,7 +573,7 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.emailValidator(invalidUser.name));
+    verifyNever(mockCallback.userValidator(invalidUser.name));
     verifyNever(mockCallback.passwordValidator(invalidUser.password));
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -593,7 +592,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator('invalid-name'),
+      mockCallback.userValidator('invalid-name'),
       mockCallback.passwordValidator(user.password),
     ]);
     verifyNever(mockCallback.onSignup(any));
@@ -614,7 +613,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator(invalidUser.name),
+      mockCallback.userValidator(invalidUser.name),
       mockCallback.passwordValidator(invalidUser.password),
       mockCallback.onSignup(any),
     ]);
@@ -634,7 +633,7 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.emailValidator(user.name),
+      mockCallback.userValidator(user.name),
       mockCallback.passwordValidator(user.password),
       mockCallback.onSignup(any),
       mockCallback.onSubmitAnimationCompleted(),

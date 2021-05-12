@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   Future<String?> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       if (mockUsers[data.name] != data.password) {
         return 'Password does not match';
@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
   Future<String?> _recoverPassword(String name) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       return null;
     });
@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
       // messages: LoginMessages(
-      //   usernameHint: 'Username',
+      //   userHint: 'User',
       //   passwordHint: 'Pass',
       //   confirmPasswordHint: 'Confirm',
       //   loginButton: 'LOG IN',
@@ -134,7 +134,7 @@ class LoginScreen extends StatelessWidget {
       //     // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
       //   ),
       // ),
-      emailValidator: (value) {
+      userValidator: (value) {
         if (!value!.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";
         }

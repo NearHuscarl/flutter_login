@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,12 +23,14 @@ import '../matrix.dart';
 import '../paddings.dart';
 import '../widget_helper.dart';
 
+// TODO Improvement: Keep just this in auth_card.dart
 class AuthCard extends StatefulWidget {
   AuthCard({
     Key? key,
+    required this.userType,
     this.padding = const EdgeInsets.all(0),
     this.loadingController,
-    this.emailValidator,
+    this.userValidator,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -38,13 +41,14 @@ class AuthCard extends StatefulWidget {
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function? onSubmit;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
+  final LoginUserType userType;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -292,10 +296,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   theme: theme,
                   child: _LoginCard(
                     key: _cardKey,
+                    userType: widget.userType,
                     loadingController: _isLoadingFirstTime
                         ? _formLoadingController
                         : (_formLoadingController..value = 1.0),
-                    emailValidator: widget.emailValidator,
+                    userValidator: widget.userValidator,
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
                     onSubmitCompleted: () {
@@ -309,7 +314,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   ),
                 )
               : _RecoverCard(
-                  emailValidator: widget.emailValidator,
+                  userValidator: widget.userValidator,
+                  userType: widget.userType,
                   onSwitchLogin: () => _switchRecovery(false),
                 );
 
@@ -337,13 +343,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 }
 
+// TODO Improvement: Modularize this in a login_card.dart
 class _LoginCard extends StatefulWidget {
   _LoginCard({
     Key? key,
     this.loadingController,
-    required this.emailValidator,
+    required this.userValidator,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
+    required this.userType,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -352,7 +360,7 @@ class _LoginCard extends StatefulWidget {
   }) : super(key: key);
 
   final AnimationController? loadingController;
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function? onSwitchAuth;
@@ -360,6 +368,7 @@ class _LoginCard extends StatefulWidget {
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
+  final LoginUserType userType;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -573,21 +582,53 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
-  Widget _buildNameField(double width, LoginMessages messages, Auth auth) {
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function and avoid duplicated code
+  String _getAutofillHints(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return AutofillHints.username;
+      case LoginUserType.phone:
+        return AutofillHints.telephoneNumber;
+      case LoginUserType.email:
+      default:
+        return AutofillHints.email;
+    }
+  }
+
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function and avoid duplicated code
+  TextInputType _getKeyboardType(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return TextInputType.name;
+      case LoginUserType.phone:
+        return TextInputType.number;
+      case LoginUserType.email:
+      default:
+        return TextInputType.emailAddress;
+    }
+  }
+
+  Widget _buildUserField(
+    double width,
+    LoginMessages messages,
+    Auth auth,
+  ) {
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: messages.usernameHint,
-      autofillHints: [AutofillHints.username],
+      labelText: messages.userHint,
+      autofillHints: [_getAutofillHints(widget.userType)],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: _getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
-      validator: widget.emailValidator,
+      validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
     );
   }
@@ -752,7 +793,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildNameField(textFieldWidth, messages, auth),
+                _buildUserField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
                 _buildPasswordField(textFieldWidth, messages, auth),
                 SizedBox(height: 10),
@@ -808,15 +849,18 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 }
 
+// TODO Improvement: Modularize this in a recover_card.dart
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key? key,
-    required this.emailValidator,
+    required this.userValidator,
     required this.onSwitchLogin,
+    required this.userType,
   }) : super(key: key);
 
-  final FormFieldValidator<String>? emailValidator;
+  final FormFieldValidator<String>? userValidator;
   final Function onSwitchLogin;
+  final LoginUserType userType;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -877,19 +921,46 @@ class _RecoverCardState extends State<_RecoverCard>
     }
   }
 
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function and avoid duplicated code
+  String _getAutofillHints(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return AutofillHints.username;
+      case LoginUserType.phone:
+        return AutofillHints.telephoneNumber;
+      case LoginUserType.email:
+      default:
+        return AutofillHints.email;
+    }
+  }
+
+  // TODO Improvement: Common function to login_card.dart and recover_card.dart
+  // Create a resource to import these function and avoid duplicated code
+  TextInputType _getKeyboardType(LoginUserType userType) {
+    switch (userType) {
+      case LoginUserType.name:
+        return TextInputType.name;
+      case LoginUserType.phone:
+        return TextInputType.number;
+      case LoginUserType.email:
+      default:
+        return TextInputType.emailAddress;
+    }
+  }
+
   Widget _buildRecoverNameField(
       double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
-      labelText: messages.usernameHint,
+      labelText: messages.userHint,
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-      keyboardType: TextInputType.emailAddress,
-      autocorrect: false,
-      autofillHints: [AutofillHints.username],
+      keyboardType: _getKeyboardType(widget.userType),
+      autofillHints: [_getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
-      validator: widget.emailValidator,
+      validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
     );
   }

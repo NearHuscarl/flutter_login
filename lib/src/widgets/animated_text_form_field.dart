@@ -43,7 +43,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
-    this.autocorrect = true,
+    this.autocorrect = false,
     this.autofillHints,
   })  : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
@@ -306,7 +306,6 @@ class _AnimatedPasswordTextFormFieldState
       inertiaController: widget.inertiaController,
       width: widget.animatedWidth,
       enabled: widget.enabled,
-      autocorrect: false,
       autofillHints: widget.autofillHints,
       labelText: widget.labelText,
       prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
