@@ -11,7 +11,10 @@ const loadingAnimationDuration = Duration(seconds: 1);
 class LoginCallback {
   Future<String> onLogin(LoginData data) => null;
   Future<String> onSignup(LoginData data) => null;
+  Future<String> onConfirmSignup(String code, LoginData data) => null;
+  Future<String> onResendCode(LoginData data) => null;
   Future<String> onRecoverPassword(String data) => null;
+  Future<String> onConfirmRecover(String code, LoginData data) => null;
   String emailValidator(String value) => null;
   String passwordValidator(String value) => null;
   void onSubmitAnimationCompleted() {}
@@ -26,6 +29,7 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
 
   final user = LoginData(name: 'near@gmail.com', password: '12345');
   final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
+  final signupCode = '123456';
 
   when(mockCallback.emailValidator(user.name)).thenReturn(null);
   when(mockCallback.emailValidator('invalid-name')).thenReturn('Invalid!');
@@ -41,6 +45,9 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
   when(mockCallback.onSignup(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
+  when(mockCallback.onConfirmSignup(signupCode, user))
+      .thenAnswer((_) => Future.value(null));
+
   return [user, invalidUser];
 }
 
@@ -51,6 +58,8 @@ Widget defaultFlutterLogin() {
       onLogin: (data) => null,
       onRecoverPassword: (data) => null,
       onConfirmRecover: (data, _) => null,
+      onConfirmSignup: (data, _) => null,
+      onResendCode: (_) => null,
     ),
   );
 }
@@ -162,3 +171,14 @@ void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed();
 /// https://stackoverflow.com/a/57930945/9449426
 void waitForFlushbarToClose(WidgetTester tester) async =>
     await tester.pumpAndSettle(const Duration(seconds: 4));
+
+/// signup confirmation
+Finder findSignupConfirmationCodeTextField() {
+  return find.byType(TextFormField).at(0);
+}
+
+AnimatedButton confirmButtonWidget() {
+  return find.byType(AnimatedButton).evaluate().first.widget;
+}
+
+void clickConfirmButton() => submitButtonWidget().onPressed();

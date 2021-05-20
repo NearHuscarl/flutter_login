@@ -15,8 +15,10 @@ typedef ProviderAuthCallback = Future<String> Function();
 typedef RecoverCallback = Future<String> Function(String);
 
 /// The result is an error message, callback successes if message is null
-typedef ConfirmRecoverCallback = Future<String> Function(
-    String code, LoginData);
+typedef ConfirmSignupCallback = Future<String> Function(String, LoginData);
+
+/// The result is an error message, callback successes if message is null
+typedef ConfirmRecoverCallback = Future<String> Function(String, LoginData);
 
 class Auth with ChangeNotifier {
   Auth({
@@ -25,6 +27,8 @@ class Auth with ChangeNotifier {
     this.onSignup,
     this.onRecoverPassword,
     this.onConfirmRecover,
+    this.onConfirmSignup,
+    this.onResendCode,
     String email = '',
     String password = '',
     String confirmPassword = '',
@@ -35,8 +39,10 @@ class Auth with ChangeNotifier {
   final AuthCallback onLogin;
   final AuthCallback onSignup;
   final RecoverCallback onRecoverPassword;
-  final List<LoginProvider> loginProviders;
   final ConfirmRecoverCallback onConfirmRecover;
+  final ConfirmSignupCallback onConfirmSignup;
+  final AuthCallback onResendCode;
+  final List<LoginProvider> loginProviders;
 
   AuthMode _mode = AuthMode.Login;
 
