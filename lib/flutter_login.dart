@@ -241,7 +241,8 @@ class FlutterLogin extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
-      this.footer})
+      this.footer,
+      this.hideProvidersTitle = false})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -313,6 +314,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Optional footer text for example a copyright notice
   final String? footer;
+
+  /// Hide the title above the login providers. If no providers are set this is uneffective
+  final bool hideProvidersTitle;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -647,6 +651,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
+                        hideProvidersTitle: widget.hideProvidersTitle,
                       ),
                     ),
                     Positioned(

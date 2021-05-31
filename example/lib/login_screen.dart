@@ -39,6 +39,8 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      loginProviders: [],
+      // hideProvidersTitle: true,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
@@ -57,6 +59,7 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordSuccess: 'Password rescued successfully',
       //   flushbarTitleError: 'Oh no!',
       //   flushbarTitleSuccess: 'Succes!',
+      //   providersTitle: 'login with'
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,
