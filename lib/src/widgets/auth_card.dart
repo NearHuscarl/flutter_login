@@ -25,19 +25,20 @@ import '../widget_helper.dart';
 
 // TODO Improvement: Keep just this in auth_card.dart
 class AuthCard extends StatefulWidget {
-  AuthCard({
-    Key? key,
-    required this.userType,
-    this.padding = const EdgeInsets.all(0),
-    this.loadingController,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmit,
-    this.onSubmitCompleted,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-  }) : super(key: key);
+  AuthCard(
+      {Key? key,
+      required this.userType,
+      this.padding = const EdgeInsets.all(0),
+      this.loadingController,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmit,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false})
+      : super(key: key);
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
@@ -49,6 +50,7 @@ class AuthCard extends StatefulWidget {
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
   final LoginUserType userType;
+  final bool hideProvidersTitle;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -311,6 +313,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     hideSignUpButton: widget.hideSignUpButton,
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
                     loginAfterSignUp: widget.loginAfterSignUp,
+                    hideProvidersTitle: widget.hideProvidersTitle,
                   ),
                 )
               : _RecoverCard(
@@ -345,19 +348,20 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
 // TODO Improvement: Modularize this in a login_card.dart
 class _LoginCard extends StatefulWidget {
-  _LoginCard({
-    Key? key,
-    this.loadingController,
-    required this.userValidator,
-    required this.passwordValidator,
-    required this.onSwitchRecoveryPassword,
-    required this.userType,
-    this.onSwitchAuth,
-    this.onSubmitCompleted,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-  }) : super(key: key);
+  _LoginCard(
+      {Key? key,
+      this.loadingController,
+      required this.userValidator,
+      required this.passwordValidator,
+      required this.onSwitchRecoveryPassword,
+      required this.userType,
+      this.onSwitchAuth,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false})
+      : super(key: key);
 
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
@@ -368,6 +372,7 @@ class _LoginCard extends StatefulWidget {
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
+  final bool hideProvidersTitle;
   final LoginUserType userType;
 
   @override
@@ -434,7 +439,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
-    _providerControllerList = auth.loginProviders!
+    _providerControllerList = auth.loginProviders
         .map(
           (e) => AnimationController(
             vsync: this,
@@ -744,8 +749,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       Auth auth, LoginTheme loginTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProviders!.map((loginProvider) {
-        var index = auth.loginProviders!.indexOf(loginProvider);
+      children: auth.loginProviders.map((loginProvider) {
+        var index = auth.loginProviders.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
@@ -832,6 +837,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
+                auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
+                    ? Row(children: <Widget>[
+                        Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(messages.providersTitle),
+                        ),
+                        Expanded(child: Divider()),
+                      ])
+                    : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
