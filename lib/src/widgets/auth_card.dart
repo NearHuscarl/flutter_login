@@ -753,19 +753,24 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         var index = auth.loginProviders.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 0.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
-            child: AnimatedIconButton(
-              icon: loginProvider.icon,
-              controller: _providerControllerList[index],
-              tooltip: '',
-              onPressed: () => _loginProviderSubmit(
-                control: _providerControllerList[index],
-                callback: () {
-                  return loginProvider.callback();
-                },
-              ),
+            child: Column(
+              children: [
+                AnimatedIconButton(
+                  icon: loginProvider.icon,
+                  controller: _providerControllerList[index],
+                  tooltip: '',
+                  onPressed: () => _loginProviderSubmit(
+                    control: _providerControllerList[index],
+                    callback: () {
+                      return loginProvider.callback();
+                    },
+                  ),
+                ),
+                Text(loginProvider.label)
+              ],
             ),
           ),
         );
