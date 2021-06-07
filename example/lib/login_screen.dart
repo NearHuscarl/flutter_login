@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
@@ -39,8 +40,36 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
-      loginProviders: [],
-      // hideProvidersTitle: true,
+      loginProviders: [
+        LoginProvider(
+          icon: FontAwesomeIcons.google,
+          callback: () async {
+            print('start google sign in');
+            await Future.delayed(loginTime);
+            print('stop google sign in');
+            return '';
+          },
+        ),
+        LoginProvider(
+          icon: FontAwesomeIcons.linkedinIn,
+          callback: () async {
+            print('start linkdin sign in');
+            await Future.delayed(loginTime);
+            print('stop linkdin sign in');
+            return '';
+          },
+        ),
+        LoginProvider(
+          icon: FontAwesomeIcons.githubAlt,
+          callback: () async {
+            print('start github sign in');
+            await Future.delayed(loginTime);
+            print('stop github sign in');
+            return '';
+          },
+        ),
+      ],
+      // hideProvidersTitle: false,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,

@@ -837,16 +837,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
-                auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
-                    ? Row(children: <Widget>[
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(messages.providersTitle),
-                        ),
-                        Expanded(child: Divider()),
-                      ])
-                    : Container(),
+                // TODO: Fix animation size when ending. See #184
+                // auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
+                //     ? Row(children: <Widget>[
+                //         Expanded(child: Divider()),
+                //         Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: Text(messages.providersTitle),
+                //         ),
+                //         Expanded(child: Divider()),
+                //       ])
+                //     : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
