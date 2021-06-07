@@ -12,16 +12,16 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   provider: ^5.0.0
   another_transformer_page_view: ^1.0.1
-  another_flushbar: ^1.10.17
+  another_flushbar: ^1.10.23
 
   # flutter_test from sdk depends on quiver
-  quiver: ^3.0.0
+  quiver: ^3.0.1
   pedantic: ^1.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.3
+  mockito: ^5.0.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
