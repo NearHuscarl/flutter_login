@@ -1,13 +1,23 @@
 library auth_card;
 
 import 'dart:math';
-
-import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:another_transformer_page_view/another_transformer_page_view.dart';
+
+import 'package:flutter_login/src/models/login_data.dart';
+import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/providers/auth.dart';
+import 'package:flutter_login/src/providers/login_messages.dart';
+import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/utils/text_field_utils.dart';
+import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/dart_helper.dart';
+import 'package:flutter_login/src/matrix.dart';
+import 'package:flutter_login/src/paddings.dart';
+import 'package:flutter_login/src/widget_helper.dart';
+
 import 'animated_button.dart';
 import 'animated_icon.dart';
 import 'animated_text.dart';
@@ -15,15 +25,7 @@ import 'animated_text_form_field.dart';
 import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
-import 'package:flutter_login/src/constants.dart';
-import 'package:flutter_login/src/providers/auth.dart';
-import 'package:flutter_login/src/providers/login_messages.dart';
-import 'package:flutter_login/src/providers/login_theme.dart';
-import 'package:flutter_login/src/models/login_data.dart';
-import 'package:flutter_login/src/dart_helper.dart';
-import 'package:flutter_login/src/matrix.dart';
-import 'package:flutter_login/src/paddings.dart';
-import 'package:flutter_login/src/widget_helper.dart';
+
 
 part 'login_card.dart';
 part 'recover_card.dart';
