@@ -1,6 +1,5 @@
 part of auth_card;
 
-// TODO Improvement: Modularize this in a recover_card.dart
 class _RecoverCard extends StatefulWidget {
   _RecoverCard({
     Key? key,
