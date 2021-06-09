@@ -26,7 +26,6 @@ import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
 
-
 part 'login_card.dart';
 part 'recover_card.dart';
 
