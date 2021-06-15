@@ -26,7 +26,6 @@ class Auth with ChangeNotifier {
   })  : _email = email,
         _password = password,
         _confirmPassword = confirmPassword;
-
   final AuthCallback? onLogin;
   final AuthCallback? onSignup;
   final RecoverCallback? onRecoverPassword;
@@ -55,6 +54,15 @@ class Auth with ChangeNotifier {
       mode = AuthMode.Login;
     }
     return mode;
+  }
+
+  List<dynamic> customRegisterData = List.empty(growable: true),
+      customLoginData = List.empty(growable: true);
+  dynamic getCustomRegisterData(int index) {
+    if (index >= customRegisterData.length) {
+      return null;
+    }
+    return customRegisterData[index];
   }
 
   String _email = '';

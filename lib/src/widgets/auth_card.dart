@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/custom_item.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/widgets/null_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -37,9 +39,10 @@ class AuthCard extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
-      this.hideProvidersTitle = false})
+      this.hideProvidersTitle = false,
+      this.customRegisterItems})
       : super(key: key);
-
+  final List<ItemBuilder>? customRegisterItems;
   final EdgeInsets padding;
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
@@ -298,6 +301,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                   theme: theme,
                   child: _LoginCard(
                     key: _cardKey,
+                    customRegisterItems: widget.customRegisterItems,
                     userType: widget.userType,
                     loadingController: _isLoadingFirstTime
                         ? _formLoadingController
@@ -360,9 +364,10 @@ class _LoginCard extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
-      this.hideProvidersTitle = false})
+      this.hideProvidersTitle = false,
+      this.customRegisterItems})
       : super(key: key);
-
+  final List<ItemBuilder>? customRegisterItems;
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
@@ -414,6 +419,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     super.initState();
 
     final auth = Provider.of<Auth>(context, listen: false);
+    //TODO: finish login data
+    //auth.customLoginData = List.generate(widget., (index) => null)
+    auth.customRegisterData =
+        List.generate(widget.customRegisterItems?.length ?? 0, (index) => '');
     _nameController = TextEditingController(text: auth.email);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
@@ -515,13 +524,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (auth.isLogin) {
       error = await auth.onLogin!(LoginData(
-        name: auth.email,
-        password: auth.password,
-      ));
+          name: auth.email,
+          password: auth.password,
+          customData: auth.customRegisterData));
     } else {
       error = await auth.onSignup!(LoginData(
         name: auth.email,
         password: auth.password,
+        customData: auth.customRegisterData,
       ));
     }
 
@@ -773,6 +783,35 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  List<Widget> _buildCustomRegisterItems(ThemeData theme, bool isLogin,
+      double cardPadding, double cardWidth, double textFieldWidth, Auth auth) {
+    if (widget.customRegisterItems == null) {
+      return [];
+    }
+    var children = List<Widget>.empty(growable: true);
+    var length = widget.customRegisterItems!.length;
+    for (var index = 0; index < length; ++index) {
+      var item = widget.customRegisterItems![index];
+      children.add(ExpandableContainer(
+          backgroundColor: theme.accentColor,
+          controller: _switchAuthController,
+          initialState: isLogin
+              ? ExpandableContainerState.shrunk
+              : ExpandableContainerState.expanded,
+          alignment: Alignment.topLeft,
+          color: theme.cardTheme.color,
+          width: cardWidth,
+          padding: EdgeInsets.symmetric(
+            horizontal: cardPadding,
+            vertical: 10,
+          ),
+          onExpandCompleted: () => _postSwitchAuthController.forward(),
+          child: item.build(
+              context, textFieldWidth, auth.customRegisterData, index)));
+    }
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
@@ -821,6 +860,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
           ),
+          ..._buildCustomRegisterItems(
+              theme, isLogin, cardPadding, cardWidth, textFieldWidth, auth),
           Container(
             padding: Paddings.fromRBL(cardPadding),
             width: cardWidth,
@@ -831,7 +872,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(16),
                       ),
-                _buildSubmitButton(theme, messages, auth),
+                //_buildSubmitButton(theme, messages, auth),
                 !widget.hideSignUpButton
                     ? _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                     : SizedBox.fromSize(

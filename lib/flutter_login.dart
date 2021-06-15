@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/custom_item.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
@@ -25,6 +26,7 @@ export 'src/models/login_user_type.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 import 'src/constants.dart';
+export 'src/models/custom_item.dart';
 
 class LoginProvider {
   final IconData icon;
@@ -242,7 +244,8 @@ class FlutterLogin extends StatefulWidget {
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
       this.footer,
-      this.hideProvidersTitle = false})
+      this.hideProvidersTitle = false,
+      this.customRegisterItems})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -317,6 +320,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Hide the title above the login providers. If no providers are set this is uneffective
   final bool hideProvidersTitle;
+
+  /// Custom Register Items
+  final List<ItemBuilder>? customRegisterItems;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -652,6 +658,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
+                        customRegisterItems: widget.customRegisterItems,
                       ),
                     ),
                     Positioned(

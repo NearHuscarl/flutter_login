@@ -40,6 +40,10 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      customRegisterItems: [
+        PureTextItem(
+            labelText: 'test custom', prefixIcon: Icon(Icons.ac_unit_rounded))
+      ],
       loginProviders: [
         LoginProvider(
           icon: FontAwesomeIcons.google,
