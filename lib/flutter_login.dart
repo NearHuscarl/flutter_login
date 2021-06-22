@@ -22,6 +22,7 @@ import 'src/widgets/hero_text.dart';
 import 'src/widgets/gradient_box.dart';
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
+export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 import 'src/constants.dart';

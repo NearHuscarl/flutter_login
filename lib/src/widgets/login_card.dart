@@ -1,20 +1,21 @@
 part of auth_card;
 
 class _LoginCard extends StatefulWidget {
-  _LoginCard(
-      {Key? key,
-      this.loadingController,
-      required this.userValidator,
-      required this.passwordValidator,
-      required this.onSwitchRecoveryPassword,
-      required this.userType,
-      this.onSwitchAuth,
-      this.onSubmitCompleted,
-      this.hideForgotPasswordButton = false,
-      this.hideSignUpButton = false,
-      this.loginAfterSignUp = true,
-      this.hideProvidersTitle = false})
-      : super(key: key);
+  _LoginCard({
+    Key? key,
+    this.loadingController,
+    required this.userValidator,
+    required this.passwordValidator,
+    required this.onSwitchRecoveryPassword,
+    required this.userType,
+    this.onSwitchAuth,
+    this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
+    this.hideProvidersTitle = false,
+    this.requireAdditionalSignUpFields = true,
+  }) : super(key: key);
 
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
@@ -27,6 +28,7 @@ class _LoginCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final bool hideProvidersTitle;
   final LoginUserType userType;
+  final bool requireAdditionalSignUpFields;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -167,12 +169,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     String? error;
 
     if (auth.isLogin) {
-      error = await auth.onLogin!(LoginData(
+      error = await auth.onLogin?.call(LoginData(
         name: auth.email,
         password: auth.password,
       ));
     } else {
-      error = await auth.onSignup!(LoginData(
+      error = await auth.onSignup?.call(LoginData(
         name: auth.email,
         password: auth.password,
       ));
@@ -196,6 +198,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     if (auth.isSignup && !widget.loginAfterSignUp) {
+      if(widget.requireAdditionalSignUpFields){
+        
+      }
       showSuccessToast(
           context, messages.flushbarTitleSuccess, messages.signUpSuccess);
       _switchAuthMode();
@@ -203,7 +208,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    widget.onSubmitCompleted!();
+    widget.onSubmitCompleted?.call();
 
     return true;
   }

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
-  LoginMessages(
-      {this.userHint = defaultUserHint,
-      this.passwordHint = defaultPasswordHint,
-      this.confirmPasswordHint = defaultConfirmPasswordHint,
-      this.forgotPasswordButton = defaultForgotPasswordButton,
-      this.loginButton = defaultLoginButton,
-      this.signupButton = defaultSignupButton,
-      this.recoverPasswordButton = defaultRecoverPasswordButton,
-      this.recoverPasswordIntro = defaultRecoverPasswordIntro,
-      this.recoverPasswordDescription = defaultRecoverPasswordDescription,
-      this.goBackButton = defaultGoBackButton,
-      this.confirmPasswordError = defaultConfirmPasswordError,
-      this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
-      this.flushbarTitleError = defaultflushbarTitleError,
-      this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
-      this.signUpSuccess = defaultSignUpSuccess,
-      this.providersTitle = defaultProvidersTitle});
+  LoginMessages({
+    this.userHint = defaultUserHint,
+    this.passwordHint = defaultPasswordHint,
+    this.confirmPasswordHint = defaultConfirmPasswordHint,
+    this.forgotPasswordButton = defaultForgotPasswordButton,
+    this.loginButton = defaultLoginButton,
+    this.signupButton = defaultSignupButton,
+    this.recoverPasswordButton = defaultRecoverPasswordButton,
+    this.recoverPasswordIntro = defaultRecoverPasswordIntro,
+    this.recoverPasswordDescription = defaultRecoverPasswordDescription,
+    this.goBackButton = defaultGoBackButton,
+    this.confirmPasswordError = defaultConfirmPasswordError,
+    this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
+    this.flushbarTitleError = defaultflushbarTitleError,
+    this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
+    this.signUpSuccess = defaultSignUpSuccess,
+    this.providersTitle = defaultProvidersTitle,
+    this.completeSignupButton = defaultCompleteSignupButton,
+    this.completeSignupInfo = defaultCompleteSignupIntro,
+  });
 
   static const defaultUserHint = 'Email';
   static const defaultPasswordHint = 'Password';
@@ -36,10 +39,17 @@ class LoginMessages with ChangeNotifier {
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';
   static const defaultProvidersTitle = 'or login with';
+  static const defaultCompleteSignupButton = 'SUBMIT';
+  static const defaultCompleteSignupIntro =
+      'Please fill in this form to complete the signup';
 
   /// Hint text of the userHint [TextField]
   /// By default is Email
   final String userHint;
+
+  final String completeSignupButton;
+
+  final String completeSignupInfo;
 
   /// Hint text of the password [TextField]
   final String passwordHint;

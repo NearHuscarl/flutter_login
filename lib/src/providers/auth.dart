@@ -8,6 +8,11 @@ enum AuthMode { Signup, Login }
 /// The result is an error message, callback successes if message is null
 typedef AuthCallback = Future<String?>? Function(LoginData);
 
+/// The additional fields are provided as an `HashMap<String, String>`
+/// The result is an error message, callback successes if message is null
+typedef AdditionalFieldsCallback = Future<String?>? Function(
+    Map<String, String>);
+
 /// The result is an error message, callback successes if message is null
 typedef ProviderAuthCallback = Future<String?>? Function();
 
@@ -20,6 +25,7 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
+    this.onAdditionalFieldsSignup,
     String email = '',
     String password = '',
     String confirmPassword = '',
@@ -29,6 +35,7 @@ class Auth with ChangeNotifier {
 
   final AuthCallback? onLogin;
   final AuthCallback? onSignup;
+  final AdditionalFieldsCallback? onAdditionalFieldsSignup;
   final RecoverCallback? onRecoverPassword;
   final List<LoginProvider> loginProviders;
 
@@ -42,7 +49,7 @@ class Auth with ChangeNotifier {
 
   bool get isLogin => _mode == AuthMode.Login;
   bool get isSignup => _mode == AuthMode.Signup;
-  bool isRecover = false;
+  int currentCardIndex = 0;
 
   AuthMode opposite() {
     return _mode == AuthMode.Login ? AuthMode.Signup : AuthMode.Login;

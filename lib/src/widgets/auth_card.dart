@@ -1,22 +1,24 @@
 library auth_card;
 
+import 'dart:collection';
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 
+import 'package:another_transformer_page_view/another_transformer_page_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/dart_helper.dart';
+import 'package:flutter_login/src/matrix.dart';
 import 'package:flutter_login/src/models/login_data.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/user_form_field.dart';
+import 'package:flutter_login/src/paddings.dart';
 import 'package:flutter_login/src/providers/auth.dart';
 import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/utils/text_field_utils.dart';
-import 'package:flutter_login/src/constants.dart';
-import 'package:flutter_login/src/dart_helper.dart';
-import 'package:flutter_login/src/matrix.dart';
-import 'package:flutter_login/src/paddings.dart';
 import 'package:flutter_login/src/widget_helper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'animated_button.dart';
 import 'animated_icon.dart';
@@ -28,6 +30,7 @@ import 'fade_in.dart';
 
 part 'login_card.dart';
 part 'recover_card.dart';
+part 'user_data_card.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard({
@@ -64,8 +67,13 @@ class AuthCard extends StatefulWidget {
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey _cardKey = GlobalKey();
 
+  static const int _loginPageIndex = 0;
+  static const int _recoveryIndex = 1;
+  static const int _additionalSignUpIndex = 2;
+
+  int _pageIndex = _loginPageIndex;
+
   var _isLoadingFirstTime = true;
-  var _pageIndex = 0;
   static const cardSizeScaleEnd = .2;
 
   TransformerPageController? _pageController;
@@ -148,23 +156,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _switchRecovery(bool recovery) {
+  void _changeCard(int newCardIndex) {
     final auth = Provider.of<Auth>(context, listen: false);
 
-    auth.isRecover = recovery;
-    if (recovery) {
-      _pageController!.nextPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-      _pageIndex = 1;
-    } else {
-      _pageController!.previousPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-      _pageIndex = 0;
-    }
+    auth.currentCardIndex = newCardIndex;
+
+    _pageController!.animateToPage(
+      newCardIndex,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.ease,
+    );
+    _pageIndex = newCardIndex;
   }
 
   Future<void>? runLoadingAnimation() {
@@ -204,7 +206,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
     ));
 
-    widget.onSubmit!();
+    widget.onSubmit?.call();
 
     return _formLoadingController
         .reverse()
@@ -227,7 +229,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   void runChangePageAnimation() {
     final auth = Provider.of<Auth>(context, listen: false);
-    _switchRecovery(!auth.isRecover);
+    if (auth.currentCardIndex >= 2) {
+      _changeCard(0);
+    } else {
+      _changeCard(auth.currentCardIndex + 1);
+    }
   }
 
   Widget _buildLoadingAnimator({Widget? child, required ThemeData theme}) {
@@ -280,9 +286,59 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _switchCard(BuildContext context, int index) {
+    switch (index) {
+      case _loginPageIndex:
+        return _buildLoadingAnimator(
+          theme: Theme.of(context),
+          child: _LoginCard(
+            key: _cardKey,
+            userType: widget.userType,
+            loadingController: _isLoadingFirstTime
+                ? _formLoadingController
+                : (_formLoadingController..value = 1.0),
+            userValidator: widget.userValidator,
+            passwordValidator: widget.passwordValidator,
+            onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
+            onSubmitCompleted: () {
+              _forwardChangeRouteAnimation().then((_) {
+                widget.onSubmitCompleted!();
+              });
+            },
+            hideSignUpButton: widget.hideSignUpButton,
+            hideForgotPasswordButton: widget.hideForgotPasswordButton,
+            loginAfterSignUp: widget.loginAfterSignUp,
+            hideProvidersTitle: widget.hideProvidersTitle,
+          ),
+        );
+      case _recoveryIndex:
+        return _RecoverCard(
+          userValidator: widget.userValidator,
+          userType: widget.userType,
+          onSwitchLogin: () => _changeCard(_loginPageIndex),
+        );
+      case _additionalSignUpIndex:
+        // TODO remove this test stuff and put what received by user
+        return _UserDataCard(formFields: [
+          UserFormField(
+              name: 'Name',
+              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
+          UserFormField(
+              name: 'Surname',
+              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
+          UserFormField(
+              name: 'Username',
+              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
+          UserFormField(
+              name: 'Date of birth',
+              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
+        ]);
+    }
+    throw IndexError(index, 3);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
     Widget current = Container(
       height: deviceSize.height,
@@ -291,45 +347,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       child: TransformerPageView(
         physics: NeverScrollableScrollPhysics(),
         pageController: _pageController,
-        itemCount: 2,
+        itemCount: 3,
 
         /// Need to keep track of page index because soft keyboard will
         /// make page view rebuilt
         index: _pageIndex,
         transformer: CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
-          final child = (index == 0)
-              ? _buildLoadingAnimator(
-                  theme: theme,
-                  child: _LoginCard(
-                    key: _cardKey,
-                    userType: widget.userType,
-                    loadingController: _isLoadingFirstTime
-                        ? _formLoadingController
-                        : (_formLoadingController..value = 1.0),
-                    userValidator: widget.userValidator,
-                    passwordValidator: widget.passwordValidator,
-                    onSwitchRecoveryPassword: () => _switchRecovery(true),
-                    onSubmitCompleted: () {
-                      _forwardChangeRouteAnimation().then((_) {
-                        widget.onSubmitCompleted!();
-                      });
-                    },
-                    hideSignUpButton: widget.hideSignUpButton,
-                    hideForgotPasswordButton: widget.hideForgotPasswordButton,
-                    loginAfterSignUp: widget.loginAfterSignUp,
-                    hideProvidersTitle: widget.hideProvidersTitle,
-                  ),
-                )
-              : _RecoverCard(
-                  userValidator: widget.userValidator,
-                  userType: widget.userType,
-                  onSwitchLogin: () => _switchRecovery(false),
-                );
-
           return Align(
             alignment: Alignment.topCenter,
-            child: child,
+            child: _switchCard(context, index),
           );
         },
       ),
