@@ -288,7 +288,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _switchCard(BuildContext context, int index) {
+  Widget _changeToCard(BuildContext context, int index) {
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -330,6 +330,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return _UserDataCard(
           key: _cardKey,
           formFields: widget.additionalSignUpFields!,
+          loadingController: widget.loadingController,
           onSubmitCompleted: () {
             _forwardChangeRouteAnimation().then((_) {
               widget.onSubmitCompleted!();
@@ -360,7 +361,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           return Align(
             alignment: Alignment.topCenter,
-            child: _switchCard(context, index),
+            child: _changeToCard(context, index),
           );
         },
       ),

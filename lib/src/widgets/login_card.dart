@@ -16,7 +16,6 @@ class _LoginCard extends StatefulWidget {
     this.hideSignUpButton = false,
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
-
   }) : super(key: key);
 
   final AnimationController? loadingController;
@@ -209,7 +208,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (widget.requireAdditionalSignUpFields) {
+    if (auth.isSignup && widget.requireAdditionalSignUpFields) {
       // proceed to the card with the additional fields
       widget.onSwitchSignUpAdditionalData();
     }

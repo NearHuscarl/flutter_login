@@ -2,10 +2,11 @@ part of auth_card;
 
 class _UserDataCard extends StatefulWidget {
   _UserDataCard({
-    required Key key,
+    Key? key,
     required this.formFields,
     required this.loginAfterSignUp,
     this.onSubmitCompleted,
+    this.loadingController,
   }) : super(key: key) {
     if (formFields.isEmpty) {
       throw RangeError('The formFields array must not be empty');
@@ -15,26 +16,33 @@ class _UserDataCard extends StatefulWidget {
     }
   }
 
-  /// The fields to be included in the card. They must be at least 1 and at maximum 6.
   final List<UserFormField> formFields;
-
   final bool loginAfterSignUp;
   final Function? onSubmitCompleted;
+  final AnimationController? loadingController;
 
   @override
   _UserDataCardState createState() => _UserDataCardState();
 }
 
 class _UserDataCardState extends State<_UserDataCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final GlobalKey<FormState> _formCompleteSignupKey = GlobalKey();
 
   late HashMap<String, TextEditingController> _nameControllers;
 
+  late List<AnimationController> _fieldAnimationControllers;
+
   late AnimationController _submitController;
+  late AnimationController _loadingController;
+
   late Interval _textFieldAnimationInterval;
+  late Interval _textButtonLoadingAnimationInterval;
+
+  late Animation<double> _buttonScaleAnimation;
 
   var _isSubmitting = false;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -52,16 +60,49 @@ class _UserDataCardState extends State<_UserDataCard>
           'Some of the formFields have duplicated names, and this is not allowed.');
     }
 
+    _fieldAnimationControllers = widget.formFields
+        .map((e) => AnimationController(
+            vsync: this, duration: Duration(milliseconds: 1000)))
+        .toList();
+
+    _loadingController = widget.loadingController ??
+        (AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: 1150),
+          reverseDuration: Duration(milliseconds: 300),
+        )..value = 1.0);
+
+    _loadingController.addStatusListener(handleLoadingAnimationStatus);
+
     _textFieldAnimationInterval = const Interval(0, .85);
 
     _submitController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
+
+    _textButtonLoadingAnimationInterval =
+        const Interval(.6, 1.0, curve: Curves.easeOut);
+    _buttonScaleAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _loadingController,
+      curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
+    ));
+  }
+
+  void handleLoadingAnimationStatus(AnimationStatus status) {
+    if (status == AnimationStatus.forward) {
+      setState(() => _isLoading = true);
+    }
+    if (status == AnimationStatus.completed) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
   void dispose() {
+    _fieldAnimationControllers.forEach((element) => element.dispose());
+    _loadingController.dispose();
     _submitController.dispose();
     super.dispose();
   }
@@ -89,7 +130,7 @@ class _UserDataCardState extends State<_UserDataCard>
     error = await auth.onAdditionalFieldsSubmit
         ?.call(_nameControllers.map((key, value) => MapEntry(key, value.text)));
 
-    await _submitController.reverse();
+    await _loadingController.reverse();
 
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, messages.flushbarTitleError, error!);
@@ -121,6 +162,7 @@ class _UserDataCardState extends State<_UserDataCard>
           AnimatedTextFormField(
             controller: _nameControllers[formField.keyName],
             interval: _textFieldAnimationInterval,
+            loadingController: _loadingController,
             width: width,
             labelText: formField.displayName,
             prefixIcon:
@@ -143,10 +185,13 @@ class _UserDataCardState extends State<_UserDataCard>
   }
 
   Widget _buildSubmitButton(ThemeData theme, LoginMessages messages) {
-    return AnimatedButton(
-      controller: _submitController,
-      text: messages.completeSignupButton,
-      onPressed: !_isSubmitting ? _submit : null,
+    return ScaleTransition(
+      scale: _buttonScaleAnimation,
+      child: AnimatedButton(
+        controller: _submitController,
+        text: messages.completeSignupButton,
+        onPressed: !_isSubmitting ? _submit : null,
+      ),
     );
   }
 
@@ -159,10 +204,7 @@ class _UserDataCardState extends State<_UserDataCard>
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
-
-
     return FittedBox(
-      // width: cardWidth,
       child: Card(
         child: Container(
           padding: const EdgeInsets.only(
@@ -177,11 +219,14 @@ class _UserDataCardState extends State<_UserDataCard>
             key: _formCompleteSignupKey,
             child: Column(
               children: [
-                Text(
-                  messages.completeSignupInfo,
-                  key: kRecoverPasswordIntroKey,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2,
+                ScaleTransition(
+                  scale: _buttonScaleAnimation,
+                  child: Text(
+                    messages.completeSignupInfo,
+                    key: kRecoverPasswordIntroKey,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyText2,
+                  ),
                 ),
                 _buildFields(textFieldWidth),
                 SizedBox(height: 5),
