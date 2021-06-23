@@ -37,12 +37,10 @@ class _UserDataCardState extends State<_UserDataCard>
   late AnimationController _loadingController;
 
   late Interval _textFieldAnimationInterval;
-  late Interval _textButtonLoadingAnimationInterval;
 
   late Animation<double> _buttonScaleAnimation;
 
   var _isSubmitting = false;
-  var _isLoading = false;
 
   @override
   void initState() {
@@ -72,8 +70,6 @@ class _UserDataCardState extends State<_UserDataCard>
           reverseDuration: Duration(milliseconds: 300),
         )..value = 1.0);
 
-    _loadingController.addStatusListener(handleLoadingAnimationStatus);
-
     _textFieldAnimationInterval = const Interval(0, .85);
 
     _submitController = AnimationController(
@@ -81,8 +77,7 @@ class _UserDataCardState extends State<_UserDataCard>
       duration: Duration(milliseconds: 1000),
     );
 
-    _textButtonLoadingAnimationInterval =
-        const Interval(.6, 1.0, curve: Curves.easeOut);
+
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _loadingController,
@@ -90,14 +85,6 @@ class _UserDataCardState extends State<_UserDataCard>
     ));
   }
 
-  void handleLoadingAnimationStatus(AnimationStatus status) {
-    if (status == AnimationStatus.forward) {
-      setState(() => _isLoading = true);
-    }
-    if (status == AnimationStatus.completed) {
-      setState(() => _isLoading = false);
-    }
-  }
 
   @override
   void dispose() {
