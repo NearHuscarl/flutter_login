@@ -2,15 +2,17 @@ part of auth_card;
 
 class _UserDataCard extends StatefulWidget {
   _UserDataCard({
-    Key? key,
+    required Key key,
     required this.formFields,
-    this.loginAfterSignUp = true,
+    required this.loginAfterSignUp,
+    this.onSubmitCompleted,
   }) : super(key: key);
 
-  /// The fields to be included in the card. They must be at least 1 and at maximum 10.
+  /// The fields to be included in the card. They must be at least 1 and at maximum 6.
   final List<UserFormField> formFields;
 
   final bool loginAfterSignUp;
+  final Function? onSubmitCompleted;
 
   @override
   _UserDataCardState createState() => _UserDataCardState();
@@ -29,13 +31,11 @@ class _UserDataCardState extends State<_UserDataCard>
   void initState() {
     super.initState();
 
-    final auth = Provider.of<Auth>(context, listen: false);
-
     _nameControllers =
         HashMap<String, TextEditingController>.fromIterable(widget.formFields,
-            key: (formFields) => formFields.name,
-            value: (_) => TextEditingController(
-                  text: '',
+            key: (formFields) => formFields.keyName,
+            value: (formFields) => TextEditingController(
+                  text: formFields.defaultValue,
                 ));
 
     if (_nameControllers.length != widget.formFields.length) {
@@ -75,7 +75,7 @@ class _UserDataCardState extends State<_UserDataCard>
 
     // We have to convert the Map<String, TextEditingController> to a Map<String, String>
     // and pass it to the function given by the user
-    error = await auth.onAdditionalFieldsSignup
+    error = await auth.onAdditionalFieldsSubmit
         ?.call(_nameControllers.map((key, value) => MapEntry(key, value.text)));
 
     await _submitController.reverse();
@@ -90,8 +90,11 @@ class _UserDataCardState extends State<_UserDataCard>
       showSuccessToast(
           context, messages.flushbarTitleSuccess, messages.signUpSuccess);
       setState(() => _isSubmitting = false);
+      //TODO go back to login card
       return false;
     }
+
+    widget.onSubmitCompleted?.call();
 
     return true;
   }
@@ -105,9 +108,9 @@ class _UserDataCardState extends State<_UserDataCard>
             height: 5,
           ),
           AnimatedTextFormField(
-            controller: _nameControllers[formField.name],
+            controller: _nameControllers[formField.keyName],
             width: width,
-            labelText: formField.name,
+            labelText: formField.displayName,
             prefixIcon:
                 formField.icon ?? Icon(FontAwesomeIcons.solidUserCircle),
             keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
@@ -137,7 +140,6 @@ class _UserDataCardState extends State<_UserDataCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
     final cardWidth = min(deviceSize.width * 0.75, 360.0);

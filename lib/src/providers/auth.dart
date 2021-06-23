@@ -25,7 +25,7 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
-    this.onAdditionalFieldsSignup,
+    this.onAdditionalFieldsSubmit,
     String email = '',
     String password = '',
     String confirmPassword = '',
@@ -35,7 +35,7 @@ class Auth with ChangeNotifier {
 
   final AuthCallback? onLogin;
   final AuthCallback? onSignup;
-  final AdditionalFieldsCallback? onAdditionalFieldsSignup;
+  final AdditionalFieldsCallback? onAdditionalFieldsSubmit;
   final RecoverCallback? onRecoverPassword;
   final List<LoginProvider> loginProviders;
 

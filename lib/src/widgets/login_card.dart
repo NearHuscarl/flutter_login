@@ -7,20 +7,23 @@ class _LoginCard extends StatefulWidget {
     required this.userValidator,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
+    required this.onSwitchSignUpAdditionalData,
     required this.userType,
+    required this.requireAdditionalSignUpFields,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
-    this.requireAdditionalSignUpFields = true,
+
   }) : super(key: key);
 
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
+  final Function onSwitchSignUpAdditionalData;
   final Function? onSwitchAuth;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -174,7 +177,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         password: auth.password,
       ));
     } else {
-      error = await auth.onSignup?.call(LoginData(
+      error = await auth.onSignup!(LoginData(
         name: auth.email,
         password: auth.password,
       ));
@@ -198,14 +201,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     if (auth.isSignup && !widget.loginAfterSignUp) {
-      if(widget.requireAdditionalSignUpFields){
-        
-      }
       showSuccessToast(
           context, messages.flushbarTitleSuccess, messages.signUpSuccess);
       _switchAuthMode();
       setState(() => _isSubmitting = false);
+
       return false;
+    }
+
+    if (widget.requireAdditionalSignUpFields) {
+      // proceed to the card with the additional fields
+      widget.onSwitchSignUpAdditionalData();
     }
 
     widget.onSubmitCompleted?.call();

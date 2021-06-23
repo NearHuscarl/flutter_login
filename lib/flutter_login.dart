@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
 import 'src/providers/login_theme.dart';
 import 'src/widgets/null_widget.dart';
@@ -227,6 +228,7 @@ class FlutterLogin extends StatefulWidget {
       required this.onSignup,
       required this.onLogin,
       required this.onRecoverPassword,
+      this.onAdditionalFieldsSubmit,
       this.title,
       this.logo,
       this.messages,
@@ -243,7 +245,9 @@ class FlutterLogin extends StatefulWidget {
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
       this.footer,
-      this.hideProvidersTitle = false})
+      this.hideProvidersTitle = false,
+      this.additionalSignupFields,
+  })
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -251,6 +255,10 @@ class FlutterLogin extends StatefulWidget {
 
   /// Called when the user hit the submit button when in login mode
   final AuthCallback onLogin;
+
+  /// Called after the additonal signup data form has been submitted
+  /// receives the form entries has a `Map<String, String>`
+  final AdditionalFieldsCallback? onAdditionalFieldsSubmit;
 
   /// [LoginUserType] can be email, name or phone, by default is email. It will change how
   /// the edit text autofill and behave accordingly to your choice
@@ -303,6 +311,10 @@ class FlutterLogin extends StatefulWidget {
   /// release mode, this will be overrided to false regardless of the value
   /// passed in
   final bool showDebugButtons;
+
+  /// This List contains the additional signup fields.
+  /// By setting this, after signup another card with a form for additional user data is shown
+  final List<UserFormField>? additionalSignupFields;
 
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
@@ -617,6 +629,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
             loginProviders: widget.loginProviders,
+            onAdditionalFieldsSubmit: widget.onAdditionalFieldsSubmit,
           ),
         ),
       ],
@@ -653,6 +666,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
+                        additionalSignUpFields: widget.additionalSignupFields,
                       ),
                     ),
                     Positioned(

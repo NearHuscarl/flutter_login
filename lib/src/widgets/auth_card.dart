@@ -46,6 +46,7 @@ class AuthCard extends StatefulWidget {
     this.hideSignUpButton = false,
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
+    this.additionalSignUpFields,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -59,6 +60,7 @@ class AuthCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final LoginUserType userType;
   final bool hideProvidersTitle;
+  final List<UserFormField>? additionalSignUpFields;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -299,7 +301,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 : (_formLoadingController..value = 1.0),
             userValidator: widget.userValidator,
             passwordValidator: widget.passwordValidator,
+            requireAdditionalSignUpFields:
+                widget.additionalSignUpFields != null,
             onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
+            onSwitchSignUpAdditionalData: () =>
+                _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation().then((_) {
                 widget.onSubmitCompleted!();
@@ -318,21 +324,19 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           onSwitchLogin: () => _changeCard(_loginPageIndex),
         );
       case _additionalSignUpIndex:
-        // TODO remove this test stuff and put what received by user
-        return _UserDataCard(formFields: [
-          UserFormField(
-              name: 'Name',
-              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
-          UserFormField(
-              name: 'Surname',
-              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
-          UserFormField(
-              name: 'Username',
-              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
-          UserFormField(
-              name: 'Date of birth',
-              icon: Icon(FontAwesomeIcons.acquisitionsIncorporated)),
-        ]);
+        if (widget.additionalSignUpFields == null) {
+          throw StateError('The additional fields List is null');
+        }
+        return _UserDataCard(
+          key: _cardKey,
+          formFields: widget.additionalSignUpFields!,
+          onSubmitCompleted: () {
+            _forwardChangeRouteAnimation().then((_) {
+              widget.onSubmitCompleted!();
+            });
+          },
+          loginAfterSignUp: widget.loginAfterSignUp,
+        );
     }
     throw IndexError(index, 3);
   }
