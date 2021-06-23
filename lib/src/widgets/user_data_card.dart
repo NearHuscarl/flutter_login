@@ -6,7 +6,14 @@ class _UserDataCard extends StatefulWidget {
     required this.formFields,
     required this.loginAfterSignUp,
     this.onSubmitCompleted,
-  }) : super(key: key);
+  }) : super(key: key) {
+    if (formFields.isEmpty) {
+      throw RangeError('The formFields array must not be empty');
+    } else if (formFields.length > 6) {
+      throw RangeError(
+          'More than 6 formFields are not displayable, you $formFields.length');
+    }
+  }
 
   /// The fields to be included in the card. They must be at least 1 and at maximum 6.
   final List<UserFormField> formFields;
@@ -23,7 +30,9 @@ class _UserDataCardState extends State<_UserDataCard>
   final GlobalKey<FormState> _formCompleteSignupKey = GlobalKey();
 
   late HashMap<String, TextEditingController> _nameControllers;
+
   late AnimationController _submitController;
+  late Interval _textFieldAnimationInterval;
 
   var _isSubmitting = false;
 
@@ -42,6 +51,8 @@ class _UserDataCardState extends State<_UserDataCard>
       throw ArgumentError(
           'Some of the formFields have duplicated names, and this is not allowed.');
     }
+
+    _textFieldAnimationInterval = const Interval(0, .85);
 
     _submitController = AnimationController(
       vsync: this,
@@ -109,6 +120,7 @@ class _UserDataCardState extends State<_UserDataCard>
           ),
           AnimatedTextFormField(
             controller: _nameControllers[formField.keyName],
+            interval: _textFieldAnimationInterval,
             width: width,
             labelText: formField.displayName,
             prefixIcon:
@@ -117,8 +129,9 @@ class _UserDataCardState extends State<_UserDataCard>
             autofillHints: [
               TextFieldUtils.getAutofillHints(formField.userType)
             ],
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => _submit(),
+            textInputAction: formField == widget.formFields.last
+                ? TextInputAction.done
+                : TextInputAction.next,
             validator: formField.fieldValidator,
           ),
           SizedBox(
@@ -146,12 +159,7 @@ class _UserDataCardState extends State<_UserDataCard>
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
-    if (widget.formFields.isEmpty) {
-      throw RangeError('The formFields array must not be empty');
-    } else if (widget.formFields.length > 6) {
-      throw RangeError(
-          'More than 6 formFields are not displayable, but you provided $widget.formFields.length');
-    }
+
 
     return FittedBox(
       // width: cardWidth,
