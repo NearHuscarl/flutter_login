@@ -99,10 +99,11 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
-      onAdditionalFieldsSubmit: (fields) {
+      onAdditionalFieldsSubmit: (fields) async {
         fields.forEach((key, value) {
           print('$key: $value');
         });
+        return null;
       },
       // hideProvidersTitle: false,
       // loginAfterSignUp: false,

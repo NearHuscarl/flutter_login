@@ -115,13 +115,14 @@ class _UserDataCardState extends State<_UserDataCard>
     error = await auth.onAdditionalFieldsSubmit
         ?.call(_nameControllers.map((key, value) => MapEntry(key, value.text)));
 
-    await _loadingController.reverse();
-
+    await _submitController.reverse();
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, messages.flushbarTitleError, error!);
       setState(() => _isSubmitting = false);
       return false;
     }
+
+    await _loadingController.reverse();
 
     if (auth.isSignup && !widget.loginAfterSignUp) {
       showSuccessToast(
