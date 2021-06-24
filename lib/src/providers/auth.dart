@@ -13,6 +13,9 @@ typedef AuthCallback = Future<String?>? Function(LoginData);
 typedef AdditionalFieldsCallback = Future<String?>? Function(
     Map<String, String>);
 
+/// If the callback returns true, the additional data card is shown
+typedef ProviderNeedsSignUpCallback = Future<bool> Function();
+
 /// The result is an error message, callback successes if message is null
 typedef ProviderAuthCallback = Future<String?>? Function();
 

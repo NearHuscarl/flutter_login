@@ -219,13 +219,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Future<bool> _loginProviderSubmit(
-      {required AnimationController control,
-      required ProviderAuthCallback callback}) async {
-    await control.forward();
+      {required LoginProvider loginProvider,
+      required AnimationController animationController}) async {
+    await animationController.forward();
 
     String? error;
 
-    error = await callback();
+    error = await loginProvider.callback();
 
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
@@ -233,7 +233,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       setState(() => _showShadow = false);
     });
 
-    await control.reverse();
+    await animationController.reverse();
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
@@ -243,6 +243,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         setState(() => _showShadow = true);
       });
       return false;
+    }
+
+    final showSignupAdditionalFields =
+        await loginProvider.providerNeedsSignUpCallback?.call() ?? false;
+
+    if (showSignupAdditionalFields) {
+      widget.onSwitchSignUpAdditionalData();
     }
 
     widget.onSubmitCompleted!();
@@ -396,11 +403,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               controller: _providerControllerList[index],
               tooltip: '',
               onPressed: () => _loginProviderSubmit(
-                control: _providerControllerList[index],
-                callback: () {
-                  return loginProvider.callback();
-                },
-              ),
+                  animationController: _providerControllerList[index],
+                  loginProvider: loginProvider),
             ),
           ),
         );

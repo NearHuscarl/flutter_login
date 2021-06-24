@@ -77,14 +77,12 @@ class _UserDataCardState extends State<_UserDataCard>
       duration: Duration(milliseconds: 1000),
     );
 
-
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _loadingController,
       curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
   }
-
 
   @override
   void dispose() {

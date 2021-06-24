@@ -31,8 +31,13 @@ import 'src/constants.dart';
 class LoginProvider {
   final IconData icon;
   final ProviderAuthCallback callback;
+  final ProviderNeedsSignUpCallback? providerNeedsSignUpCallback;
 
-  LoginProvider({required this.icon, required this.callback});
+  LoginProvider({
+    required this.icon,
+    required this.callback,
+    this.providerNeedsSignUpCallback,
+  });
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -223,32 +228,31 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin(
-      {Key? key,
-      required this.onSignup,
-      required this.onLogin,
-      required this.onRecoverPassword,
-      this.onAdditionalFieldsSubmit,
-      this.title,
-      this.logo,
-      this.messages,
-      this.theme,
-      this.userValidator,
-      this.passwordValidator,
-      this.onSubmitAnimationCompleted,
-      this.logoTag,
-      this.userType = LoginUserType.email,
-      this.titleTag,
-      this.showDebugButtons = false,
-      this.loginProviders = const <LoginProvider>[],
-      this.hideForgotPasswordButton = false,
-      this.hideSignUpButton = false,
-      this.loginAfterSignUp = true,
-      this.footer,
-      this.hideProvidersTitle = false,
-      this.additionalSignupFields,
-  })
-      : super(key: key);
+  FlutterLogin({
+    Key? key,
+    required this.onSignup,
+    required this.onLogin,
+    required this.onRecoverPassword,
+    this.onAdditionalFieldsSubmit,
+    this.title,
+    this.logo,
+    this.messages,
+    this.theme,
+    this.userValidator,
+    this.passwordValidator,
+    this.onSubmitAnimationCompleted,
+    this.logoTag,
+    this.userType = LoginUserType.email,
+    this.titleTag,
+    this.showDebugButtons = false,
+    this.loginProviders = const <LoginProvider>[],
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
+    this.footer,
+    this.hideProvidersTitle = false,
+    this.additionalSignupFields,
+  }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;

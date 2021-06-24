@@ -57,14 +57,17 @@ class LoginScreen extends StatelessWidget {
           },
         ),
         LoginProvider(
-          icon: FontAwesomeIcons.linkedinIn,
-          callback: () async {
-            print('start linkdin sign in');
-            await Future.delayed(loginTime);
-            print('stop linkdin sign in');
-            return '';
-          },
-        ),
+            icon: FontAwesomeIcons.linkedinIn,
+            callback: () async {
+              print('start linkdin sign in');
+              await Future.delayed(loginTime);
+              print('stop linkdin sign in');
+              return '';
+            },
+            providerNeedsSignUpCallback: () {
+              // put here your logic to conditionally show the additional fields
+              return Future.value(true);
+            }),
         LoginProvider(
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
@@ -76,7 +79,8 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
       additionalSignupFields: [
-        UserFormField(keyName: 'Username',icon: Icon(FontAwesomeIcons.userAlt)),
+        UserFormField(
+            keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
         UserFormField(keyName: 'Name', defaultValue: 'Steve'),
         UserFormField(keyName: 'Surname'),
         UserFormField(
@@ -84,8 +88,11 @@ class LoginScreen extends StatelessWidget {
           displayName: 'Phone Number',
           userType: LoginUserType.phone,
           fieldValidator: (value) {
-            var phoneRegExp = RegExp('^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
-            if (value != null && value.length < 7 && !phoneRegExp.hasMatch(value)) {
+            var phoneRegExp = RegExp(
+                '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
+            if (value != null &&
+                value.length < 7 &&
+                !phoneRegExp.hasMatch(value)) {
               return "This isn't a valid phone number";
             }
             return null;
