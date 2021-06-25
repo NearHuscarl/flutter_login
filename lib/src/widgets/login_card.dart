@@ -199,18 +199,25 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (auth.isSignup && !widget.loginAfterSignUp) {
-      showSuccessToast(
-          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
-      _switchAuthMode();
-      setState(() => _isSubmitting = false);
+    if (auth.isSignup) {
+      if (!widget.loginAfterSignUp && !widget.requireAdditionalSignUpFields) {
+        showSuccessToast(
+            context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+        _switchAuthMode();
+        setState(() => _isSubmitting = false);
 
-      return false;
-    }
+        return false;
+      } else if (!widget.loginAfterSignUp &&
+          widget.requireAdditionalSignUpFields) {
+        // proceed to the card with the additional fields
+        widget.onSwitchSignUpAdditionalData();
 
-    if (auth.isSignup && widget.requireAdditionalSignUpFields) {
-      // proceed to the card with the additional fields
-      widget.onSwitchSignUpAdditionalData();
+        return false;
+      } else if (widget.loginAfterSignUp &&
+          widget.requireAdditionalSignUpFields) {
+        // proceed to the card with the additional fields
+        widget.onSwitchSignUpAdditionalData();
+      }
     }
 
     widget.onSubmitCompleted?.call();

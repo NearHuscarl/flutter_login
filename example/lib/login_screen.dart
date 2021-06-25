@@ -106,7 +106,7 @@ class LoginScreen extends StatelessWidget {
         return null;
       },
       // hideProvidersTitle: false,
-      // loginAfterSignUp: false,
+      loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
       // messages: LoginMessages(

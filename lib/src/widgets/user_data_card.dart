@@ -5,6 +5,7 @@ class _UserDataCard extends StatefulWidget {
     Key? key,
     required this.formFields,
     required this.loginAfterSignUp,
+    required this.switchToLogin,
     this.onSubmitCompleted,
     this.loadingController,
   }) : super(key: key) {
@@ -16,6 +17,7 @@ class _UserDataCard extends StatefulWidget {
     }
   }
 
+  final Function switchToLogin;
   final List<UserFormField> formFields;
   final bool loginAfterSignUp;
   final Function? onSubmitCompleted;
@@ -125,10 +127,16 @@ class _UserDataCardState extends State<_UserDataCard>
     await _loadingController.reverse();
 
     if (auth.isSignup && !widget.loginAfterSignUp) {
-      showSuccessToast(
-          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+
+      showSuccessToast(context, messages.flushbarTitleSuccess,
+          messages.signUpSuccess, Duration(seconds: 4));
       setState(() => _isSubmitting = false);
-      //TODO go back to login card
+
+      await Future.delayed(Duration(seconds: 4))
+          .then(
+            (_) => widget.switchToLogin()
+          );
+
       return false;
     }
 
