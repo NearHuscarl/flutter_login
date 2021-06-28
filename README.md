@@ -215,6 +215,7 @@ class LoginScreen extends StatelessWidget {
         loginProviders: <LoginProvider>[
           LoginProvider(
             icon: FontAwesomeIcons.google,
+            label: 'Google',
             callback: () async {
               print('start google sign in');
               await Future.delayed(loginTime);
@@ -224,6 +225,7 @@ class LoginScreen extends StatelessWidget {
           ),
           LoginProvider(
             icon: FontAwesomeIcons.facebookF,
+            label: 'Facebook',
             callback: () async {            
               print('start facebook sign in');
               await Future.delayed(loginTime);
