@@ -53,6 +53,7 @@ class LoginTheme with ChangeNotifier {
     this.beforeHeroFontSize = 48.0,
     this.afterHeroFontSize = 15.0,
     this.footerBackgroundColor,
+    this.switchAuthTextColor,
     this.footerTextStyle,
     this.authButtonPadding,
     this.providerButtonPadding,
@@ -110,6 +111,9 @@ class LoginTheme with ChangeNotifier {
 
   /// Color of the footer background
   final Color? footerBackgroundColor;
+
+  /// Color of the switch authentication button
+  final Color? switchAuthTextColor;
 
   /// Text style for footer text
   final TextStyle? footerTextStyle;
