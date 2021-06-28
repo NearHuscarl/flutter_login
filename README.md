@@ -90,6 +90,7 @@ afterHeroFontSize | `double` | Defines the font size of the title in the screen 
 pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not provided.
+switchAuthTextColor | `Color` | The optional color for the switch authentication text, if nothing is specified [primaryColor] is used.
 logoWidth | `double` | Width of the logo where 1 is the full width of the login card. ; defaults to 0.75 if not provided.
 
 ### LoginUserType
