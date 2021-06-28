@@ -419,6 +419,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildProvidersTitle(LoginMessages messages) {
+    return ScaleTransition(
+        scale: _buttonScaleAnimation,
+        child: Row(children: <Widget>[
+          Expanded(child: Divider()),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(messages.providersTitle),
+          ),
+          Expanded(child: Divider()),
+        ]));
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
@@ -483,17 +496,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     : SizedBox.fromSize(
                         size: Size.fromHeight(10),
                       ),
-                // TODO: Fix animation size when ending. See #184
-                // auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
-                //     ? Row(children: <Widget>[
-                //         Expanded(child: Divider()),
-                //         Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: Text(messages.providersTitle),
-                //         ),
-                //         Expanded(child: Divider()),
-                //       ])
-                //     : Container(),
+                auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
+                    ? _buildProvidersTitle(messages)
+                    : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
