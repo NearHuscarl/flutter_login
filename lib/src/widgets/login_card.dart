@@ -381,20 +381,25 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
-            child: AnimatedIconButton(
-              icon: loginProvider.icon,
-              controller: _providerControllerList[index],
-              tooltip: '',
-              onPressed: () => _loginProviderSubmit(
-                control: _providerControllerList[index],
-                callback: () {
-                  return loginProvider.callback();
-                },
-              ),
+            child: Column(
+              children: [
+                AnimatedIconButton(
+                  icon: loginProvider.icon,
+                  controller: _providerControllerList[index],
+                  tooltip: '',
+                  onPressed: () => _loginProviderSubmit(
+                    control: _providerControllerList[index],
+                    callback: () {
+                      return loginProvider.callback();
+                    },
+                  ),
+                ),
+                Text(loginProvider.label)
+              ],
             ),
           ),
         );
-      }).toList(),
+      }).toList()
     );
   }
 
@@ -463,16 +468,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                         size: Size.fromHeight(10),
                       ),
                 // TODO: Fix animation size when ending. See #184
-                // auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
-                //     ? Row(children: <Widget>[
-                //         Expanded(child: Divider()),
-                //         Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: Text(messages.providersTitle),
-                //         ),
-                //         Expanded(child: Divider()),
-                //       ])
-                //     : Container(),
+                auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
+                    ? Row(children: <Widget>[
+                        Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(messages.providersTitle),
+                        ),
+                        Expanded(child: Divider()),
+                      ])
+                    : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],
             ),
