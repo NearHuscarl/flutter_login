@@ -373,34 +373,33 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProviders.map((loginProvider) {
-        var index = auth.loginProviders.indexOf(loginProvider);
-        return Padding(
-          padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
-          child: ScaleTransition(
-            scale: _buttonScaleAnimation,
-            child: Column(
-              children: [
-                AnimatedIconButton(
-                  icon: loginProvider.icon,
-                  controller: _providerControllerList[index],
-                  tooltip: '',
-                  onPressed: () => _loginProviderSubmit(
-                    control: _providerControllerList[index],
-                    callback: () {
-                      return loginProvider.callback();
-                    },
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: auth.loginProviders.map((loginProvider) {
+          var index = auth.loginProviders.indexOf(loginProvider);
+          return Padding(
+            padding: loginTheme.providerButtonPadding ??
+                const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+            child: ScaleTransition(
+              scale: _buttonScaleAnimation,
+              child: Column(
+                children: [
+                  AnimatedIconButton(
+                    icon: loginProvider.icon,
+                    controller: _providerControllerList[index],
+                    tooltip: '',
+                    onPressed: () => _loginProviderSubmit(
+                      control: _providerControllerList[index],
+                      callback: () {
+                        return loginProvider.callback();
+                      },
+                    ),
                   ),
-                ),
-                Text(loginProvider.label)
-              ],
+                  Text(loginProvider.label)
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList()
-    );
+          );
+        }).toList());
   }
 
   Widget _buildProvidersTitle(LoginMessages messages) {
