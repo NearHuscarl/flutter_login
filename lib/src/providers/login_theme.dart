@@ -58,6 +58,7 @@ class LoginTheme with ChangeNotifier {
     this.authButtonPadding,
     this.providerButtonPadding,
     this.footerBottomPadding = 0,
+    this.logoWidth,
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -126,4 +127,9 @@ class LoginTheme with ChangeNotifier {
 
   /// Provide custom bottom padding for the footer.
   final double footerBottomPadding;
+
+  /// Set the width of the logo. Defaults to 0.75 times the card size.
+  /// Value can be between 0 and 1 (or higher) where 1 is the full width
+  /// of the login card.
+  final double? logoWidth;
 }
