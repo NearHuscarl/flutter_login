@@ -186,9 +186,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final isLogin = Provider.of<Auth>(context, listen: false).isLogin;
     final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(_cardKey)!;
-    // add .35 to make sure the scaling will cover the whole screen
+    // add .45 to make sure the scaling will cover the whole screen
     final widthRatio =
-        deviceSize.width / cardSize.height + (isLogin ? .35 : .65);
+        deviceSize.width / cardSize.height + (isLogin ? .45 : .65);
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
