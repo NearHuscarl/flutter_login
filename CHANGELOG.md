@@ -1,3 +1,13 @@
+## 2.1.0
+Features
+* Added possibility to change switch authentication button color. [#195](https://github.com/NearHuscarl/flutter_login/pull/195)
+* Added possibility to change logo size. [#193](https://github.com/NearHuscarl/flutter_login/pull/193)
+* Added labels to LoginProviders. [#192](https://github.com/NearHuscarl/flutter_login/pull/192)
+* Added a bar with title/description above providers. Can be disabled using hideProvidersTitle. See [#181](https://github.com/NearHuscarl/flutter_login/pull/181)
+
+Bug fixes
+* Fixed animation padding not filling screen. [#194](https://github.com/NearHuscarl/flutter_login/pull/194)
+
 ## 2.0.0
 Stable release of null-safety
 
