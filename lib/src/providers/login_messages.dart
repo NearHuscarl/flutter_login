@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
-
   LoginMessages(
       {this.userHint = defaultUserHint,
       this.passwordHint = defaultPasswordHint,
@@ -12,6 +11,8 @@ class LoginMessages with ChangeNotifier {
       this.recoverPasswordButton = defaultRecoverPasswordButton,
       this.recoverPasswordIntro = defaultRecoverPasswordIntro,
       this.recoverPasswordDescription = defaultRecoverPasswordDescription,
+      this.recoverCodePasswordDescription =
+          defaultRecoverCodePasswordDescription,
       this.goBackButton = defaultGoBackButton,
       this.confirmPasswordError = defaultConfirmPasswordError,
       this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
@@ -25,7 +26,7 @@ class LoginMessages with ChangeNotifier {
       this.confirmSignupIntro = defaultConfirmSignupIntro,
       this.confirmationCodeHint = defaultConfirmationCodeHint,
       this.confirmationCodeValidationError =
-      defaultConfirmationCodeValidationError,
+          defaultConfirmationCodeValidationError,
       this.resendCodeButton = defaultResendCodeButton,
       this.resendCodeSuccess = defaultResendCodeSuccess,
       this.confirmSignupButton = defaultConfirmSignupButton,
@@ -42,6 +43,8 @@ class LoginMessages with ChangeNotifier {
   static const defaultRecoverPasswordButton = 'RECOVER';
   static const defaultRecoverPasswordIntro = 'Reset your password here';
   static const defaultRecoverPasswordDescription =
+      'We will send your password to your email.';
+  static const defaultRecoverCodePasswordDescription =
       'We will send a password recovery code to your email.';
   static const defaultGoBackButton = 'BACK';
   static const defaultConfirmPasswordError = 'Passwords do not match!';
@@ -92,8 +95,13 @@ class LoginMessages with ChangeNotifier {
   /// Intro in password recovery form
   final String recoverPasswordIntro;
 
-  /// Description in password recovery form
+  /// Description in password recovery form, shown when the onConfirmRecover
+  /// callback is not provided
   final String recoverPasswordDescription;
+
+  /// Description in password recovery form, shown when the onConfirmRecover
+  /// callback is provided
+  final String recoverCodePasswordDescription;
 
   /// Go back button's label. Go back button is used to go back to to
   /// login/signup form from the recover password form

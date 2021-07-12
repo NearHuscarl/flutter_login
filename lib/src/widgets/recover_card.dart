@@ -148,7 +148,9 @@ class _RecoverCardState extends State<_RecoverCard>
                 _buildRecoverNameField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
                 Text(
-                  messages.recoverPasswordDescription,
+                  auth.onConfirmRecover != null
+                      ? messages.recoverCodePasswordDescription
+                      : messages.recoverPasswordDescription,
                   key: kRecoverPasswordDescriptionKey,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,

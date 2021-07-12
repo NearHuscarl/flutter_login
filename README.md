@@ -66,7 +66,8 @@ loginButton | `String` | Login button's label
 signupButton | `String` | Signup button's label
 recoverPasswordButton | `String` | Recover password button's label
 recoverPasswordIntro | `String` | Intro in password recovery form
-recoverPasswordDescription | `String` | Description in password recovery form
+recoverPasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is not provided
+recoverCodePasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is provided
 goBackButton | `String` | Go back button's label. Go back button is used to go back to to login/signup form from the recover password form
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password

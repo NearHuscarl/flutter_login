@@ -354,7 +354,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     if (targetIndex > currentIndex) {
       quickJumpTarget = currentIndex + 1;
-    } else { // targetIndex < currentIndex
+    } else {
+      // targetIndex < currentIndex
       quickJumpTarget = currentIndex - 1;
     }
 
@@ -383,6 +384,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Widget _buildCard(ThemeData theme, CardType cardType) {
+    final auth = Provider.of<Auth>(context, listen: false);
     switch (cardType) {
       case CardType.login:
         return _buildLoadingAnimator(
@@ -416,11 +418,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           userValidator: widget.userValidator!,
           userType: widget.userType,
           onBack: () => _switchPage(false),
-          onSwitchRecoverCode: () =>
-              (Provider.of<Auth>(context, listen: false).onConfirmRecover !=
-                      null)
-                  ? _switchPage(true)
-                  : _switchPage(false),
+          onSwitchRecoverCode: () => _switchPage(auth.onConfirmRecover != null),
         );
 
       case CardType.confirmRecover:
