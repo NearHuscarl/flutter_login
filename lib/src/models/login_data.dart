@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:quiver/core.dart';
 
 class LoginData {
@@ -6,8 +5,8 @@ class LoginData {
   final String password;
 
   LoginData({
-    @required this.name,
-    @required this.password,
+    required this.name,
+    required this.password,
   });
 
   @override

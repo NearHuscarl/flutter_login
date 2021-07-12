@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
 
 class LoginMessages with ChangeNotifier {
-  LoginMessages({
-    this.usernameHint = defaultUsernameHint,
-    this.passwordHint = defaultPasswordHint,
-    this.confirmPasswordHint = defaultConfirmPasswordHint,
-    this.forgotPasswordButton = defaultForgotPasswordButton,
-    this.loginButton = defaultLoginButton,
-    this.signupButton = defaultSignupButton,
-    this.recoverPasswordButton = defaultRecoverPasswordButton,
-    this.recoverPasswordIntro = defaultRecoverPasswordIntro,
-    this.recoverPasswordDescription = defaultRecoverPasswordDescription,
-    this.goBackButton = defaultGoBackButton,
-    this.confirmPasswordError = defaultConfirmPasswordError,
-    this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
-    this.confirmRecoverIntro = defaultConfirmRecoverIntro,
-    this.recoveryCodeHint = defaultRecoveryCodeHint,
-    this.recoveryCodeValidationError = defaultRecoveryCodeValidationError,
-    this.setPasswordButton = defaultSetPasswordButton,
-    this.confirmRecoverSuccess = defaultConfirmRecoverSuccess,
-    this.flushbarTitleError = defaultflushbarTitleError,
-    this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
-    this.confirmSignupIntro = defaultConfirmSignupIntro,
-    this.confirmationCodeHint = defaultConfirmationCodeHint,
-    this.confirmationCodeValidationError =
-        defaultConfirmationCodeValidationError,
-    this.resendCodeButton = defaultResendCodeButton,
-    this.resendCodeSuccess = defaultResendCodeSuccess,
-    this.confirmSignupButton = defaultConfirmSignupButton,
-    this.confirmSignupSuccess = defaultConfirmSignupSuccess,
-    this.signUpSuccess = defaultSignUpSuccess,
-  });
 
-  static const defaultUsernameHint = 'Email';
+  LoginMessages(
+      {this.userHint = defaultUserHint,
+      this.passwordHint = defaultPasswordHint,
+      this.confirmPasswordHint = defaultConfirmPasswordHint,
+      this.forgotPasswordButton = defaultForgotPasswordButton,
+      this.loginButton = defaultLoginButton,
+      this.signupButton = defaultSignupButton,
+      this.recoverPasswordButton = defaultRecoverPasswordButton,
+      this.recoverPasswordIntro = defaultRecoverPasswordIntro,
+      this.recoverPasswordDescription = defaultRecoverPasswordDescription,
+      this.goBackButton = defaultGoBackButton,
+      this.confirmPasswordError = defaultConfirmPasswordError,
+      this.recoverPasswordSuccess = defaultRecoverPasswordSuccess,
+      this.confirmRecoverIntro = defaultConfirmRecoverIntro,
+      this.recoveryCodeHint = defaultRecoveryCodeHint,
+      this.recoveryCodeValidationError = defaultRecoveryCodeValidationError,
+      this.setPasswordButton = defaultSetPasswordButton,
+      this.confirmRecoverSuccess = defaultConfirmRecoverSuccess,
+      this.flushbarTitleError = defaultflushbarTitleError,
+      this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
+      this.confirmSignupIntro = defaultConfirmSignupIntro,
+      this.confirmationCodeHint = defaultConfirmationCodeHint,
+      this.confirmationCodeValidationError =
+      defaultConfirmationCodeValidationError,
+      this.resendCodeButton = defaultResendCodeButton,
+      this.resendCodeSuccess = defaultResendCodeSuccess,
+      this.confirmSignupButton = defaultConfirmSignupButton,
+      this.confirmSignupSuccess = defaultConfirmSignupSuccess,
+      this.signUpSuccess = defaultSignUpSuccess,
+      this.providersTitle = defaultProvidersTitle});
+
+  static const defaultUserHint = 'Email';
   static const defaultPasswordHint = 'Password';
   static const defaultConfirmPasswordHint = 'Confirm Password';
   static const defaultForgotPasswordButton = 'Forgot Password?';
@@ -64,9 +65,11 @@ class LoginMessages with ChangeNotifier {
   static const defaultConfirmSignupButton = 'CONFIRM';
   static const defaultConfirmSignupSuccess = 'Account confirmed.';
   static const defaultSignUpSuccess = 'An activation link has been sent';
+  static const defaultProvidersTitle = 'or login with';
 
-  /// Hint text of the user name [TextField]
-  final String usernameHint;
+  /// Hint text of the userHint [TextField]
+  /// By default is Email
+  final String userHint;
 
   /// Hint text of the password [TextField]
   final String passwordHint;
@@ -147,4 +150,7 @@ class LoginMessages with ChangeNotifier {
 
   /// The success message to show after signing up
   final String signUpSuccess;
+
+  /// The string shown above the Providers buttons
+  final String providersTitle;
 }

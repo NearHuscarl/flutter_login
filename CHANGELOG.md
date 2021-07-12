@@ -1,3 +1,44 @@
+## 2.1.0
+Features
+* Added possibility to change switch authentication button color. [#195](https://github.com/NearHuscarl/flutter_login/pull/195)
+* Added possibility to change logo size. [#193](https://github.com/NearHuscarl/flutter_login/pull/193)
+* Added labels to LoginProviders. [#192](https://github.com/NearHuscarl/flutter_login/pull/192)
+* Added a bar with title/description above providers. Can be disabled using hideProvidersTitle. See [#181](https://github.com/NearHuscarl/flutter_login/pull/181)
+
+Bug fixes
+* Fixed animation padding not filling screen. [#194](https://github.com/NearHuscarl/flutter_login/pull/194)
+
+## 2.0.0
+Stable release of null-safety
+
+Changed
+* emailValidator is now userValidator
+
+Features
+* Add bottom padding to LoginTheme
+
+Also fixed numerous other bugs.
+
+## 2.0.0-nullsafety.0
+Migrated to null-safety
+
+## 1.1.0
+Features (30/03/2021)
+* Possibility to hide the sign-up and forgot password button [#115](https://github.com/NearHuscarl/flutter_login/pull/115)
+* Possibility to provide flushbar title [#117](https://github.com/NearHuscarl/flutter_login/pull/117)
+* Support for auto-fill hints [#125](https://github.com/NearHuscarl/flutter_login/pull/125)
+* Possibility to navigate back to login after sign-up [#126](https://github.com/NearHuscarl/flutter_login/pull/126)
+* Support for external login providers [#127](https://github.com/NearHuscarl/flutter_login/pull/127)
+* Footer for copyright notice [#129](https://github.com/NearHuscarl/flutter_login/pull/129)
+* Add custom padding to sign-up and login provider buttons [#135](https://github.com/NearHuscarl/flutter_login/pull/135)
+* Possibility to only show logo without title
+
+Bug fixes
+* Add safe area to header
+* Scaffold is now transparent so background images are now supported
+* Fix logo size
+* Disable auto-correct for text field
+
 ## 1.0.15
 Bug fixes (16/03/2021)
 * Fixed animationController methods should not be used after calling dispose [#114](https://github.com/NearHuscarl/flutter_login/pull/114)

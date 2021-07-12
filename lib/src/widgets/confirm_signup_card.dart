@@ -13,15 +13,15 @@ import '../widget_helper.dart';
 
 class ConfirmSignupCard extends StatefulWidget {
   ConfirmSignupCard({
-    Key key,
-    @required this.onBack,
-    @required this.onSubmitCompleted,
+    Key? key,
+    required this.onBack,
+    required this.onSubmitCompleted,
     this.loginAfterSignUp = true,
   }) : super(key: key);
 
   final bool loginAfterSignUp;
-  final Function onBack;
-  final Function onSubmitCompleted;
+  final VoidCallback onBack;
+  final VoidCallback onSubmitCompleted;
 
   @override
   ConfirmSignupCardState createState() => ConfirmSignupCardState();
@@ -34,7 +34,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
   var _isSubmitting = false;
   var _code = '';
 
-  AnimationController _submitController;
+  late AnimationController _submitController;
 
   @override
   void initState() {
@@ -55,16 +55,16 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
   Future<bool> _submit() async {
     FocusScope.of(context).requestFocus(FocusNode());
 
-    if (!_formRecoverKey.currentState.validate()) {
+    if (!_formRecoverKey.currentState!.validate()) {
       return false;
     }
     final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
-    _formRecoverKey.currentState.save();
+    _formRecoverKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onConfirmSignup(
+    final error = await auth.onConfirmSignup!(
         _code,
         LoginData(
           name: auth.email,
@@ -84,11 +84,11 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
 
     if (!widget.loginAfterSignUp) {
       auth.mode = AuthMode.Login;
-      widget?.onBack();
+      widget.onBack();
       return false;
     }
 
-    widget?.onSubmitCompleted();
+    widget.onSubmitCompleted();
     return true;
   }
 
@@ -100,7 +100,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
 
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onResendCode(LoginData(
+    final error = await auth.onResendCode!(LoginData(
       name: auth.email,
       password: auth.password,
     ));
@@ -126,12 +126,12 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return messages.confirmationCodeValidationError;
         }
         return null;
       },
-      onSaved: (value) => _code = value,
+      onSaved: (value) => _code = value!,
     );
   }
 

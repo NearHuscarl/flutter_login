@@ -12,15 +12,15 @@ import '../widget_helper.dart';
 
 class ConfirmRecoverCard extends StatefulWidget {
   ConfirmRecoverCard({
-    Key key,
-    @required this.passwordValidator,
-    @required this.onBack,
-    @required this.onSubmitCompleted,
+    Key? key,
+    required this.passwordValidator,
+    required this.onBack,
+    required this.onSubmitCompleted,
   }) : super(key: key);
 
   final FormFieldValidator<String> passwordValidator;
-  final Function onBack;
-  final Function onSubmitCompleted;
+  final VoidCallback onBack;
+  final VoidCallback onSubmitCompleted;
 
   @override
   ConfirmRecoverCardState createState() => ConfirmRecoverCardState();
@@ -37,7 +37,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   var _isSubmitting = false;
   var _code = '';
 
-  AnimationController _submitController;
+  late AnimationController _submitController;
 
   @override
   void initState() {
@@ -58,16 +58,16 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   Future<bool> _submit() async {
     FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
 
-    if (!_formRecoverKey.currentState.validate()) {
+    if (!_formRecoverKey.currentState!.validate()) {
       return false;
     }
     final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
-    _formRecoverKey.currentState.save();
+    _formRecoverKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onConfirmRecover(
+    final error = await auth.onConfirmRecover!(
       _code,
       LoginData(
         name: auth.email,
@@ -84,7 +84,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
 
     showSuccessToast(context, null, messages.confirmRecoverSuccess);
     setState(() => _isSubmitting = false);
-    widget?.onSubmitCompleted();
+    widget.onSubmitCompleted();
     return true;
   }
 
@@ -98,12 +98,12 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return messages.recoveryCodeValidationError;
         }
         return null;
       },
-      onSaved: (value) => _code = value,
+      onSaved: (value) => _code = value!,
     );
   }
 
@@ -120,7 +120,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
       validator: widget.passwordValidator,
       onSaved: (value) {
         final auth = Provider.of<Auth>(context, listen: false);
-        auth.password = value;
+        auth.password = value!;
       },
     );
   }

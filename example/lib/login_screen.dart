@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
@@ -11,10 +12,10 @@ class LoginScreen extends StatelessWidget {
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
-  Future<String> _loginUser(LoginData data) {
+  Future<String?> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
-        return 'Username not exists';
+        return 'User not exists';
       }
       if (mockUsers[data.name] != data.password) {
         return 'Password does not match';
@@ -23,7 +24,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _confirmSignup(String code, LoginData data) {
+  Future<String?> _confirmSignup(String code, LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (code != confirmSignupCode) {
         return 'Wrong confirmation code. Try again.';
@@ -32,7 +33,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _resendCode(LoginData data) {
+  Future<String?> _resendCode(LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
         return 'Username does not exist.';
@@ -41,7 +42,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _recoverPassword(String name) {
+  Future<String?> _recoverPassword(String name) {
     return Future.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(name)) {
         return 'Username does not exist.';
@@ -50,7 +51,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String> _confirmRecoverPassword(String code, LoginData loginData) {
+  Future<String?> _confirmRecoverPassword(String code, LoginData loginData) {
     return Future.delayed(loginTime).then((_) {
       if (code != recoverPasswordCode) {
         return 'Wrong verification code. Try again.';
@@ -66,11 +67,43 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      loginProviders: [
+        LoginProvider(
+          icon: FontAwesomeIcons.google,
+          label: 'Google',
+          callback: () async {
+            print('start google sign in');
+            await Future.delayed(loginTime);
+            print('stop google sign in');
+            return '';
+          },
+        ),
+        LoginProvider(
+          icon: FontAwesomeIcons.linkedinIn,
+          label: 'LinkedIn',
+          callback: () async {
+            print('start linkdin sign in');
+            await Future.delayed(loginTime);
+            print('stop linkdin sign in');
+            return '';
+          },
+        ),
+        LoginProvider(
+          icon: FontAwesomeIcons.githubAlt,
+          callback: () async {
+            print('start github sign in');
+            await Future.delayed(loginTime);
+            print('stop github sign in');
+            return '';
+          },
+        ),
+      ],
+      // hideProvidersTitle: false,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
       // messages: LoginMessages(
-      //   usernameHint: 'Username',
+      //   userHint: 'User',
       //   passwordHint: 'Pass',
       //   confirmPasswordHint: 'Confirm',
       //   loginButton: 'LOG IN',
@@ -84,6 +117,7 @@ class LoginScreen extends StatelessWidget {
       //   recoverPasswordSuccess: 'Password rescued successfully',
       //   flushbarTitleError: 'Oh no!',
       //   flushbarTitleSuccess: 'Succes!',
+      //   providersTitle: 'login with'
       // ),
       // theme: LoginTheme(
       //   primaryColor: Colors.teal,
@@ -91,6 +125,7 @@ class LoginScreen extends StatelessWidget {
       //   errorColor: Colors.deepOrange,
       //   pageColorLight: Colors.indigo.shade300,
       //   pageColorDark: Colors.indigo.shade500,
+      //   logoWidth: 0.80,
       //   titleStyle: TextStyle(
       //     color: Colors.greenAccent,
       //     fontFamily: 'Quicksand',
@@ -161,14 +196,14 @@ class LoginScreen extends StatelessWidget {
       //     // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
       //   ),
       // ),
-      emailValidator: (value) {
-        if (!value.contains('@') || !value.endsWith('.com')) {
+      userValidator: (value) {
+        if (!value!.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";
         }
         return null;
       },
       passwordValidator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return 'Password is empty';
         }
         return null;

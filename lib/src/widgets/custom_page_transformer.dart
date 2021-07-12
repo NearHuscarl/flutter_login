@@ -1,5 +1,5 @@
+import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
-import 'package:transformer_page_view/transformer_page_view.dart';
 
 import '../math_helper.dart';
 import '../matrix.dart';
@@ -8,7 +8,7 @@ class CustomPageTransformer extends PageTransformer {
   @override
   Widget transform(Widget child, TransformInfo info) {
     final transform = Matrix.perspective();
-    final position = info.position;
+    final position = info.position!;
     final pageDt = 1 - position.abs();
 
     if (position > 0) {

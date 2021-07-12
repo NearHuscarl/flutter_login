@@ -9,14 +9,14 @@ import 'package:flutter_login/src/widgets/animated_button.dart';
 const loadingAnimationDuration = Duration(seconds: 1);
 
 class LoginCallback {
-  Future<String> onLogin(LoginData data) => null;
-  Future<String> onSignup(LoginData data) => null;
-  Future<String> onConfirmSignup(String code, LoginData data) => null;
-  Future<String> onResendCode(LoginData data) => null;
-  Future<String> onRecoverPassword(String data) => null;
-  Future<String> onConfirmRecover(String code, LoginData data) => null;
-  String emailValidator(String value) => null;
-  String passwordValidator(String value) => null;
+  Future<String>? onLogin(LoginData? data) => null;
+  Future<String>? onSignup(LoginData? data) => null;
+  Future<String>? onConfirmSignup(String code, LoginData data) => null;
+  Future<String>? onResendCode(LoginData data) => null;
+  Future<String>? onRecoverPassword(String? data) => null;
+  Future<String>? onConfirmRecover(String code, LoginData data) => null;
+  String? userValidator(String? value) => null;
+  String? passwordValidator(String? value) => null;
   void onSubmitAnimationCompleted() {}
 }
 
@@ -31,17 +31,17 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
   final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
   final signupCode = '123456';
 
-  when(mockCallback.emailValidator(user.name)).thenReturn(null);
-  when(mockCallback.emailValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.userValidator(user.name)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
 
   when(mockCallback.passwordValidator(user.password)).thenReturn(null);
   when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
 
-  when(mockCallback.onLogin(user)).thenAnswer((_) => Future.value(null));
+  when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
-  when(mockCallback.onSignup(user)).thenAnswer((_) => Future.value(null));
+  when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
@@ -81,7 +81,7 @@ Future<void> simulateOpenSoftKeyboard(
   await tester.pumpWidget(widget);
 }
 
-bool isSignup(WidgetTester tester) {
+bool? isSignup(WidgetTester tester) {
   return confirmPasswordTextFieldWidget(tester).enabled;
 }
 
@@ -134,35 +134,36 @@ TextField confirmPasswordTextFieldWidget(WidgetTester tester) {
 }
 
 AnimatedButton submitButtonWidget() {
-  return find.byType(AnimatedButton).evaluate().first.widget;
+  return find.byType(AnimatedButton).evaluate().first.widget as AnimatedButton;
 }
 
 TextButton forgotPasswordButtonWidget() {
-  return find.byType(TextButton).evaluate().first.widget;
+  return find.byType(TextButton).evaluate().first.widget as TextButton;
 }
 
 MaterialButton switchAuthButtonWidget() {
-  return find.byType(MaterialButton).evaluate().last.widget;
+  return find.byType(MaterialButton).evaluate().last.widget as MaterialButton;
 }
 
 MaterialButton goBackButtonWidget() {
-  return find.byType(MaterialButton).evaluate().last.widget;
+  return find.byType(MaterialButton).evaluate().last.widget as MaterialButton;
 }
 
 Text recoverIntroTextWidget() {
-  return find.byKey(kRecoverPasswordIntroKey).evaluate().single.widget;
+  return find.byKey(kRecoverPasswordIntroKey).evaluate().single.widget as Text;
 }
 
 Text recoverDescriptionTextWidget() {
-  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget;
+  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget
+      as Text;
 }
 
 // tester.tap() not working for some reasons. Workaround:
 // https://github.com/flutter/flutter/issues/31066#issuecomment-530507319
-void clickSubmitButton() => submitButtonWidget().onPressed();
-void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed();
-void clickGoBackButton() => goBackButtonWidget().onPressed();
-void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed();
+void clickSubmitButton() => submitButtonWidget().onPressed!();
+void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed!();
+void clickGoBackButton() => goBackButtonWidget().onPressed!();
+void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed!();
 
 /// this prevents this error:
 /// A Timer is still pending even after the widget tree was disposed.
@@ -178,7 +179,7 @@ Finder findSignupConfirmationCodeTextField() {
 }
 
 AnimatedButton confirmButtonWidget() {
-  return find.byType(AnimatedButton).evaluate().first.widget;
+  return find.byType(AnimatedButton).evaluate().first.widget as AnimatedButton;
 }
 
-void clickConfirmButton() => submitButtonWidget().onPressed();
+void clickConfirmButton() => submitButtonWidget().onPressed!();
