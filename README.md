@@ -21,11 +21,11 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode</sub>
-onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup</sub>
-onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup</sub>
+onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
+onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
-onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode</sub>
+onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode. If not specified, a confirmation code will not be used to recover password.</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
 logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>

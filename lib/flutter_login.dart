@@ -250,7 +250,9 @@ class FlutterLogin extends StatefulWidget {
       this.loginAfterSignUp = true,
       this.footer,
       this.hideProvidersTitle = false})
-      : super(key: key);
+      : assert((onConfirmSignup != null && onResendCode != null) ||
+            (onConfirmSignup == null && onResendCode == null)),
+        super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;

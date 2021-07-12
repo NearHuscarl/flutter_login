@@ -7,8 +7,8 @@ class _LoginCard extends StatefulWidget {
       required this.userValidator,
       required this.passwordValidator,
       required this.onSwitchRecoveryPassword,
-      required this.onSwitchConfirmSignup,
       required this.userType,
+      this.onSwitchConfirmSignup,
       this.onSwitchAuth,
       this.onSubmitCompleted,
       this.hideForgotPasswordButton = false,
@@ -21,7 +21,7 @@ class _LoginCard extends StatefulWidget {
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
-  final Function onSwitchConfirmSignup;
+  final Function? onSwitchConfirmSignup;
   final Function? onSwitchAuth;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -205,10 +205,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (auth.isLogin) {
+    if (auth.isLogin || widget.onSwitchConfirmSignup == null) {
       widget.onSubmitCompleted!();
     } else {
-      widget.onSwitchConfirmSignup();
+      widget.onSwitchConfirmSignup!();
     }
 
     return true;
