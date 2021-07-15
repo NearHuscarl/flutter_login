@@ -536,7 +536,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle,
+        labelStyle: inputTheme.labelStyle ?? TextStyle(color: primaryColor),
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
