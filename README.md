@@ -38,6 +38,10 @@ hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button 
 hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
+additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up in </sub>
+onAdditionalFieldsSubmit | `AdditionalFieldsCallback?` | <sub> This function is called right after the submit of the additional fields form. It receives a `Map<String, String>` containing the values filled in by the user. The function should return `null` on success, or a `String` that will be shown to the user in case of error.
+
+
 
 
 
@@ -94,6 +98,7 @@ footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not
 switchAuthTextColor | `Color` | The optional color for the switch authentication text, if nothing is specified [primaryColor] is used.
 logoWidth | `double` | Width of the logo where 1 is the full width of the login card. ; defaults to 0.75 if not provided.
 
+
 ### LoginUserType
 Enum     |   Description |
 -------- |---------------|
@@ -102,6 +107,19 @@ NAME  | The User Field will be set to be username
 PHONE  | The User Field will be set to be phone
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
+
+### UserFormField
+Property |   Type     | Description |
+-------- |------------| ------------| 
+keyName  | `String` | The identifier of the fields, it will be the key in the returned map. Please ensure this is unique, otherwise an Error will be thrown
+displayName | `String` | The name of the field displayed on the form. Defaults to `keyName` if not given
+defaultValue | `String` | The default value of the field, if given the field will be pre-filled in with this
+fieldValidator | `FormFieldValidator<String>` | A function to validate the field. It should return null on success, or a string with the explanation of the error
+icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
+userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`
+
+
+
 
 
 ## Examples
