@@ -684,6 +684,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         additionalSignUpFields: widget.additionalSignupFields,
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
+                        loginTheme: widget.theme,
                       ),
                     ),
                     Positioned(

@@ -1,16 +1,18 @@
 part of auth_card;
 
 class _RecoverCard extends StatefulWidget {
-  _RecoverCard({
-    Key? key,
-    required this.userValidator,
-    required this.onSwitchLogin,
-    required this.userType,
-  }) : super(key: key);
+  _RecoverCard(
+      {Key? key,
+      required this.userValidator,
+      required this.onSwitchLogin,
+      required this.userType,
+      this.loginTheme})
+      : super(key: key);
 
   final FormFieldValidator<String>? userValidator;
   final Function onSwitchLogin;
   final LoginUserType userType;
+  final LoginTheme? loginTheme;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -95,7 +97,8 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
-  Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
+  Widget _buildBackButton(
+      ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
     return MaterialButton(
       onPressed: !_isSubmitting
           ? () {
@@ -105,7 +108,9 @@ class _RecoverCardState extends State<_RecoverCard>
           : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: theme.primaryColor,
+      textColor: (loginTheme != null && loginTheme.switchAuthTextColor != null)
+          ? loginTheme.switchAuthTextColor!
+          : theme.primaryColor,
       child: Text(messages.goBackButton),
     );
   }
@@ -121,7 +126,6 @@ class _RecoverCardState extends State<_RecoverCard>
     final textFieldWidth = cardWidth - cardPadding * 2;
 
     return FittedBox(
-      // width: cardWidth,
       child: Card(
         child: Container(
           padding: const EdgeInsets.only(
@@ -153,7 +157,7 @@ class _RecoverCardState extends State<_RecoverCard>
                 ),
                 SizedBox(height: 26),
                 _buildRecoverButton(theme, messages),
-                _buildBackButton(theme, messages),
+                _buildBackButton(theme, messages, widget.loginTheme),
               ],
             ),
           ),

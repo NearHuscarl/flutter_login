@@ -34,22 +34,25 @@ part 'recover_card.dart';
 part 'user_data_card.dart';
 
 class AuthCard extends StatefulWidget {
-  AuthCard({
-    Key? key,
-    required this.userType,
-    this.padding = const EdgeInsets.all(0),
-    this.loadingController,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmit,
-    this.onSubmitCompleted,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-    this.hideProvidersTitle = false,
-    this.additionalSignUpFields,
-    this.disableCustomPageTransformer = false,
-  }) : super(key: key);
+
+  AuthCard(
+      {Key? key,
+      required this.userType,
+      this.padding = const EdgeInsets.all(0),
+      this.loadingController,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmit,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false,
+      this.additionalSignUpFields,
+      this.disableCustomPageTransformer = false,
+      this.loginTheme})
+      : super(key: key);
+
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
@@ -66,6 +69,7 @@ class AuthCard extends StatefulWidget {
   final List<UserFormField>? additionalSignUpFields;
 
   final bool disableCustomPageTransformer;
+  final LoginTheme? loginTheme;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -324,6 +328,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           userValidator: widget.userValidator,
           userType: widget.userType,
           onSwitchLogin: () => _changeCard(_loginPageIndex),
+          loginTheme: widget.loginTheme,
         );
       case _additionalSignUpIndex:
         if (widget.additionalSignUpFields == null) {
@@ -364,6 +369,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             ? null
             : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
+
           return Align(
             alignment: Alignment.topCenter,
             child: _changeToCard(context, index),
