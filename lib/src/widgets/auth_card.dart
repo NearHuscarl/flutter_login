@@ -34,7 +34,6 @@ part 'recover_card.dart';
 part 'user_data_card.dart';
 
 class AuthCard extends StatefulWidget {
-
   AuthCard(
       {Key? key,
       required this.userType,
@@ -52,7 +51,6 @@ class AuthCard extends StatefulWidget {
       this.disableCustomPageTransformer = false,
       this.loginTheme})
       : super(key: key);
-
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
@@ -369,7 +367,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             ? null
             : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
-
           return Align(
             alignment: Alignment.topCenter,
             child: _changeToCard(context, index),
