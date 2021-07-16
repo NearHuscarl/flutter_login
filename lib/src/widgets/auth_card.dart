@@ -30,20 +30,21 @@ part 'login_card.dart';
 part 'recover_card.dart';
 
 class AuthCard extends StatefulWidget {
-  AuthCard({
-    Key? key,
-    required this.userType,
-    this.padding = const EdgeInsets.all(0),
-    this.loadingController,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmit,
-    this.onSubmitCompleted,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-    this.hideProvidersTitle = false,
-  }) : super(key: key);
+  AuthCard(
+      {Key? key,
+      required this.userType,
+      this.padding = const EdgeInsets.all(0),
+      this.loadingController,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmit,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false,
+      this.disableCustomPageTransformer = false})
+      : super(key: key);
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
@@ -56,6 +57,7 @@ class AuthCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final LoginUserType userType;
   final bool hideProvidersTitle;
+  final bool disableCustomPageTransformer;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -293,7 +295,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         /// Need to keep track of page index because soft keyboard will
         /// make page view rebuilt
         index: _pageIndex,
-        transformer: CustomPageTransformer(),
+        transformer: widget.disableCustomPageTransformer
+            ? null
+            : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
           final child = (index == 0)
               ? _buildLoadingAnimator(
