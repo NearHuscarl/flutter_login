@@ -112,6 +112,7 @@ class LoginScreen extends StatelessWidget {
       loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
+      // disableCustomPageTransformer: true,
       // messages: LoginMessages(
       //   userHint: 'User',
       //   passwordHint: 'Pass',

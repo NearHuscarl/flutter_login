@@ -127,15 +127,12 @@ class _UserDataCardState extends State<_UserDataCard>
     await _loadingController.reverse();
 
     if (auth.isSignup && !widget.loginAfterSignUp) {
-
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.signUpSuccess, Duration(seconds: 4));
       setState(() => _isSubmitting = false);
 
       await Future.delayed(Duration(seconds: 4))
-          .then(
-            (_) => widget.switchToLogin()
-          );
+          .then((_) => widget.switchToLogin());
 
       return false;
     }

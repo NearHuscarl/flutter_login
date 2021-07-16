@@ -399,7 +399,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
     return Row(
-
         mainAxisAlignment: MainAxisAlignment.center,
         children: auth.loginProviders.map((loginProvider) {
           var index = auth.loginProviders.indexOf(loginProvider);

@@ -257,6 +257,7 @@ class FlutterLogin extends StatefulWidget {
     this.footer,
     this.hideProvidersTitle = false,
     this.additionalSignupFields,
+    this.disableCustomPageTransformer = false,
   }) : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -339,6 +340,10 @@ class FlutterLogin extends StatefulWidget {
 
   /// Hide the title above the login providers. If no providers are set this is uneffective
   final bool hideProvidersTitle;
+
+  /// Disable the page transformation between switching authentication modes.
+  /// Fixes #97 if disabled. https://github.com/NearHuscarl/flutter_login/issues/97
+  final bool disableCustomPageTransformer;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -677,6 +682,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
                         additionalSignUpFields: widget.additionalSignupFields,
+                        disableCustomPageTransformer:
+                            widget.disableCustomPageTransformer,
                       ),
                     ),
                     Positioned(

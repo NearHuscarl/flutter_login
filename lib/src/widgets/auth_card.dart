@@ -48,6 +48,7 @@ class AuthCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.additionalSignUpFields,
+    this.disableCustomPageTransformer = false,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -61,7 +62,10 @@ class AuthCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final LoginUserType userType;
   final bool hideProvidersTitle;
+
   final List<UserFormField>? additionalSignUpFields;
+
+  final bool disableCustomPageTransformer;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -302,7 +306,6 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             requireAdditionalSignUpFields:
                 widget.additionalSignUpFields != null,
             onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
-
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
@@ -357,7 +360,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         /// Need to keep track of page index because soft keyboard will
         /// make page view rebuilt
         index: _pageIndex,
-        transformer: CustomPageTransformer(),
+        transformer: widget.disableCustomPageTransformer
+            ? null
+            : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
           return Align(
             alignment: Alignment.topCenter,
