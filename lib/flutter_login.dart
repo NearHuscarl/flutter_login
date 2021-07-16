@@ -664,6 +664,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideProvidersTitle: widget.hideProvidersTitle,
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
+                        loginTheme: widget.theme,
                       ),
                     ),
                     Positioned(
