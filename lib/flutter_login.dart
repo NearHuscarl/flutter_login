@@ -479,6 +479,8 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   ThemeData _mergeTheme(
       {required ThemeData theme, required LoginTheme loginTheme}) {
+    final calculatedBlack =
+        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
     final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
     final primaryDarkShades = getDarkShades(originalPrimaryColor);
     final primaryColor = primaryDarkShades.length == 1
@@ -503,7 +505,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
-        .copyWith(color: Colors.black54)
+        .copyWith(color: calculatedBlack)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subtitle1!
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
