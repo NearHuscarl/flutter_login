@@ -6,13 +6,15 @@ class _RecoverCard extends StatefulWidget {
       required this.userValidator,
       required this.onSwitchLogin,
       required this.userType,
-      this.loginTheme})
+      this.loginTheme,
+      required this.navigateBack})
       : super(key: key);
 
   final FormFieldValidator<String>? userValidator;
   final Function onSwitchLogin;
   final LoginUserType userType;
   final LoginTheme? loginTheme;
+  final bool navigateBack;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -69,6 +71,7 @@ class _RecoverCardState extends State<_RecoverCard>
           messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
       await _submitController!.reverse();
+      if (widget.navigateBack) widget.onSwitchLogin();
       return true;
     }
   }

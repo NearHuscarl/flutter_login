@@ -247,7 +247,8 @@ class FlutterLogin extends StatefulWidget {
       this.loginAfterSignUp = true,
       this.footer,
       this.hideProvidersTitle = false,
-      this.disableCustomPageTransformer = false})
+      this.disableCustomPageTransformer = false,
+      this.navigateBackAfterRecovery = false})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -326,6 +327,9 @@ class FlutterLogin extends StatefulWidget {
   /// Disable the page transformation between switching authentication modes.
   /// Fixes #97 if disabled. https://github.com/NearHuscarl/flutter_login/issues/97
   final bool disableCustomPageTransformer;
+
+  /// Navigate back to the login screen after recovery of password.
+  final bool navigateBackAfterRecovery;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -667,6 +671,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
                         loginTheme: widget.theme,
+                        navigateBackAfterRecovery:
+                            widget.navigateBackAfterRecovery,
                       ),
                     ),
                     Positioned(
