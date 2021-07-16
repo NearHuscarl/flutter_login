@@ -90,6 +90,8 @@ afterHeroFontSize | `double` | Defines the font size of the title in the screen 
 pageColorLight | `Color` | The optional light background color of login screen; if provided, used for light gradient instead of primaryColor
 pageColorDark | `Color` | The optional dark background color of login screen; if provided, used for dark gradient instead of primaryColor
 footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not provided.
+switchAuthTextColor | `Color` | The optional color for the switch authentication text, if nothing is specified [primaryColor] is used.
+logoWidth | `double` | Width of the logo where 1 is the full width of the login card. ; defaults to 0.75 if not provided.
 
 ### LoginUserType
 Enum     |   Description |
@@ -215,6 +217,7 @@ class LoginScreen extends StatelessWidget {
         loginProviders: <LoginProvider>[
           LoginProvider(
             icon: FontAwesomeIcons.google,
+            label: 'Google',
             callback: () async {
               print('start google sign in');
               await Future.delayed(loginTime);
@@ -224,6 +227,7 @@ class LoginScreen extends StatelessWidget {
           ),
           LoginProvider(
             icon: FontAwesomeIcons.facebookF,
+            label: 'Facebook',
             callback: () async {            
               print('start facebook sign in');
               await Future.delayed(loginTime);

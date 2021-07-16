@@ -30,12 +30,14 @@ import 'src/constants.dart';
 
 class LoginProvider {
   final IconData icon;
+  final String label;
   final ProviderAuthCallback callback;
   final ProviderNeedsSignUpCallback? providerNeedsSignUpCallback;
 
   LoginProvider({
     required this.icon,
     required this.callback,
+    this.label = '',
     this.providerNeedsSignUpCallback,
   });
 }
@@ -86,6 +88,7 @@ class _Header extends StatefulWidget {
   _Header({
     this.logoPath,
     this.logoTag,
+    this.logoWidth = 0.75,
     this.title,
     this.titleTag,
     this.height = 250.0,
@@ -97,6 +100,7 @@ class _Header extends StatefulWidget {
 
   final String? logoPath;
   final String? logoTag;
+  final double logoWidth;
   final String? title;
   final String? titleTag;
   final double height;
@@ -162,13 +166,14 @@ class __HeaderState extends State<_Header> {
             gap,
         kMaxLogoHeight);
     final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
+    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
 
     var logo = displayLogo
         ? Image.asset(
             widget.logoPath!,
             filterQuality: FilterQuality.high,
             height: logoHeight,
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: widget.logoWidth * cardWidth,
           )
         : NullWidget();
 
@@ -417,6 +422,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       height: height,
       logoPath: widget.logo,
       logoTag: widget.logoTag,
+      logoWidth: widget.theme?.logoWidth ?? 0.75,
       title: widget.title,
       titleTag: widget.titleTag,
       loginTheme: loginTheme,

@@ -385,7 +385,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         padding: loginTheme.authButtonPadding ??
             EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: theme.primaryColor,
+        textColor: loginTheme.switchAuthTextColor != null
+            ? loginTheme.switchAuthTextColor!
+            : theme.primaryColor,
         child: AnimatedText(
           text: auth.isSignup ? messages.loginButton : messages.signupButton,
           textRotation: AnimatedTextRotation.down,
@@ -397,26 +399,32 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: auth.loginProviders.map((loginProvider) {
-        var index = auth.loginProviders.indexOf(loginProvider);
-        return Padding(
-          padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
-          child: ScaleTransition(
-            scale: _buttonScaleAnimation,
-            child: AnimatedIconButton(
-              icon: loginProvider.icon,
-              controller: _providerControllerList[index],
-              tooltip: '',
-              onPressed: () => _loginProviderSubmit(
-                  animationController: _providerControllerList[index],
-                  loginProvider: loginProvider),
+
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: auth.loginProviders.map((loginProvider) {
+          var index = auth.loginProviders.indexOf(loginProvider);
+          return Padding(
+            padding: loginTheme.providerButtonPadding ??
+                const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+            child: ScaleTransition(
+              scale: _buttonScaleAnimation,
+              child: Column(
+                children: [
+                  AnimatedIconButton(
+                    icon: loginProvider.icon,
+                    controller: _providerControllerList[index],
+                    tooltip: '',
+                    onPressed: () => _loginProviderSubmit(
+                      animationController: _providerControllerList[index],
+                      loginProvider: loginProvider,
+                    ),
+                  ),
+                  Text(loginProvider.label),
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    );
+          );
+        }).toList());
   }
 
   Widget _buildProvidersTitle(LoginMessages messages) {

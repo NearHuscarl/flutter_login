@@ -49,6 +49,7 @@ class LoginScreen extends StatelessWidget {
       loginProviders: [
         LoginProvider(
           icon: FontAwesomeIcons.google,
+          label: 'Google',
           callback: () async {
             print('start google sign in');
             await Future.delayed(loginTime);
@@ -57,17 +58,19 @@ class LoginScreen extends StatelessWidget {
           },
         ),
         LoginProvider(
-            icon: FontAwesomeIcons.linkedinIn,
-            callback: () async {
-              print('start linkdin sign in');
-              await Future.delayed(loginTime);
-              print('stop linkdin sign in');
-              return '';
-            },
-            providerNeedsSignUpCallback: () {
-              // put here your logic to conditionally show the additional fields
-              return Future.value(true);
-            }),
+          icon: FontAwesomeIcons.linkedinIn,
+          label: 'LinkedIn',
+          callback: () async {
+            print('start linkdin sign in');
+            await Future.delayed(loginTime);
+            print('stop linkdin sign in');
+            return '';
+          },
+          providerNeedsSignUpCallback: () {
+            // put here your logic to conditionally show the additional fields
+            return Future.value(true);
+          },
+        ),
         LoginProvider(
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
@@ -132,6 +135,7 @@ class LoginScreen extends StatelessWidget {
       //   errorColor: Colors.deepOrange,
       //   pageColorLight: Colors.indigo.shade300,
       //   pageColorDark: Colors.indigo.shade500,
+      //   logoWidth: 0.80,
       //   titleStyle: TextStyle(
       //     color: Colors.greenAccent,
       //     fontFamily: 'Quicksand',
