@@ -662,7 +662,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
-                        disableCustomPageTransformer: widget.disableCustomPageTransformer,
+                        disableCustomPageTransformer:
+                            widget.disableCustomPageTransformer,
                       ),
                     ),
                     Positioned(
