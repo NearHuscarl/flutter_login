@@ -1,7 +1,7 @@
 part of auth_card;
 
-class _UserDataCard extends StatefulWidget {
-  _UserDataCard({
+class _AdditionalSignUpCard extends StatefulWidget {
+  _AdditionalSignUpCard({
     Key? key,
     required this.formFields,
     required this.loginAfterSignUp,
@@ -13,7 +13,7 @@ class _UserDataCard extends StatefulWidget {
       throw RangeError('The formFields array must not be empty');
     } else if (formFields.length > 6) {
       throw RangeError(
-          'More than 6 formFields are not displayable, you $formFields.length');
+          'More than 6 formFields are not displayable, you provided $formFields.length');
     }
   }
 
@@ -24,10 +24,10 @@ class _UserDataCard extends StatefulWidget {
   final AnimationController? loadingController;
 
   @override
-  _UserDataCardState createState() => _UserDataCardState();
+  _AdditionalSignUpCardState createState() => _AdditionalSignUpCardState();
 }
 
-class _UserDataCardState extends State<_UserDataCard>
+class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     with TickerProviderStateMixin {
   final GlobalKey<FormState> _formCompleteSignupKey = GlobalKey();
 
@@ -162,7 +162,7 @@ class _UserDataCardState extends State<_UserDataCard>
             autofillHints: [
               TextFieldUtils.getAutofillHints(formField.userType)
             ],
-            textInputAction: formField == widget.formFields.last
+            textInputAction: formField.keyName == widget.formFields.last.keyName
                 ? TextInputAction.done
                 : TextInputAction.next,
             validator: formField.fieldValidator,

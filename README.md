@@ -39,7 +39,7 @@ hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</s
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
 additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up in </sub>
-onAdditionalFieldsSubmit | `AdditionalFieldsCallback?` | <sub> This function is called right after the submit of the additional fields form. It receives a `Map<String, String>` containing the values filled in by the user. The function should return `null` on success, or a `String` that will be shown to the user in case of error.
+onAdditionalFieldsSubmit | `AdditionalFieldsCallback?` | <sub> This function is called right after the submit of the additional fields form. It receives a `Map<String, String>` containing the values filled in by the user. The function should return `null` on success, or a `String` that will be shown to the user in case of error. </sub>
 
 
 

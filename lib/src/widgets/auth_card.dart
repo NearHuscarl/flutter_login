@@ -31,7 +31,7 @@ import 'fade_in.dart';
 
 part 'login_card.dart';
 part 'recover_card.dart';
-part 'user_data_card.dart';
+part 'additional_signup_card.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard(
@@ -332,7 +332,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         if (widget.additionalSignUpFields == null) {
           throw StateError('The additional fields List is null');
         }
-        return _UserDataCard(
+        return _AdditionalSignUpCard(
           key: _cardKey,
           formFields: widget.additionalSignUpFields!,
           loadingController: widget.loadingController,
