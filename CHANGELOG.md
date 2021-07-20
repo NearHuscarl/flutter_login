@@ -1,3 +1,14 @@
+## 2.2.0
+Features
+* Added possibility to disable custom page transformer. [#202](https://github.com/NearHuscarl/flutter_login/pull/202)
+* Added possibility to automatically navigate back to login page after successful recovery. [#207](https://github.com/NearHuscarl/flutter_login/pull/207)
+
+Bug fixes
+* Fixed primary color not applying to input decoration. ([@SalahAdDin](https://github.com/SalahAdDin) in [#201](https://github.com/NearHuscarl/flutter_login/pull/201))
+* Fixed forgot password button not coloring. [#203](https://github.com/NearHuscarl/flutter_login/pull/203)
+* Fixed black text when night mode is enabled and no other theme is provided. [#206](https://github.com/NearHuscarl/flutter_login/pull/206)
+* Fixed routing issue in example app. [#204](https://github.com/NearHuscarl/flutter_login/pull/204)
+
 ## 2.1.0
 Features
 * Added possibility to change switch authentication button color. [#195](https://github.com/NearHuscarl/flutter_login/pull/195)

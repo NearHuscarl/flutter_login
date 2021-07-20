@@ -374,6 +374,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
+    final calculatedTextColor = (theme.primaryColor.computeLuminance() < 0.5)
+        ? Colors.white
+        : theme.primaryColor;
     return FadeIn(
       controller: _loadingController,
       offset: .5,
@@ -385,9 +388,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         padding: loginTheme.authButtonPadding ??
             EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: loginTheme.switchAuthTextColor != null
-            ? loginTheme.switchAuthTextColor!
-            : theme.primaryColor,
+        textColor: loginTheme.switchAuthTextColor ?? calculatedTextColor,
         child: AnimatedText(
           text: auth.isSignup ? messages.loginButton : messages.signupButton,
           textRotation: AnimatedTextRotation.down,

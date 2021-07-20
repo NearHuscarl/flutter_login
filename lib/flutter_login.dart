@@ -233,32 +233,33 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key? key,
-    required this.onSignup,
-    required this.onLogin,
-    required this.onRecoverPassword,
-    this.onAdditionalFieldsSubmit,
-    this.title,
-    this.logo,
-    this.messages,
-    this.theme,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.userType = LoginUserType.email,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.loginProviders = const <LoginProvider>[],
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-    this.footer,
-    this.hideProvidersTitle = false,
-    this.additionalSignupFields,
-    this.disableCustomPageTransformer = false,
-  }) : super(key: key);
+  FlutterLogin(
+      {Key? key,
+      required this.onSignup,
+      required this.onLogin,
+      required this.onRecoverPassword,
+      this.onAdditionalFieldsSubmit,
+      this.title,
+      this.logo,
+      this.messages,
+      this.theme,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.userType = LoginUserType.email,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.loginProviders = const <LoginProvider>[],
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.footer,
+      this.hideProvidersTitle = false,
+      this.additionalSignupFields,
+      this.disableCustomPageTransformer = false,
+      this.navigateBackAfterRecovery = false})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
@@ -344,6 +345,9 @@ class FlutterLogin extends StatefulWidget {
   /// Disable the page transformation between switching authentication modes.
   /// Fixes #97 if disabled. https://github.com/NearHuscarl/flutter_login/issues/97
   final bool disableCustomPageTransformer;
+
+  /// Navigate back to the login screen after recovery of password.
+  final bool navigateBackAfterRecovery;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -497,6 +501,8 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   ThemeData _mergeTheme(
       {required ThemeData theme, required LoginTheme loginTheme}) {
+    final calculatedBlack =
+        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
     final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
     final primaryDarkShades = getDarkShades(originalPrimaryColor);
     final primaryColor = primaryDarkShades.length == 1
@@ -521,7 +527,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
-        .copyWith(color: Colors.black54)
+        .copyWith(color: calculatedBlack)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subtitle1!
         .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
@@ -559,7 +565,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle,
+        labelStyle: inputTheme.labelStyle ?? TextStyle(color: primaryColor),
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
@@ -685,6 +691,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
                         loginTheme: widget.theme,
+                        navigateBackAfterRecovery:
+                            widget.navigateBackAfterRecovery,
                       ),
                     ),
                     Positioned(
