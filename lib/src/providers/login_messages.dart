@@ -18,8 +18,9 @@ class LoginMessages with ChangeNotifier {
     this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
     this.signUpSuccess = defaultSignUpSuccess,
     this.providersTitle = defaultProvidersTitle,
-    this.completeSignupButton = defaultCompleteSignupButton,
-    this.completeSignupInfo = defaultCompleteSignupIntro,
+    this.additionalSignUpSubmitButton = defaultAdditionalSignUpSubmitButton,
+    this.additionalSignUpFormDescription =
+        defaultAdditionalSignUpFormDescription,
   });
 
   static const defaultUserHint = 'Email';
@@ -39,17 +40,19 @@ class LoginMessages with ChangeNotifier {
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';
   static const defaultProvidersTitle = 'or login with';
-  static const defaultCompleteSignupButton = 'SUBMIT';
-  static const defaultCompleteSignupIntro =
+  static const defaultAdditionalSignUpSubmitButton = 'SUBMIT';
+  static const defaultAdditionalSignUpFormDescription =
       'Please fill in this form to complete the signup';
 
   /// Hint text of the userHint [TextField]
   /// By default is Email
   final String userHint;
 
-  final String completeSignupButton;
+  /// Additional signup form button's label
+  final String additionalSignUpSubmitButton;
 
-  final String completeSignupInfo;
+  /// Description in the additional signup form
+  final String additionalSignUpFormDescription;
 
   /// Hint text of the password [TextField]
   final String passwordHint;

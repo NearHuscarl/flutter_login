@@ -180,7 +180,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       scale: _buttonScaleAnimation,
       child: AnimatedButton(
         controller: _submitController,
-        text: messages.completeSignupButton,
+        text: messages.additionalSignUpSubmitButton,
         onPressed: !_isSubmitting ? _submit : null,
       ),
     );
@@ -213,7 +213,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                 ScaleTransition(
                   scale: _buttonScaleAnimation,
                   child: Text(
-                    messages.completeSignupInfo,
+                    messages.additionalSignUpFormDescription,
                     key: kRecoverPasswordIntroKey,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyText2,
