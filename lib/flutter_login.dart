@@ -512,7 +512,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         .copyWith(color: calculatedBlack)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subtitle1!
-        .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
+        .copyWith(color: calculatedBlack, fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button!
         .copyWith(color: Colors.white)
@@ -547,7 +547,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle ?? TextStyle(color: primaryColor),
+        labelStyle: inputTheme.labelStyle ?? TextStyle(color: calculatedBlack),
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
