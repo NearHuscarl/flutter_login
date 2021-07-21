@@ -483,8 +483,11 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   ThemeData _mergeTheme(
       {required ThemeData theme, required LoginTheme loginTheme}) {
-    final calculatedBlack =
+    final blackOrWhite =
         theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
+    final primaryOrWhite = theme.brightness == Brightness.light
+        ? theme.primaryColor
+        : Colors.white;
     final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
     final primaryDarkShades = getDarkShades(originalPrimaryColor);
     final primaryColor = primaryDarkShades.length == 1
@@ -509,10 +512,10 @@ class _FlutterLoginState extends State<FlutterLogin>
         )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
-        .copyWith(color: calculatedBlack)
+        .copyWith(color: blackOrWhite)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subtitle1!
-        .copyWith(color: calculatedBlack, fontSize: 14)
+        .copyWith(color: blackOrWhite, fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button!
         .copyWith(color: Colors.white)
@@ -541,13 +544,13 @@ class _FlutterLoginState extends State<FlutterLogin>
         filled: inputTheme.filled,
         fillColor: inputTheme.fillColor ??
             Color.alphaBlend(
-              primaryColor!.withOpacity(.07),
+              primaryOrWhite.withOpacity(.07),
               Colors.grey.withOpacity(.04),
             ),
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle ?? TextStyle(color: calculatedBlack),
+        labelStyle: inputTheme.labelStyle ?? TextStyle(color: blackOrWhite),
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
