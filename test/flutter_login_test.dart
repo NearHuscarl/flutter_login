@@ -746,6 +746,59 @@ void main() {
     expect(find.text('Forgot huh?'), findsNothing);
   });
 
+  testWidgets('providers Title should be shown when there are providers',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value!.length == 5 ? null : 'Invalid!',
+          loginProviders: [LoginProvider(icon: Icons.ac_unit, callback: () {})],
+          messages: LoginMessages(
+            signupButton: 'REGISTER',
+            forgotPasswordButton: 'Forgot huh?',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.text('or login with'), findsOneWidget);
+  });
+
+  testWidgets('providers Title should not be shown when there are no providers',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value!.length == 5 ? null : 'Invalid!',
+          messages: LoginMessages(
+            signupButton: 'REGISTER',
+            forgotPasswordButton: 'Forgot huh?',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.text('or login with'), findsNothing);
+  });
+  testWidgets('hideProvidersTitle should hide providers title',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => value!.length == 5 ? null : 'Invalid!',
+          hideProvidersTitle: true,
+          loginProviders: [LoginProvider(icon: Icons.ac_unit, callback: () {})],
+          messages: LoginMessages(
+            signupButton: 'REGISTER',
+            forgotPasswordButton: 'Forgot huh?',
+          ),
+        ));
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+    expect(find.text('or login with'), findsNothing);
+  });
+
   testWidgets(
       'Change flushbar title by setting flushbarTitleError & flushbarTitleSuccess.',
       (WidgetTester tester) async {
