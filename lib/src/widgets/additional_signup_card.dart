@@ -13,7 +13,7 @@ class _AdditionalSignUpCard extends StatefulWidget {
       throw RangeError('The formFields array must not be empty');
     } else if (formFields.length > 6) {
       throw RangeError(
-          'More than 6 formFields are not displayable, you provided $formFields.length');
+          'More than 6 formFields are not displayable, you provided {$formFields.length} instead');
     }
   }
 
@@ -89,7 +89,6 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
   @override
   void dispose() {
     _fieldAnimationControllers.forEach((element) => element.dispose());
-    _loadingController.dispose();
     _submitController.dispose();
     super.dispose();
   }
