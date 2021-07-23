@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/widgets/animated_button.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 // TODO: get this value from fluter_login package
 const loadingAnimationDuration = Duration(seconds: 1);
@@ -83,7 +83,11 @@ Finder findTitle() {
   return find.byKey(kTitleKey);
 }
 
-Finder findNameTextField() {
+Finder findNthField(int n) {
+  return find.byType(TextFormField).at(n);
+}
+
+Finder findFirstTextField() {
   return find.byType(TextFormField).at(0);
 }
 

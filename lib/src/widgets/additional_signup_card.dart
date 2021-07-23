@@ -13,7 +13,7 @@ class _AdditionalSignUpCard extends StatefulWidget {
       throw RangeError('The formFields array must not be empty');
     } else if (formFields.length > 6) {
       throw RangeError(
-          'More than 6 formFields are not displayable, you provided {$formFields.length} instead');
+          'More than 6 formFields are not displayable, you provided ${formFields.length}');
     }
   }
 
