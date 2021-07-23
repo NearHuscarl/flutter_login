@@ -29,7 +29,7 @@ void main() {
 
     // empty email
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), '');
+    await tester.enterText(findNameTextField(), '');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -39,7 +39,7 @@ void main() {
 
     // missing '@'
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), 'neargmail.com');
+    await tester.enterText(findNameTextField(), 'neargmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -48,7 +48,7 @@ void main() {
 
     // missing the part before '@'
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), '@gmail.com');
+    await tester.enterText(findNameTextField(), '@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -57,7 +57,7 @@ void main() {
 
     // missing the part after '@'
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), 'near@.com');
+    await tester.enterText(findNameTextField(), 'near@.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -66,7 +66,7 @@ void main() {
 
     // missing domain extension (.com, .org...)
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), 'near@gmail');
+    await tester.enterText(findNameTextField(), 'near@gmail');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -75,7 +75,7 @@ void main() {
 
     // valid email based on default validator
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -182,7 +182,7 @@ void main() {
 
     // invalid value
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'abc.org');
+    await tester.enterText(findNameTextField(), 'abc.org');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -191,7 +191,7 @@ void main() {
 
     // valid value
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'abc.com');
+    await tester.enterText(findNameTextField(), 'abc.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pumpAndSettle();
@@ -248,7 +248,7 @@ void main() {
 
     // invalid name
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'not.exists@gmail.com');
+    await tester.enterText(findNameTextField(), 'not.exists@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pump(); // First pump is to active the animation
@@ -259,7 +259,7 @@ void main() {
 
     // valid name
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
     await tester.pump(); // First pump is to active the animation
@@ -365,7 +365,7 @@ void main() {
 
     // trigger recover password success message
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
 
@@ -488,7 +488,7 @@ void main() {
 
     // fail at validating
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'invalid-name');
+    await tester.enterText(findNameTextField(), 'invalid-name');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), user.password);
     await tester.pumpAndSettle();
@@ -506,7 +506,7 @@ void main() {
 
     // fail at onLogin
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), invalidUser.name);
+    await tester.enterText(findNameTextField(), invalidUser.name);
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), invalidUser.password);
     await tester.pumpAndSettle();
@@ -524,7 +524,7 @@ void main() {
 
     // pass
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), user.name);
+    await tester.enterText(findNameTextField(), user.name);
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), user.password);
     await tester.pumpAndSettle();
@@ -565,7 +565,7 @@ void main() {
 
     // fail at validating - confirm password not match
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), user.name);
+    await tester.enterText(findNameTextField(), user.name);
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), user.password);
     await tester.pumpAndSettle();
@@ -583,7 +583,7 @@ void main() {
 
     // fail at validating
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'invalid-name');
+    await tester.enterText(findNameTextField(), 'invalid-name');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), user.password);
     await tester.pumpAndSettle();
@@ -603,7 +603,7 @@ void main() {
 
     // fail at onSignup
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), invalidUser.name);
+    await tester.enterText(findNameTextField(), invalidUser.name);
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), invalidUser.password);
     await tester.pumpAndSettle();
@@ -624,7 +624,7 @@ void main() {
 
     // pass
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), user.name);
+    await tester.enterText(findNameTextField(), user.name);
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), user.password);
     await tester.pumpAndSettle();
@@ -654,7 +654,7 @@ void main() {
     expect(isSignup(tester), true);
 
     await simulateOpenSoftKeyboard(tester, defaultFlutterLogin());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), '12345');
     await tester.pumpAndSettle();
@@ -822,7 +822,7 @@ void main() {
 
     // Test error flushbar by entering unknown name
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'not.exists@gmail.com');
+    await tester.enterText(findNameTextField(), 'not.exists@gmail.com');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), 'not.exists@gmail.com');
     await tester.pumpAndSettle();
@@ -842,7 +842,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     clickSubmitButton();
 
@@ -872,7 +872,7 @@ void main() {
     expect(isSignup(tester), true);
 
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), '12345678');
     await tester.pumpAndSettle();
@@ -911,7 +911,7 @@ void main() {
     expect(isSignup(tester), true);
 
     await simulateOpenSoftKeyboard(tester, loginBuilder());
-    await tester.enterText(findFirstTextField(), 'near@gmail.com');
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
     await tester.pumpAndSettle();
     await tester.enterText(findPasswordTextField(), '12345678');
     await tester.pumpAndSettle();
@@ -937,6 +937,51 @@ void main() {
 
     expect(signupFields['Name'], 'foo');
     expect(signupFields['Surname'], 'bar');
+  });
+
+  testWidgets('Redirect to login page after sign up with additional fields',
+      (WidgetTester tester) async {
+    final loginBuilder = () => widget(FlutterLogin(
+          loginAfterSignUp: false,
+          onSignup: (data) => null,
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => null,
+          additionalSignupFields: [
+            UserFormField(keyName: 'Name'),
+            UserFormField(keyName: 'Surname'),
+          ],
+          onAdditionalFieldsSubmit: (_) => null,
+        ));
+
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickSwitchAuthButton();
+    await tester.pumpAndSettle();
+    expect(isSignup(tester), true);
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNameTextField(), 'near@gmail.com');
+    await tester.pumpAndSettle();
+    await tester.enterText(findPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+    await tester.enterText(findConfirmPasswordTextField(), '12345678');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNthField(0), 'foo');
+    await tester.pumpAndSettle();
+    await tester.enterText(findNthField(1), 'bar');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+
+    expect(isSignup(tester), false);
   });
 
   testWidgets('Check if footer text is visible.', (WidgetTester tester) async {

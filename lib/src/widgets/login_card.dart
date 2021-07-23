@@ -42,9 +42,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
-  TextEditingController? _nameController;
-  TextEditingController? _passController;
-  TextEditingController? _confirmPassController;
+  late TextEditingController _nameController;
+  late TextEditingController _passController;
+  late TextEditingController _confirmPassController;
 
   var _isLoading = false;
   var _isSubmitting = false;
@@ -212,6 +212,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         // proceed to the card with the additional fields
         widget.onSwitchSignUpAdditionalData();
 
+        // The login page is shown in login mode
+        _switchAuthMode();
         return false;
       } else if (widget.loginAfterSignUp &&
           widget.requireAdditionalSignUpFields) {
@@ -327,7 +329,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-              if (value != _passController!.text) {
+              if (value != _passController.text) {
                 return messages.confirmPasswordError;
               }
               return null;

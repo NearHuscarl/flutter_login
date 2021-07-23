@@ -123,18 +123,17 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       return false;
     }
 
-    await _loadingController.reverse();
-
-    if (auth.isSignup && !widget.loginAfterSignUp) {
+    if (!widget.loginAfterSignUp) {
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.signUpSuccess, Duration(seconds: 4));
       setState(() => _isSubmitting = false);
 
-      await Future.delayed(Duration(seconds: 4))
-          .then((_) => widget.switchToLogin());
+      await widget.switchToLogin();
 
       return false;
     }
+
+    await _loadingController.reverse();
 
     widget.onSubmitCompleted?.call();
 

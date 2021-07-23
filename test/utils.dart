@@ -87,7 +87,7 @@ Finder findNthField(int n) {
   return find.byType(TextFormField).at(n);
 }
 
-Finder findFirstTextField() {
+Finder findNameTextField() {
   return find.byType(TextFormField).at(0);
 }
 

@@ -29,9 +29,9 @@ import 'custom_page_transformer.dart';
 import 'expandable_container.dart';
 import 'fade_in.dart';
 
+part 'additional_signup_card.dart';
 part 'login_card.dart';
 part 'recover_card.dart';
-part 'additional_signup_card.dart';
 
 class AuthCard extends StatefulWidget {
   AuthCard(
@@ -172,12 +172,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     auth.currentCardIndex = newCardIndex;
 
-    _pageController!.animateToPage(
-      newCardIndex,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
-    _pageIndex = newCardIndex;
+    setState(() {
+      _pageController!.animateToPage(
+        newCardIndex,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+      _pageIndex = newCardIndex;
+    });
   }
 
   Future<void>? runLoadingAnimation() {
