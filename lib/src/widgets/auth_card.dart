@@ -56,20 +56,23 @@ const Map<CardType, int> _cardIndex = {
 };
 
 class AuthCard extends StatefulWidget {
-  AuthCard({
-    Key? key,
-    required this.userType,
-    this.padding = const EdgeInsets.all(0),
-    this.loadingController,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmit,
-    this.onSubmitCompleted,
-    this.hideForgotPasswordButton = false,
-    this.hideSignUpButton = false,
-    this.loginAfterSignUp = true,
-    this.hideProvidersTitle = false,
-  }) : super(key: key);
+  AuthCard(
+      {Key? key,
+      required this.userType,
+      this.padding = const EdgeInsets.all(0),
+      this.loadingController,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmit,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false,
+      this.disableCustomPageTransformer = false,
+      this.loginTheme,
+      this.navigateBackAfterRecovery = false})
+      : super(key: key);
 
   final EdgeInsets padding;
   final AnimationController? loadingController;
@@ -82,6 +85,9 @@ class AuthCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final LoginUserType userType;
   final bool hideProvidersTitle;
+  final bool disableCustomPageTransformer;
+  final LoginTheme? loginTheme;
+  final bool navigateBackAfterRecovery;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -459,7 +465,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         /// Need to keep track of page index because soft keyboard will
         /// make page view rebuilt
         index: _pageIndex,
-        transformer: CustomPageTransformer(),
+        transformer: widget.disableCustomPageTransformer
+            ? null
+            : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
           return Align(
             alignment: Alignment.topCenter,

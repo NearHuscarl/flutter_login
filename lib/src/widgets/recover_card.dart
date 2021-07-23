@@ -7,12 +7,15 @@ class _RecoverCard extends StatefulWidget {
     required this.onBack,
     required this.onSwitchRecoverCode,
     required this.userType,
+    this.loginTheme,
   }) : super(key: key);
 
   final FormFieldValidator<String>? userValidator;
   final Function onBack;
   final Function onSwitchRecoverCode;
   final LoginUserType userType;
+  final LoginTheme? loginTheme;
+  // final bool navigateBack;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -97,7 +100,11 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
-  Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
+  Widget _buildBackButton(
+      ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
+    final calculatedTextColor = (theme.primaryColor.computeLuminance() < 0.5)
+        ? Colors.white
+        : theme.primaryColor;
     return MaterialButton(
       onPressed: !_isSubmitting
           ? () {
@@ -107,7 +114,7 @@ class _RecoverCardState extends State<_RecoverCard>
           : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: theme.primaryColor,
+      textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
       child: Text(messages.goBackButton),
     );
   }
@@ -123,7 +130,6 @@ class _RecoverCardState extends State<_RecoverCard>
     final textFieldWidth = cardWidth - cardPadding * 2;
 
     return FittedBox(
-      // width: cardWidth,
       child: Card(
         child: Container(
           padding: const EdgeInsets.only(
@@ -157,7 +163,7 @@ class _RecoverCardState extends State<_RecoverCard>
                 ),
                 SizedBox(height: 26),
                 _buildRecoverButton(theme, messages),
-                _buildBackButton(theme, messages),
+                _buildBackButton(theme, messages, widget.loginTheme),
               ],
             ),
           ),

@@ -67,6 +67,7 @@ class LoginScreen extends StatelessWidget {
       logo: 'assets/images/ecorp.png',
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
+      navigateBackAfterRecovery: true,
       loginProviders: [
         LoginProvider(
           icon: FontAwesomeIcons.google,
@@ -102,6 +103,7 @@ class LoginScreen extends StatelessWidget {
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
       // hideSignUpButton: true,
+      // disableCustomPageTransformer: true,
       // messages: LoginMessages(
       //   userHint: 'User',
       //   passwordHint: 'Pass',

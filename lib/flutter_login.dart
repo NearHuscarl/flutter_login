@@ -249,10 +249,10 @@ class FlutterLogin extends StatefulWidget {
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
       this.footer,
-      this.hideProvidersTitle = false})
-      : assert((onConfirmSignup != null && onResendCode != null) ||
-            (onConfirmSignup == null && onResendCode == null)),
-        super(key: key);
+      this.hideProvidersTitle = false,
+      this.disableCustomPageTransformer = false,
+      this.navigateBackAfterRecovery = false})
+      : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;
@@ -335,6 +335,13 @@ class FlutterLogin extends StatefulWidget {
 
   /// Hide the title above the login providers. If no providers are set this is uneffective
   final bool hideProvidersTitle;
+
+  /// Disable the page transformation between switching authentication modes.
+  /// Fixes #97 if disabled. https://github.com/NearHuscarl/flutter_login/issues/97
+  final bool disableCustomPageTransformer;
+
+  /// Navigate back to the login screen after recovery of password.
+  final bool navigateBackAfterRecovery;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -488,6 +495,11 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   ThemeData _mergeTheme(
       {required ThemeData theme, required LoginTheme loginTheme}) {
+    final blackOrWhite =
+        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
+    final primaryOrWhite = theme.brightness == Brightness.light
+        ? theme.primaryColor
+        : Colors.white;
     final originalPrimaryColor = loginTheme.primaryColor ?? theme.primaryColor;
     final primaryDarkShades = getDarkShades(originalPrimaryColor);
     final primaryColor = primaryDarkShades.length == 1
@@ -512,10 +524,10 @@ class _FlutterLoginState extends State<FlutterLogin>
         )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
-        .copyWith(color: Colors.black54)
+        .copyWith(color: blackOrWhite)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.subtitle1!
-        .copyWith(color: Colors.black.withOpacity(.65), fontSize: 14)
+        .copyWith(color: blackOrWhite, fontSize: 14)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.button!
         .copyWith(color: Colors.white)
@@ -544,13 +556,13 @@ class _FlutterLoginState extends State<FlutterLogin>
         filled: inputTheme.filled,
         fillColor: inputTheme.fillColor ??
             Color.alphaBlend(
-              primaryColor!.withOpacity(.07),
+              primaryOrWhite.withOpacity(.07),
               Colors.grey.withOpacity(.04),
             ),
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle,
+        labelStyle: inputTheme.labelStyle ?? TextStyle(color: blackOrWhite),
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
@@ -674,6 +686,11 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
+                        disableCustomPageTransformer:
+                            widget.disableCustomPageTransformer,
+                        loginTheme: widget.theme,
+                        navigateBackAfterRecovery:
+                            widget.navigateBackAfterRecovery,
                       ),
                     ),
                     Positioned(
