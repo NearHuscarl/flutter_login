@@ -433,7 +433,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return ConfirmRecoverCard(
           passwordValidator: widget.passwordValidator!,
           onBack: () => _switchPage(false),
-          onSubmitCompleted: widget.onSubmitCompleted!,
+          onSubmitCompleted: () {
+            _jumpToCard(
+              theme,
+              _cardIndex[CardType.login]!,
+            );
+          },
         );
 
       case CardType.confirmSignup:
@@ -444,7 +449,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               _cardIndex[CardType.login]!,
             );
           },
-          onSubmitCompleted: widget.onSubmitCompleted!,
+          onSubmitCompleted: () {
+            _forwardChangeRouteAnimation().then((_) {
+              widget.onSubmitCompleted!();
+            });
+          },
           loginAfterSignUp: widget.loginAfterSignUp,
         );
     }

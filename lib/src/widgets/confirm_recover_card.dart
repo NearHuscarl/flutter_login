@@ -76,16 +76,17 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     );
 
     if (error != null) {
-      showErrorToast(context, null, error);
+      showErrorToast(context, messages.flushbarTitleError, error);
       setState(() => _isSubmitting = false);
       await _submitController.reverse();
       return false;
+    } else {
+      showSuccessToast(context, messages.flushbarTitleSuccess,
+          messages.confirmRecoverSuccess);
+      setState(() => _isSubmitting = false);
+      widget.onSubmitCompleted();
+      return true;
     }
-
-    showSuccessToast(context, null, messages.confirmRecoverSuccess);
-    setState(() => _isSubmitting = false);
-    widget.onSubmitCompleted();
-    return true;
   }
 
   Widget _buildVerificationCodeField(double width, LoginMessages messages) {
