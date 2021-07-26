@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/widgets/animated_button.dart';
+import 'package:flutter_login/src/widgets/animated_icon.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -144,6 +145,11 @@ TextField confirmPasswordTextFieldWidget(WidgetTester tester) {
   return tester.widgetList<TextField>(find.byType(TextField)).elementAt(2);
 }
 
+AnimatedIconButton firstProviderButton() {
+  return find.byType(AnimatedIconButton).evaluate().first.widget
+      as AnimatedIconButton;
+}
+
 AnimatedButton submitButtonWidget() {
   return find.byType(AnimatedButton).evaluate().first.widget as AnimatedButton;
 }
@@ -175,6 +181,7 @@ void clickSubmitButton() => submitButtonWidget().onPressed!();
 void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed!();
 void clickGoBackButton() => goBackButtonWidget().onPressed!();
 void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed!();
+void clickFirstProvider() => firstProviderButton().onPressed();
 
 /// this prevents this error:
 /// A Timer is still pending even after the widget tree was disposed.

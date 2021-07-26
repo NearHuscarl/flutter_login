@@ -170,6 +170,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
     String? error;
 
+    auth.authType = AuthType.userPassword;
+
     if (auth.isLogin) {
       error = await auth.onLogin?.call(LoginData(
         name: auth.email,
@@ -236,6 +238,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       {required LoginProvider loginProvider,
       required AnimationController animationController}) async {
     await animationController.forward();
+
+    final auth = Provider.of<Auth>(context, listen: false);
+
+    auth.authType = AuthType.provider;
 
     String? error;
 

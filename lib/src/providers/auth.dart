@@ -50,6 +50,7 @@ class Auth with ChangeNotifier {
 
   AuthType _authType = AuthType.userPassword;
 
+  /// Used to decide if the login/signup comes from a provider or normal login
   AuthType get authType => _authType;
   set authType(AuthType authType) {
     _authType = authType;

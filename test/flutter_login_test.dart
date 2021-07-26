@@ -3,6 +3,7 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/widgets/animated_text.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mockito/mockito.dart';
 
 import 'utils.dart';
@@ -1004,12 +1005,10 @@ void main() {
       'Redirect to signup card if there are additional signup fields, test that filled in fields are passed correctly to the callback',
       (WidgetTester tester) async {
     var signupFields = {};
-    var onSignupCount = 0;
     final loginBuilder = () => widget(FlutterLogin(
           loginAfterSignUp: false,
           onSignup: (data) {
             signupFields = data.additionalSignupData!;
-            onSignupCount++;
             return null;
           },
           onLogin: (data) => null,
@@ -1054,7 +1053,6 @@ void main() {
 
     expect(signupFields['Name'], 'foo');
     expect(signupFields['Surname'], 'bar');
-    expect(onSignupCount, 1);
   });
 
   testWidgets(
@@ -1146,6 +1144,116 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(onSubmitAnimationCompletedExecuted, true);
+  });
+
+  testWidgets('Test provider signup with additional fields',
+      (WidgetTester tester) async {
+    var onSubmitAnimationCompletedExecuted = false;
+    var signupFields = {};
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) {
+            signupFields = data.additionalSignupData!;
+            return null;
+          },
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => null,
+          additionalSignupFields: [
+            UserFormField(keyName: 'Name'),
+            UserFormField(keyName: 'Surname'),
+          ],
+          loginProviders: [
+            LoginProvider(
+              icon: FontAwesomeIcons.user,
+              callback: () => null,
+              providerNeedsSignUpCallback: () async => true,
+            ),
+          ],
+          onSubmitAnimationCompleted: () =>
+              onSubmitAnimationCompletedExecuted = true,
+        ));
+
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickFirstProvider();
+    await tester.pumpAndSettle();
+
+    // we should be in additional signup card now
+
+    expect(find.text('Please fill in this form to complete the signup'),
+        findsOneWidget);
+    expect(find.text('Name'), findsOneWidget);
+    expect(find.text('Surname'), findsOneWidget);
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNthField(0), 'foo');
+    await tester.pumpAndSettle();
+    await tester.enterText(findNthField(1), 'bar');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+
+    expect(signupFields['Name'], 'foo');
+    expect(signupFields['Surname'], 'bar');
+
+    expect(onSubmitAnimationCompletedExecuted, true);
+  });
+
+  testWidgets('Test provider signup with additional fields and error',
+      (WidgetTester tester) async {
+    var onSubmitAnimationCompletedExecuted = false;
+    var signupFields = {};
+    final loginBuilder = () => widget(FlutterLogin(
+          onSignup: (data) async {
+            signupFields = data.additionalSignupData!;
+            return 'known error';
+          },
+          onLogin: (data) => null,
+          onRecoverPassword: (data) => null,
+          passwordValidator: (value) => null,
+          additionalSignupFields: [
+            UserFormField(keyName: 'Name'),
+            UserFormField(keyName: 'Surname'),
+          ],
+          loginProviders: [
+            LoginProvider(
+              icon: FontAwesomeIcons.user,
+              callback: () => null,
+              providerNeedsSignUpCallback: () async => true,
+            ),
+          ],
+          onSubmitAnimationCompleted: () =>
+              onSubmitAnimationCompletedExecuted = true,
+        ));
+
+    await tester.pumpWidget(loginBuilder());
+    await tester.pumpAndSettle(loadingAnimationDuration);
+
+    clickFirstProvider();
+    await tester.pumpAndSettle();
+
+    // we should be in additional signup card now
+
+    expect(find.text('Please fill in this form to complete the signup'),
+        findsOneWidget);
+    expect(find.text('Name'), findsOneWidget);
+    expect(find.text('Surname'), findsOneWidget);
+
+    await simulateOpenSoftKeyboard(tester, loginBuilder());
+    await tester.enterText(findNthField(0), 'foo');
+    await tester.pumpAndSettle();
+    await tester.enterText(findNthField(1), 'bar');
+    await tester.pumpAndSettle();
+
+    clickSubmitButton();
+    await tester.pumpAndSettle();
+
+    expect(signupFields['Name'], 'foo');
+    expect(signupFields['Surname'], 'bar');
+
+    expect(onSubmitAnimationCompletedExecuted, false);
   });
 
   testWidgets('Check if footer text is visible.', (WidgetTester tester) async {
