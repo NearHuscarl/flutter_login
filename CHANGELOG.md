@@ -1,3 +1,7 @@
+## 2.2.1
+Bug fixes
+* Fixes issue with switch auth button not calculating correct color. [#210](https://github.com/NearHuscarl/flutter_login/pull/210)
+
 ## 2.2.0
 Features
 * Added possibility to disable custom page transformer. [#202](https://github.com/NearHuscarl/flutter_login/pull/202)
