@@ -88,6 +88,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
   @override
   void dispose() {
+    // Don't dispose the controller when we get it from outside, otherwise we get an Error
+    // since also the parent widget disposes it
+    if (widget.loadingController == null) _loadingController.dispose();
     _fieldAnimationControllers.forEach((element) => element.dispose());
     _submitController.dispose();
     super.dispose();
@@ -113,8 +116,23 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     // We have to convert the Map<String, TextEditingController> to a Map<String, String>
     // and pass it to the function given by the user
-    error = await auth.onAdditionalFieldsSubmit
-        ?.call(_nameControllers.map((key, value) => MapEntry(key, value.text)));
+    auth.additionalSignupData =
+        _nameControllers.map((key, value) => MapEntry(key, value.text));
+
+    switch (auth.authType) {
+      case AuthType.provider:
+        error = await auth.onSignup!(SignupData.fromProvider(
+          additionalSignupData: auth.additionalSignupData,
+        ));
+        break;
+      case AuthType.userPassword:
+        error = await auth.onSignup!(SignupData.fromSignupForm(
+          name: auth.email,
+          password: auth.password,
+          additionalSignupData: auth.additionalSignupData,
+        ));
+        break;
+    }
 
     await _submitController.reverse();
     if (!DartHelper.isNullOrEmpty(error)) {

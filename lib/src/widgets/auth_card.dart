@@ -11,6 +11,7 @@ import 'package:flutter_login/src/dart_helper.dart';
 import 'package:flutter_login/src/matrix.dart';
 import 'package:flutter_login/src/models/login_data.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/signup_data.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:flutter_login/src/paddings.dart';
 import 'package:flutter_login/src/providers/auth.dart';

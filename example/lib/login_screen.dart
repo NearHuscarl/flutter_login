@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String?> _signupUser(LoginData data) {
+  Future<String?> _signupUser(SignupData data) {
     return Future.delayed(loginTime).then((_) {
       return null;
     });
@@ -104,12 +104,6 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
-      onAdditionalFieldsSubmit: (fields) async {
-        fields.forEach((key, value) {
-          print('$key: $value');
-        });
-        return null;
-      },
       // hideProvidersTitle: false,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
@@ -227,11 +221,16 @@ class LoginScreen extends StatelessWidget {
         print('Password: ${loginData.password}');
         return _loginUser(loginData);
       },
-      onSignup: (loginData) {
+      onSignup: (signupData) {
         print('Signup info');
-        print('Name: ${loginData.name}');
-        print('Password: ${loginData.password}');
-        return _signupUser(loginData);
+        print('Name: ${signupData.name}');
+        print('Password: ${signupData.password}');
+
+        signupData.additionalSignupData?.forEach((key, value) {
+          print('$key: $value');
+        });
+
+        return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/signup_data.dart';
 
 import '../../flutter_login.dart';
 import '../models/login_data.dart';
 
 enum AuthMode { Signup, Login }
 
+enum AuthType { provider, userPassword }
+
+/// The callback triggered after login
 /// The result is an error message, callback successes if message is null
-typedef AuthCallback = Future<String?>? Function(LoginData);
+typedef LoginCallback = Future<String?>? Function(LoginData);
+
+/// The callback triggered after signup
+/// The result is an error message, callback successes if message is null
+typedef SignupCallback = Future<String?>? Function(SignupData);
 
 /// The additional fields are provided as an `HashMap<String, String>`
 /// The result is an error message, callback successes if message is null
@@ -28,7 +36,6 @@ class Auth with ChangeNotifier {
     this.onLogin,
     this.onSignup,
     this.onRecoverPassword,
-    this.onAdditionalFieldsSubmit,
     String email = '',
     String password = '',
     String confirmPassword = '',
@@ -36,11 +43,18 @@ class Auth with ChangeNotifier {
         _password = password,
         _confirmPassword = confirmPassword;
 
-  final AuthCallback? onLogin;
-  final AuthCallback? onSignup;
-  final AdditionalFieldsCallback? onAdditionalFieldsSubmit;
+  final LoginCallback? onLogin;
+  final SignupCallback? onSignup;
   final RecoverCallback? onRecoverPassword;
   final List<LoginProvider> loginProviders;
+
+  AuthType _authType = AuthType.userPassword;
+
+  AuthType get authType => _authType;
+  set authType(AuthType authType) {
+    _authType = authType;
+    notifyListeners();
+  }
 
   AuthMode _mode = AuthMode.Login;
 
@@ -85,6 +99,13 @@ class Auth with ChangeNotifier {
   String get confirmPassword => _confirmPassword;
   set confirmPassword(String confirmPassword) {
     _confirmPassword = confirmPassword;
+    notifyListeners();
+  }
+
+  Map<String, String>? _additionalSignupData;
+  Map<String, String>? get additionalSignupData => _additionalSignupData;
+  set additionalSignupData(Map<String, String>? additionalSignupData) {
+    _additionalSignupData = additionalSignupData;
     notifyListeners();
   }
 }

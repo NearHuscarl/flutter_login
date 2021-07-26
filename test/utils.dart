@@ -10,7 +10,7 @@ const loadingAnimationDuration = Duration(seconds: 1);
 
 class LoginCallback {
   Future<String>? onLogin(LoginData? data) => null;
-  Future<String>? onSignup(LoginData? data) => null;
+  Future<String>? onSignup(SignupData? data) => null;
   Future<String>? onRecoverPassword(String? data) => null;
   String? userValidator(String? value) => null;
   String? passwordValidator(String? value) => null;
@@ -21,7 +21,7 @@ class MockCallback extends Mock implements LoginCallback {}
 
 final mockCallback = MockCallback();
 
-List<LoginData> stubCallback(MockCallback mockCallback) {
+List<LoginData> loginStubCallback(MockCallback mockCallback) {
   reset(mockCallback);
 
   final user = LoginData(name: 'near@gmail.com', password: '12345');
@@ -36,6 +36,23 @@ List<LoginData> stubCallback(MockCallback mockCallback) {
   when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
+
+  return [user, invalidUser];
+}
+
+List<SignupData> signupStubCallback(MockCallback mockCallback) {
+  reset(mockCallback);
+
+  final user =
+      SignupData.fromSignupForm(name: 'near@gmail.com', password: '12345');
+  final invalidUser =
+      SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
+
+  when(mockCallback.userValidator(user.name)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
+
+  when(mockCallback.passwordValidator(user.password)).thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
 
   when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))

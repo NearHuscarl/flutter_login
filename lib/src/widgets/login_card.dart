@@ -176,10 +176,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         password: auth.password,
       ));
     } else {
-      error = await auth.onSignup!(LoginData(
-        name: auth.email,
-        password: auth.password,
-      ));
+      if (!widget.requireAdditionalSignUpFields) {
+        error = await auth.onSignup!(SignupData.fromSignupForm(
+          name: auth.email,
+          password: auth.password,
+        ));
+      }
     }
 
     // workaround to run after _cardSizeAnimation in parent finished
@@ -214,11 +216,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
         // The login page is shown in login mode
         _switchAuthMode();
+
         return false;
       } else if (widget.loginAfterSignUp &&
           widget.requireAdditionalSignUpFields) {
         // proceed to the card with the additional fields
         widget.onSwitchSignUpAdditionalData();
+
+        return false;
       }
     }
 
@@ -369,7 +374,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: AnimatedButton(
         controller: _submitController,
         text: auth.isLogin ? messages.loginButton : messages.signupButton,
-        onPressed: _submit,
+        onPressed: () => _submit(),
       ),
     );
   }
