@@ -102,7 +102,8 @@ class _RecoverCardState extends State<_RecoverCard>
 
   Widget _buildBackButton(
       ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
-    final calculatedTextColor = (theme.primaryColor.computeLuminance() < 0.5)
+    final calculatedTextColor =
+    (theme.cardTheme.color!.computeLuminance() < 0.5)
         ? Colors.white
         : theme.primaryColor;
     return MaterialButton(

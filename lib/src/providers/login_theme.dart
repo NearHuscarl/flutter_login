@@ -59,6 +59,7 @@ class LoginTheme with ChangeNotifier {
     this.providerButtonPadding,
     this.footerBottomPadding = 0,
     this.logoWidth,
+    this.primaryColorAsInputLabel = false
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -132,4 +133,7 @@ class LoginTheme with ChangeNotifier {
   /// Value can be between 0 and 1 (or higher) where 1 is the full width
   /// of the login card.
   final double? logoWidth;
+
+  /// Set to true if you want to use the primary color for input labels.
+  final bool primaryColorAsInputLabel;
 }
