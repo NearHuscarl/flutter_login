@@ -94,6 +94,7 @@ pageColorDark | `Color` | The optional dark background color of login screen; if
 footerBottomPadding | `double` | The footer bottom Padding; defaults to 0 if not provided.
 switchAuthTextColor | `Color` | The optional color for the switch authentication text, if nothing is specified [primaryColor] is used.
 logoWidth | `double` | Width of the logo where 1 is the full width of the login card. ; defaults to 0.75 if not provided.
+primaryColorAsInputLabel | `bool` | Set to true if you want to use the primary color for input labels. Defaults to false.
 
 ### LoginUserType
 Enum     |   Description |
