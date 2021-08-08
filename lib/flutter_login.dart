@@ -273,7 +273,7 @@ class FlutterLogin extends StatefulWidget {
   /// The large text above the login [Card], usually the app or company name
   final String? title;
 
-  /// The image provider for the image to be displayed
+  /// The image provider for the logo image to be displayed
   final ImageProvider? logo;
 
   /// Describes all of the labels, text hints, button texts and other auth
