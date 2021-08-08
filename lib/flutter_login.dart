@@ -24,6 +24,7 @@ export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
+export 'src/providers/auth.dart' show AuthCallback, RecoverCallback;
 import 'src/constants.dart';
 
 class LoginProvider {
