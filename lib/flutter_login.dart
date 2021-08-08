@@ -78,7 +78,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
 class _Header extends StatefulWidget {
   _Header({
-    this.logoPath,
+    this.logo,
     this.logoTag,
     this.logoWidth = 0.75,
     this.title,
@@ -90,7 +90,7 @@ class _Header extends StatefulWidget {
     this.footer,
   });
 
-  final String? logoPath;
+  final ImageProvider? logo;
   final String? logoTag;
   final double logoWidth;
   final String? title;
@@ -157,12 +157,12 @@ class __HeaderState extends State<_Header> {
             _titleHeight -
             gap,
         kMaxLogoHeight);
-    final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
+    final displayLogo = widget.logo != null && logoHeight >= kMinLogoHeight;
     final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
 
     var logo = displayLogo
-        ? Image.asset(
-            widget.logoPath!,
+        ? Image(
+            image: widget.logo!,
             filterQuality: FilterQuality.high,
             height: logoHeight,
             width: widget.logoWidth * cardWidth,
@@ -272,8 +272,8 @@ class FlutterLogin extends StatefulWidget {
   /// The large text above the login [Card], usually the app or company name
   final String? title;
 
-  /// The path to the asset image that will be passed to the `Image.asset()`
-  final String? logo;
+  /// The image provider for the image to be displayed
+  final ImageProvider? logo;
 
   /// Describes all of the labels, text hints, button texts and other auth
   /// descriptions
@@ -411,7 +411,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       logoController: _logoController,
       titleController: _titleController,
       height: height,
-      logoPath: widget.logo,
+      logo: widget.logo,
       logoTag: widget.logoTag,
       logoWidth: widget.theme?.logoWidth ?? 0.75,
       title: widget.title,
