@@ -232,7 +232,9 @@ class FlutterLogin extends StatefulWidget {
       required this.onLogin,
       required this.onRecoverPassword,
       this.title,
-      this.logo,
+
+      /// The [ImageProvider] or asset path [String] for the logo image to be displayed
+      dynamic logo,
       this.messages,
       this.theme,
       this.userValidator,
@@ -250,7 +252,9 @@ class FlutterLogin extends StatefulWidget {
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false})
-      : super(key: key);
+      : assert((logo is String?) || (logo is ImageProvider?)),
+        logo = logo is String ? AssetImage(logo) : logo,
+        super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
   final AuthCallback onSignup;

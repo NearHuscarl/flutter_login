@@ -24,7 +24,7 @@ onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit butto
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
-logo |   `ImageProvider`     | <sub>The image provider for the logo image to be displayed</sub>
+logo |   `ImageProvider or String`     | <sub>The image provider or asset path string for the logo image to be displayed</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
 userType |   [`LoginUserType`](#LoginUserType)     | <sub>FlutterLogin's user type. If not specified, it will use the default user type as email</sub>
