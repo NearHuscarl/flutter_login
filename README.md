@@ -21,8 +21,11 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode. It receives a `SignupData` object, with name, password and, if `additionalSignUpFields` is not null, the additional fields filled in by the user in a `Map<String,String>`</sub>
+onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
+onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
+onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode. If not specified, a confirmation code will not be used to recover password.</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
 logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
@@ -65,10 +68,23 @@ loginButton | `String` | Login button's label
 signupButton | `String` | Signup button's label
 recoverPasswordButton | `String` | Recover password button's label
 recoverPasswordIntro | `String` | Intro in password recovery form
-recoverPasswordDescription | `String` | Description in password recovery form
+recoverPasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is not provided
+recoverCodePasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is provided
 goBackButton | `String` | Go back button's label. Go back button is used to go back to to login/signup form from the recover password form
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
+confirmSignupIntro | `String` | The intro text for the confirm signup card
+confirmationCodeHint | `String` | Hint text of the confirmation code [TextField]
+confirmationCodeValidationError | `String` | The error message to show if confirmation code is empty
+resendCodeButton | `String` | Resend code button's label
+resendCodeSuccess | `String` | The success message to show after resending a confirmation code
+confirmSignupButton | `String` | Confirm signup button's label
+confirmSignupSuccess | `String` | The success message to show after confirming signup
+confirmRecoverIntro | `String` | The intro text for the confirm recover password card
+recoveryCodeHint | `String` | Hint text of the recovery code [TextField]
+recoveryCodeValidationError | `String` | The error message to show if recovery code is empty
+setPasswordButton | `String` | Set password button's label for password recovery
+confirmRecoverSuccess | `String` | The success message to show after confirming recovered password
 flushbarTitleError | `String` | The Flushbar title on errors
 flushbarTitleSuccess | `String` | The Flushbar title on successes
 providersTitle | `String` | A string shown above the login Providers, defaults to `or login with`

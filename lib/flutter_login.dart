@@ -363,12 +363,15 @@ class FlutterLogin extends StatefulWidget {
   final bool navigateBackAfterRecovery;
 
   /// Called when the user submits confirmation code in recover password mode
+  /// Optional
   final ConfirmRecoverCallback? onConfirmRecover;
 
   /// Called when the user hits the submit button when in confirm signup mode
+  /// Optional
   final ConfirmSignupCallback? onConfirmSignup;
 
   /// Called when the user hits the resend code button in confirm signup mode
+  /// Only when onConfirmSignup is set
   final SignupCallback? onResendCode;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
