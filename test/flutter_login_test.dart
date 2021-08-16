@@ -276,7 +276,7 @@ void main() {
 
     expect(
         find.text(LoginMessages.defaultRecoverPasswordSuccess), findsOneWidget);
-        waitForFlushbarToClose(tester);
+    waitForFlushbarToClose(tester);
   });
 
   testWidgets('Custom login messages should display correct texts',
