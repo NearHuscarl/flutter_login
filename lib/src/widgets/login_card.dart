@@ -10,6 +10,7 @@ class _LoginCard extends StatefulWidget {
     required this.onSwitchSignUpAdditionalData,
     required this.userType,
     required this.requireAdditionalSignUpFields,
+    this.onSwitchConfirmSignup,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -23,6 +24,7 @@ class _LoginCard extends StatefulWidget {
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function onSwitchSignUpAdditionalData;
+  final Function? onSwitchConfirmSignup;
   final Function? onSwitchAuth;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -211,15 +213,23 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         setState(() => _isSubmitting = false);
 
         return false;
+      } else if (widget.loginAfterSignUp &&
+          !widget.requireAdditionalSignUpFields &&
+          widget.onSwitchConfirmSignup != null) {
+        widget.onSwitchConfirmSignup!();
       } else if (!widget.loginAfterSignUp &&
           widget.requireAdditionalSignUpFields) {
         // proceed to the card with the additional fields
         widget.onSwitchSignUpAdditionalData();
-
+//FIRST
         // The login page is shown in login mode
         _switchAuthMode();
 
         return false;
+      } else if (widget.loginAfterSignUp &&
+          widget.requireAdditionalSignUpFields &&
+          widget.onSwitchConfirmSignup != null) {
+        widget.onSwitchConfirmSignup!();
       } else if (widget.loginAfterSignUp &&
           widget.requireAdditionalSignUpFields) {
         // proceed to the card with the additional fields

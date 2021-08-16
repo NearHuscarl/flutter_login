@@ -40,6 +40,12 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
+  Future<String?> _signupConfirm(String error, LoginData data) {
+    return Future.delayed(loginTime).then((_) {
+      return null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
@@ -48,6 +54,9 @@ class LoginScreen extends StatelessWidget {
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
       navigateBackAfterRecovery: true,
+      onConfirmRecover: _signupConfirm,
+      onConfirmSignup: _signupConfirm,
+      loginAfterSignUp: false,
       loginProviders: [
         LoginProvider(
           icon: FontAwesomeIcons.google,
@@ -86,7 +95,7 @@ class LoginScreen extends StatelessWidget {
       additionalSignupFields: [
         UserFormField(
             keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
-        UserFormField(keyName: 'Name', defaultValue: 'Steve'),
+        UserFormField(keyName: 'Name'),
         UserFormField(keyName: 'Surname'),
         UserFormField(
           keyName: 'phone_number',

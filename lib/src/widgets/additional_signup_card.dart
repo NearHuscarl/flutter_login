@@ -4,9 +4,7 @@ class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({
     Key? key,
     required this.formFields,
-    required this.loginAfterSignUp,
-    required this.switchToLogin,
-    this.onSubmitCompleted,
+    required this.onSubmitCompleted,
     this.loadingController,
   }) : super(key: key) {
     if (formFields.isEmpty) {
@@ -17,10 +15,8 @@ class _AdditionalSignUpCard extends StatefulWidget {
     }
   }
 
-  final Function switchToLogin;
   final List<UserFormField> formFields;
-  final bool loginAfterSignUp;
-  final Function? onSubmitCompleted;
+  final Function onSubmitCompleted;
   final AnimationController? loadingController;
 
   @override
@@ -139,23 +135,14 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       showErrorToast(context, messages.flushbarTitleError, error!);
       setState(() => _isSubmitting = false);
       return false;
-    }
-
-    if (!widget.loginAfterSignUp) {
+    } else {
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.signUpSuccess, Duration(seconds: 4));
       setState(() => _isSubmitting = false);
-
-      await widget.switchToLogin();
-
-      return false;
+      // await _loadingController.reverse();
+      widget.onSubmitCompleted.call();
+      return true;
     }
-
-    await _loadingController.reverse();
-
-    widget.onSubmitCompleted?.call();
-
-    return true;
   }
 
   Widget _buildFields(double width) {

@@ -19,6 +19,8 @@ import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/utils/text_field_utils.dart';
 import 'package:flutter_login/src/widget_helper.dart';
+import 'package:flutter_login/src/widgets/recover_confirm_card.dart';
+import 'package:flutter_login/src/widgets/signup_confirm_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -82,6 +84,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   static const int _loginPageIndex = 0;
   static const int _recoveryIndex = 1;
   static const int _additionalSignUpIndex = 2;
+  static const int _confirmSignup = 3;
+  static const int _confirmRecover = 4;
 
   int _pageIndex = _loginPageIndex;
 
@@ -298,6 +302,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Widget _changeToCard(BuildContext context, int index) {
+    final auth = Provider.of<Auth>(context, listen: false);
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -328,12 +333,18 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         );
       case _recoveryIndex:
         return _RecoverCard(
-          userValidator: widget.userValidator,
-          userType: widget.userType,
-          loginTheme: widget.loginTheme,
-          navigateBack: widget.navigateBackAfterRecovery,
-          onSwitchLogin: () => _changeCard(_loginPageIndex),
-        );
+            userValidator: widget.userValidator,
+            userType: widget.userType,
+            loginTheme: widget.loginTheme,
+            navigateBack: widget.navigateBackAfterRecovery,
+            onBack: () => _changeCard(_loginPageIndex),
+            onSubmitCompleted: () {
+              if (auth.onConfirmRecover != null) {
+                _changeCard(_confirmRecover);
+              } else {
+                _changeCard(_loginPageIndex);
+              }
+            });
 
       case _additionalSignUpIndex:
         if (widget.additionalSignUpFields == null) {
@@ -343,7 +354,29 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           key: _cardKey,
           formFields: widget.additionalSignUpFields!,
           loadingController: widget.loadingController,
-          switchToLogin: () => _changeCard(_loginPageIndex),
+          onSubmitCompleted: () {
+            if (auth.onConfirmSignup != null) {
+              _changeCard(_confirmSignup);
+            } else if (widget.loginAfterSignUp) {
+              _forwardChangeRouteAnimation().then((_) {
+                widget.onSubmitCompleted!();
+              });
+            } else {
+              _changeCard(_loginPageIndex);
+            }
+          },
+        );
+
+      case _confirmRecover:
+        return ConfirmRecoverCard(
+          passwordValidator: widget.passwordValidator!,
+          onBack: () => _changeCard(_loginPageIndex),
+          onSubmitCompleted: () => _changeCard(_loginPageIndex),
+        );
+
+      case _confirmSignup:
+        return ConfirmSignupCard(
+          onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () {
             _forwardChangeRouteAnimation().then((_) {
               widget.onSubmitCompleted!();
@@ -352,7 +385,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           loginAfterSignUp: widget.loginAfterSignUp,
         );
     }
-    throw IndexError(index, 3);
+    throw IndexError(index, 5);
   }
 
   @override
@@ -365,7 +398,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       child: TransformerPageView(
         physics: NeverScrollableScrollPhysics(),
         pageController: _pageController,
-        itemCount: 3,
+        itemCount: 5,
 
         /// Need to keep track of page index because soft keyboard will
         /// make page view rebuilt

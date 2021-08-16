@@ -272,7 +272,10 @@ class FlutterLogin extends StatefulWidget {
       this.hideProvidersTitle = false,
       this.additionalSignupFields,
       this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false,
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -358,6 +361,15 @@ class FlutterLogin extends StatefulWidget {
 
   /// Navigate back to the login screen after recovery of password.
   final bool navigateBackAfterRecovery;
+
+  /// Called when the user submits confirmation code in recover password mode
+  final ConfirmRecoverCallback? onConfirmRecover;
+
+  /// Called when the user hits the submit button when in confirm signup mode
+  final ConfirmSignupCallback? onConfirmSignup;
+
+  /// Called when the user hits the resend code button in confirm signup mode
+  final SignupCallback? onResendCode;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -671,6 +683,9 @@ class _FlutterLoginState extends State<FlutterLogin>
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
             loginProviders: widget.loginProviders,
+            onConfirmRecover: widget.onConfirmRecover,
+            onConfirmSignup: widget.onConfirmSignup,
+            onResendCode: widget.onResendCode,
           ),
         ),
       ],

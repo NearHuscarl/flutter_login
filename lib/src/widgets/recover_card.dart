@@ -4,17 +4,20 @@ class _RecoverCard extends StatefulWidget {
   _RecoverCard(
       {Key? key,
       required this.userValidator,
-      required this.onSwitchLogin,
+      required this.onBack,
       required this.userType,
       this.loginTheme,
-      required this.navigateBack})
+      required this.navigateBack,
+      required this.onSubmitCompleted})
       : super(key: key);
 
   final FormFieldValidator<String>? userValidator;
-  final Function onSwitchLogin;
+  final Function onBack;
   final LoginUserType userType;
   final LoginTheme? loginTheme;
   final bool navigateBack;
+
+  final Function onSubmitCompleted;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -70,8 +73,7 @@ class _RecoverCardState extends State<_RecoverCard>
       showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.recoverPasswordSuccess);
       setState(() => _isSubmitting = false);
-      await _submitController!.reverse();
-      if (widget.navigateBack) widget.onSwitchLogin();
+      widget.onSubmitCompleted();
       return true;
     }
   }
@@ -110,7 +112,7 @@ class _RecoverCardState extends State<_RecoverCard>
       onPressed: !_isSubmitting
           ? () {
               _formRecoverKey.currentState!.save();
-              widget.onSwitchLogin();
+              widget.onBack();
             }
           : null,
       padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
@@ -155,7 +157,9 @@ class _RecoverCardState extends State<_RecoverCard>
                 _buildRecoverNameField(textFieldWidth, messages, auth),
                 SizedBox(height: 20),
                 Text(
-                  messages.recoverPasswordDescription,
+                  auth.onConfirmRecover != null
+                      ? messages.recoverCodePasswordDescription
+                      : messages.recoverPasswordDescription,
                   key: kRecoverPasswordDescriptionKey,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
