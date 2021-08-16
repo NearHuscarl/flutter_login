@@ -539,6 +539,14 @@ class _FlutterLoginState extends State<FlutterLogin>
 
     LoginThemeHelper.loginTextStyle = titleStyle;
 
+    var labelStyle;
+
+    if (loginTheme.primaryColorAsInputLabel) {
+      labelStyle = TextStyle(color: primaryColor);
+    } else {
+      labelStyle = TextStyle(color: blackOrWhite);
+    }
+
     return theme.copyWith(
       primaryColor: primaryColor,
       primaryColorDark: primaryColorDark,
@@ -562,7 +570,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4.0),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
-        labelStyle: inputTheme.labelStyle ?? TextStyle(color: blackOrWhite),
+        labelStyle: inputTheme.labelStyle ?? labelStyle,
         enabledBorder: inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
