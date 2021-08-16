@@ -20,9 +20,12 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 
 Property |   Type     | Description
 -------- |------------| ---------------
-onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode</sub>
+onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode. It receives a `SignupData` object, with name, password and, if `additionalSignUpFields` is not null, the additional fields filled in by the user in a `Map<String,String>`</sub>
+onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
+onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
+onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode. If not specified, a confirmation code will not be used to recover password.</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
 logo |   `ImageProvider or String`     | <sub>The image provider or asset path string for the logo image to be displayed</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
@@ -38,8 +41,8 @@ hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button 
 hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
+additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up. You can provide at most 6 additional fields. </sub>
 navigateBackAfterRecovery |   `bool`     | <sub>Navigate back to the login page after successful recovery.</sub>
-
 
 
 
@@ -65,10 +68,23 @@ loginButton | `String` | Login button's label
 signupButton | `String` | Signup button's label
 recoverPasswordButton | `String` | Recover password button's label
 recoverPasswordIntro | `String` | Intro in password recovery form
-recoverPasswordDescription | `String` | Description in password recovery form
+recoverPasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is not provided
+recoverCodePasswordDescription | `String` | Description in password recovery form, shown when the onConfirmRecover callback is provided
 goBackButton | `String` | Go back button's label. Go back button is used to go back to to login/signup form from the recover password form
 confirmPasswordError | `String` | The error message to show when the confirm password not match with the original password
 recoverPasswordSuccess | `String` | The success message to show after submitting recover password
+confirmSignupIntro | `String` | The intro text for the confirm signup card
+confirmationCodeHint | `String` | Hint text of the confirmation code [TextField]
+confirmationCodeValidationError | `String` | The error message to show if confirmation code is empty
+resendCodeButton | `String` | Resend code button's label
+resendCodeSuccess | `String` | The success message to show after resending a confirmation code
+confirmSignupButton | `String` | Confirm signup button's label
+confirmSignupSuccess | `String` | The success message to show after confirming signup
+confirmRecoverIntro | `String` | The intro text for the confirm recover password card
+recoveryCodeHint | `String` | Hint text of the recovery code [TextField]
+recoveryCodeValidationError | `String` | The error message to show if recovery code is empty
+setPasswordButton | `String` | Set password button's label for password recovery
+confirmRecoverSuccess | `String` | The success message to show after confirming recovered password
 flushbarTitleError | `String` | The Flushbar title on errors
 flushbarTitleSuccess | `String` | The Flushbar title on successes
 providersTitle | `String` | A string shown above the login Providers, defaults to `or login with`
@@ -96,6 +112,7 @@ switchAuthTextColor | `Color` | The optional color for the switch authentication
 logoWidth | `double` | Width of the logo where 1 is the full width of the login card. ; defaults to 0.75 if not provided.
 primaryColorAsInputLabel | `bool` | Set to true if you want to use the primary color for input labels. Defaults to false.
 
+
 ### LoginUserType
 Enum     |   Description |
 -------- |---------------|
@@ -105,6 +122,24 @@ PHONE  | The User Field will be set to be phone
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 
+### UserFormField
+Property |   Type     | Description |
+-------- |------------| ------------| 
+keyName  | `String` | The identifier of the fields, it will be the key in the returned map. Please ensure this is unique, otherwise an Error will be thrown
+displayName | `String` | The name of the field displayed on the form. Defaults to `keyName` if not given
+defaultValue | `String` | The default value of the field, if given the field will be pre-filled in with this
+fieldValidator | `FormFieldValidator<String>` | A function to validate the field. It should return null on success, or a string with the explanation of the error
+icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
+userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`
+
+
+### LoginProvider
+Property |   Type     | Description |
+-------- |------------| ------------| 
+icon     | `IconData` | The icon shown on the provider button |
+label    | `String`   | The label shown under the provider |
+callback | `ProviderAuthCallback` | A Function called when the provider button is pressed. It must return null on success, or a `String` describing the error on failure. |
+providerNeedsSignUpCallback | `ProviderNeedsSignUpCallback?` | Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`. When given, this callback must return a `Future<bool>`. If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`. If not given the default behaviour is not to show the signup card.
 
 ## Examples
 
