@@ -189,4 +189,4 @@ void clickFirstProvider() => firstProviderButton().onPressed();
 /// go away.
 /// https://stackoverflow.com/a/57930945/9449426
 void waitForFlushbarToClose(WidgetTester tester) async =>
-    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));
