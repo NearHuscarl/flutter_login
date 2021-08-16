@@ -27,7 +27,7 @@ onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button
 onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
 onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode. If not specified, a confirmation code will not be used to recover password.</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
-logo |   `String`     | <sub>The path to the asset image that will be passed to the `Image.asset()`</sub>
+logo |   `ImageProvider or String`     | <sub>The image provider or asset path string for the logo image to be displayed</sub>
 messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the labels, text hints, button texts and other auth descriptions</sub>
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
 userType |   [`LoginUserType`](#LoginUserType)     | <sub>FlutterLogin's user type. If not specified, it will use the default user type as email</sub>
@@ -188,7 +188,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp-lightblue.png',
+      logo: AssetImage('assets/images/ecorp-lightblue.png'),
       onLogin: _authUser,
       onSignup: _authUser,
       onSubmitAnimationCompleted: () {
@@ -248,7 +248,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp-lightblue.png',
+      logo: AssetImage('assets/images/ecorp-lightblue.png'),
       onLogin: _authUser,
       onSignup: _authUser,
       
@@ -355,7 +355,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp.png',
+      logo: AssetImage('assets/images/ecorp.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
@@ -383,7 +383,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp.png',
+      logo: AssetImage('assets/images/ecorp.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
@@ -433,7 +433,7 @@ class LoginScreen extends StatelessWidget {
 
     return FlutterLogin(
       title: 'ECORP',
-      logo: 'assets/images/ecorp-lightgreen.png',
+      logo: AssetImage('assets/images/ecorp-lightgreen.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
