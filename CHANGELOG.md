@@ -1,3 +1,10 @@
+## 3.0.0-beta.1
+You can now add more signup-fields! Please keep in mind that this is a beta release and may still
+contain bugs.
+
+Other features:
+* You can now use an ImageProvider instead of only an AssetImage. [#216](https://github.com/NearHuscarl/flutter_login/pull/216)
+
 ## 2.2.1
 Bug fixes
 * Fixes issue with switch auth button not calculating correct color. [#210](https://github.com/NearHuscarl/flutter_login/pull/210)
