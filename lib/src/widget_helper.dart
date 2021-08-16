@@ -7,7 +7,8 @@ Size? getWidgetSize(GlobalKey key) {
   return renderBox?.size;
 }
 
-Flushbar showSuccessToast(BuildContext context, String title, String message) {
+Flushbar showSuccessToast(BuildContext context, String title, String message,
+    [Duration? duration]) {
   return Flushbar(
     title: title,
     message: message,
@@ -16,7 +17,7 @@ Flushbar showSuccessToast(BuildContext context, String title, String message) {
       size: 28.0,
       color: Colors.white,
     ),
-    duration: const Duration(seconds: 4),
+    duration: duration ?? Duration(seconds: 4),
     backgroundGradient: LinearGradient(
       colors: [Colors.green[600]!, Colors.green[400]!],
     ),

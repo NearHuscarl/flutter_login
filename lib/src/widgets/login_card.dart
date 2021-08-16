@@ -1,25 +1,28 @@
 part of auth_card;
 
 class _LoginCard extends StatefulWidget {
-  _LoginCard(
-      {Key? key,
-      this.loadingController,
-      required this.userValidator,
-      required this.passwordValidator,
-      required this.onSwitchRecoveryPassword,
-      required this.userType,
-      this.onSwitchAuth,
-      this.onSubmitCompleted,
-      this.hideForgotPasswordButton = false,
-      this.hideSignUpButton = false,
-      this.loginAfterSignUp = true,
-      this.hideProvidersTitle = false})
-      : super(key: key);
+  _LoginCard({
+    Key? key,
+    this.loadingController,
+    required this.userValidator,
+    required this.passwordValidator,
+    required this.onSwitchRecoveryPassword,
+    required this.onSwitchSignUpAdditionalData,
+    required this.userType,
+    required this.requireAdditionalSignUpFields,
+    this.onSwitchAuth,
+    this.onSubmitCompleted,
+    this.hideForgotPasswordButton = false,
+    this.hideSignUpButton = false,
+    this.loginAfterSignUp = true,
+    this.hideProvidersTitle = false,
+  }) : super(key: key);
 
   final AnimationController? loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
+  final Function onSwitchSignUpAdditionalData;
   final Function? onSwitchAuth;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -27,6 +30,7 @@ class _LoginCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final bool hideProvidersTitle;
   final LoginUserType userType;
+  final bool requireAdditionalSignUpFields;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -38,9 +42,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
-  TextEditingController? _nameController;
-  TextEditingController? _passController;
-  TextEditingController? _confirmPassController;
+  late TextEditingController _nameController;
+  late TextEditingController _passController;
+  late TextEditingController _confirmPassController;
 
   var _isLoading = false;
   var _isSubmitting = false;
@@ -166,16 +170,20 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
     String? error;
 
+    auth.authType = AuthType.userPassword;
+
     if (auth.isLogin) {
-      error = await auth.onLogin!(LoginData(
+      error = await auth.onLogin?.call(LoginData(
         name: auth.email,
         password: auth.password,
       ));
     } else {
-      error = await auth.onSignup!(LoginData(
-        name: auth.email,
-        password: auth.password,
-      ));
+      if (!widget.requireAdditionalSignUpFields) {
+        error = await auth.onSignup!(SignupData.fromSignupForm(
+          name: auth.email,
+          password: auth.password,
+        ));
+      }
     }
 
     // workaround to run after _cardSizeAnimation in parent finished
@@ -195,27 +203,49 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (auth.isSignup && !widget.loginAfterSignUp) {
-      showSuccessToast(
-          context, messages.flushbarTitleSuccess, messages.signUpSuccess);
-      _switchAuthMode();
-      setState(() => _isSubmitting = false);
-      return false;
+    if (auth.isSignup) {
+      if (!widget.loginAfterSignUp && !widget.requireAdditionalSignUpFields) {
+        showSuccessToast(
+            context, messages.flushbarTitleSuccess, messages.signUpSuccess);
+        _switchAuthMode();
+        setState(() => _isSubmitting = false);
+
+        return false;
+      } else if (!widget.loginAfterSignUp &&
+          widget.requireAdditionalSignUpFields) {
+        // proceed to the card with the additional fields
+        widget.onSwitchSignUpAdditionalData();
+
+        // The login page is shown in login mode
+        _switchAuthMode();
+
+        return false;
+      } else if (widget.loginAfterSignUp &&
+          widget.requireAdditionalSignUpFields) {
+        // proceed to the card with the additional fields
+        widget.onSwitchSignUpAdditionalData();
+
+        return false;
+      }
     }
 
-    widget.onSubmitCompleted!();
+    widget.onSubmitCompleted?.call();
 
     return true;
   }
 
   Future<bool> _loginProviderSubmit(
-      {required AnimationController control,
-      required ProviderAuthCallback callback}) async {
-    await control.forward();
+      {required LoginProvider loginProvider,
+      required AnimationController animationController}) async {
+    await animationController.forward();
+
+    final auth = Provider.of<Auth>(context, listen: false);
+
+    auth.authType = AuthType.provider;
 
     String? error;
 
-    error = await callback();
+    error = await loginProvider.callback();
 
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
@@ -223,7 +253,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       setState(() => _showShadow = false);
     });
 
-    await control.reverse();
+    await animationController.reverse();
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
@@ -233,6 +263,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         setState(() => _showShadow = true);
       });
       return false;
+    }
+
+    final showSignupAdditionalFields =
+        await loginProvider.providerNeedsSignUpCallback?.call() ?? false;
+
+    if (showSignupAdditionalFields) {
+      widget.onSwitchSignUpAdditionalData();
     }
 
     widget.onSubmitCompleted!();
@@ -303,7 +340,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-              if (value != _passController!.text) {
+              if (value != _passController.text) {
                 return messages.confirmPasswordError;
               }
               return null;
@@ -343,7 +380,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: AnimatedButton(
         controller: _submitController,
         text: auth.isLogin ? messages.loginButton : messages.signupButton,
-        onPressed: _submit,
+        onPressed: () => _submit(),
       ),
     );
   }
@@ -392,13 +429,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     controller: _providerControllerList[index],
                     tooltip: '',
                     onPressed: () => _loginProviderSubmit(
-                      control: _providerControllerList[index],
-                      callback: () {
-                        return loginProvider.callback();
-                      },
+                      animationController: _providerControllerList[index],
+                      loginProvider: loginProvider,
                     ),
                   ),
-                  Text(loginProvider.label)
+                  Text(loginProvider.label),
                 ],
               ),
             ),

@@ -1,37 +1,60 @@
 library flutter_login;
 
 import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
-import 'src/providers/login_theme.dart';
-import 'src/widgets/null_widget.dart';
-import 'theme.dart';
-import 'src/dart_helper.dart';
+
 import 'src/color_helper.dart';
+import 'src/constants.dart';
+import 'src/dart_helper.dart';
 import 'src/providers/auth.dart';
 import 'src/providers/login_messages.dart';
+import 'src/providers/login_theme.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
-import 'src/widgets/hero_text.dart';
 import 'src/widgets/gradient_box.dart';
+import 'src/widgets/hero_text.dart';
+import 'src/widgets/null_widget.dart';
+import 'theme.dart';
+
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
+export 'src/models/signup_data.dart';
+export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
-import 'src/constants.dart';
 
 class LoginProvider {
+  /// The icon shown on the provider button
   final IconData icon;
+
+  /// The label shown under the provider
   final String label;
+
+  /// A Function called when the provider button is pressed.
+  /// It must return null on success, or a `String` describing the error on failure.
   final ProviderAuthCallback callback;
 
-  LoginProvider({required this.icon, required this.callback, this.label = ''});
+  /// Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`.
+  /// When given, this callback must return a `Future<bool>`.
+  /// If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`.
+  /// If not given the default behaviour is not to show the signup card.
+  final ProviderNeedsSignUpCallback? providerNeedsSignUpCallback;
+
+  const LoginProvider({
+    required this.icon,
+    required this.callback,
+    this.label = '',
+    this.providerNeedsSignUpCallback,
+  });
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -247,15 +270,16 @@ class FlutterLogin extends StatefulWidget {
       this.loginAfterSignUp = true,
       this.footer,
       this.hideProvidersTitle = false,
+      this.additionalSignupFields,
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
-  final AuthCallback onSignup;
+  final SignupCallback onSignup;
 
   /// Called when the user hit the submit button when in login mode
-  final AuthCallback onLogin;
+  final LoginCallback onLogin;
 
   /// [LoginUserType] can be email, name or phone, by default is email. It will change how
   /// the edit text autofill and behave accordingly to your choice
@@ -308,6 +332,10 @@ class FlutterLogin extends StatefulWidget {
   /// release mode, this will be overrided to false regardless of the value
   /// passed in
   final bool showDebugButtons;
+
+  /// This List contains the additional signup fields.
+  /// By setting this, after signup another card with a form for additional user data is shown
+  final List<UserFormField>? additionalSignupFields;
 
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
@@ -679,6 +707,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
+                        additionalSignUpFields: widget.additionalSignupFields,
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
                         loginTheme: widget.theme,

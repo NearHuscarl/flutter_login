@@ -1,7 +1,8 @@
-import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'constants.dart';
 import 'custom_route.dart';
 import 'dashboard_screen.dart';
@@ -20,6 +21,12 @@ class LoginScreen extends StatelessWidget {
       if (mockUsers[data.name] != data.password) {
         return 'Password does not match';
       }
+      return null;
+    });
+  }
+
+  Future<String?> _signupUser(SignupData data) {
+    return Future.delayed(loginTime).then((_) {
       return null;
     });
   }
@@ -61,6 +68,10 @@ class LoginScreen extends StatelessWidget {
             print('stop linkdin sign in');
             return '';
           },
+          providerNeedsSignUpCallback: () {
+            // put here your logic to conditionally show the additional fields
+            return Future.value(true);
+          },
         ),
         LoginProvider(
           icon: FontAwesomeIcons.githubAlt,
@@ -69,6 +80,27 @@ class LoginScreen extends StatelessWidget {
             await Future.delayed(loginTime);
             print('stop github sign in');
             return '';
+          },
+        ),
+      ],
+      additionalSignupFields: [
+        UserFormField(
+            keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
+        UserFormField(keyName: 'Name', defaultValue: 'Steve'),
+        UserFormField(keyName: 'Surname'),
+        UserFormField(
+          keyName: 'phone_number',
+          displayName: 'Phone Number',
+          userType: LoginUserType.phone,
+          fieldValidator: (value) {
+            var phoneRegExp = RegExp(
+                '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
+            if (value != null &&
+                value.length < 7 &&
+                !phoneRegExp.hasMatch(value)) {
+              return "This isn't a valid phone number";
+            }
+            return null;
           },
         ),
       ],
@@ -189,11 +221,16 @@ class LoginScreen extends StatelessWidget {
         print('Password: ${loginData.password}');
         return _loginUser(loginData);
       },
-      onSignup: (loginData) {
+      onSignup: (signupData) {
         print('Signup info');
-        print('Name: ${loginData.name}');
-        print('Password: ${loginData.password}');
-        return _loginUser(loginData);
+        print('Name: ${signupData.name}');
+        print('Password: ${signupData.password}');
+
+        signupData.additionalSignupData?.forEach((key, value) {
+          print('$key: $value');
+        });
+
+        return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(

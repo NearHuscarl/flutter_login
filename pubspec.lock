@@ -35,7 +35,7 @@ packages:
       name: args
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   async:
     dependency: transitive
     description:
@@ -105,7 +105,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   collection:
     dependency: transitive
     description:
@@ -133,7 +133,7 @@ packages:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -206,7 +206,7 @@ packages:
       name: mockito
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.11"
+    version: "5.0.12"
   nested:
     dependency: transitive
     description:
