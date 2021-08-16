@@ -31,7 +31,6 @@ export 'src/models/signup_data.dart';
 export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
-import 'src/constants.dart';
 
 class LoginProvider {
   /// The icon shown on the provider button
