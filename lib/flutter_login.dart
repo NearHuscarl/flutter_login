@@ -277,7 +277,9 @@ class FlutterLogin extends StatefulWidget {
       this.navigateBackAfterRecovery = false,
       this.onConfirmRecover,
       this.onConfirmSignup,
-      this.onResendCode})
+      this.onResendCode,
+      this.savedEmail = '',
+      this.savedPassword = ''})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -377,6 +379,14 @@ class FlutterLogin extends StatefulWidget {
   /// Called when the user hits the resend code button in confirm signup mode
   /// Only when onConfirmSignup is set
   final SignupCallback? onResendCode;
+  
+  /// Prefilled (ie. saved from previous session) value at startup for username
+  /// (Auth class calls username email, therefore we use savedEmail here aswell)
+  final String savedEmail;
+
+  /// Prefilled (ie. saved from previous session) value at startup for password (applies both
+  /// to Auth class password and confirmation password)
+  final String savedPassword;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -690,6 +700,9 @@ class _FlutterLoginState extends State<FlutterLogin>
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
             loginProviders: widget.loginProviders,
+            email: widget.savedEmail,
+            password: widget.savedPassword,
+            confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
             onResendCode: widget.onResendCode,
