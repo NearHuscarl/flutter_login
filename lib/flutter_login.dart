@@ -250,8 +250,7 @@ class FlutterLogin extends StatefulWidget {
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false,
       this.savedEmail = '',
-      this.savedPassword = '',
-      this.savedConfirmPassword = ''})
+      this.savedPassword = ''})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -338,11 +337,9 @@ class FlutterLogin extends StatefulWidget {
   /// (Auth class calls username email, therefore we use savedEmail here aswell)
   final String savedEmail;
 
-  /// Prefilled (ie. saved from previous session) value at startup for password
+  /// Prefilled (ie. saved from previous session) value at startup for password (applies both
+  /// to Auth class password and confirmation password)
   final String savedPassword;
-
-  /// Prefilled (ie. saved from previous session) value at startup for confirmation password
-  final String savedConfirmPassword;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -658,7 +655,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             loginProviders: widget.loginProviders,
             email: widget.savedEmail,
             password: widget.savedPassword,
-            confirmPassword: widget.savedConfirmPassword,
+            confirmPassword: widget.savedPassword,
           ),
         ),
       ],
