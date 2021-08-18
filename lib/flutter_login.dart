@@ -1,37 +1,60 @@
 library flutter_login;
 
 import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
-import 'src/providers/login_theme.dart';
-import 'src/widgets/null_widget.dart';
-import 'theme.dart';
-import 'src/dart_helper.dart';
+
 import 'src/color_helper.dart';
+import 'src/constants.dart';
+import 'src/dart_helper.dart';
 import 'src/providers/auth.dart';
 import 'src/providers/login_messages.dart';
+import 'src/providers/login_theme.dart';
 import 'src/regex.dart';
 import 'src/widgets/auth_card.dart';
 import 'src/widgets/fade_in.dart';
-import 'src/widgets/hero_text.dart';
 import 'src/widgets/gradient_box.dart';
+import 'src/widgets/hero_text.dart';
+import 'src/widgets/null_widget.dart';
+import 'theme.dart';
+
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
+export 'src/models/signup_data.dart';
+export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
-import 'src/constants.dart';
 
 class LoginProvider {
+  /// The icon shown on the provider button
   final IconData icon;
+
+  /// The label shown under the provider
   final String label;
+
+  /// A Function called when the provider button is pressed.
+  /// It must return null on success, or a `String` describing the error on failure.
   final ProviderAuthCallback callback;
 
-  LoginProvider({required this.icon, required this.callback, this.label = ''});
+  /// Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`.
+  /// When given, this callback must return a `Future<bool>`.
+  /// If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`.
+  /// If not given the default behaviour is not to show the signup card.
+  final ProviderNeedsSignUpCallback? providerNeedsSignUpCallback;
+
+  const LoginProvider({
+    required this.icon,
+    required this.callback,
+    this.label = '',
+    this.providerNeedsSignUpCallback,
+  });
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -78,7 +101,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
 class _Header extends StatefulWidget {
   _Header({
-    this.logoPath,
+    this.logo,
     this.logoTag,
     this.logoWidth = 0.75,
     this.title,
@@ -90,7 +113,7 @@ class _Header extends StatefulWidget {
     this.footer,
   });
 
-  final String? logoPath;
+  final ImageProvider? logo;
   final String? logoTag;
   final double logoWidth;
   final String? title;
@@ -157,12 +180,12 @@ class __HeaderState extends State<_Header> {
             _titleHeight -
             gap,
         kMaxLogoHeight);
-    final displayLogo = widget.logoPath != null && logoHeight >= kMinLogoHeight;
+    final displayLogo = widget.logo != null && logoHeight >= kMinLogoHeight;
     final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
 
     var logo = displayLogo
-        ? Image.asset(
-            widget.logoPath!,
+        ? Image(
+            image: widget.logo!,
             filterQuality: FilterQuality.high,
             height: logoHeight,
             width: widget.logoWidth * cardWidth,
@@ -231,7 +254,9 @@ class FlutterLogin extends StatefulWidget {
       required this.onLogin,
       required this.onRecoverPassword,
       this.title,
-      this.logo,
+
+      /// The [ImageProvider] or asset path [String] for the logo image to be displayed
+      dynamic logo,
       this.messages,
       this.theme,
       this.userValidator,
@@ -247,17 +272,23 @@ class FlutterLogin extends StatefulWidget {
       this.loginAfterSignUp = true,
       this.footer,
       this.hideProvidersTitle = false,
+      this.additionalSignupFields,
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false,
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode,
       this.savedEmail = '',
       this.savedPassword = ''})
-      : super(key: key);
+      : assert((logo is String?) || (logo is ImageProvider?)),
+        logo = logo is String ? AssetImage(logo) : logo,
+        super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
-  final AuthCallback onSignup;
+  final SignupCallback onSignup;
 
   /// Called when the user hit the submit button when in login mode
-  final AuthCallback onLogin;
+  final LoginCallback onLogin;
 
   /// [LoginUserType] can be email, name or phone, by default is email. It will change how
   /// the edit text autofill and behave accordingly to your choice
@@ -274,8 +305,8 @@ class FlutterLogin extends StatefulWidget {
   /// The large text above the login [Card], usually the app or company name
   final String? title;
 
-  /// The path to the asset image that will be passed to the `Image.asset()`
-  final String? logo;
+  /// The image provider for the logo image to be displayed
+  final ImageProvider? logo;
 
   /// Describes all of the labels, text hints, button texts and other auth
   /// descriptions
@@ -311,6 +342,10 @@ class FlutterLogin extends StatefulWidget {
   /// passed in
   final bool showDebugButtons;
 
+  /// This List contains the additional signup fields.
+  /// By setting this, after signup another card with a form for additional user data is shown
+  final List<UserFormField>? additionalSignupFields;
+
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
 
@@ -333,6 +368,18 @@ class FlutterLogin extends StatefulWidget {
   /// Navigate back to the login screen after recovery of password.
   final bool navigateBackAfterRecovery;
 
+  /// Called when the user submits confirmation code in recover password mode
+  /// Optional
+  final ConfirmRecoverCallback? onConfirmRecover;
+
+  /// Called when the user hits the submit button when in confirm signup mode
+  /// Optional
+  final ConfirmSignupCallback? onConfirmSignup;
+
+  /// Called when the user hits the resend code button in confirm signup mode
+  /// Only when onConfirmSignup is set
+  final SignupCallback? onResendCode;
+  
   /// Prefilled (ie. saved from previous session) value at startup for username
   /// (Auth class calls username email, therefore we use savedEmail here aswell)
   final String savedEmail;
@@ -421,7 +468,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       logoController: _logoController,
       titleController: _titleController,
       height: height,
-      logoPath: widget.logo,
+      logo: widget.logo,
       logoTag: widget.logoTag,
       logoWidth: widget.theme?.logoWidth ?? 0.75,
       title: widget.title,
@@ -656,6 +703,9 @@ class _FlutterLoginState extends State<FlutterLogin>
             email: widget.savedEmail,
             password: widget.savedPassword,
             confirmPassword: widget.savedPassword,
+            onConfirmRecover: widget.onConfirmRecover,
+            onConfirmSignup: widget.onConfirmSignup,
+            onResendCode: widget.onResendCode,
           ),
         ),
       ],
@@ -692,6 +742,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
+                        additionalSignUpFields: widget.additionalSignupFields,
                         disableCustomPageTransformer:
                             widget.disableCustomPageTransformer,
                         loginTheme: widget.theme,
