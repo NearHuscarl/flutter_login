@@ -248,7 +248,10 @@ class FlutterLogin extends StatefulWidget {
       this.footer,
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false,
+      this.savedEmail = '',
+      this.savedPassword = '',
+      this.savedConfirmPassword = ''})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -330,6 +333,16 @@ class FlutterLogin extends StatefulWidget {
 
   /// Navigate back to the login screen after recovery of password.
   final bool navigateBackAfterRecovery;
+
+  /// Prefilled (ie. saved from previous session) value at startup for username
+  /// (Auth class calls username email, therefore we use savedEmail here aswell)
+  final String savedEmail;
+
+  /// Prefilled (ie. saved from previous session) value at startup for password
+  final String savedPassword;
+
+  /// Prefilled (ie. saved from previous session) value at startup for confirmation password
+  final String savedConfirmPassword;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -643,6 +656,9 @@ class _FlutterLoginState extends State<FlutterLogin>
             onSignup: widget.onSignup,
             onRecoverPassword: widget.onRecoverPassword,
             loginProviders: widget.loginProviders,
+            email: widget.savedEmail,
+            password: widget.savedPassword,
+            confirmPassword: widget.savedConfirmPassword,
           ),
         ),
       ],
