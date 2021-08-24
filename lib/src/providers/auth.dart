@@ -33,7 +33,6 @@ class Auth with ChangeNotifier {
   final List<LoginProvider> loginProviders;
 
   AuthMode _mode = AuthMode.Login;
-
   AuthMode get mode => _mode;
   set mode(AuthMode value) {
     _mode = value;

@@ -2,6 +2,7 @@ library auth_card;
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/widgets/term_of_service_check.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_login/src/matrix.dart';
 import 'package:flutter_login/src/paddings.dart';
 import 'package:flutter_login/src/widget_helper.dart';
 
+import '../../flutter_login.dart';
 import 'animated_button.dart';
 import 'animated_icon.dart';
 import 'animated_text.dart';
@@ -45,7 +47,7 @@ class AuthCard extends StatefulWidget {
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
       this.loginTheme,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false, this.termsOfService = const <TermOfService>[]})
       : super(key: key);
 
   final EdgeInsets padding;
@@ -62,7 +64,7 @@ class AuthCard extends StatefulWidget {
   final bool disableCustomPageTransformer;
   final LoginTheme? loginTheme;
   final bool navigateBackAfterRecovery;
-
+  final List<TermOfService> termsOfService;
   @override
   AuthCardState createState() => AuthCardState();
 }
@@ -324,6 +326,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
                     loginAfterSignUp: widget.loginAfterSignUp,
                     hideProvidersTitle: widget.hideProvidersTitle,
+                    termsOfService: widget.termsOfService,
                   ),
                 )
               : _RecoverCard(

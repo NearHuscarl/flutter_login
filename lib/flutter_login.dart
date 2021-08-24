@@ -248,7 +248,7 @@ class FlutterLogin extends StatefulWidget {
       this.footer,
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false, this.termsOfService =  const <TermOfService>[]})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -331,6 +331,8 @@ class FlutterLogin extends StatefulWidget {
   /// Navigate back to the login screen after recovery of password.
   final bool navigateBackAfterRecovery;
 
+  final List<TermOfService> termsOfService;
+
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
@@ -361,7 +363,6 @@ class _FlutterLoginState extends State<FlutterLogin>
   @override
   void initState() {
     super.initState();
-
     _loadingController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -684,6 +685,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         loginTheme: widget.theme,
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
+                        termsOfService: widget.termsOfService, //[TermOfService(true, 'Newsletter subscription', defaultValue: true)],
                       ),
                     ),
                     Positioned(
@@ -705,4 +707,13 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
     );
   }
+}
+
+
+class TermOfService{
+  bool required;
+  String text;
+  String link;
+  bool defaultValue;
+  TermOfService(this.required, this.text, {this.link = '', this.defaultValue = false});
 }
