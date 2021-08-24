@@ -47,7 +47,8 @@ class AuthCard extends StatefulWidget {
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
       this.loginTheme,
-      this.navigateBackAfterRecovery = false, this.termsOfService = const <TermOfService>[]})
+      this.navigateBackAfterRecovery = false,
+      this.termsOfService = const <TermOfService>[]})
       : super(key: key);
 
   final EdgeInsets padding;

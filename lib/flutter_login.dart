@@ -248,7 +248,8 @@ class FlutterLogin extends StatefulWidget {
       this.footer,
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false, this.termsOfService =  const <TermOfService>[]})
+      this.navigateBackAfterRecovery = false,
+      this.termsOfService = const <TermOfService>[]})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -685,7 +686,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         loginTheme: widget.theme,
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
-                        termsOfService: widget.termsOfService, //[TermOfService(true, 'Newsletter subscription', defaultValue: true)],
+                        termsOfService: widget
+                            .termsOfService, //[TermOfService(true, 'Newsletter subscription', defaultValue: true)],
                       ),
                     ),
                     Positioned(
@@ -709,11 +711,11 @@ class _FlutterLoginState extends State<FlutterLogin>
   }
 }
 
-
-class TermOfService{
+class TermOfService {
   bool required;
   String text;
   String link;
   bool defaultValue;
-  TermOfService(this.required, this.text, {this.link = '', this.defaultValue = false});
+  TermOfService(this.required, this.text,
+      {this.link = '', this.defaultValue = false});
 }
