@@ -163,7 +163,7 @@ const users = const {
 class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 2250);
 
-  Future<String ?> _authUser(LoginData data) {
+  Future<String?> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
@@ -176,7 +176,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String ?> _signupUser(SignupData data) {
+  Future<String?> _signupUser(SignupData data) {
     print('Signup Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       return null;
@@ -230,7 +230,7 @@ const users = const {
 class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 2250);
 
-  Future<String ?> _authUser(LoginData data) {
+  Future<String?> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
@@ -243,7 +243,7 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String ?> _signupUser(SignupData data) {
+  Future<String?> _signupUser(SignupData data) {
     print('Signup Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       return null;
