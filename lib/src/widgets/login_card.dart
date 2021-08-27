@@ -191,7 +191,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
     Future.delayed(const Duration(milliseconds: 270), () {
-      setState(() => _showShadow = false);
+      if (mounted) {
+        setState(() => _showShadow = false);
+      }
     });
 
     await _submitController.reverse();
@@ -199,7 +201,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
-        setState(() => _showShadow = true);
+        if (mounted) {
+          setState(() => _showShadow = true);
+        }
       });
       setState(() => _isSubmitting = false);
       return false;
@@ -260,7 +264,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
     Future.delayed(const Duration(milliseconds: 270), () {
-      setState(() => _showShadow = false);
+      if (mounted) {
+        setState(() => _showShadow = false);
+      }
     });
 
     await animationController.reverse();
@@ -270,7 +276,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     if (!DartHelper.isNullOrEmpty(error)) {
       showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
-        setState(() => _showShadow = true);
+        if (mounted) {
+          setState(() => _showShadow = true);
+        }
       });
       return false;
     }
