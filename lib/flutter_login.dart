@@ -275,6 +275,7 @@ class FlutterLogin extends StatefulWidget {
       this.additionalSignupFields,
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false,
+      this.termsOfService = const <TermOfService>[],
       this.onConfirmRecover,
       this.onConfirmSignup,
       this.onResendCode,
@@ -379,7 +380,7 @@ class FlutterLogin extends StatefulWidget {
   /// Called when the user hits the resend code button in confirm signup mode
   /// Only when onConfirmSignup is set
   final SignupCallback? onResendCode;
-  
+
   /// Prefilled (ie. saved from previous session) value at startup for username
   /// (Auth class calls username email, therefore we use savedEmail here aswell)
   final String savedEmail;
@@ -387,6 +388,9 @@ class FlutterLogin extends StatefulWidget {
   /// Prefilled (ie. saved from previous session) value at startup for password (applies both
   /// to Auth class password and confirmation password)
   final String savedPassword;
+
+  /// List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of TermOfServiceResult
+  final List<TermOfService> termsOfService;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -706,6 +710,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
             onResendCode: widget.onResendCode,
+            termsOfService: widget.termsOfService
           ),
         ),
       ],
@@ -769,4 +774,32 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
     );
   }
+}
+
+class TermOfService {
+  String id;
+  bool required;
+  String text;
+  String? linkUrl;
+  String validationErrorMessage;
+  bool initialValue;
+  bool _checked = false;
+  TermOfService(this.id, this.required, this.text,
+      {this.linkUrl,
+      this.initialValue = false,
+      this.validationErrorMessage = 'Required'}){
+    _checked = initialValue;
+  }
+  void setStatus(bool checked){
+    _checked = checked;
+  }
+  bool getStatus(){
+    return _checked;
+  }
+}
+
+class TermOfServiceResult {
+  TermOfService term;
+  bool accepted;
+  TermOfServiceResult(this.term, this.accepted);
 }

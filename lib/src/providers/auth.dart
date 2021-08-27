@@ -48,6 +48,7 @@ class Auth with ChangeNotifier {
     String email = '',
     String password = '',
     String confirmPassword = '',
+    this.termsOfService = const []
   })  : _email = email,
         _password = password,
         _confirmPassword = confirmPassword;
@@ -59,6 +60,7 @@ class Auth with ChangeNotifier {
   final ConfirmRecoverCallback? onConfirmRecover;
   final ConfirmSignupCallback? onConfirmSignup;
   final SignupCallback? onResendCode;
+  final List<TermOfService> termsOfService;
 
   AuthType _authType = AuthType.userPassword;
 
@@ -70,7 +72,6 @@ class Auth with ChangeNotifier {
   }
 
   AuthMode _mode = AuthMode.Login;
-
   AuthMode get mode => _mode;
   set mode(AuthMode value) {
     _mode = value;
@@ -120,5 +121,9 @@ class Auth with ChangeNotifier {
   set additionalSignupData(Map<String, String>? additionalSignupData) {
     _additionalSignupData = additionalSignupData;
     notifyListeners();
+  }
+
+  List<TermOfServiceResult> getTermsOfServiceResults(){
+    return termsOfService.map((e) => TermOfServiceResult(e, e.getStatus())).toList();
   }
 }
