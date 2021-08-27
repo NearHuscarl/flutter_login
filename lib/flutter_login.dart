@@ -700,18 +700,17 @@ class _FlutterLoginState extends State<FlutterLogin>
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(
-            onLogin: widget.onLogin,
-            onSignup: widget.onSignup,
-            onRecoverPassword: widget.onRecoverPassword,
-            loginProviders: widget.loginProviders,
-            email: widget.savedEmail,
-            password: widget.savedPassword,
-            confirmPassword: widget.savedPassword,
-            onConfirmRecover: widget.onConfirmRecover,
-            onConfirmSignup: widget.onConfirmSignup,
-            onResendCode: widget.onResendCode,
-            termsOfService: widget.termsOfService
-          ),
+              onLogin: widget.onLogin,
+              onSignup: widget.onSignup,
+              onRecoverPassword: widget.onRecoverPassword,
+              loginProviders: widget.loginProviders,
+              email: widget.savedEmail,
+              password: widget.savedPassword,
+              confirmPassword: widget.savedPassword,
+              onConfirmRecover: widget.onConfirmRecover,
+              onConfirmSignup: widget.onConfirmSignup,
+              onResendCode: widget.onResendCode,
+              termsOfService: widget.termsOfService),
         ),
       ],
       child: Scaffold(
@@ -787,13 +786,14 @@ class TermOfService {
   TermOfService(this.id, this.required, this.text,
       {this.linkUrl,
       this.initialValue = false,
-      this.validationErrorMessage = 'Required'}){
+      this.validationErrorMessage = 'Required'}) {
     _checked = initialValue;
   }
-  void setStatus(bool checked){
+  void setStatus(bool checked) {
     _checked = checked;
   }
-  bool getStatus(){
+
+  bool getStatus() {
     return _checked;
   }
 }

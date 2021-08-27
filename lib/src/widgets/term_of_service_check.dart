@@ -6,9 +6,7 @@ import '../../flutter_login.dart';
 class TermCheck extends StatefulWidget {
   final TermOfService termOfService;
 
-  const TermCheck(
-      {Key? key, required this.termOfService})
-      : super(key: key);
+  const TermCheck({Key? key, required this.termOfService}) : super(key: key);
 
   @override
   _TermCheckState createState() => _TermCheckState();
@@ -37,7 +35,8 @@ class _TermCheckState extends State<TermCheck> {
               textAlign: TextAlign.left,
             ),
       validator: (bool? value) {
-        if (widget.termOfService.required == true && widget.termOfService.getStatus() != true) {
+        if (widget.termOfService.required == true &&
+            widget.termOfService.getStatus() != true) {
           return widget.termOfService.validationErrorMessage;
         }
       },

@@ -37,19 +37,19 @@ typedef ConfirmSignupCallback = Future<String?>? Function(String, LoginData);
 typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
 class Auth with ChangeNotifier {
-  Auth({
-    this.loginProviders = const [],
-    this.onLogin,
-    this.onSignup,
-    this.onRecoverPassword,
-    this.onConfirmRecover,
-    this.onConfirmSignup,
-    this.onResendCode,
-    String email = '',
-    String password = '',
-    String confirmPassword = '',
-    this.termsOfService = const []
-  })  : _email = email,
+  Auth(
+      {this.loginProviders = const [],
+      this.onLogin,
+      this.onSignup,
+      this.onRecoverPassword,
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode,
+      String email = '',
+      String password = '',
+      String confirmPassword = '',
+      this.termsOfService = const []})
+      : _email = email,
         _password = password,
         _confirmPassword = confirmPassword;
 
@@ -123,7 +123,9 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  List<TermOfServiceResult> getTermsOfServiceResults(){
-    return termsOfService.map((e) => TermOfServiceResult(e, e.getStatus())).toList();
+  List<TermOfServiceResult> getTermsOfServiceResults() {
+    return termsOfService
+        .map((e) => TermOfServiceResult(e, e.getStatus()))
+        .toList();
   }
 }
