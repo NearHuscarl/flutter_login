@@ -105,6 +105,8 @@ PHONE  | The User Field will be set to be phone
 
 ### TermOfService
 
+Property |   Type     | Description
+-------- |------------| ---------------
 id | `String` | Used only on Signup callback to identify a single Term Of service if it's optional.
 required | `bool` | If set true and term is not check when form is validate on submit, the validation error message will be shown
 text | `String` | Name of Term to show.
@@ -114,6 +116,8 @@ initialValue | `bool` | Specify if checkbox is initialized checked
 
 #### TermOfServiceResult
 
+Property |   Type     | Description
+-------- |------------| ---------------
 term | [`TermOfService`](#TermOfService) | Contains a termOfServiceObject.
 accepted | `bool` | Indicates whether or not the term of service was selected during registration
 
