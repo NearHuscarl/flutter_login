@@ -39,9 +39,7 @@ hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</s
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
 navigateBackAfterRecovery |   `bool`     | <sub>Navigate back to the login page after successful recovery.</sub>
-
-
-
+termsOfService | [`TermOfService`](#TermOfService) | <sub>List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of [`TermOfServiceResult`](#TermOfServiceResult) </sub>
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the
 same in both places. For title's hero animation use the
@@ -105,6 +103,19 @@ PHONE  | The User Field will be set to be phone
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 
+### TermOfService
+
+id | `String` | Used only on Signup callback to identify a single Term Of service if it's optional.
+required | `bool` | If set true and term is not check when form is validate on submit, the validation error message will be shown
+text | `String` | Name of Term to show.
+linkUrl | `String` | Web url link to additional term of services info.
+validationErrorMessage | `String` | Validation error message to show.
+initialValue | `bool` | Specify if checkbox is initialized checked
+
+#### TermOfServiceResult
+
+term | [`TermOfService`](#TermOfService) | Contains a termOfServiceObject.
+accepted | `bool` | Indicates whether or not the term of service was selected during registration
 
 ## Examples
 

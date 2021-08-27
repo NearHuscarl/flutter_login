@@ -712,10 +712,18 @@ class _FlutterLoginState extends State<FlutterLogin>
 }
 
 class TermOfService {
+  String id;
   bool required;
   String text;
-  String link;
-  bool defaultValue;
-  TermOfService(this.required, this.text,
-      {this.link = '', this.defaultValue = false});
+  String? linkUrl;
+  String validationErrorMessage;
+  bool initialValue;
+  TermOfService(this.id, this.required, this.text,
+      {this.linkUrl, this.initialValue = false, this.validationErrorMessage = 'Required'});
+}
+
+class TermOfServiceResult{
+  TermOfService term;
+  bool accepted;
+  TermOfServiceResult(this.term, this.accepted);
 }

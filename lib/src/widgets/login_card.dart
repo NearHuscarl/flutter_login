@@ -116,7 +116,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     ));
     if (widget.termsOfService.isNotEmpty) {
       _termsOfServiceCheck =
-          widget.termsOfService.map((e) => e.defaultValue).toList();
+          widget.termsOfService.map((e) => e.initialValue).toList();
     }
   }
 
@@ -183,6 +183,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       error = await auth.onSignup!(LoginData(
         name: auth.email,
         password: auth.password,
+        termsOfService: List.generate(_termsOfServiceCheck.length, (index) => TermOfServiceResult(widget.termsOfService[index], _termsOfServiceCheck[index]))
       ));
     }
 
@@ -489,8 +490,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                                 _termsOfServiceCheck[index] = value!;
                               });
                             },
-                            text: widget.termsOfService[index].text,
-                            value: _termsOfServiceCheck[index],
+                            termOfService: widget.termsOfService[index],
                           )),
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)

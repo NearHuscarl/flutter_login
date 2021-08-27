@@ -72,6 +72,10 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
+      termsOfService: [
+        TermOfService('newsletter', false, 'Newsletter subscription'),
+        TermOfService('general-term', true, 'Term of services', linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
+      ],
       // hideProvidersTitle: false,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,
@@ -193,6 +197,12 @@ class LoginScreen extends StatelessWidget {
         print('Signup info');
         print('Name: ${loginData.name}');
         print('Password: ${loginData.password}');
+        if(loginData.termsOfService.isNotEmpty){
+          print('Terms of service: ');
+          loginData.termsOfService.forEach((element) {print('${element.term.id}: ${element.accepted==true?'accepted':'rejected'}');});
+        }
+
+
         return _loginUser(loginData);
       },
       onSubmitAnimationCompleted: () {

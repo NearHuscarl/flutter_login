@@ -1,12 +1,14 @@
+import 'package:flutter_login/flutter_login.dart';
 import 'package:quiver/core.dart';
 
 class LoginData {
   final String name;
   final String password;
-
+  final List<TermOfServiceResult> termsOfService;
   LoginData({
     required this.name,
     required this.password,
+    this.termsOfService = const []
   });
 
   @override

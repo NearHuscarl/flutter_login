@@ -17,6 +17,7 @@ dependencies:
   # flutter_test from sdk depends on quiver
   quiver: ^3.0.1
   pedantic: ^1.11.0
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
