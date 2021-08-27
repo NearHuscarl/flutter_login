@@ -22,13 +22,14 @@ class _TermCheckState extends State<TermCheck> {
     _state = widget.termOfService.initialValue;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return CheckboxFormField(
       onChanged: (value) {
         _state = value!;
         widget.onChanged(value);
-      } ,
+      },
       initialValue: widget.termOfService.initialValue,
       title: widget.termOfService.linkUrl != null
           ? InkWell(
@@ -47,7 +48,7 @@ class _TermCheckState extends State<TermCheck> {
               textAlign: TextAlign.left,
             ),
       validator: (bool? value) {
-        if (widget.termOfService.required == true && _state!=true) {
+        if (widget.termOfService.required == true && _state != true) {
           return widget.termOfService.validationErrorMessage;
         }
       },

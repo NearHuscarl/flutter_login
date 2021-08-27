@@ -719,10 +719,12 @@ class TermOfService {
   String validationErrorMessage;
   bool initialValue;
   TermOfService(this.id, this.required, this.text,
-      {this.linkUrl, this.initialValue = false, this.validationErrorMessage = 'Required'});
+      {this.linkUrl,
+      this.initialValue = false,
+      this.validationErrorMessage = 'Required'});
 }
 
-class TermOfServiceResult{
+class TermOfServiceResult {
   TermOfService term;
   bool accepted;
   TermOfServiceResult(this.term, this.accepted);

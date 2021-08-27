@@ -5,11 +5,10 @@ class LoginData {
   final String name;
   final String password;
   final List<TermOfServiceResult> termsOfService;
-  LoginData({
-    required this.name,
-    required this.password,
-    this.termsOfService = const []
-  });
+  LoginData(
+      {required this.name,
+      required this.password,
+      this.termsOfService = const []});
 
   @override
   String toString() {

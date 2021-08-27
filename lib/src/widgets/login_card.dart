@@ -181,10 +181,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       ));
     } else {
       error = await auth.onSignup!(LoginData(
-        name: auth.email,
-        password: auth.password,
-        termsOfService: List.generate(_termsOfServiceCheck.length, (index) => TermOfServiceResult(widget.termsOfService[index], _termsOfServiceCheck[index]))
-      ));
+          name: auth.email,
+          password: auth.password,
+          termsOfService: List.generate(
+              _termsOfServiceCheck.length,
+              (index) => TermOfServiceResult(
+                  widget.termsOfService[index], _termsOfServiceCheck[index]))));
     }
 
     // workaround to run after _cardSizeAnimation in parent finished
