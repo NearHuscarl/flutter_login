@@ -640,7 +640,12 @@ class _FlutterLoginState extends State<FlutterLogin>
               borderSide: BorderSide(color: errorColor, width: 1.5),
               borderRadius: roundBorderRadius,
             ),
-        disabledBorder: inputTheme.disabledBorder ?? inputTheme.border,
+        disabledBorder: inputTheme.disabledBorder ??
+            inputTheme.border ??
+            OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+              borderRadius: roundBorderRadius,
+            ),
       ),
       floatingActionButtonTheme: theme.floatingActionButtonTheme.copyWith(
         backgroundColor: buttonTheme.backgroundColor ?? primaryColor,
