@@ -306,7 +306,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.userHint,
-      autofillHints: [TextFieldUtils.getAutofillHints(widget.userType)],
+      autofillHints: _isSubmitting
+          ? null
+          : [TextFieldUtils.getAutofillHints(widget.userType)],
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
@@ -315,6 +317,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       },
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
+      enabled: !_isSubmitting,
     );
   }
 
@@ -324,8 +327,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: _loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
-      autofillHints:
-          auth.isLogin ? [AutofillHints.password] : [AutofillHints.newPassword],
+      autofillHints: _isSubmitting
+          ? null
+          : (auth.isLogin
+              ? [AutofillHints.password]
+              : [AutofillHints.newPassword]),
       controller: _passController,
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
@@ -340,6 +346,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       },
       validator: widget.passwordValidator,
       onSaved: (value) => auth.password = value!,
+      enabled: !_isSubmitting,
     );
   }
 
