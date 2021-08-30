@@ -379,7 +379,7 @@ class FlutterLogin extends StatefulWidget {
   /// Called when the user hits the resend code button in confirm signup mode
   /// Only when onConfirmSignup is set
   final SignupCallback? onResendCode;
-  
+
   /// Prefilled (ie. saved from previous session) value at startup for username
   /// (Auth class calls username email, therefore we use savedEmail here aswell)
   final String savedEmail;
@@ -442,7 +442,9 @@ class _FlutterLoginState extends State<FlutterLogin>
     );
 
     Future.delayed(const Duration(seconds: 1), () {
-      _loadingController!.forward();
+      if (mounted) {
+        _loadingController!.forward();
+      }
     });
   }
 
