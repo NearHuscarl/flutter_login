@@ -150,7 +150,7 @@ providerNeedsSignUpCallback | `ProviderNeedsSignUpCallback?` | Optional. Require
 Property |   Type     | Description
 -------- |------------| ---------------
 id | `String` | Used only on Signup callback to identify a single Term Of service if it's optional.
-required | `bool` | If set true and term is not check when form is validate on submit, the validation error message will be shown
+mandatory | `bool` | If set true and term is not check when form is validate on submit, the validation error message will be shown
 text | `String` | Name of Term to show.
 linkUrl | `String` | Web url link to additional term of services info.
 validationErrorMessage | `String` | Validation error message to show.
