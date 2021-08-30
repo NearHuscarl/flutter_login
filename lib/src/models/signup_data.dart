@@ -1,6 +1,5 @@
+import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:quiver/core.dart';
-
-import '../../flutter_login.dart';
 
 class SignupData {
   final String? name;

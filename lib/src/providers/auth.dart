@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/signup_data.dart';
+import 'package:flutter_login/src/models/term_of_service.dart';
 
 import '../../flutter_login.dart';
 import '../models/login_data.dart';
@@ -125,7 +126,7 @@ class Auth with ChangeNotifier {
 
   List<TermOfServiceResult> getTermsOfServiceResults() {
     return termsOfService
-        .map((e) => TermOfServiceResult(e, e.getStatus()))
+        .map((e) => TermOfServiceResult(term: e, accepted: e.getStatus()))
         .toList();
   }
 }

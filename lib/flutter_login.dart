@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ export 'src/models/signup_data.dart';
 export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
+export 'src/models/term_of_service.dart';
 
 class LoginProvider {
   /// The icon shown on the provider button
@@ -773,33 +775,4 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
     );
   }
-}
-
-class TermOfService {
-  String id;
-  bool required;
-  String text;
-  String? linkUrl;
-  String validationErrorMessage;
-  bool initialValue;
-  bool _checked = false;
-  TermOfService(this.id, this.required, this.text,
-      {this.linkUrl,
-      this.initialValue = false,
-      this.validationErrorMessage = 'Required'}) {
-    _checked = initialValue;
-  }
-  void setStatus(bool checked) {
-    _checked = checked;
-  }
-
-  bool getStatus() {
-    return _checked;
-  }
-}
-
-class TermOfServiceResult {
-  TermOfService term;
-  bool accepted;
-  TermOfServiceResult(this.term, this.accepted);
 }

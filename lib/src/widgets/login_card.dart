@@ -519,7 +519,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               children: <Widget>[
                 if (auth.isSignup && auth.termsOfService.isNotEmpty)
                   ...auth.termsOfService
-                      .map((e) => TermCheck(
+                      .map((e) => TermCheckbox(
                             termOfService: e,
                           ))
                       .toList(),

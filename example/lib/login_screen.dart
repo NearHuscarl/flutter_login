@@ -93,8 +93,14 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
       termsOfService: [
-        TermOfService('newsletter', false, 'Newsletter subscription'),
-        TermOfService('general-term', true, 'Term of services',
+        TermOfService(
+            id: 'newsletter',
+            mandatory: false,
+            text: 'Newsletter subscription'),
+        TermOfService(
+            id: 'general-term',
+            mandatory: true,
+            text: 'Term of services',
             linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
       ],
       additionalSignupFields: [
