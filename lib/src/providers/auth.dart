@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/signup_data.dart';
+import 'package:flutter_login/src/models/term_of_service.dart';
 
 import '../../flutter_login.dart';
 import '../models/login_data.dart';
@@ -37,18 +38,19 @@ typedef ConfirmSignupCallback = Future<String?>? Function(String, LoginData);
 typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
 class Auth with ChangeNotifier {
-  Auth({
-    this.loginProviders = const [],
-    this.onLogin,
-    this.onSignup,
-    this.onRecoverPassword,
-    this.onConfirmRecover,
-    this.onConfirmSignup,
-    this.onResendCode,
-    String email = '',
-    String password = '',
-    String confirmPassword = '',
-  })  : _email = email,
+  Auth(
+      {this.loginProviders = const [],
+      this.onLogin,
+      this.onSignup,
+      this.onRecoverPassword,
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode,
+      String email = '',
+      String password = '',
+      String confirmPassword = '',
+      this.termsOfService = const []})
+      : _email = email,
         _password = password,
         _confirmPassword = confirmPassword;
 
@@ -59,6 +61,7 @@ class Auth with ChangeNotifier {
   final ConfirmRecoverCallback? onConfirmRecover;
   final ConfirmSignupCallback? onConfirmSignup;
   final SignupCallback? onResendCode;
+  final List<TermOfService> termsOfService;
 
   AuthType _authType = AuthType.userPassword;
 
@@ -70,7 +73,6 @@ class Auth with ChangeNotifier {
   }
 
   AuthMode _mode = AuthMode.Login;
-
   AuthMode get mode => _mode;
   set mode(AuthMode value) {
     _mode = value;
@@ -120,5 +122,11 @@ class Auth with ChangeNotifier {
   set additionalSignupData(Map<String, String>? additionalSignupData) {
     _additionalSignupData = additionalSignupData;
     notifyListeners();
+  }
+
+  List<TermOfServiceResult> getTermsOfServiceResults() {
+    return termsOfService
+        .map((e) => TermOfServiceResult(term: e, accepted: e.getStatus()))
+        .toList();
   }
 }

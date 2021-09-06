@@ -4,10 +4,7 @@ class LoginData {
   final String name;
   final String password;
 
-  LoginData({
-    required this.name,
-    required this.password,
-  });
+  LoginData({required this.name, required this.password});
 
   @override
   String toString() {

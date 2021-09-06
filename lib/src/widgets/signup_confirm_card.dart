@@ -103,9 +103,9 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     await _submitController.forward();
     setState(() => _isSubmitting = true);
     final error = await auth.onResendCode!(SignupData.fromSignupForm(
-      name: auth.email,
-      password: auth.password,
-    ));
+        name: auth.email,
+        password: auth.password,
+        termsOfService: auth.getTermsOfServiceResults()));
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);

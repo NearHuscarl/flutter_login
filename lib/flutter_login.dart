@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ export 'src/models/signup_data.dart';
 export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
+export 'src/models/term_of_service.dart';
 
 class LoginProvider {
   /// The icon shown on the provider button
@@ -275,6 +277,7 @@ class FlutterLogin extends StatefulWidget {
       this.additionalSignupFields,
       this.disableCustomPageTransformer = false,
       this.navigateBackAfterRecovery = false,
+      this.termsOfService = const <TermOfService>[],
       this.onConfirmRecover,
       this.onConfirmSignup,
       this.onResendCode,
@@ -387,6 +390,9 @@ class FlutterLogin extends StatefulWidget {
   /// Prefilled (ie. saved from previous session) value at startup for password (applies both
   /// to Auth class password and confirmation password)
   final String savedPassword;
+
+  /// List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of TermOfServiceResult
+  final List<TermOfService> termsOfService;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -703,17 +709,17 @@ class _FlutterLoginState extends State<FlutterLogin>
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(
-            onLogin: widget.onLogin,
-            onSignup: widget.onSignup,
-            onRecoverPassword: widget.onRecoverPassword,
-            loginProviders: widget.loginProviders,
-            email: widget.savedEmail,
-            password: widget.savedPassword,
-            confirmPassword: widget.savedPassword,
-            onConfirmRecover: widget.onConfirmRecover,
-            onConfirmSignup: widget.onConfirmSignup,
-            onResendCode: widget.onResendCode,
-          ),
+              onLogin: widget.onLogin,
+              onSignup: widget.onSignup,
+              onRecoverPassword: widget.onRecoverPassword,
+              loginProviders: widget.loginProviders,
+              email: widget.savedEmail,
+              password: widget.savedPassword,
+              confirmPassword: widget.savedPassword,
+              onConfirmRecover: widget.onConfirmRecover,
+              onConfirmSignup: widget.onConfirmSignup,
+              onResendCode: widget.onResendCode,
+              termsOfService: widget.termsOfService),
         ),
       ],
       child: Scaffold(

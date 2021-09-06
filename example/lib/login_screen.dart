@@ -92,6 +92,17 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
+      termsOfService: [
+        TermOfService(
+            id: 'newsletter',
+            mandatory: false,
+            text: 'Newsletter subscription'),
+        TermOfService(
+            id: 'general-term',
+            mandatory: true,
+            text: 'Term of services',
+            linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
+      ],
       additionalSignupFields: [
         UserFormField(
             keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
@@ -238,7 +249,13 @@ class LoginScreen extends StatelessWidget {
         signupData.additionalSignupData?.forEach((key, value) {
           print('$key: $value');
         });
-
+        if (signupData.termsOfService.isNotEmpty) {
+          print('Terms of service: ');
+          signupData.termsOfService.forEach((element) {
+            print(
+                ' - ${element.term.id}: ${element.accepted == true ? 'accepted' : 'rejected'}');
+          });
+        }
         return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {

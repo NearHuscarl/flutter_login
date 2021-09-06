@@ -182,9 +182,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     } else {
       if (!widget.requireAdditionalSignUpFields) {
         error = await auth.onSignup!(SignupData.fromSignupForm(
-          name: auth.email,
-          password: auth.password,
-        ));
+            name: auth.email,
+            password: auth.password,
+            termsOfService: auth.getTermsOfServiceResults()));
       }
     }
 
@@ -532,6 +532,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             width: cardWidth,
             child: Column(
               children: <Widget>[
+                if (auth.isSignup && auth.termsOfService.isNotEmpty)
+                  ...auth.termsOfService
+                      .map((e) => TermCheckbox(
+                            termOfService: e,
+                          ))
+                      .toList(),
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)
                     : SizedBox.fromSize(

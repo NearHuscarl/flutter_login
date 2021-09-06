@@ -45,7 +45,7 @@ additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify th
 navigateBackAfterRecovery |   `bool`     | <sub>Navigate back to the login page after successful recovery.</sub>
 savedEmail |   `String`     | <sub>Prefilled value for user field (ie. saved from previous session via other means, ie. via SharedPreferences)</sub>
 savedPassword |   `String`     | <sub>Prefilled value for password field (ie. saved from previous session via other means, ie. via SharedPreferences). Will set also confirmation password in Auth class</sub>
-
+termsOfService | [`TermOfService`](#TermOfService) | <sub>List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of [`TermOfServiceResult`](#TermOfServiceResult) </sub>
 
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the
@@ -143,6 +143,25 @@ label    | `String`   | The label shown under the provider |
 callback | `ProviderAuthCallback` | A Function called when the provider button is pressed. It must return null on success, or a `String` describing the error on failure. |
 providerNeedsSignUpCallback | `ProviderNeedsSignUpCallback?` | Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`. When given, this callback must return a `Future<bool>`. If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`. If not given the default behaviour is not to show the signup card.
 
+
+### TermOfService
+
+
+Property |   Type     | Description
+-------- |------------| ---------------
+id | `String` | Used only on Signup callback to identify a single Term Of service if it's optional.
+mandatory | `bool` | If set true and term is not check when form is validate on submit, the validation error message will be shown
+text | `String` | Name of Term to show.
+linkUrl | `String` | Web url link to additional term of services info.
+validationErrorMessage | `String` | Validation error message to show.
+initialValue | `bool` | Specify if checkbox is initialized checked
+
+#### TermOfServiceResult
+
+Property |   Type     | Description
+-------- |------------| ---------------
+term | [`TermOfService`](#TermOfService) | Contains a termOfServiceObject.
+accepted | `bool` | Indicates whether or not the term of service was selected during registration
 ## Examples
 
 You can view the complete example in the [example project] which resulted in the
