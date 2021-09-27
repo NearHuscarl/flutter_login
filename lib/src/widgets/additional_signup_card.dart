@@ -58,27 +58,27 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     _fieldAnimationControllers = widget.formFields
         .map((e) => AnimationController(
-            vsync: this, duration: Duration(milliseconds: 1000)))
+            vsync: this, duration: const Duration(milliseconds: 1000)))
         .toList();
 
     _loadingController = widget.loadingController ??
         (AnimationController(
           vsync: this,
-          duration: Duration(milliseconds: 1150),
-          reverseDuration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 1150),
+          reverseDuration: const Duration(milliseconds: 300),
         )..value = 1.0);
 
     _textFieldAnimationInterval = const Interval(0, .85);
 
     _submitController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _loadingController,
-      curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
+      curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
   }
 
@@ -87,7 +87,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     // Don't dispose the controller when we get it from outside, otherwise we get an Error
     // since also the parent widget disposes it
     if (widget.loadingController == null) _loadingController.dispose();
-    _fieldAnimationControllers.forEach((element) => element.dispose());
+    for (var element in _fieldAnimationControllers) {
+      element.dispose();
+    }
     _submitController.dispose();
     super.dispose();
   }
@@ -137,7 +139,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       return false;
     } else {
       showSuccessToast(context, messages.flushbarTitleSuccess,
-          messages.signUpSuccess, Duration(seconds: 4));
+          messages.signUpSuccess, const Duration(seconds: 4));
       setState(() => _isSubmitting = false);
       // await _loadingController.reverse();
       widget.onSubmitCompleted.call();
@@ -150,7 +152,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
         children: widget.formFields.map((UserFormField formField) {
       return Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           AnimatedTextFormField(
@@ -160,7 +162,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             width: width,
             labelText: formField.displayName,
             prefixIcon:
-                formField.icon ?? Icon(FontAwesomeIcons.solidUserCircle),
+                formField.icon ?? const Icon(FontAwesomeIcons.solidUserCircle),
             keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
             autofillHints: [
               TextFieldUtils.getAutofillHints(formField.userType)
@@ -170,7 +172,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                 : TextInputAction.next,
             validator: formField.fieldValidator,
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           )
         ],
@@ -223,7 +225,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                   ),
                 ),
                 _buildFields(textFieldWidth),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 _buildSubmitButton(theme, messages),
               ],
             ),

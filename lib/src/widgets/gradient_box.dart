@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class GradientBox extends StatelessWidget {
-  GradientBox({
+  const GradientBox({
+    Key? key,
     this.colors,
     this.begin = Alignment.topLeft,
     this.end = Alignment.bottomRight,
-  });
+  }) : super(key: key);
 
   final AlignmentGeometry begin;
   final AlignmentGeometry end;
@@ -19,10 +20,10 @@ class GradientBox extends StatelessWidget {
           colors: colors!,
           begin: begin,
           end: end,
-          stops: [0, 1],
+          stops: const [0, 1],
         ),
       ),
-      child: SizedBox.expand(),
+      child: const SizedBox.expand(),
     );
   }
 }

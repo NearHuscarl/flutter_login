@@ -10,7 +10,7 @@ enum ViewState {
 }
 
 class _HeroTextContent extends StatefulWidget {
-  _HeroTextContent(
+  const _HeroTextContent(
     this.text, {
     Key? key,
     required this.viewState,
@@ -143,7 +143,7 @@ class __HeroTextContentState extends State<_HeroTextContent>
 }
 
 class HeroText extends StatelessWidget {
-  HeroText(
+  const HeroText(
     this.text, {
     Key? key,
     required this.tag,
@@ -224,7 +224,7 @@ class HeroText extends StatelessWidget {
 }
 
 class HeroTextWidget extends StatelessWidget {
-  HeroTextWidget({
+  const HeroTextWidget({
     Key? key,
     this.child,
     required this.tag,

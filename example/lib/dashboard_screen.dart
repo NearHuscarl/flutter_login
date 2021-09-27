@@ -12,6 +12,8 @@ import 'widgets/round_button.dart';
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
 
+  const DashboardScreen({Key? key}) : super(key: key);
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -95,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             viewState: ViewState.shrunk,
             style: LoginThemeHelper.loginTextStyle,
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
         ],
       ),
     );
@@ -134,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final linearGradient = LinearGradient(colors: [
       primaryColor.shade800,
       primaryColor.shade200,
-    ]).createShader(Rect.fromLTWH(0.0, 0.0, 418.0, 78.0));
+    ]).createShader(const Rect.fromLTWH(0.0, 0.0, 418.0, 78.0));
 
     return ScaleTransition(
       scale: _headerScaleAnimation,
@@ -156,11 +158,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     color: accentColor.shade400,
                   ),
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 AnimatedNumericText(
                   initialValue: 14,
                   targetValue: 3467.87,
-                  curve: Interval(0, .5, curve: Curves.easeOut),
+                  curve: const Interval(0, .5, curve: Curves.easeOut),
                   controller: _loadingController!,
                   style: theme.textTheme.headline3!.copyWith(
                     foreground: Paint()..shader = linearGradient,
@@ -184,7 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       interval: Interval(
         interval.begin,
         interval.end,
-        curve: ElasticOutCurve(0.42),
+        curve: const ElasticOutCurve(0.42),
       ),
       onPressed: () {},
     );
@@ -204,57 +206,57 @@ class _DashboardScreenState extends State<DashboardScreen>
       crossAxisCount: 3,
       children: [
         _buildButton(
-          icon: Icon(FontAwesomeIcons.user),
+          icon: const Icon(FontAwesomeIcons.user),
           label: 'Profile',
-          interval: Interval(0, aniInterval),
+          interval: const Interval(0, aniInterval),
         ),
         _buildButton(
           icon: Container(
             // fix icon is not centered like others for some reasons
             padding: const EdgeInsets.only(left: 16.0),
             alignment: Alignment.centerLeft,
-            child: Icon(
+            child: const Icon(
               FontAwesomeIcons.moneyBillAlt,
               size: 20,
             ),
           ),
           label: 'Fund Transfer',
-          interval: Interval(step, aniInterval + step),
+          interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.handHoldingUsd),
+          icon: const Icon(FontAwesomeIcons.handHoldingUsd),
           label: 'Payment',
-          interval: Interval(step * 2, aniInterval + step * 2),
+          interval: const Interval(step * 2, aniInterval + step * 2),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.chartLine),
+          icon: const Icon(FontAwesomeIcons.chartLine),
           label: 'Report',
-          interval: Interval(0, aniInterval),
+          interval: const Interval(0, aniInterval),
         ),
         _buildButton(
-          icon: Icon(Icons.vpn_key),
+          icon: const Icon(Icons.vpn_key),
           label: 'Register',
-          interval: Interval(step, aniInterval + step),
+          interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.history),
+          icon: const Icon(FontAwesomeIcons.history),
           label: 'History',
-          interval: Interval(step * 2, aniInterval + step * 2),
+          interval: const Interval(step * 2, aniInterval + step * 2),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.ellipsisH),
+          icon: const Icon(FontAwesomeIcons.ellipsisH),
           label: 'Other',
-          interval: Interval(0, aniInterval),
+          interval: const Interval(0, aniInterval),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.search, size: 20),
+          icon: const Icon(FontAwesomeIcons.search, size: 20),
           label: 'Search',
-          interval: Interval(step, aniInterval + step),
+          interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: Icon(FontAwesomeIcons.slidersH, size: 20),
+          icon: const Icon(FontAwesomeIcons.slidersH, size: 20),
           label: 'Settings',
-          interval: Interval(step * 2, aniInterval + step * 2),
+          interval: const Interval(step * 2, aniInterval + step * 2),
         ),
       ],
     );
@@ -274,7 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             onPressed: () => _loadingController!.value == 0
                 ? _loadingController!.forward()
                 : _loadingController!.reverse(),
-            child: Text('loading', style: textStyle),
+            child: const Text('loading', style: textStyle),
           ),
         ],
       ),
@@ -298,7 +300,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Expanded(
                       flex: 2,
                       child: _buildHeader(theme),

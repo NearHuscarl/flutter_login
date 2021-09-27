@@ -1,7 +1,7 @@
 part of auth_card;
 
 class _RecoverCard extends StatefulWidget {
-  _RecoverCard(
+  const _RecoverCard(
       {Key? key,
       required this.userValidator,
       required this.onBack,
@@ -42,7 +42,7 @@ class _RecoverCardState extends State<_RecoverCard>
 
     _submitController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -84,7 +84,7 @@ class _RecoverCardState extends State<_RecoverCard>
       controller: _nameController,
       width: width,
       labelText: messages.userHint,
-      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+      prefixIcon: const Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       autofillHints: [TextFieldUtils.getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
@@ -115,7 +115,7 @@ class _RecoverCardState extends State<_RecoverCard>
               widget.onBack();
             }
           : null,
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
       child: Text(messages.goBackButton),
@@ -153,9 +153,9 @@ class _RecoverCardState extends State<_RecoverCard>
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildRecoverNameField(textFieldWidth, messages, auth),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   auth.onConfirmRecover != null
                       ? messages.recoverCodePasswordDescription
@@ -164,7 +164,7 @@ class _RecoverCardState extends State<_RecoverCard>
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
-                SizedBox(height: 26),
+                const SizedBox(height: 26),
                 _buildRecoverButton(theme, messages),
                 _buildBackButton(theme, messages, widget.loginTheme),
               ],

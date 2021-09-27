@@ -11,7 +11,7 @@ import '../providers/login_messages.dart';
 import '../widget_helper.dart';
 
 class ConfirmRecoverCard extends StatefulWidget {
-  ConfirmRecoverCard({
+  const ConfirmRecoverCard({
     Key? key,
     required this.passwordValidator,
     required this.onBack,
@@ -45,7 +45,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
 
     _submitController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -93,7 +93,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
     return AnimatedTextFormField(
       width: width,
       labelText: messages.recoveryCodeHint,
-      prefixIcon: Icon(FontAwesomeIcons.solidCheckCircle),
+      prefixIcon: const Icon(FontAwesomeIcons.solidCheckCircle),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -153,7 +153,7 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
     return MaterialButton(
       onPressed: !_isSubmitting ? widget.onBack : null,
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
       child: Text(messages.goBackButton),
@@ -189,13 +189,13 @@ class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildVerificationCodeField(textFieldWidth, messages),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildPasswordField(textFieldWidth, messages),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildConfirmPasswordField(textFieldWidth, messages),
-                SizedBox(height: 26),
+                const SizedBox(height: 26),
                 _buildSetPasswordButton(theme, messages),
                 _buildBackButton(theme, messages),
               ],

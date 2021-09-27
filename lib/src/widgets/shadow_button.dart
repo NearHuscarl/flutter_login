@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ShadowButton extends StatelessWidget {
-  ShadowButton({
+  const ShadowButton({
     Key? key,
     this.text,
     this.borderRadius = const BorderRadius.all(Radius.circular(0.0)),

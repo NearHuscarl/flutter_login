@@ -185,7 +185,7 @@ class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 2250);
 
   Future<String?> _authUser(LoginData data) {
-    print('Name: ${data.name}, Password: ${data.password}');
+    debugPrint('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
         return 'User not exists';
@@ -198,14 +198,14 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupUser(SignupData data) {
-    print('Signup Name: ${data.name}, Password: ${data.password}');
+    debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       return null;
     });
   }
 
   Future<String> _recoverPassword(String name) {
-    print('Name: $name');
+    debugPrint('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
         return 'User not exists';
@@ -252,7 +252,7 @@ class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 2250);
 
   Future<String?> _authUser(LoginData data) {
-    print('Name: ${data.name}, Password: ${data.password}');
+    debugPrint('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
         return 'User not exists';
@@ -265,14 +265,14 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupUser(SignupData data) {
-    print('Signup Name: ${data.name}, Password: ${data.password}');
+    debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
       return null;
     });
   }
 
   Future<String> _recoverPassword(String name) {
-    print('Name: $name');
+    debugPrint('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
         return 'User not exists';
@@ -294,9 +294,9 @@ class LoginScreen extends StatelessWidget {
             icon: FontAwesomeIcons.google,
             label: 'Google',
             callback: () async {
-              print('start google sign in');
+              debugPrint('start google sign in');
               await Future.delayed(loginTime);
-              print('stop google sign in');              
+              debugPrint('stop google sign in');              
               return null;
             },
           ),
@@ -304,27 +304,27 @@ class LoginScreen extends StatelessWidget {
             icon: FontAwesomeIcons.facebookF,
             label: 'Facebook',
             callback: () async {            
-              print('start facebook sign in');
+              debugPrint('start facebook sign in');
               await Future.delayed(loginTime);
-              print('stop facebook sign in');              
+              debugPrint('stop facebook sign in');              
               return null;
             },
           ),
           LoginProvider(
             icon: FontAwesomeIcons.linkedinIn,
             callback: () async {         
-              print('start linkdin sign in');
+              debugPrint('start linkdin sign in');
               await Future.delayed(loginTime);         
-              print('stop linkdin sign in');              
+              debugPrint('stop linkdin sign in');              
               return null;
             },
           ),
           LoginProvider(
             icon: FontAwesomeIcons.githubAlt,
             callback: () async {
-              print('start github sign in');
+              debugPrint('start github sign in');
               await Future.delayed(loginTime);
-              print('stop github sign in');              
+              debugPrint('stop github sign in');              
               return null;
             },
           ),

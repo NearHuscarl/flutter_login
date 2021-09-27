@@ -12,12 +12,12 @@ Flushbar showSuccessToast(BuildContext context, String title, String message,
   return Flushbar(
     title: title,
     message: message,
-    icon: Icon(
+    icon: const Icon(
       Icons.check,
       size: 28.0,
       color: Colors.white,
     ),
-    duration: duration ?? Duration(seconds: 4),
+    duration: duration ?? const Duration(seconds: 4),
     backgroundGradient: LinearGradient(
       colors: [Colors.green[600]!, Colors.green[400]!],
     ),
@@ -29,7 +29,7 @@ Flushbar showErrorToast(BuildContext context, String title, String message) {
   return Flushbar(
     title: title,
     message: message,
-    icon: Icon(
+    icon: const Icon(
       Icons.error,
       size: 28.0,
       color: Colors.white,

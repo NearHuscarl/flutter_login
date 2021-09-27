@@ -58,13 +58,15 @@ class _TermCheckboxState extends State<TermCheckbox> {
 
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField(
-      {required Widget title,
+      {Key? key,
+      required Widget title,
       required FormFieldValidator<bool> validator,
       String validationErrorMessage = '',
       bool initialValue = false,
       bool autoValidate = true,
       required ValueChanged<bool?> onChanged})
       : super(
+            key: key,
             validator: validator,
             initialValue: initialValue,
             builder: (FormFieldState<bool> state) {

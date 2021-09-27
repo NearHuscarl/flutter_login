@@ -11,6 +11,8 @@ import 'users.dart';
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
+  const LoginScreen({Key? key}) : super(key: key);
+
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String?> _loginUser(LoginData data) {
@@ -50,7 +52,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: Constants.appName,
-      logo: AssetImage('assets/images/ecorp.png'),
+      logo: const AssetImage('assets/images/ecorp.png'),
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
       navigateBackAfterRecovery: true,
@@ -62,9 +64,9 @@ class LoginScreen extends StatelessWidget {
           icon: FontAwesomeIcons.google,
           label: 'Google',
           callback: () async {
-            print('start google sign in');
+            debugPrint('start google sign in');
             await Future.delayed(loginTime);
-            print('stop google sign in');
+            debugPrint('stop google sign in');
             return '';
           },
         ),
@@ -72,9 +74,9 @@ class LoginScreen extends StatelessWidget {
           icon: FontAwesomeIcons.linkedinIn,
           label: 'LinkedIn',
           callback: () async {
-            print('start linkdin sign in');
+            debugPrint('start linkdin sign in');
             await Future.delayed(loginTime);
-            print('stop linkdin sign in');
+            debugPrint('stop linkdin sign in');
             return '';
           },
           providerNeedsSignUpCallback: () {
@@ -85,9 +87,9 @@ class LoginScreen extends StatelessWidget {
         LoginProvider(
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
-            print('start github sign in');
+            debugPrint('start github sign in');
             await Future.delayed(loginTime);
-            print('stop github sign in');
+            debugPrint('stop github sign in');
             return '';
           },
         ),
@@ -104,10 +106,10 @@ class LoginScreen extends StatelessWidget {
             linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
       ],
       additionalSignupFields: [
-        UserFormField(
+        const UserFormField(
             keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
-        UserFormField(keyName: 'Name'),
-        UserFormField(keyName: 'Surname'),
+        const UserFormField(keyName: 'Name'),
+        const UserFormField(keyName: 'Surname'),
         UserFormField(
           keyName: 'phone_number',
           displayName: 'Phone Number',
@@ -236,36 +238,36 @@ class LoginScreen extends StatelessWidget {
         return null;
       },
       onLogin: (loginData) {
-        print('Login info');
-        print('Name: ${loginData.name}');
-        print('Password: ${loginData.password}');
+        debugPrint('Login info');
+        debugPrint('Name: ${loginData.name}');
+        debugPrint('Password: ${loginData.password}');
         return _loginUser(loginData);
       },
       onSignup: (signupData) {
-        print('Signup info');
-        print('Name: ${signupData.name}');
-        print('Password: ${signupData.password}');
+        debugPrint('Signup info');
+        debugPrint('Name: ${signupData.name}');
+        debugPrint('Password: ${signupData.password}');
 
         signupData.additionalSignupData?.forEach((key, value) {
-          print('$key: $value');
+          debugPrint('$key: $value');
         });
         if (signupData.termsOfService.isNotEmpty) {
-          print('Terms of service: ');
-          signupData.termsOfService.forEach((element) {
-            print(
+          debugPrint('Terms of service: ');
+          for (var element in signupData.termsOfService) {
+            debugPrint(
                 ' - ${element.term.id}: ${element.accepted == true ? 'accepted' : 'rejected'}');
-          });
+          }
         }
         return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: (name) {
-        print('Recover password info');
-        print('Name: $name');
+        debugPrint('Recover password info');
+        debugPrint('Name: $name');
         return _recoverPassword(name);
         // Show new password dialog
       },
