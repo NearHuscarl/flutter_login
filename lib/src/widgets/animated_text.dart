@@ -11,7 +11,7 @@ enum AnimatedTextRotation { up, down }
 
 /// https://medium.com/flutter-community/flutter-challenge-3d-bottom-navigation-bar-48952a5fd996
 class AnimatedText extends StatefulWidget {
-  AnimatedText({
+  const AnimatedText({
     Key? key,
     required this.text,
     this.style,

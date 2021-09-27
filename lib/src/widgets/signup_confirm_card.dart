@@ -13,7 +13,7 @@ import '../providers/login_messages.dart';
 import '../widget_helper.dart';
 
 class ConfirmSignupCard extends StatefulWidget {
-  ConfirmSignupCard({
+  const ConfirmSignupCard({
     Key? key,
     required this.onBack,
     required this.onSubmitCompleted,
@@ -43,7 +43,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
 
     _submitController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -85,7 +85,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     await _submitController.reverse();
 
     if (!widget.loginAfterSignUp) {
-      auth.mode = AuthMode.Login;
+      auth.mode = AuthMode.login;
       widget.onBack();
       return false;
     }
@@ -125,7 +125,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
     return AnimatedTextFormField(
       width: width,
       labelText: messages.confirmationCodeHint,
-      prefixIcon: Icon(FontAwesomeIcons.solidCheckCircle),
+      prefixIcon: const Icon(FontAwesomeIcons.solidCheckCircle),
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: (value) {
@@ -160,7 +160,7 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
     return MaterialButton(
       onPressed: !_isSubmitting ? widget.onBack : null,
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
       child: Text(messages.goBackButton),
@@ -196,9 +196,9 @@ class ConfirmSignupCardState extends State<ConfirmSignupCard>
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildConfirmationCodeField(textFieldWidth, messages),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 _buildResendCode(theme, messages),
                 _buildConfirmButton(theme, messages),
                 _buildBackButton(theme, messages),

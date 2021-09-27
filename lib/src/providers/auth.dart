@@ -5,7 +5,7 @@ import 'package:flutter_login/src/models/term_of_service.dart';
 import '../../flutter_login.dart';
 import '../models/login_data.dart';
 
-enum AuthMode { Signup, Login }
+enum AuthMode { signup, login }
 
 enum AuthType { provider, userPassword }
 
@@ -72,26 +72,26 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
-  AuthMode _mode = AuthMode.Login;
+  AuthMode _mode = AuthMode.login;
   AuthMode get mode => _mode;
   set mode(AuthMode value) {
     _mode = value;
     notifyListeners();
   }
 
-  bool get isLogin => _mode == AuthMode.Login;
-  bool get isSignup => _mode == AuthMode.Signup;
+  bool get isLogin => _mode == AuthMode.login;
+  bool get isSignup => _mode == AuthMode.signup;
   int currentCardIndex = 0;
 
   AuthMode opposite() {
-    return _mode == AuthMode.Login ? AuthMode.Signup : AuthMode.Login;
+    return _mode == AuthMode.login ? AuthMode.signup : AuthMode.login;
   }
 
   AuthMode switchAuth() {
-    if (mode == AuthMode.Login) {
-      mode = AuthMode.Signup;
-    } else if (mode == AuthMode.Signup) {
-      mode = AuthMode.Login;
+    if (mode == AuthMode.login) {
+      mode = AuthMode.signup;
+    } else if (mode == AuthMode.signup) {
+      mode = AuthMode.login;
     }
     return mode;
   }

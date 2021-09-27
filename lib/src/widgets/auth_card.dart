@@ -39,7 +39,7 @@ part 'login_card.dart';
 part 'recover_card.dart';
 
 class AuthCard extends StatefulWidget {
-  AuthCard(
+  const AuthCard(
       {Key? key,
       required this.userType,
       this.padding = const EdgeInsets.all(0),
@@ -128,19 +128,20 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _formLoadingController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1150),
-      reverseDuration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 1150),
+      reverseDuration: const Duration(milliseconds: 300),
     );
 
     _routeTransitionController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1100),
+      duration: const Duration(milliseconds: 1100),
     );
 
     _cardSizeAnimation = Tween<double>(begin: 1.0, end: cardSizeScaleEnd)
         .animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(0, .27272727 /* ~300ms */, curve: Curves.easeInOutCirc),
+      curve: const Interval(0, .27272727 /* ~300ms */,
+          curve: Curves.easeInOutCirc),
     ));
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
@@ -148,12 +149,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         Tween<double>(begin: double.minPositive, end: 1.0)
             .animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
+      curve: const Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
     ));
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
+      curve: const Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
     ));
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
@@ -162,7 +163,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _cardRotationAnimation =
         Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(.72727272, 1 /* ~300ms */, curve: Curves.easeInOutCubic),
+      curve: const Interval(.72727272, 1 /* ~300ms */,
+          curve: Curves.easeInOutCubic),
     ));
   }
 
@@ -182,7 +184,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     setState(() {
       _pageController!.animateToPage(
         newCardIndex,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.ease,
       );
       _pageIndex = newCardIndex;
@@ -214,13 +216,13 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+      curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
     ));
     _cardSize2AnimationY =
         Tween<double>(begin: 1.0, end: widthRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
       parent: _routeTransitionController,
-      curve: Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+      curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
     ));
 
     widget.onSubmit?.call();
@@ -282,7 +284,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         ),
         child: DecoratedBox(
-          decoration: BoxDecoration(color: theme.accentColor),
+          decoration: BoxDecoration(color: theme.colorScheme.secondary),
         ),
       ),
     );
@@ -398,7 +400,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       width: deviceSize.width,
       padding: widget.padding,
       child: TransformerPageView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         pageController: _pageController,
         itemCount: 5,
 
