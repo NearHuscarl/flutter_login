@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Demo',
       theme: ThemeData(
-        // brightness: Brightness.dark,
         textSelectionTheme:
             const TextSelectionThemeData(cursorColor: Colors.orange),
         // fontFamily: 'SourceSansPro',

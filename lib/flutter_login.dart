@@ -62,16 +62,16 @@ class LoginProvider {
   /// Enable or disable the animation of the button.
   ///
   /// Default: enabled
-  final bool animated;
+  // final bool animated;
 
-  const LoginProvider(
-      {this.button,
-      this.icon,
-      this.callback,
-      this.label = '',
-      this.providerNeedsSignUpCallback,
-      this.animated = true})
-      : assert(button != null || icon != null);
+  const LoginProvider({
+    this.button,
+    this.icon,
+    this.callback,
+    this.label = '',
+    this.providerNeedsSignUpCallback,
+    // this.animated = true
+  }) : assert(button != null || icon != null);
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -267,7 +267,7 @@ class __HeaderState extends State<_Header> {
 class FlutterLogin extends StatefulWidget {
   FlutterLogin(
       {Key? key,
-      required this.onSignup,
+      this.onSignup,
       required this.onLogin,
       required this.onRecoverPassword,
       this.title,
@@ -285,7 +285,6 @@ class FlutterLogin extends StatefulWidget {
       this.showDebugButtons = false,
       this.loginProviders = const <LoginProvider>[],
       this.hideForgotPasswordButton = false,
-      this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
       this.footer,
       this.hideProvidersTitle = false,
@@ -303,7 +302,9 @@ class FlutterLogin extends StatefulWidget {
         super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
-  final SignupCallback onSignup;
+  ///
+  /// Can be null to disable signup.
+  final SignupCallback? onSignup;
 
   /// Called when the user hit the submit button when in login mode
   final LoginCallback onLogin;
@@ -366,9 +367,6 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
-
-  /// Set to true to hide the SignUp button
-  final bool hideSignUpButton;
 
   /// Set to false to return back to sign in page after successful sign up
   final bool loginAfterSignUp;
@@ -765,7 +763,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
-                        hideSignUpButton: widget.hideSignUpButton,
+                        hideSignUpButton: widget.onSignup == null,
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,

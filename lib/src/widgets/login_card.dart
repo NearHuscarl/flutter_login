@@ -474,12 +474,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       if (loginProvider.button != null) {
         buttonProvidersList.add(LoginProvider(
           icon: loginProvider.icon,
+          label: loginProvider.label,
           button: loginProvider.button,
           callback: loginProvider.callback,
         ));
       } else if (loginProvider.icon != null) {
         iconProvidersList.add(LoginProvider(
           icon: loginProvider.icon,
+          label: loginProvider.label,
           button: loginProvider.button,
           callback: loginProvider.callback,
         ));
@@ -534,9 +536,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
-            scale: _buttonScaleAnimation,
-            child: loginProvider.animated
-                ? AnimatedIconButton(
+              scale: _buttonScaleAnimation,
+              child: Column(
+                children: [
+                  AnimatedIconButton(
                     icon: loginProvider.icon!,
                     controller: _providerControllerList[index],
                     tooltip: loginProvider.label,
@@ -544,16 +547,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                       control: _providerControllerList[index],
                       loginProvider: loginProvider,
                     ),
-                  )
-                : IconButton(
-                    icon: Icon(loginProvider.icon!),
-                    tooltip: loginProvider.label,
-                    onPressed: () => _loginProviderSubmit(
-                      control: _providerControllerList[index],
-                      loginProvider: loginProvider,
-                    ),
                   ),
-          ),
+                  Text(loginProvider.label)
+                ],
+              )),
         );
       }).toList(),
     );

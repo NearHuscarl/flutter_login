@@ -197,7 +197,6 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
                 height: _height,
                 alignment: Alignment.center,
                 child: Icon(widget.icon, color: Colors.white),
-                //_buildButtonText(theme),
               ),
             ),
           ),
