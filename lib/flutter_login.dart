@@ -35,15 +35,25 @@ export 'src/providers/login_theme.dart';
 export 'src/models/term_of_service.dart';
 
 class LoginProvider {
+
+  /// Used for custom sign-in buttons.
+  ///
+  /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
+  /// but [button] will take preference over [icon]
+  final Widget? button;
+
   /// The icon shown on the provider button
-  final IconData icon;
+  ///
+  /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
+  /// but [button] will take preference over [icon]
+  final IconData? icon;
 
   /// The label shown under the provider
   final String label;
 
   /// A Function called when the provider button is pressed.
   /// It must return null on success, or a `String` describing the error on failure.
-  final ProviderAuthCallback callback;
+  final ProviderAuthCallback? callback;
 
   /// Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`.
   /// When given, this callback must return a `Future<bool>`.
@@ -51,12 +61,19 @@ class LoginProvider {
   /// If not given the default behaviour is not to show the signup card.
   final ProviderNeedsSignUpCallback? providerNeedsSignUpCallback;
 
+  /// Enable or disable the animation of the button.
+  ///
+  /// Default: enabled
+  final bool animated;
+
   const LoginProvider({
-    required this.icon,
-    required this.callback,
+    this.button,
+    this.icon,
+    this.callback,
     this.label = '',
     this.providerNeedsSignUpCallback,
-  });
+    this.animated = true
+  }) : assert (button != null || icon != null);
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -76,8 +93,8 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
+          const Padding(
+            padding: EdgeInsets.all(10.0),
             child: Text(
               'x1 is normal time, x5 means the animation is 5x times slower for debugging purpose',
               textAlign: TextAlign.center,
@@ -561,7 +578,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     final primaryColorDark = primaryDarkShades.length >= 3
         ? primaryDarkShades[2]
         : primaryDarkShades.last;
-    final accentColor = loginTheme.accentColor ?? theme.accentColor;
+    final accentColor = loginTheme.accentColor ?? theme.colorScheme.secondary;
     final errorColor = loginTheme.errorColor ?? theme.errorColor;
     // the background is a dark gradient, force to use white text if detect default black text color
     final isDefaultBlackText = theme.textTheme.headline3!.color ==
@@ -603,7 +620,6 @@ class _FlutterLoginState extends State<FlutterLogin>
     return theme.copyWith(
       primaryColor: primaryColor,
       primaryColorDark: primaryColorDark,
-      accentColor: accentColor,
       errorColor: errorColor,
       cardTheme: theme.cardTheme.copyWith(
         clipBehavior: cardTheme.clipBehavior,
@@ -657,7 +673,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
       floatingActionButtonTheme: theme.floatingActionButtonTheme.copyWith(
         backgroundColor: buttonTheme.backgroundColor ?? primaryColor,
-        splashColor: buttonTheme.splashColor ?? theme.accentColor,
+        splashColor: buttonTheme.splashColor ?? theme.colorScheme.secondary,
         elevation: buttonTheme.elevation ?? 4.0,
         highlightElevation: buttonTheme.highlightElevation ?? 2.0,
         shape: buttonTheme.shape ?? StadiumBorder(),
@@ -670,7 +686,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         bodyText2: textStyle,
         subtitle1: textFieldStyle,
         button: buttonStyle,
-      ),
+      ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor),
     );
   }
 
@@ -775,8 +791,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                 ),
               ),
             ),
-            if (!kReleaseMode && widget.showDebugButtons)
-              _buildDebugAnimationButtons(),
+            // if (!kReleaseMode && widget.showDebugButtons)
+            //   _buildDebugAnimationButtons(),
           ],
         ),
       ),

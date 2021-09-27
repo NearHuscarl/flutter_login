@@ -250,8 +250,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
-      required AnimationController animationController}) async {
-    await animationController.forward();
+      required AnimationController control}) async {
+    await control.forward();
 
     final auth = Provider.of<Auth>(context, listen: false);
 
@@ -259,7 +259,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     String? error;
 
-    error = await loginProvider.callback();
+    error = await loginProvider.callback!();
 
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
@@ -269,7 +269,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     });
 
-    await animationController.reverse();
+    await control.reverse();
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
@@ -436,34 +436,125 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
+  // Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
+  //     Auth auth, LoginTheme loginTheme) {
+  //   return Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: auth.loginProviders.map((loginProvider) {
+  //         var index = auth.loginProviders.indexOf(loginProvider);
+  //         return Padding(
+  //           padding: loginTheme.providerButtonPadding ??
+  //               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+  //           child: ScaleTransition(
+  //             scale: _buttonScaleAnimation,
+  //             child: Column(
+  //               children: [
+  //                 AnimatedIconButton(
+  //                   icon: loginProvider.icon,
+  //                   controller: _providerControllerList[index],
+  //                   tooltip: '',
+  //                   onPressed: () => _loginProviderSubmit(
+  //                     animationController: _providerControllerList[index],
+  //                     loginProvider: loginProvider,
+  //                   ),
+  //                 ),
+  //                 Text(loginProvider.label),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }).toList());
+  // }
+
   Widget _buildProvidersLogInButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: auth.loginProviders.map((loginProvider) {
-          var index = auth.loginProviders.indexOf(loginProvider);
-          return Padding(
-            padding: loginTheme.providerButtonPadding ??
-                const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
-            child: ScaleTransition(
-              scale: _buttonScaleAnimation,
-              child: Column(
-                children: [
-                  AnimatedIconButton(
-                    icon: loginProvider.icon,
-                    controller: _providerControllerList[index],
-                    tooltip: '',
-                    onPressed: () => _loginProviderSubmit(
-                      animationController: _providerControllerList[index],
-                      loginProvider: loginProvider,
-                    ),
+    var buttonProvidersList = <LoginProvider>[];
+    var iconProvidersList = <LoginProvider>[];
+    auth.loginProviders.forEach((LoginProvider loginProvider) {
+      if (loginProvider.button != null) {
+        buttonProvidersList.add(LoginProvider(
+          icon: loginProvider.icon,
+          button: loginProvider.button,
+          callback: loginProvider.callback,
+        ));
+      } else if (loginProvider.icon != null) {
+        iconProvidersList.add(LoginProvider(
+          icon: loginProvider.icon,
+          button: loginProvider.button,
+          callback: loginProvider.callback,
+        ));
+      }
+    });
+    if (buttonProvidersList.isNotEmpty) {
+      return Column(
+        children: [
+          _buildButtonColumn(theme, messages, buttonProvidersList, loginTheme),
+          iconProvidersList.isNotEmpty
+              ? Row(children: <Widget>[
+                  Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('OR'),
                   ),
-                  Text(loginProvider.label),
-                ],
+                  Expanded(child: Divider()),
+                ])
+              : Container(),
+          _buildIconRow(theme, messages, iconProvidersList, loginTheme),
+        ],
+      );
+    } else if (iconProvidersList.isNotEmpty) {
+      return _buildIconRow(theme, messages, iconProvidersList, loginTheme);
+    }
+    return Container();
+  }
+
+  Widget _buildButtonColumn(ThemeData theme, LoginMessages messages,
+      List<LoginProvider> buttonProvidersList, LoginTheme loginTheme) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: buttonProvidersList.map((loginProvider) {
+        return Padding(
+          padding: loginTheme.providerButtonPadding ??
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+          child: ScaleTransition(
+            scale: _buttonScaleAnimation,
+            child: loginProvider.button,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildIconRow(ThemeData theme, LoginMessages messages,
+      List<LoginProvider> iconProvidersList, LoginTheme loginTheme) {
+    return Wrap(
+      children: iconProvidersList.map((loginProvider) {
+        var index = iconProvidersList.indexOf(loginProvider);
+        return Padding(
+          padding: loginTheme.providerButtonPadding ??
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+          child: ScaleTransition(
+            scale: _buttonScaleAnimation,
+            child: loginProvider.animated ? AnimatedIconButton(
+              icon: loginProvider.icon!,
+              controller: _providerControllerList[index],
+              tooltip: loginProvider.label,
+              onPressed: () => _loginProviderSubmit(
+                control: _providerControllerList[index],
+                loginProvider: loginProvider,
               ),
+            ) : IconButton(
+                icon: Icon(loginProvider.icon!),
+                tooltip: loginProvider.label,
+                onPressed: () => _loginProviderSubmit(
+                  control: _providerControllerList[index],
+                  loginProvider: loginProvider,
+                ),
             ),
-          );
-        }).toList());
+          ),
+        );
+      }).toList(),
+    );
   }
 
   Widget _buildProvidersTitle(LoginMessages messages) {
@@ -486,8 +577,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
-    final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min(deviceSize.width * 0.75, 360.0);
+    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
@@ -512,7 +602,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             ),
           ),
           ExpandableContainer(
-            backgroundColor: theme.accentColor,
+            backgroundColor: theme.colorScheme.secondary,
             controller: _switchAuthController,
             initialState: isLogin
                 ? ExpandableContainerState.shrunk

@@ -21,8 +21,6 @@ class MyApp extends StatelessWidget {
       title: 'Login Demo',
       theme: ThemeData(
         // brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.orange,
         textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.orange),
         // fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
@@ -53,6 +51,7 @@ class MyApp extends StatelessWidget {
           subtitle2: TextStyle(fontFamily: 'NotoSans'),
           overline: TextStyle(fontFamily: 'NotoSans'),
         ),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple).copyWith(secondary: Colors.orange),
       ),
       navigatorObservers: [TransitionRouteObserver()],
       initialRoute: LoginScreen.routeName,

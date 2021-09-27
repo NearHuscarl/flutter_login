@@ -11,15 +11,15 @@ dependencies:
     sdk: flutter
   flutter_login:
     path: ../
-  cupertino_icons: ^1.0.2
-  font_awesome_flutter: ^9.0.0
+  cupertino_icons: ^1.0.3
+  font_awesome_flutter: ^9.1.0
+  flutter_signin_button: ^2.0.0
   intl: ^0.17.0
-  # dummy package to test https://github.com/NearHuscarl/flutter_login/issues/35
-  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^1.0.4
 
 flutter:
   uses-material-design: true

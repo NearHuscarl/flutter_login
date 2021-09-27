@@ -138,11 +138,13 @@ userType | `LoginUserType` | The LoginUserType of the form. The right keyboard a
 ### LoginProvider
 Property |   Type     | Description |
 -------- |------------| ------------| 
-icon     | `IconData` | The icon shown on the provider button |
+button | `Widget` | Used for Buttons for [LoginProvider] - see example uses [SignInButton] package
+icon | `IconData` | Icon that is used for a button for [LoginProvider]
 label    | `String`   | The label shown under the provider |
 callback | `ProviderAuthCallback` | A Function called when the provider button is pressed. It must return null on success, or a `String` describing the error on failure. |
 providerNeedsSignUpCallback | `ProviderNeedsSignUpCallback?` | Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`. When given, this callback must return a `Future<bool>`. If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`. If not given the default behaviour is not to show the signup card.
 
+*NOTE:* Both [button] and [icon] can be added to [LoginProvider], but [button] will take preference over [icon]
 
 ### TermOfService
 
@@ -338,7 +340,7 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-<img src="https://github.com/xnio94/flutter_login/raw/master/demo/sign_in_providers.png" width="300">
+<img src="https://github.com/NearHuscarl/flutter_login/raw/master/demo/login-with-provider.png" width="300">
 
 
 
