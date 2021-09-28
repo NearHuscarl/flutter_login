@@ -126,6 +126,7 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
+      initialAuthMode: AuthMode.login,
       // hideProvidersTitle: false,
       // loginAfterSignUp: false,
       // hideForgotPasswordButton: true,

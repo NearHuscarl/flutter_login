@@ -49,10 +49,12 @@ class Auth with ChangeNotifier {
       String email = '',
       String password = '',
       String confirmPassword = '',
+      AuthMode initialAuthMode = AuthMode.login,
       this.termsOfService = const []})
       : _email = email,
         _password = password,
-        _confirmPassword = confirmPassword;
+        _confirmPassword = confirmPassword,
+        _mode = initialAuthMode;
 
   final LoginCallback? onLogin;
   final SignupCallback? onSignup;
