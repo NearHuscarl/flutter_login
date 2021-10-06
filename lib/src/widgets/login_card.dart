@@ -250,8 +250,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
-      required AnimationController control}) async {
-    await control.forward();
+      AnimationController? control}) async {
+    await control?.forward();
 
     final auth = Provider.of<Auth>(context, listen: false);
 
@@ -269,7 +269,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     });
 
-    await control.reverse();
+    await control?.reverse();
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
@@ -492,14 +492,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         children: [
           _buildButtonColumn(theme, messages, buttonProvidersList, loginTheme),
           iconProvidersList.isNotEmpty
-              ? Row(children: const <Widget>[
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('OR'),
-                  ),
-                  Expanded(child: Divider()),
-                ])
+              ? _buildProvidersTitleSecond(messages)
               : Container(),
           _buildIconRow(theme, messages, iconProvidersList, loginTheme),
         ],
@@ -512,15 +505,25 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildButtonColumn(ThemeData theme, LoginMessages messages,
       List<LoginProvider> buttonProvidersList, LoginTheme loginTheme) {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: buttonProvidersList.map((loginProvider) {
+        final index = buttonProvidersList.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
-            child: loginProvider.button,
+            child: SignInButton(
+              loginProvider.button!,
+              onPressed: () => _loginProviderSubmit(
+                // control: _providerControllerList[index],
+                loginProvider: loginProvider,
+              ),
+              text: loginProvider.label,
+            ),
+            // child: loginProvider.button,
           ),
         );
       }).toList(),
@@ -556,18 +559,33 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProvidersTitle(LoginMessages messages) {
+  Widget _buildProvidersTitleFirst(LoginMessages messages) {
     return ScaleTransition(
         scale: _buttonScaleAnimation,
         child: Row(children: <Widget>[
           const Expanded(child: Divider()),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(messages.providersTitle),
+            child: Text(messages.providersTitleFirst),
           ),
           const Expanded(child: Divider()),
         ]));
   }
+
+  Widget _buildProvidersTitleSecond(LoginMessages messages) {
+    return ScaleTransition(
+        scale: _buttonScaleAnimation,
+        child: Row(children: <Widget>[
+          Expanded(child: Divider()),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(messages.providersTitleSecond),
+          ),
+          Expanded(child: Divider()),
+        ]));
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -639,7 +657,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                         size: const Size.fromHeight(10),
                       ),
                 auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
-                    ? _buildProvidersTitle(messages)
+                    ? _buildProvidersTitleFirst(messages)
                     : Container(),
                 _buildProvidersLogInButton(theme, messages, auth, loginTheme),
               ],

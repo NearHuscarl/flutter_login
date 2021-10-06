@@ -181,7 +181,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   Widget _buildButton(ThemeData theme) {
     final buttonTheme = theme.floatingActionButtonTheme;
-
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
       child: AnimatedContainer(

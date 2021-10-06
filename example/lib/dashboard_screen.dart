@@ -22,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin, TransitionRouteAware {
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context)
-        .pushReplacementNamed('/')
+        .pushReplacementNamed('/auth')
         // we dont want to pop the screen, just replace it completely
         .then((_) => false);
   }

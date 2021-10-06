@@ -17,7 +17,8 @@ class LoginMessages with ChangeNotifier {
     this.flushbarTitleError = defaultflushbarTitleError,
     this.flushbarTitleSuccess = defaultflushbarTitleSuccess,
     this.signUpSuccess = defaultSignUpSuccess,
-    this.providersTitle = defaultProvidersTitle,
+    this.providersTitleFirst = defaultProvidersTitleFirst,
+    this.providersTitleSecond = defaultProvidersTitleSecond,
     this.additionalSignUpSubmitButton = defaultAdditionalSignUpSubmitButton,
     this.additionalSignUpFormDescription =
         defaultAdditionalSignUpFormDescription,
@@ -55,7 +56,8 @@ class LoginMessages with ChangeNotifier {
   static const defaultflushbarTitleSuccess = 'Success';
   static const defaultflushbarTitleError = 'Error';
   static const defaultSignUpSuccess = 'An activation link has been sent';
-  static const defaultProvidersTitle = 'or login with';
+  static const defaultProvidersTitleFirst = 'or login with';
+  static const defaultProvidersTitleSecond = 'or';
   static const defaultAdditionalSignUpSubmitButton = 'SUBMIT';
   static const defaultAdditionalSignUpFormDescription =
       'Please fill in this form to complete the signup';
@@ -133,7 +135,10 @@ class LoginMessages with ChangeNotifier {
   final String signUpSuccess;
 
   /// The string shown above the Providers buttons
-  final String providersTitle;
+  final String providersTitleFirst;
+
+  /// The string shown above the Providers icons
+  final String providersTitleSecond;
 
   /// The intro text for the confirm recover password card
   final String confirmRecoverIntro;

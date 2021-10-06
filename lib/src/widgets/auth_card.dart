@@ -22,6 +22,7 @@ import 'package:flutter_login/src/widget_helper.dart';
 import 'package:flutter_login/src/widgets/recover_confirm_card.dart';
 import 'package:flutter_login/src/widgets/signup_confirm_card.dart';
 import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 

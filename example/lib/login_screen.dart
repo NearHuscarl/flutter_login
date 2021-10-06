@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_signin_button/button_list.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'constants.dart';
@@ -61,27 +62,21 @@ class LoginScreen extends StatelessWidget {
       loginAfterSignUp: false,
       loginProviders: [
         LoginProvider(
-          icon: FontAwesomeIcons.google,
-          label: 'Google',
+          button: Buttons.LinkedIn,
+          label: 'Sign in with LinkedIn',
           callback: () async {
-            debugPrint('start google sign in');
-            await Future.delayed(loginTime);
-            debugPrint('stop google sign in');
-            return '';
-          },
-        ),
-        LoginProvider(
-          icon: FontAwesomeIcons.linkedinIn,
-          label: 'LinkedIn',
-          callback: () async {
-            debugPrint('start linkdin sign in');
-            await Future.delayed(loginTime);
-            debugPrint('stop linkdin sign in');
-            return '';
+            return null;
           },
           providerNeedsSignUpCallback: () {
             // put here your logic to conditionally show the additional fields
             return Future.value(true);
+          },
+        ),
+        LoginProvider(
+          icon: FontAwesomeIcons.google,
+          label: 'Google',
+          callback: () async {
+            return null;
           },
         ),
         LoginProvider(
@@ -90,7 +85,7 @@ class LoginScreen extends StatelessWidget {
             debugPrint('start github sign in');
             await Future.delayed(loginTime);
             debugPrint('stop github sign in');
-            return '';
+            return null;
           },
         ),
       ],

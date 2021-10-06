@@ -11,6 +11,7 @@ import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/button_list.dart';
 
 import 'src/color_helper.dart';
 import 'src/constants.dart';
@@ -38,7 +39,7 @@ class LoginProvider {
   ///
   /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
   /// but [button] will take preference over [icon]
-  final Widget? button;
+  final Buttons? button;
 
   /// The icon shown on the provider button
   ///
