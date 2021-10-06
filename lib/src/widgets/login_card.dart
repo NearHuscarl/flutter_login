@@ -509,7 +509,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: buttonProvidersList.map((loginProvider) {
-        final index = buttonProvidersList.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
@@ -518,7 +517,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: SignInButton(
               loginProvider.button!,
               onPressed: () => _loginProviderSubmit(
-                // control: _providerControllerList[index],
                 loginProvider: loginProvider,
               ),
               text: loginProvider.label,
@@ -576,12 +574,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return ScaleTransition(
         scale: _buttonScaleAnimation,
         child: Row(children: <Widget>[
-          Expanded(child: Divider()),
+          const Expanded(child: Divider()),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(messages.providersTitleSecond),
           ),
-          Expanded(child: Divider()),
+          const Expanded(child: Divider()),
         ]));
   }
 
