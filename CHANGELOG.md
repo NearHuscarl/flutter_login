@@ -1,3 +1,14 @@
+## 3.0.0-beta.2
+Besides the existing loginProvider icons, you can now also add a LoginButton as provider widget.
+
+BREAKING CHANGES:
+* Provider has been updated to 6.0.1.
+* Instead of hideSignUpButton, you can now set onSignup parameter to null (or just leave it out) in
+order to hide the signup button.
+  
+Fixed several other small bugs like color not being applied
+correctly to all widgets.
+
 ## 3.0.0-beta.1
 You can now add more signup-fields! Please keep in mind that this is a beta release and may still
 contain bugs.

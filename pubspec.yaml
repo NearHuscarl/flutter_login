@@ -13,6 +13,7 @@ dependencies:
   provider: ^6.0.1
   another_transformer_page_view: ^1.0.1
   another_flushbar: ^1.10.23
+  flutter_signin_button: ^2.0.0
 
   # flutter_test from sdk depends on quiver
   quiver: ^3.0.1
