@@ -505,7 +505,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildButtonColumn(ThemeData theme, LoginMessages messages,
       List<LoginProvider> buttonProvidersList, LoginTheme loginTheme) {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: buttonProvidersList.map((loginProvider) {
@@ -582,8 +581,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           const Expanded(child: Divider()),
         ]));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
