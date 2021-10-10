@@ -83,6 +83,7 @@ class AuthCard extends StatefulWidget {
 
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey _cardKey = GlobalKey();
+  final GlobalKey _additionalSignUpCardKey = GlobalKey();
 
   static const int _loginPageIndex = 0;
   static const int _recoveryIndex = 1;
@@ -207,9 +208,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     return null;
   }
 
-  Future<void> _forwardChangeRouteAnimation() {
+  Future<void> _forwardChangeRouteAnimation(GlobalKey cardKey) {
     final deviceSize = MediaQuery.of(context).size;
-    final cardSize = getWidgetSize(_cardKey)!;
+    final cardSize = getWidgetSize(cardKey)!;
     final widthRatio = deviceSize.width / cardSize.height + 1;
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
@@ -243,7 +244,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
     } else if (_routeTransitionController.isDismissed) {
-      _forwardChangeRouteAnimation();
+      _forwardChangeRouteAnimation(_cardKey);
     }
   }
 
@@ -326,7 +327,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation().then((_) {
+              _forwardChangeRouteAnimation(_cardKey).then((_) {
                 widget.onSubmitCompleted!();
               });
             },
@@ -356,6 +357,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           throw StateError('The additional fields List is null');
         }
         return _AdditionalSignUpCard(
+          key: _additionalSignUpCardKey,
           formFields: widget.additionalSignUpFields!,
           loadingController: widget.loadingController,
           onBack: () => _changeCard(_loginPageIndex),
@@ -364,7 +366,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             if (auth.onConfirmSignup != null) {
               _changeCard(_confirmSignup);
             } else if (widget.loginAfterSignUp) {
-              _forwardChangeRouteAnimation().then((_) {
+              _forwardChangeRouteAnimation(_additionalSignUpCardKey).then((_) {
                 widget.onSubmitCompleted!();
               });
             } else {
@@ -384,7 +386,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return ConfirmSignupCard(
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () {
-            _forwardChangeRouteAnimation().then((_) {
+            _forwardChangeRouteAnimation(_cardKey).then((_) {
               widget.onSubmitCompleted!();
             });
           },
