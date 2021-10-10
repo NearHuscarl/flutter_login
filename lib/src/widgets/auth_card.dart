@@ -356,9 +356,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           throw StateError('The additional fields List is null');
         }
         return _AdditionalSignUpCard(
-          key: _cardKey,
           formFields: widget.additionalSignUpFields!,
           loadingController: widget.loadingController,
+          onBack: () => _changeCard(_loginPageIndex),
+          loginTheme: widget.loginTheme,
           onSubmitCompleted: () {
             if (auth.onConfirmSignup != null) {
               _changeCard(_confirmSignup);
