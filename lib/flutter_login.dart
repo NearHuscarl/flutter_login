@@ -689,7 +689,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         subtitle1: textFieldStyle,
         button: buttonStyle,
       ),
-      colorScheme: Theme.of(context).colorScheme.copyWith(secondary: accentColor),
+      colorScheme:
+          Theme.of(context).colorScheme.copyWith(secondary: accentColor),
     );
   }
 
