@@ -238,7 +238,7 @@ class FlutterLogin extends StatefulWidget {
       this.passwordValidator,
       this.onSubmitAnimationCompleted,
       this.logoTag,
-      this.userType = LoginUserType.email,
+      this.userType = LoginUserType.name,
       this.titleTag,
       this.showDebugButtons = false,
       this.loginProviders = const <LoginProvider>[],
@@ -632,7 +632,10 @@ class _FlutterLoginState extends State<FlutterLogin>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-          value: widget.messages ?? LoginMessages(),
+          value: widget.messages ?? LoginMessages(
+            userHint: (widget.userType == LoginUserType.name)
+                ? "Username" : LoginMessages.defaultUserHint,
+          ),
         ),
         ChangeNotifierProvider.value(
           value: widget.theme ?? LoginTheme(),
