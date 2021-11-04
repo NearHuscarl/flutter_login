@@ -33,6 +33,7 @@ export 'src/models/user_form_field.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 export 'src/models/term_of_service.dart';
+export 'src/providers/auth.dart';
 
 class LoginProvider {
   /// Used for custom sign-in buttons.
@@ -266,39 +267,40 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin(
-      {Key? key,
-      this.onSignup,
-      required this.onLogin,
-      required this.onRecoverPassword,
-      this.title,
+  FlutterLogin({
+    Key? key,
+    this.onSignup,
+    required this.onLogin,
+    required this.onRecoverPassword,
+    this.title,
 
-      /// The [ImageProvider] or asset path [String] for the logo image to be displayed
-      dynamic logo,
-      this.messages,
-      this.theme,
-      this.userValidator,
-      this.passwordValidator,
-      this.onSubmitAnimationCompleted,
-      this.logoTag,
-      this.userType = LoginUserType.email,
-      this.titleTag,
-      this.showDebugButtons = false,
-      this.loginProviders = const <LoginProvider>[],
-      this.hideForgotPasswordButton = false,
-      this.loginAfterSignUp = true,
-      this.footer,
-      this.hideProvidersTitle = false,
-      this.additionalSignupFields,
-      this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false,
-      this.termsOfService = const <TermOfService>[],
-      this.onConfirmRecover,
-      this.onConfirmSignup,
-      this.onResendCode,
-      this.savedEmail = '',
-      this.savedPassword = ''})
-      : assert((logo is String?) || (logo is ImageProvider?)),
+    /// The [ImageProvider] or asset path [String] for the logo image to be displayed
+    dynamic logo,
+    this.messages,
+    this.theme,
+    this.userValidator,
+    this.passwordValidator,
+    this.onSubmitAnimationCompleted,
+    this.logoTag,
+    this.userType = LoginUserType.email,
+    this.titleTag,
+    this.showDebugButtons = false,
+    this.loginProviders = const <LoginProvider>[],
+    this.hideForgotPasswordButton = false,
+    this.loginAfterSignUp = true,
+    this.footer,
+    this.hideProvidersTitle = false,
+    this.additionalSignupFields,
+    this.disableCustomPageTransformer = false,
+    this.navigateBackAfterRecovery = false,
+    this.termsOfService = const <TermOfService>[],
+    this.onConfirmRecover,
+    this.onConfirmSignup,
+    this.onResendCode,
+    this.savedEmail = '',
+    this.savedPassword = '',
+    this.initialAuthMode = AuthMode.login,
+  })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
 
@@ -407,6 +409,10 @@ class FlutterLogin extends StatefulWidget {
 
   /// List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of TermOfServiceResult
   final List<TermOfService> termsOfService;
+
+  /// The initial auth mode for the widget to show. This defaults to [AuthMode.login]
+  /// if not specified. This field can allow you to show the sign up state by default.
+  final AuthMode initialAuthMode;
 
   static String? defaultEmailValidator(value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -684,7 +690,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         subtitle1: textFieldStyle,
         button: buttonStyle,
       ),
-      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor),
+      colorScheme:
+          Theme.of(context).colorScheme.copyWith(secondary: accentColor),
     );
   }
 
@@ -723,17 +730,19 @@ class _FlutterLoginState extends State<FlutterLogin>
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(
-              onLogin: widget.onLogin,
-              onSignup: widget.onSignup,
-              onRecoverPassword: widget.onRecoverPassword,
-              loginProviders: widget.loginProviders,
-              email: widget.savedEmail,
-              password: widget.savedPassword,
-              confirmPassword: widget.savedPassword,
-              onConfirmRecover: widget.onConfirmRecover,
-              onConfirmSignup: widget.onConfirmSignup,
-              onResendCode: widget.onResendCode,
-              termsOfService: widget.termsOfService),
+            onLogin: widget.onLogin,
+            onSignup: widget.onSignup,
+            onRecoverPassword: widget.onRecoverPassword,
+            loginProviders: widget.loginProviders,
+            email: widget.savedEmail,
+            password: widget.savedPassword,
+            confirmPassword: widget.savedPassword,
+            onConfirmRecover: widget.onConfirmRecover,
+            onConfirmSignup: widget.onConfirmSignup,
+            onResendCode: widget.onResendCode,
+            termsOfService: widget.termsOfService,
+            initialAuthMode: widget.initialAuthMode,
+          ),
         ),
       ],
       child: Scaffold(
