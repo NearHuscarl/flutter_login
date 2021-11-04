@@ -20,6 +20,7 @@ class LoginMessages with ChangeNotifier {
       this.providersTitle = defaultProvidersTitle});
 
   static const defaultUserHint = 'Email';
+  static const defaultUsernameHint = 'Username';
   static const defaultPasswordHint = 'Password';
   static const defaultConfirmPasswordHint = 'Confirm Password';
   static const defaultForgotPasswordButton = 'Forgot Password?';

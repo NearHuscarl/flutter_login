@@ -632,10 +632,12 @@ class _FlutterLoginState extends State<FlutterLogin>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-          value: widget.messages ?? LoginMessages(
-            userHint: (widget.userType == LoginUserType.name)
-                ? "Username" : LoginMessages.defaultUserHint,
-          ),
+          value: widget.messages ??
+              LoginMessages(
+                userHint: (widget.userType == LoginUserType.name)
+                    ? LoginMessages.defaultUsernameHint
+                    : LoginMessages.defaultUserHint,
+              ),
         ),
         ChangeNotifierProvider.value(
           value: widget.theme ?? LoginTheme(),
