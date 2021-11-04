@@ -262,7 +262,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         ),
         child: DecoratedBox(
-          decoration: BoxDecoration(color: theme.accentColor),
+          decoration: BoxDecoration(color: theme.colorScheme.secondary),
         ),
       ),
     );

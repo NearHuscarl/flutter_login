@@ -65,13 +65,13 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   AppBar _buildAppBar(ThemeData theme) {
     final menuBtn = IconButton(
-      color: theme.accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       icon: const Icon(FontAwesomeIcons.bars),
       onPressed: () {},
     );
     final signOutBtn = IconButton(
       icon: const Icon(FontAwesomeIcons.signOutAlt),
-      color: theme.accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       onPressed: () => _goToLogin(context),
     );
     final title = Center(
@@ -120,8 +120,8 @@ class _DashboardScreenState extends State<DashboardScreen>
       title: title,
       backgroundColor: theme.primaryColor.withOpacity(.1),
       elevation: 0,
-      textTheme: theme.accentTextTheme,
-      iconTheme: theme.accentIconTheme,
+      iconTheme:
+        Theme.of(context).iconTheme,
     );
   }
 
@@ -129,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final primaryColor =
         Colors.primaries.where((c) => c == theme.primaryColor).first;
     final accentColor =
-        Colors.primaries.where((c) => c == theme.accentColor).first;
+        Colors.primaries.where((c) => c == Theme.of(context).colorScheme.secondary).first;
     final linearGradient = LinearGradient(colors: [
       primaryColor.shade800,
       primaryColor.shade200,

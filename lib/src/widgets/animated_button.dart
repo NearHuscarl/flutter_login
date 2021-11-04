@@ -90,7 +90,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     final buttonTheme = theme.floatingActionButtonTheme;
 
     _color = widget.color ?? buttonTheme.backgroundColor;
-    _loadingColor = widget.loadingColor ?? theme.accentColor;
+    _loadingColor = widget.loadingColor ?? theme.colorScheme.secondary;
 
     _colorAnimation = ColorTween(
       begin: _color,
