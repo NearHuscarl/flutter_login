@@ -4,6 +4,8 @@ class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({
     Key? key,
     required this.formFields,
+    required this.onBack,
+    this.loginTheme,
     required this.onSubmitCompleted,
     this.loadingController,
   }) : super(key: key) {
@@ -16,7 +18,9 @@ class _AdditionalSignUpCard extends StatefulWidget {
   }
 
   final List<UserFormField> formFields;
+  final Function onBack;
   final Function onSubmitCompleted;
+  final LoginTheme? loginTheme;
   final AnimationController? loadingController;
 
   @override
@@ -191,6 +195,26 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     );
   }
 
+  Widget _buildBackButton(
+      ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
+    final calculatedTextColor =
+        (theme.cardTheme.color!.computeLuminance() < 0.5)
+            ? Colors.white
+            : theme.primaryColor;
+    return MaterialButton(
+      onPressed: !_isSubmitting
+          ? () {
+              _formCompleteSignupKey.currentState!.save();
+              widget.onBack();
+            }
+          : null,
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
+      child: Text(messages.goBackButton),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -227,6 +251,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                 _buildFields(textFieldWidth),
                 const SizedBox(height: 5),
                 _buildSubmitButton(theme, messages),
+                _buildBackButton(theme, messages, widget.loginTheme),
               ],
             ),
           ),
