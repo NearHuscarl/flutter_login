@@ -38,7 +38,6 @@ logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it 
 titleTag |   `String`     | <sub>`Hero` tag for title text. Need to specify `LoginTheme.beforeHeroFontSize` and `LoginTheme.afterHeroFontSize` if you want different font size before and after hero animation</sub>
 showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forward/reverse login animations. In release mode, this will be overridden to `false` regardless of the value passed in</sub>
 hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
-hideSignUpButton |   `bool`     | <sub>Hides the SignUp button if set to true</sub>
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
 additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up. You can provide at most 6 additional fields. </sub>
