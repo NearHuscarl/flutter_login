@@ -248,7 +248,8 @@ class FlutterLogin extends StatefulWidget {
       this.footer,
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false,
+      this.loginFirst = true})
       : super(key: key);
 
   /// Called when the user hit the submit button when in sign up mode
@@ -330,6 +331,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// Navigate back to the login screen after recovery of password.
   final bool navigateBackAfterRecovery;
+
+  /// Set to false to show SignUp as default.
+  final bool loginFirst;
 
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -684,6 +688,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         loginTheme: widget.theme,
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
+                        loginFirst: widget.loginFirst,
                       ),
                     ),
                     Positioned(

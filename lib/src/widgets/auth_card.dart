@@ -45,7 +45,8 @@ class AuthCard extends StatefulWidget {
       this.hideProvidersTitle = false,
       this.disableCustomPageTransformer = false,
       this.loginTheme,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false,
+      this.loginFirst = true})
       : super(key: key);
 
   final EdgeInsets padding;
@@ -62,6 +63,7 @@ class AuthCard extends StatefulWidget {
   final bool disableCustomPageTransformer;
   final LoginTheme? loginTheme;
   final bool navigateBackAfterRecovery;
+  final bool loginFirst;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -93,6 +95,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     widget.loadingController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        if(!widget.loginFirst){
+          final auth = Provider.of<Auth>(context, listen: false);
+          auth.switchAuth();
+        }
         _isLoadingFirstTime = false;
         _formLoadingController.forward();
       }
@@ -324,6 +330,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
                     loginAfterSignUp: widget.loginAfterSignUp,
                     hideProvidersTitle: widget.hideProvidersTitle,
+                    loginFirst: widget.loginFirst,
                   ),
                 )
               : _RecoverCard(

@@ -13,7 +13,8 @@ class _LoginCard extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
-      this.hideProvidersTitle = false})
+      this.hideProvidersTitle = false,
+      this.loginFirst = true})
       : super(key: key);
 
   final AnimationController? loadingController;
@@ -27,6 +28,7 @@ class _LoginCard extends StatefulWidget {
   final bool loginAfterSignUp;
   final bool hideProvidersTitle;
   final LoginUserType userType;
+  final bool loginFirst;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -422,7 +424,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: true);
-    final isLogin = auth.isLogin;
+    final isLogin = widget.loginFirst;
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
