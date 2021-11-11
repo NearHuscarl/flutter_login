@@ -120,16 +120,16 @@ class _DashboardScreenState extends State<DashboardScreen>
       title: title,
       backgroundColor: theme.primaryColor.withOpacity(.1),
       elevation: 0,
-      iconTheme:
-        Theme.of(context).iconTheme,
+      iconTheme: Theme.of(context).iconTheme,
     );
   }
 
   Widget _buildHeader(ThemeData theme) {
     final primaryColor =
         Colors.primaries.where((c) => c == theme.primaryColor).first;
-    final accentColor =
-        Colors.primaries.where((c) => c == Theme.of(context).colorScheme.secondary).first;
+    final accentColor = Colors.primaries
+        .where((c) => c == Theme.of(context).colorScheme.secondary)
+        .first;
     final linearGradient = LinearGradient(colors: [
       primaryColor.shade800,
       primaryColor.shade200,
