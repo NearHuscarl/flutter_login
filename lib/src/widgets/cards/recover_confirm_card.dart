@@ -1,17 +1,7 @@
-import 'dart:math';
+part of auth_card_builder;
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'animated_button.dart';
-import 'animated_text_form_field.dart';
-import '../models/login_data.dart';
-import '../providers/auth.dart';
-import '../providers/login_messages.dart';
-import '../widget_helper.dart';
-
-class ConfirmRecoverCard extends StatefulWidget {
-  const ConfirmRecoverCard({
+class _ConfirmRecoverCard extends StatefulWidget {
+  const _ConfirmRecoverCard({
     Key? key,
     required this.passwordValidator,
     required this.onBack,
@@ -23,10 +13,10 @@ class ConfirmRecoverCard extends StatefulWidget {
   final VoidCallback onSubmitCompleted;
 
   @override
-  ConfirmRecoverCardState createState() => ConfirmRecoverCardState();
+  _ConfirmRecoverCardState createState() => _ConfirmRecoverCardState();
 }
 
-class ConfirmRecoverCardState extends State<ConfirmRecoverCard>
+class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 

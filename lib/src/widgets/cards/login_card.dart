@@ -1,9 +1,9 @@
-part of auth_card;
+part of auth_card_builder;
 
 class _LoginCard extends StatefulWidget {
   const _LoginCard({
     Key? key,
-    this.loadingController,
+    required this.loadingController,
     required this.userValidator,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
@@ -19,7 +19,7 @@ class _LoginCard extends StatefulWidget {
     this.hideProvidersTitle = false,
   }) : super(key: key);
 
-  final AnimationController? loadingController;
+  final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
@@ -53,7 +53,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   var _showShadow = true;
 
   /// switch between login and signup
-  late AnimationController _loadingController;
   late AnimationController _switchAuthController;
   late AnimationController _postSwitchAuthController;
   late AnimationController _submitController;
@@ -77,14 +76,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
 
-    _loadingController = widget.loadingController ??
-        (AnimationController(
-          vsync: this,
-          duration: const Duration(milliseconds: 1150),
-          reverseDuration: const Duration(milliseconds: 300),
-        )..value = 1.0);
-
-    _loadingController.addStatusListener(handleLoadingAnimationStatus);
+    widget.loadingController.addStatusListener(handleLoadingAnimationStatus);
 
     _switchAuthController = AnimationController(
       vsync: this,
@@ -113,7 +105,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _loadingController,
+      parent: widget.loadingController,
       curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
   }
@@ -129,7 +121,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _loadingController.removeStatusListener(handleLoadingAnimationStatus);
+    widget.loadingController.removeStatusListener(handleLoadingAnimationStatus);
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 
@@ -303,7 +295,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
-      loadingController: _loadingController,
+      loadingController: widget.loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
       labelText: messages.userHint,
       autofillHints: _isSubmitting
@@ -324,7 +316,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
-      loadingController: _loadingController,
+      loadingController: widget.loadingController,
       interval: _passTextFieldLoadingAnimationInterval,
       labelText: messages.passwordHint,
       autofillHints: _isSubmitting
@@ -355,7 +347,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       enabled: auth.isSignup,
-      loadingController: _loadingController,
+      loadingController: widget.loadingController,
       inertiaController: _postSwitchAuthController,
       inertiaDirection: TextFieldInertiaDirection.right,
       labelText: messages.confirmPasswordHint,
@@ -377,7 +369,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Widget _buildForgotPassword(ThemeData theme, LoginMessages messages) {
     return FadeIn(
-      controller: _loadingController,
+      controller: widget.loadingController,
       fadeDirection: FadeDirection.bottomToTop,
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
@@ -417,7 +409,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             ? Colors.white
             : theme.primaryColor;
     return FadeIn(
-      controller: _loadingController,
+      controller: widget.loadingController,
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
@@ -614,7 +606,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             ),
           ),
           ExpandableContainer(
-            backgroundColor: theme.colorScheme.secondary,
+            backgroundColor: _switchAuthController.isCompleted
+                ? null
+                : theme.colorScheme.secondary,
             controller: _switchAuthController,
             initialState: isLogin
                 ? ExpandableContainerState.shrunk
@@ -636,8 +630,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               children: <Widget>[
                 if (auth.isSignup && auth.termsOfService.isNotEmpty)
                   ...auth.termsOfService
-                      .map((e) => TermCheckbox(
-                            termOfService: e,
+                      .map((e) => ScaleTransition(
+                            scale: _buttonScaleAnimation,
+                            child: TermCheckbox(
+                              termOfService: e,
+                            ),
                           ))
                       .toList(),
                 !widget.hideForgotPasswordButton

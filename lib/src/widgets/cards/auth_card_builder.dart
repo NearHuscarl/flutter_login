@@ -1,4 +1,4 @@
-library auth_card;
+library auth_card_builder;
 
 import 'dart:collection';
 import 'dart:math';
@@ -19,32 +19,32 @@ import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/utils/text_field_utils.dart';
 import 'package:flutter_login/src/widget_helper.dart';
-import 'package:flutter_login/src/widgets/recover_confirm_card.dart';
-import 'package:flutter_login/src/widgets/signup_confirm_card.dart';
 import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../flutter_login.dart';
-import 'animated_button.dart';
-import 'animated_icon.dart';
-import 'animated_text.dart';
-import 'animated_text_form_field.dart';
-import 'custom_page_transformer.dart';
-import 'expandable_container.dart';
-import 'fade_in.dart';
+import '../../../flutter_login.dart';
+import '../animated_button.dart';
+import '../animated_icon.dart';
+import '../animated_text.dart';
+import '../animated_text_form_field.dart';
+import '../custom_page_transformer.dart';
+import '../expandable_container.dart';
+import '../fade_in.dart';
 
 part 'additional_signup_card.dart';
 part 'login_card.dart';
 part 'recover_card.dart';
+part 'recover_confirm_card.dart';
+part 'signup_confirm_card.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard(
       {Key? key,
       required this.userType,
       this.padding = const EdgeInsets.all(0),
-      this.loadingController,
+      required this.loadingController,
       this.userValidator,
       this.passwordValidator,
       this.onSubmit,
@@ -60,7 +60,7 @@ class AuthCard extends StatefulWidget {
       : super(key: key);
 
   final EdgeInsets padding;
-  final AnimationController? loadingController;
+  final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function? onSubmit;
@@ -82,8 +82,10 @@ class AuthCard extends StatefulWidget {
 }
 
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
-  final GlobalKey _cardKey = GlobalKey();
+  final GlobalKey _loginCardKey = GlobalKey();
   final GlobalKey _additionalSignUpCardKey = GlobalKey();
+  final GlobalKey _confirmRecoverCardKey = GlobalKey();
+  final GlobalKey _confirmSignUpCardKey = GlobalKey();
 
   static const int _loginPageIndex = 0;
   static const int _recoveryIndex = 1;
@@ -96,9 +98,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _isLoadingFirstTime = true;
   static const cardSizeScaleEnd = .2;
 
-  TransformerPageController? _pageController;
+  final TransformerPageController _pageController = TransformerPageController();
   late AnimationController _formLoadingController;
   late AnimationController _routeTransitionController;
+
+  // Card specific animations
   late Animation<double> _flipAnimation;
   late Animation<double> _cardSizeAnimation;
   late Animation<double> _cardSize2AnimationX;
@@ -111,18 +115,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _pageController = TransformerPageController();
-
-    widget.loadingController!.addStatusListener((status) {
+    widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
         _formLoadingController.forward();
       }
     });
 
+    // Set all animations
     _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
       CurvedAnimation(
-        parent: widget.loadingController!,
+        parent: widget.loadingController,
         curve: Curves.easeOutBack,
         reverseCurve: Curves.easeIn,
       ),
@@ -145,6 +148,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: const Interval(0, .27272727 /* ~300ms */,
           curve: Curves.easeInOutCirc),
     ));
+
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
     _cardOverlayHeightFactorAnimation =
@@ -153,15 +157,19 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       parent: _routeTransitionController,
       curve: const Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
     ));
+
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(CurvedAnimation(
       parent: _routeTransitionController,
       curve: const Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
     ));
+
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
+
     _cardSize2AnimationY =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
+
     _cardRotationAnimation =
         Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
       parent: _routeTransitionController,
@@ -173,7 +181,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   void dispose() {
     _formLoadingController.dispose();
-    _pageController!.dispose();
+    _pageController.dispose();
     _routeTransitionController.dispose();
     super.dispose();
   }
@@ -184,7 +192,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     auth.currentCardIndex = newCardIndex;
 
     setState(() {
-      _pageController!.animateToPage(
+      _pageController.animateToPage(
         newCardIndex,
         duration: const Duration(milliseconds: 500),
         curve: Curves.ease,
@@ -194,16 +202,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Future<void>? runLoadingAnimation() {
-    if (widget.loadingController!.isDismissed) {
-      return widget.loadingController!.forward().then((_) {
+    if (widget.loadingController.isDismissed) {
+      return widget.loadingController.forward().then((_) {
         if (!_isLoadingFirstTime) {
           _formLoadingController.forward();
         }
       });
-    } else if (widget.loadingController!.isCompleted) {
+    } else if (widget.loadingController.isCompleted) {
       return _formLoadingController
           .reverse()
-          .then((_) => widget.loadingController!.reverse());
+          .then((_) => widget.loadingController.reverse());
     }
     return null;
   }
@@ -211,7 +219,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   Future<void> _forwardChangeRouteAnimation(GlobalKey cardKey) {
     final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(cardKey)!;
-    final widthRatio = deviceSize.width / cardSize.height + 1;
+    final widthRatio = deviceSize.width / cardSize.height + 2;
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
@@ -244,7 +252,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
     } else if (_routeTransitionController.isDismissed) {
-      _forwardChangeRouteAnimation(_cardKey);
+      _forwardChangeRouteAnimation(_loginCardKey);
     }
   }
 
@@ -309,16 +317,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   Widget _changeToCard(BuildContext context, int index) {
     final auth = Provider.of<Auth>(context, listen: false);
+    var formController = _formLoadingController;
+    // if (!_isLoadingFirstTime) formController = _formLoadingController..value = 1.0;
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
           theme: Theme.of(context),
           child: _LoginCard(
-            key: _cardKey,
+            key: _loginCardKey,
             userType: widget.userType,
-            loadingController: _isLoadingFirstTime
-                ? _formLoadingController
-                : (_formLoadingController..value = 1.0),
+            loadingController: formController,
             userValidator: widget.userValidator,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
@@ -327,7 +335,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation(_cardKey).then((_) {
+              _forwardChangeRouteAnimation(_loginCardKey).then((_) {
                 widget.onSubmitCompleted!();
               });
             },
@@ -342,6 +350,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userValidator: widget.userValidator,
             userType: widget.userType,
             loginTheme: widget.loginTheme,
+            loadingController: formController,
             navigateBack: widget.navigateBackAfterRecovery,
             onBack: () => _changeCard(_loginPageIndex),
             onSubmitCompleted: () {
@@ -354,43 +363,54 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
       case _additionalSignUpIndex:
         if (widget.additionalSignUpFields == null) {
-          throw StateError('The additional fields List is null');
+          return const SizedBox.shrink();
+          // throw StateError('The additional fields List is null');
         }
-        return _AdditionalSignUpCard(
-          key: _additionalSignUpCardKey,
-          formFields: widget.additionalSignUpFields!,
-          loadingController: widget.loadingController,
-          onBack: () => _changeCard(_loginPageIndex),
-          loginTheme: widget.loginTheme,
-          onSubmitCompleted: () {
-            if (auth.onConfirmSignup != null) {
-              _changeCard(_confirmSignup);
-            } else if (widget.loginAfterSignUp) {
-              _forwardChangeRouteAnimation(_additionalSignUpCardKey).then((_) {
-                widget.onSubmitCompleted!();
-              });
-            } else {
-              _changeCard(_loginPageIndex);
-            }
-          },
+        return _buildLoadingAnimator(
+          theme: Theme.of(context),
+          child: _AdditionalSignUpCard(
+            key: _additionalSignUpCardKey,
+            formFields: widget.additionalSignUpFields!,
+            loadingController: formController,
+            onBack: () => _changeCard(_loginPageIndex),
+            loginTheme: widget.loginTheme,
+            onSubmitCompleted: () {
+              if (auth.onConfirmSignup != null) {
+                _changeCard(_confirmSignup);
+              } else if (widget.loginAfterSignUp) {
+                _forwardChangeRouteAnimation(_additionalSignUpCardKey)
+                    .then((_) {
+                  widget.onSubmitCompleted!();
+                });
+              } else {
+                _changeCard(_loginPageIndex);
+              }
+            },
+          ),
         );
 
       case _confirmRecover:
-        return ConfirmRecoverCard(
+        return _ConfirmRecoverCard(
+          key: _confirmRecoverCardKey,
           passwordValidator: widget.passwordValidator!,
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
         );
 
       case _confirmSignup:
-        return ConfirmSignupCard(
-          onBack: () => _changeCard(_loginPageIndex),
-          onSubmitCompleted: () {
-            _forwardChangeRouteAnimation(_cardKey).then((_) {
-              widget.onSubmitCompleted!();
-            });
-          },
-          loginAfterSignUp: widget.loginAfterSignUp,
+        return _buildLoadingAnimator(
+          theme: Theme.of(context),
+          child: _ConfirmSignupCard(
+            key: _confirmSignUpCardKey,
+            onBack: () => _changeCard(_loginPageIndex),
+            loadingController: formController,
+            onSubmitCompleted: () {
+              _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
+                widget.onSubmitCompleted!();
+              });
+            },
+            loginAfterSignUp: widget.loginAfterSignUp,
+          ),
         );
     }
     throw IndexError(index, 5);

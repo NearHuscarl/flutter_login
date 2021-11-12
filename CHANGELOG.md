@@ -1,3 +1,15 @@
+## 3.0.0
+First stable release of 3.0.0.
+Please see the changelog entries of the beta versions for all changes.
+New features include:
+* Additional signup fields!
+* Confirmation card for password recovery.
+* Confirmation card for user registration.
+
+This release also fixes:
+* White space visible when animation is complete
+* Several other animation improvements
+
 ## 3.0.0-beta.2
 Besides the existing loginProvider icons, you can now also add a LoginButton as provider widget.
 Please check out [flutter_signin_button](https://pub.dev/packages/flutter_signin_button) for supported buttons.

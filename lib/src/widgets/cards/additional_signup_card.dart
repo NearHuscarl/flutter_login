@@ -1,4 +1,4 @@
-part of auth_card;
+part of auth_card_builder;
 
 class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({
@@ -7,7 +7,7 @@ class _AdditionalSignUpCard extends StatefulWidget {
     required this.onBack,
     this.loginTheme,
     required this.onSubmitCompleted,
-    this.loadingController,
+    required this.loadingController,
   }) : super(key: key) {
     if (formFields.isEmpty) {
       throw RangeError('The formFields array must not be empty');
@@ -21,7 +21,7 @@ class _AdditionalSignUpCard extends StatefulWidget {
   final Function onBack;
   final Function onSubmitCompleted;
   final LoginTheme? loginTheme;
-  final AnimationController? loadingController;
+  final AnimationController loadingController;
 
   @override
   _AdditionalSignUpCardState createState() => _AdditionalSignUpCardState();
@@ -31,18 +31,22 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     with TickerProviderStateMixin {
   final GlobalKey<FormState> _formCompleteSignupKey = GlobalKey();
 
+  // Used to remember all text controllers
   late HashMap<String, TextEditingController> _nameControllers;
 
-  late List<AnimationController> _fieldAnimationControllers;
+  // List of animation controller for every field
+  late List<AnimationController> _fieldAnimationControllers = [];
 
+  // TODO: Fix animation interval for different fields
+  // late final List<Interval> _fieldAnimationIntervals = [];
+
+  // Separate controller for the submit button
   late AnimationController _submitController;
-  late AnimationController _loadingController;
 
-  late Interval _textFieldAnimationInterval;
-
+  // Animation for button sizes
   late Animation<double> _buttonScaleAnimation;
 
-  var _isSubmitting = false;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -65,14 +69,11 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             vsync: this, duration: const Duration(milliseconds: 1000)))
         .toList();
 
-    _loadingController = widget.loadingController ??
-        (AnimationController(
-          vsync: this,
-          duration: const Duration(milliseconds: 1150),
-          reverseDuration: const Duration(milliseconds: 300),
-        )..value = 1.0);
-
-    _textFieldAnimationInterval = const Interval(0, .85);
+    // List<double> intervalBegin = List<double>.generate(widget.formFields.length, (i) => 0.15 / i);
+    //
+    // for (int i = 0; i < widget.formFields.length; i++) {
+    //   _fieldAnimationIntervals.add(Interval(intervalBegin[i], (0.85 + intervalBegin[i])));
+    // }
 
     _submitController = AnimationController(
       vsync: this,
@@ -81,7 +82,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _loadingController,
+      parent: widget.loadingController,
       curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
   }
@@ -90,7 +91,6 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
   void dispose() {
     // Don't dispose the controller when we get it from outside, otherwise we get an Error
     // since also the parent widget disposes it
-    if (widget.loadingController == null) _loadingController.dispose();
     for (var element in _fieldAnimationControllers) {
       element.dispose();
     }
@@ -157,12 +157,12 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       return Column(
         children: [
           const SizedBox(
-            height: 5,
+            height: 10,
           ),
           AnimatedTextFormField(
             controller: _nameControllers[formField.keyName],
-            interval: _textFieldAnimationInterval,
-            loadingController: _loadingController,
+            // interval: _fieldAnimationIntervals[widget.formFields.indexOf(formField)],
+            loadingController: widget.loadingController,
             width: width,
             labelText: formField.displayName,
             prefixIcon:
@@ -201,17 +201,20 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
         (theme.cardTheme.color!.computeLuminance() < 0.5)
             ? Colors.white
             : theme.primaryColor;
-    return MaterialButton(
-      onPressed: !_isSubmitting
-          ? () {
-              _formCompleteSignupKey.currentState!.save();
-              widget.onBack();
-            }
-          : null,
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
-      child: Text(messages.goBackButton),
+    return ScaleTransition(
+      scale: _buttonScaleAnimation,
+      child: MaterialButton(
+        onPressed: !_isSubmitting
+            ? () {
+                _formCompleteSignupKey.currentState!.save();
+                widget.onBack();
+              }
+            : null,
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
+        child: Text(messages.goBackButton),
+      ),
     );
   }
 
