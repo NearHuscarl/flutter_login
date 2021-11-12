@@ -8,7 +8,8 @@ class _RecoverCard extends StatefulWidget {
       required this.userType,
       this.loginTheme,
       required this.navigateBack,
-      required this.onSubmitCompleted})
+      required this.onSubmitCompleted,
+      required this.loadingController})
       : super(key: key);
 
   final FormFieldValidator<String>? userValidator;
@@ -16,6 +17,7 @@ class _RecoverCard extends StatefulWidget {
   final LoginUserType userType;
   final LoginTheme? loginTheme;
   final bool navigateBack;
+  final AnimationController loadingController;
 
   final Function onSubmitCompleted;
 
@@ -27,11 +29,11 @@ class _RecoverCardState extends State<_RecoverCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
-  TextEditingController? _nameController;
+  bool _isSubmitting = false;
 
-  var _isSubmitting = false;
+  late TextEditingController _nameController;
 
-  AnimationController? _submitController;
+  late AnimationController _submitController;
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class _RecoverCardState extends State<_RecoverCard>
 
   @override
   void dispose() {
-    _submitController!.dispose();
+    _submitController.dispose();
     super.dispose();
   }
 
@@ -60,14 +62,14 @@ class _RecoverCardState extends State<_RecoverCard>
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     _formRecoverKey.currentState!.save();
-    await _submitController!.forward();
+    await _submitController.forward();
     setState(() => _isSubmitting = true);
     final error = await auth.onRecoverPassword!(auth.email);
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
       setState(() => _isSubmitting = false);
-      await _submitController!.reverse();
+      await _submitController.reverse();
       return false;
     } else {
       showSuccessToast(context, messages.flushbarTitleSuccess,
@@ -82,6 +84,7 @@ class _RecoverCardState extends State<_RecoverCard>
       double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
       controller: _nameController,
+      loadingController: widget.loadingController,
       width: width,
       labelText: messages.userHint,
       prefixIcon: const Icon(FontAwesomeIcons.solidUserCircle),

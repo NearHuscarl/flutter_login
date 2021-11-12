@@ -435,11 +435,13 @@ class FlutterLogin extends StatefulWidget {
 class _FlutterLoginState extends State<FlutterLogin>
     with TickerProviderStateMixin {
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
+
   static const loadingDuration = Duration(milliseconds: 400);
-  AnimationController? _loadingController;
-  AnimationController? _logoController;
-  AnimationController? _titleController;
   double _selectTimeDilation = 1.0;
+
+  late AnimationController _loadingController;
+  late AnimationController _logoController;
+  late AnimationController _titleController;
 
   @override
   void initState() {
@@ -450,12 +452,12 @@ class _FlutterLoginState extends State<FlutterLogin>
       duration: loadingDuration,
     )..addStatusListener((status) {
         if (status == AnimationStatus.forward) {
-          _logoController!.forward();
-          _titleController!.forward();
+          _logoController.forward();
+          _titleController.forward();
         }
         if (status == AnimationStatus.reverse) {
-          _logoController!.reverse();
-          _titleController!.reverse();
+          _logoController.reverse();
+          _titleController.reverse();
         }
       });
     _logoController = AnimationController(
@@ -469,25 +471,25 @@ class _FlutterLoginState extends State<FlutterLogin>
 
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
-        _loadingController!.forward();
+        _loadingController.forward();
       }
     });
   }
 
   @override
   void dispose() {
-    _loadingController!.dispose();
-    _logoController!.dispose();
-    _titleController!.dispose();
+    _loadingController.dispose();
+    _logoController.dispose();
+    _titleController.dispose();
     super.dispose();
   }
 
   void _reverseHeaderAnimation() {
     if (widget.logoTag == null) {
-      _logoController!.reverse();
+      _logoController.reverse();
     }
     if (widget.titleTag == null) {
-      _titleController!.reverse();
+      _titleController.reverse();
     }
   }
 

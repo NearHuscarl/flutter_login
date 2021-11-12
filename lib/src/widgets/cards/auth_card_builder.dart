@@ -44,7 +44,7 @@ class AuthCard extends StatefulWidget {
       {Key? key,
       required this.userType,
       this.padding = const EdgeInsets.all(0),
-      this.loadingController,
+      required this.loadingController,
       this.userValidator,
       this.passwordValidator,
       this.onSubmit,
@@ -60,7 +60,7 @@ class AuthCard extends StatefulWidget {
       : super(key: key);
 
   final EdgeInsets padding;
-  final AnimationController? loadingController;
+  final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
   final FormFieldValidator<String>? passwordValidator;
   final Function? onSubmit;
@@ -98,9 +98,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   var _isLoadingFirstTime = true;
   static const cardSizeScaleEnd = .2;
 
-  TransformerPageController? _pageController;
+  final TransformerPageController _pageController = TransformerPageController();
   late AnimationController _formLoadingController;
   late AnimationController _routeTransitionController;
+
+  // Card specific animations
   late Animation<double> _flipAnimation;
   late Animation<double> _cardSizeAnimation;
   late Animation<double> _cardSize2AnimationX;
@@ -113,18 +115,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _pageController = TransformerPageController();
-
-    widget.loadingController!.addStatusListener((status) {
+    widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
         _formLoadingController.forward();
       }
     });
 
+    // Set all animations
     _flipAnimation = Tween<double>(begin: pi / 2, end: 0).animate(
       CurvedAnimation(
-        parent: widget.loadingController!,
+        parent: widget.loadingController,
         curve: Curves.easeOutBack,
         reverseCurve: Curves.easeIn,
       ),
@@ -147,6 +148,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       curve: const Interval(0, .27272727 /* ~300ms */,
           curve: Curves.easeInOutCirc),
     ));
+
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
     _cardOverlayHeightFactorAnimation =
@@ -155,15 +157,19 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       parent: _routeTransitionController,
       curve: const Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
     ));
+
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(CurvedAnimation(
       parent: _routeTransitionController,
       curve: const Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
     ));
+
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
+
     _cardSize2AnimationY =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
+
     _cardRotationAnimation =
         Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
       parent: _routeTransitionController,
@@ -175,7 +181,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   void dispose() {
     _formLoadingController.dispose();
-    _pageController!.dispose();
+    _pageController.dispose();
     _routeTransitionController.dispose();
     super.dispose();
   }
@@ -186,7 +192,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     auth.currentCardIndex = newCardIndex;
 
     setState(() {
-      _pageController!.animateToPage(
+      _pageController.animateToPage(
         newCardIndex,
         duration: const Duration(milliseconds: 500),
         curve: Curves.ease,
@@ -196,16 +202,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   Future<void>? runLoadingAnimation() {
-    if (widget.loadingController!.isDismissed) {
-      return widget.loadingController!.forward().then((_) {
+    if (widget.loadingController.isDismissed) {
+      return widget.loadingController.forward().then((_) {
         if (!_isLoadingFirstTime) {
           _formLoadingController.forward();
         }
       });
-    } else if (widget.loadingController!.isCompleted) {
+    } else if (widget.loadingController.isCompleted) {
       return _formLoadingController
           .reverse()
-          .then((_) => widget.loadingController!.reverse());
+          .then((_) => widget.loadingController.reverse());
     }
     return null;
   }
@@ -213,7 +219,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   Future<void> _forwardChangeRouteAnimation(GlobalKey cardKey) {
     final deviceSize = MediaQuery.of(context).size;
     final cardSize = getWidgetSize(cardKey)!;
-    final widthRatio = deviceSize.width / cardSize.height + 1;
+    final widthRatio = deviceSize.width / cardSize.height + 2;
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
@@ -311,6 +317,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   Widget _changeToCard(BuildContext context, int index) {
     final auth = Provider.of<Auth>(context, listen: false);
+    var formController = _formLoadingController;
+    // if (!_isLoadingFirstTime) formController = _formLoadingController..value = 1.0;
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -318,9 +326,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           child: _LoginCard(
             key: _loginCardKey,
             userType: widget.userType,
-            loadingController: _isLoadingFirstTime
-                ? _formLoadingController
-                : (_formLoadingController..value = 1.0),
+            loadingController: formController,
             userValidator: widget.userValidator,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
@@ -344,6 +350,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userValidator: widget.userValidator,
             userType: widget.userType,
             loginTheme: widget.loginTheme,
+            loadingController: formController,
             navigateBack: widget.navigateBackAfterRecovery,
             onBack: () => _changeCard(_loginPageIndex),
             onSubmitCompleted: () {
@@ -356,16 +363,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
       case _additionalSignUpIndex:
         if (widget.additionalSignUpFields == null) {
-          throw StateError('The additional fields List is null');
+          return const SizedBox.shrink();
+          // throw StateError('The additional fields List is null');
         }
         return _buildLoadingAnimator(
           theme: Theme.of(context),
           child: _AdditionalSignUpCard(
             key: _additionalSignUpCardKey,
             formFields: widget.additionalSignUpFields!,
-            loadingController: _isLoadingFirstTime
-                ? _formLoadingController
-                : (_formLoadingController..value = 1.0),
+            loadingController: formController,
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
             onSubmitCompleted: () {
@@ -396,9 +402,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           child: _ConfirmSignupCard(
             key: _confirmSignUpCardKey,
             onBack: () => _changeCard(_loginPageIndex),
-            loadingController: _isLoadingFirstTime
-                ? _formLoadingController
-                : (_formLoadingController..value = 1.0),
+            loadingController: formController,
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
                 widget.onSubmitCompleted!();
