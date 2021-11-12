@@ -11,28 +11,28 @@ void main() {
           SystemUiOverlayStyle.dark.systemNavigationBarColor,
     ),
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login Demo',
       theme: ThemeData(
-        // brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
-        accentColor: Colors.orange,
-        textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.orange),
+        textSelectionTheme:
+            const TextSelectionThemeData(cursorColor: Colors.orange),
         // fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
-          headline3: TextStyle(
+          headline3: const TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 45.0,
             // fontWeight: FontWeight.w400,
             color: Colors.orange,
           ),
-          button: TextStyle(
+          button: const TextStyle(
             // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
             fontFamily: 'OpenSans',
           ),
@@ -42,23 +42,25 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.normal,
             color: Colors.deepPurple[300],
           ),
-          headline1: TextStyle(fontFamily: 'Quicksand'),
-          headline2: TextStyle(fontFamily: 'Quicksand'),
-          headline4: TextStyle(fontFamily: 'Quicksand'),
-          headline5: TextStyle(fontFamily: 'NotoSans'),
-          headline6: TextStyle(fontFamily: 'NotoSans'),
-          subtitle1: TextStyle(fontFamily: 'NotoSans'),
-          bodyText1: TextStyle(fontFamily: 'NotoSans'),
-          bodyText2: TextStyle(fontFamily: 'NotoSans'),
-          subtitle2: TextStyle(fontFamily: 'NotoSans'),
-          overline: TextStyle(fontFamily: 'NotoSans'),
+          headline1: const TextStyle(fontFamily: 'Quicksand'),
+          headline2: const TextStyle(fontFamily: 'Quicksand'),
+          headline4: const TextStyle(fontFamily: 'Quicksand'),
+          headline5: const TextStyle(fontFamily: 'NotoSans'),
+          headline6: const TextStyle(fontFamily: 'NotoSans'),
+          subtitle1: const TextStyle(fontFamily: 'NotoSans'),
+          bodyText1: const TextStyle(fontFamily: 'NotoSans'),
+          bodyText2: const TextStyle(fontFamily: 'NotoSans'),
+          subtitle2: const TextStyle(fontFamily: 'NotoSans'),
+          overline: const TextStyle(fontFamily: 'NotoSans'),
         ),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
+            .copyWith(secondary: Colors.orange),
       ),
       navigatorObservers: [TransitionRouteObserver()],
       initialRoute: LoginScreen.routeName,
       routes: {
-        LoginScreen.routeName: (context) => LoginScreen(),
-        DashboardScreen.routeName: (context) => DashboardScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        DashboardScreen.routeName: (context) => const DashboardScreen(),
       },
     );
   }

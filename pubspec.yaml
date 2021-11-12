@@ -1,6 +1,6 @@
 name: flutter_login
 description: A login widget with login/signup functionalities to help speed up development
-version: 2.2.1
+version: 3.0.0
 homepage: https://github.com/NearHuscarl/flutter_login
 
 environment:
@@ -9,53 +9,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  font_awesome_flutter: ^9.0.0
-  provider: ^5.0.0
+  font_awesome_flutter: ^9.1.0
+  provider: ^6.0.1
   another_transformer_page_view: ^1.0.1
   another_flushbar: ^1.10.23
+  flutter_signin_button: ^2.0.0
 
   # flutter_test from sdk depends on quiver
   quiver: ^3.0.1
-  pedantic: ^1.11.0
+  url_launcher: ^6.0.12
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.9
+  mockito: ^5.0.16
+  flutter_lints: ^1.0.4
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # To add assets to your package, add an assets section, like this:
   assets:
     - assets/images/ecorp.png
-  #  - assets/images/placeholder-logo.png
-  #
-  # For details regarding assets in packages, see
-  # https://flutter.dev/assets-and-images/#from-packages
-  #
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # To add custom fonts to your package, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts in packages, see
-  # https://flutter.dev/custom-fonts/#from-packages

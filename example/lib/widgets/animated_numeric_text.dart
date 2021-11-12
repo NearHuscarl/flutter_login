@@ -26,7 +26,7 @@ class AnimatedNumericText extends StatelessWidget {
   final Curve curve;
   final String formatter;
   final TextStyle? style;
-  final numberFormat;
+  final NumberFormat numberFormat;
   final Animation<double> numberAnimation;
 
   @override
@@ -34,7 +34,7 @@ class AnimatedNumericText extends StatelessWidget {
     return AnimatedBuilder(
       animation: numberAnimation,
       builder: (context, child) => Text(
-        '${numberFormat.format(numberAnimation.value)}',
+        numberFormat.format(numberAnimation.value),
         style: style,
       ),
     );

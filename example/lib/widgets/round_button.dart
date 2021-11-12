@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RoundButton extends StatefulWidget {
-  RoundButton({
+  const RoundButton({
     Key? key,
     required this.icon,
     required this.onPressed,
@@ -47,7 +47,7 @@ class _RoundButtonState extends State<RoundButton>
       CurvedAnimation(
         parent: _pressController,
         curve: Curves.easeOut,
-        reverseCurve: ElasticInCurve(0.3),
+        reverseCurve: const ElasticInCurve(0.3),
       ),
     );
   }
@@ -94,7 +94,7 @@ class _RoundButtonState extends State<RoundButton>
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               widget.label!,
               style:

@@ -5,7 +5,7 @@ import 'animated_text.dart';
 import 'ring.dart';
 
 class AnimatedButton extends StatefulWidget {
-  AnimatedButton({
+  const AnimatedButton({
     Key? key,
     required this.text,
     required this.onPressed,
@@ -50,7 +50,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: widget.controller!,
-        curve: Interval(0.0, .25),
+        curve: const Interval(0.0, .25),
       ),
     );
 
@@ -60,19 +60,19 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller!,
-      curve: Threshold(.65),
+      curve: const Threshold(.65),
     ));
 
     _ringThicknessAnimation =
         Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
             .animate(CurvedAnimation(
       parent: widget.controller!,
-      curve: Interval(.65, .85),
+      curve: const Interval(.65, .85),
     ));
     _ringOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller!,
-      curve: Interval(.85, 1.0),
+      curve: const Interval(.85, 1.0),
     ));
 
     widget.controller!.addStatusListener(handleStatusChanged);
@@ -90,7 +90,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     final buttonTheme = theme.floatingActionButtonTheme;
 
     _color = widget.color ?? buttonTheme.backgroundColor;
-    _loadingColor = widget.loadingColor ?? theme.accentColor;
+    _loadingColor = widget.loadingColor ?? theme.colorScheme.secondary;
 
     _colorAnimation = ColorTween(
       begin: _color,
@@ -149,7 +149,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       maxLines: 1,
     );
 
-    renderParagraph.layout(BoxConstraints(minWidth: 120.0));
+    renderParagraph.layout(const BoxConstraints(minWidth: 120.0));
 
     // text width based on fontSize, plus 45.0 for padding
     var textWidth =
@@ -165,7 +165,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
       parent: widget.controller!,
-      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+      curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
   }
 
@@ -181,11 +181,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   Widget _buildButton(ThemeData theme) {
     final buttonTheme = theme.floatingActionButtonTheme;
-
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: AnimatedBuilder(
           animation: _colorAnimation,
           builder: (context, child) => Material(

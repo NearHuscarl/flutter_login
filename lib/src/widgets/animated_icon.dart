@@ -7,7 +7,7 @@ import 'ring.dart';
 ///similar a AnimatedButton but has an icon instead of textButton
 //(basically its a modified version of the AnimatedButton Widget and may need to be cleaned up)
 class AnimatedIconButton extends StatefulWidget {
-  AnimatedIconButton({
+  const AnimatedIconButton({
     Key? key,
     required this.tooltip,
     required this.onPressed,
@@ -56,19 +56,19 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     _buttonOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Threshold(.65),
+      curve: const Threshold(.65),
     ));
 
     _ringThicknessAnimation =
         Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
             .animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(.65, .85),
+      curve: const Interval(.65, .85),
     ));
     _ringOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(.85, 1.0),
+      curve: const Interval(.85, 1.0),
     ));
 
     widget.controller.addStatusListener(handleStatusChanged);
@@ -86,7 +86,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     final buttonTheme = theme.floatingActionButtonTheme;
 
     _color = widget.color ?? buttonTheme.backgroundColor;
-    _loadingColor = widget.loadingColor ?? theme.accentColor;
+    _loadingColor = widget.loadingColor ?? theme.colorScheme.secondary;
 
     _colorAnimation = ColorTween(
       begin: _color,
@@ -145,7 +145,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
       maxLines: 1,
     );
 
-    renderParagraph.layout(BoxConstraints(minWidth: 120.0));
+    renderParagraph.layout(const BoxConstraints(minWidth: 120.0));
 
     // text width based on fontSize, plus 45.0 for padding
     var textWidth =
@@ -161,7 +161,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width)
         .animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+      curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
     ));
   }
 
@@ -170,7 +170,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     return FadeTransition(
       opacity: _buttonOpacityAnimation,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: AnimatedBuilder(
           animation: _colorAnimation,
           builder: (context, child) => Material(
@@ -197,7 +197,6 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
                 height: _height,
                 alignment: Alignment.center,
                 child: Icon(widget.icon, color: Colors.white),
-                //_buildButtonText(theme),
               ),
             ),
           ),
