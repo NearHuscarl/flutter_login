@@ -201,17 +201,20 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
         (theme.cardTheme.color!.computeLuminance() < 0.5)
             ? Colors.white
             : theme.primaryColor;
-    return MaterialButton(
-      onPressed: !_isSubmitting
-          ? () {
-              _formCompleteSignupKey.currentState!.save();
-              widget.onBack();
-            }
-          : null,
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
-      child: Text(messages.goBackButton),
+    return ScaleTransition(
+      scale: _buttonScaleAnimation,
+      child: MaterialButton(
+        onPressed: !_isSubmitting
+            ? () {
+                _formCompleteSignupKey.currentState!.save();
+                widget.onBack();
+              }
+            : null,
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
+        child: Text(messages.goBackButton),
+      ),
     );
   }
 
