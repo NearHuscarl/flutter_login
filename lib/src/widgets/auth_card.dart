@@ -82,8 +82,10 @@ class AuthCard extends StatefulWidget {
 }
 
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
-  final GlobalKey _cardKey = GlobalKey();
+  final GlobalKey _loginCardKey = GlobalKey();
   final GlobalKey _additionalSignUpCardKey = GlobalKey();
+  final GlobalKey _confirmRecoverCardKey = GlobalKey();
+  final GlobalKey _confirmSignUpCardKey = GlobalKey();
 
   static const int _loginPageIndex = 0;
   static const int _recoveryIndex = 1;
@@ -244,7 +246,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
     } else if (_routeTransitionController.isDismissed) {
-      _forwardChangeRouteAnimation(_cardKey);
+      _forwardChangeRouteAnimation(_loginCardKey);
     }
   }
 
@@ -314,7 +316,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return _buildLoadingAnimator(
           theme: Theme.of(context),
           child: _LoginCard(
-            key: _cardKey,
+            key: _loginCardKey,
             userType: widget.userType,
             loadingController: _isLoadingFirstTime
                 ? _formLoadingController
@@ -327,7 +329,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation(_cardKey).then((_) {
+              _forwardChangeRouteAnimation(_loginCardKey).then((_) {
                 widget.onSubmitCompleted!();
               });
             },
@@ -356,27 +358,33 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         if (widget.additionalSignUpFields == null) {
           throw StateError('The additional fields List is null');
         }
-        return _AdditionalSignUpCard(
-          key: _additionalSignUpCardKey,
-          formFields: widget.additionalSignUpFields!,
-          loadingController: widget.loadingController,
-          onBack: () => _changeCard(_loginPageIndex),
-          loginTheme: widget.loginTheme,
-          onSubmitCompleted: () {
-            if (auth.onConfirmSignup != null) {
-              _changeCard(_confirmSignup);
-            } else if (widget.loginAfterSignUp) {
-              _forwardChangeRouteAnimation(_additionalSignUpCardKey).then((_) {
-                widget.onSubmitCompleted!();
-              });
-            } else {
-              _changeCard(_loginPageIndex);
-            }
-          },
+        return _buildLoadingAnimator(
+          theme: Theme.of(context),
+          child: _AdditionalSignUpCard(
+            key: _additionalSignUpCardKey,
+            formFields: widget.additionalSignUpFields!,
+            loadingController: _isLoadingFirstTime
+                ? _formLoadingController
+                : (_formLoadingController..value = 1.0),
+            onBack: () => _changeCard(_loginPageIndex),
+            loginTheme: widget.loginTheme,
+            onSubmitCompleted: () {
+              if (auth.onConfirmSignup != null) {
+                _changeCard(_confirmSignup);
+              } else if (widget.loginAfterSignUp) {
+                _forwardChangeRouteAnimation(_additionalSignUpCardKey).then((_) {
+                  widget.onSubmitCompleted!();
+                });
+              } else {
+                _changeCard(_loginPageIndex);
+              }
+            },
+          ),
         );
 
       case _confirmRecover:
         return ConfirmRecoverCard(
+          key: _confirmRecoverCardKey,
           passwordValidator: widget.passwordValidator!,
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
@@ -384,9 +392,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
       case _confirmSignup:
         return ConfirmSignupCard(
+          key: _confirmSignUpCardKey,
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () {
-            _forwardChangeRouteAnimation(_cardKey).then((_) {
+            _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
               widget.onSubmitCompleted!();
             });
           },
