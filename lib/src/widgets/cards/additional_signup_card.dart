@@ -1,4 +1,4 @@
-part of auth_card;
+part of auth_card_builder;
 
 class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({

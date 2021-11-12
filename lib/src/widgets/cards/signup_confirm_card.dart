@@ -1,34 +1,24 @@
-import 'dart:math';
+part of auth_card_builder;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'animated_button.dart';
-import 'animated_text_form_field.dart';
-
-import '../models/login_data.dart';
-import '../providers/auth.dart';
-import '../providers/login_messages.dart';
-import '../widget_helper.dart';
-
-class ConfirmSignupCard extends StatefulWidget {
-  const ConfirmSignupCard({
+class _ConfirmSignupCard extends StatefulWidget {
+  const _ConfirmSignupCard({
     Key? key,
     required this.onBack,
     required this.onSubmitCompleted,
     this.loginAfterSignUp = true,
+    this.loadingController,
   }) : super(key: key);
 
   final bool loginAfterSignUp;
   final VoidCallback onBack;
   final VoidCallback onSubmitCompleted;
+  final AnimationController? loadingController;
 
   @override
-  ConfirmSignupCardState createState() => ConfirmSignupCardState();
+  _ConfirmSignupCardState createState() => _ConfirmSignupCardState();
 }
 
-class ConfirmSignupCardState extends State<ConfirmSignupCard>
+class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 

@@ -20,7 +20,7 @@ import 'src/providers/auth.dart';
 import 'src/providers/login_messages.dart';
 import 'src/providers/login_theme.dart';
 import 'src/regex.dart';
-import 'src/widgets/auth_card.dart';
+import 'src/widgets/cards/auth_card_builder.dart';
 import 'src/widgets/fade_in.dart';
 import 'src/widgets/gradient_box.dart';
 import 'src/widgets/hero_text.dart';

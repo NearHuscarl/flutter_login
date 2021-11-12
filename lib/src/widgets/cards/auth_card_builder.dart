@@ -1,4 +1,4 @@
-library auth_card;
+library auth_card_builder;
 
 import 'dart:collection';
 import 'dart:math';
@@ -19,25 +19,25 @@ import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/utils/text_field_utils.dart';
 import 'package:flutter_login/src/widget_helper.dart';
-import 'package:flutter_login/src/widgets/recover_confirm_card.dart';
-import 'package:flutter_login/src/widgets/signup_confirm_card.dart';
 import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../flutter_login.dart';
-import 'animated_button.dart';
-import 'animated_icon.dart';
-import 'animated_text.dart';
-import 'animated_text_form_field.dart';
-import 'custom_page_transformer.dart';
-import 'expandable_container.dart';
-import 'fade_in.dart';
+import '../../../flutter_login.dart';
+import '../animated_button.dart';
+import '../animated_icon.dart';
+import '../animated_text.dart';
+import '../animated_text_form_field.dart';
+import '../custom_page_transformer.dart';
+import '../expandable_container.dart';
+import '../fade_in.dart';
 
 part 'additional_signup_card.dart';
 part 'login_card.dart';
 part 'recover_card.dart';
+part 'recover_confirm_card.dart';
+part 'signup_confirm_card.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard(
@@ -383,7 +383,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         );
 
       case _confirmRecover:
-        return ConfirmRecoverCard(
+        return _ConfirmRecoverCard(
           key: _confirmRecoverCardKey,
           passwordValidator: widget.passwordValidator!,
           onBack: () => _changeCard(_loginPageIndex),
@@ -391,15 +391,21 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         );
 
       case _confirmSignup:
-        return ConfirmSignupCard(
-          key: _confirmSignUpCardKey,
-          onBack: () => _changeCard(_loginPageIndex),
-          onSubmitCompleted: () {
-            _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
-              widget.onSubmitCompleted!();
-            });
-          },
-          loginAfterSignUp: widget.loginAfterSignUp,
+        return _buildLoadingAnimator(
+          theme: Theme.of(context),
+          child: _ConfirmSignupCard(
+            key: _confirmSignUpCardKey,
+            onBack: () => _changeCard(_loginPageIndex),
+            loadingController: _isLoadingFirstTime
+                ? _formLoadingController
+                : (_formLoadingController..value = 1.0),
+            onSubmitCompleted: () {
+              _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
+                widget.onSubmitCompleted!();
+              });
+            },
+            loginAfterSignUp: widget.loginAfterSignUp,
+          ),
         );
     }
     throw IndexError(index, 5);
