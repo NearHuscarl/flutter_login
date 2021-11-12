@@ -29,7 +29,6 @@ class _AdditionalSignUpCard extends StatefulWidget {
 
 class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     with TickerProviderStateMixin {
-
   final GlobalKey<FormState> _formCompleteSignupKey = GlobalKey();
 
   // Used to remember all text controllers
@@ -59,7 +58,6 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             value: (formFields) => TextEditingController(
                   text: formFields.defaultValue,
                 ));
-
 
     if (_nameControllers.length != widget.formFields.length) {
       throw ArgumentError(

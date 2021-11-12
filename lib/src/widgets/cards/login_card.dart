@@ -75,7 +75,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _nameController = TextEditingController(text: auth.email);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
-    
+
     widget.loadingController.addStatusListener(handleLoadingAnimationStatus);
 
     _switchAuthController = AnimationController(
@@ -606,7 +606,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             ),
           ),
           ExpandableContainer(
-            backgroundColor: _switchAuthController.isCompleted ? null : theme.colorScheme.secondary,
+            backgroundColor: _switchAuthController.isCompleted
+                ? null
+                : theme.colorScheme.secondary,
             controller: _switchAuthController,
             initialState: isLogin
                 ? ExpandableContainerState.shrunk
@@ -629,11 +631,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 if (auth.isSignup && auth.termsOfService.isNotEmpty)
                   ...auth.termsOfService
                       .map((e) => ScaleTransition(
-                      scale: _buttonScaleAnimation,
-                        child: TermCheckbox(
+                            scale: _buttonScaleAnimation,
+                            child: TermCheckbox(
                               termOfService: e,
                             ),
-                      ))
+                          ))
                       .toList(),
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)

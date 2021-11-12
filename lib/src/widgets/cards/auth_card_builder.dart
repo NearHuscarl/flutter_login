@@ -378,7 +378,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               if (auth.onConfirmSignup != null) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
-                _forwardChangeRouteAnimation(_additionalSignUpCardKey).then((_) {
+                _forwardChangeRouteAnimation(_additionalSignUpCardKey)
+                    .then((_) {
                   widget.onSubmitCompleted!();
                 });
               } else {
