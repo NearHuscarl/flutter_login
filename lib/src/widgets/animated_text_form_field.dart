@@ -24,10 +24,10 @@ Interval _getInternalInterval(
 }
 
 class AnimatedTextFormField extends StatefulWidget {
-  AnimatedTextFormField({
-    Key key,
+  const AnimatedTextFormField({
+    Key? key,
     this.interval = const Interval(0.0, 1.0),
-    @required this.width,
+    required this.width,
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -43,44 +43,44 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
-    this.autocorrect = true,
+    this.autocorrect = false,
     this.autofillHints,
   })  : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
         super(key: key);
 
-  final Interval interval;
-  final AnimationController loadingController;
-  final AnimationController inertiaController;
+  final Interval? interval;
+  final AnimationController? loadingController;
+  final AnimationController? inertiaController;
   final double width;
   final bool enabled;
   final bool autocorrect;
-  final Iterable<String> autofillHints;
-  final String labelText;
-  final Widget prefixIcon;
-  final Widget suffixIcon;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
+  final Iterable<String>? autofillHints;
+  final String? labelText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final bool obscureText;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final FormFieldValidator<String> validator;
-  final ValueChanged<String> onFieldSubmitted;
-  final FormFieldSetter<String> onSaved;
-  final TextFieldInertiaDirection inertiaDirection;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onFieldSubmitted;
+  final FormFieldSetter<String>? onSaved;
+  final TextFieldInertiaDirection? inertiaDirection;
 
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
-  Animation<double> scaleAnimation;
-  Animation<double> sizeAnimation;
-  Animation<double> suffixIconOpacityAnimation;
+  late Animation<double> scaleAnimation;
+  late Animation<double> sizeAnimation;
+  late Animation<double> suffixIconOpacityAnimation;
 
-  Animation<double> fieldTranslateAnimation;
-  Animation<double> iconRotationAnimation;
-  Animation<double> iconTranslateAnimation;
+  late Animation<double> fieldTranslateAnimation;
+  late Animation<double> iconRotationAnimation;
+  late Animation<double> iconTranslateAnimation;
 
   @override
   void initState() {
@@ -98,7 +98,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       ).animate(CurvedAnimation(
         parent: loadingController,
         curve: _getInternalInterval(
-            0, .2, interval.begin, interval.end, Curves.easeOutBack),
+            0, .2, interval!.begin, interval.end, Curves.easeOutBack),
       ));
       suffixIconOpacityAnimation =
           Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -118,28 +118,28 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         end: sign * 15.0,
       ).animate(CurvedAnimation(
         parent: inertiaController,
-        curve: Interval(0, .5, curve: Curves.easeOut),
+        curve: const Interval(0, .5, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
       iconRotationAnimation =
           Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */)
               .animate(CurvedAnimation(
         parent: inertiaController,
-        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        curve: const Interval(.5, 1.0, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
       iconTranslateAnimation =
           Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
         parent: inertiaController,
-        curve: Interval(.5, 1.0, curve: Curves.easeOut),
+        curve: const Interval(.5, 1.0, curve: Curves.easeOut),
         reverseCurve: Curves.easeIn,
       ));
     }
   }
 
   void _updateSizeAnimation() {
-    final interval = widget.interval;
-    final loadingController = widget.loadingController;
+    final interval = widget.interval!;
+    final loadingController = widget.loadingController!;
 
     sizeAnimation = Tween<double>(
       begin: 48.0,
@@ -173,7 +173,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
   }
 
-  Widget _buildInertiaAnimation(Widget child) {
+  Widget? _buildInertiaAnimation(Widget? child) {
     if (widget.inertiaController == null) {
       return child;
     }
@@ -208,6 +208,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget textField = TextFormField(
+      cursorColor: theme.primaryColor,
       controller: widget.controller,
       focusNode: widget.focusNode,
       decoration: _getInputDecoration(theme),
@@ -252,10 +253,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 }
 
 class AnimatedPasswordTextFormField extends StatefulWidget {
-  AnimatedPasswordTextFormField({
-    Key key,
+  const AnimatedPasswordTextFormField({
+    Key? key,
     this.interval = const Interval(0.0, 1.0),
-    @required this.animatedWidth,
+    required this.animatedWidth,
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -273,21 +274,21 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
             (inertiaController != null && inertiaDirection != null)),
         super(key: key);
 
-  final Interval interval;
-  final AnimationController loadingController;
-  final AnimationController inertiaController;
+  final Interval? interval;
+  final AnimationController? loadingController;
+  final AnimationController? inertiaController;
   final double animatedWidth;
   final bool enabled;
-  final String labelText;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final FormFieldValidator<String> validator;
-  final ValueChanged<String> onFieldSubmitted;
-  final FormFieldSetter<String> onSaved;
-  final TextFieldInertiaDirection inertiaDirection;
-  final Iterable<String> autofillHints;
+  final String? labelText;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onFieldSubmitted;
+  final FormFieldSetter<String>? onSaved;
+  final TextFieldInertiaDirection? inertiaDirection;
+  final Iterable<String>? autofillHints;
 
   @override
   _AnimatedPasswordTextFormFieldState createState() =>
@@ -306,10 +307,9 @@ class _AnimatedPasswordTextFormFieldState
       inertiaController: widget.inertiaController,
       width: widget.animatedWidth,
       enabled: widget.enabled,
-      autocorrect: false,
       autofillHints: widget.autofillHints,
       labelText: widget.labelText,
-      prefixIcon: Icon(FontAwesomeIcons.lock, size: 20),
+      prefixIcon: const Icon(FontAwesomeIcons.lock, size: 20),
       suffixIcon: GestureDetector(
         onTap: () => setState(() => _obscureText = !_obscureText),
         dragStartBehavior: DragStartBehavior.down,
@@ -324,12 +324,12 @@ class _AnimatedPasswordTextFormFieldState
               children: <Widget>[bottomChild, topChild],
             );
           },
-          firstChild: Icon(
+          firstChild: const Icon(
             Icons.visibility,
             size: 25.0,
             semanticLabel: 'show password',
           ),
-          secondChild: Icon(
+          secondChild: const Icon(
             Icons.visibility_off,
             size: 25.0,
             semanticLabel: 'hide password',

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/widgets/animated_button.dart';
+import 'package:flutter_login/src/widgets/animated_icon.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 // TODO: get this value from fluter_login package
 const loadingAnimationDuration = Duration(seconds: 1);
 
 class LoginCallback {
-  Future<String> onLogin(LoginData data) => null;
-  Future<String> onSignup(LoginData data) => null;
-  Future<String> onRecoverPassword(String data) => null;
-  String emailValidator(String value) => null;
-  String passwordValidator(String value) => null;
+  Future<String>? onLogin(LoginData? data) => null;
+  Future<String>? onSignup(SignupData? data) => null;
+  Future<String>? onRecoverPassword(String? data) => null;
+  String? userValidator(String? value) => null;
+  String? passwordValidator(String? value) => null;
   void onSubmitAnimationCompleted() {}
 }
 
@@ -21,23 +22,40 @@ class MockCallback extends Mock implements LoginCallback {}
 
 final mockCallback = MockCallback();
 
-List<LoginData> stubCallback(MockCallback mockCallback) {
+List<LoginData> loginStubCallback(MockCallback mockCallback) {
   reset(mockCallback);
 
   final user = LoginData(name: 'near@gmail.com', password: '12345');
   final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
 
-  when(mockCallback.emailValidator(user.name)).thenReturn(null);
-  when(mockCallback.emailValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.userValidator(user.name)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
 
   when(mockCallback.passwordValidator(user.password)).thenReturn(null);
   when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
 
-  when(mockCallback.onLogin(user)).thenAnswer((_) => Future.value(null));
+  when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
-  when(mockCallback.onSignup(user)).thenAnswer((_) => Future.value(null));
+  return [user, invalidUser];
+}
+
+List<SignupData> signupStubCallback(MockCallback mockCallback) {
+  reset(mockCallback);
+
+  final user =
+      SignupData.fromSignupForm(name: 'near@gmail.com', password: '12345');
+  final invalidUser =
+      SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
+
+  when(mockCallback.userValidator(user.name)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
+
+  when(mockCallback.passwordValidator(user.password)).thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
+
+  when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))
       .thenAnswer((_) => Future.value('Invalid!'));
 
@@ -71,7 +89,7 @@ Future<void> simulateOpenSoftKeyboard(
   await tester.pumpWidget(widget);
 }
 
-bool isSignup(WidgetTester tester) {
+bool? isSignup(WidgetTester tester) {
   return confirmPasswordTextFieldWidget(tester).enabled;
 }
 
@@ -81,6 +99,10 @@ Finder findLogoImage() {
 
 Finder findTitle() {
   return find.byKey(kTitleKey);
+}
+
+Finder findNthField(int n) {
+  return find.byType(TextFormField).at(n);
 }
 
 Finder findNameTextField() {
@@ -123,36 +145,43 @@ TextField confirmPasswordTextFieldWidget(WidgetTester tester) {
   return tester.widgetList<TextField>(find.byType(TextField)).elementAt(2);
 }
 
+AnimatedIconButton firstProviderButton() {
+  return find.byType(AnimatedIconButton).evaluate().first.widget
+      as AnimatedIconButton;
+}
+
 AnimatedButton submitButtonWidget() {
-  return find.byType(AnimatedButton).evaluate().first.widget;
+  return find.byType(AnimatedButton).evaluate().first.widget as AnimatedButton;
 }
 
 TextButton forgotPasswordButtonWidget() {
-  return find.byType(TextButton).evaluate().first.widget;
+  return find.byType(TextButton).evaluate().first.widget as TextButton;
 }
 
 MaterialButton switchAuthButtonWidget() {
-  return find.byType(MaterialButton).evaluate().last.widget;
+  return find.byType(MaterialButton).evaluate().last.widget as MaterialButton;
 }
 
 MaterialButton goBackButtonWidget() {
-  return find.byType(MaterialButton).evaluate().last.widget;
+  return find.byType(MaterialButton).evaluate().last.widget as MaterialButton;
 }
 
 Text recoverIntroTextWidget() {
-  return find.byKey(kRecoverPasswordIntroKey).evaluate().single.widget;
+  return find.byKey(kRecoverPasswordIntroKey).evaluate().single.widget as Text;
 }
 
 Text recoverDescriptionTextWidget() {
-  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget;
+  return find.byKey(kRecoverPasswordDescriptionKey).evaluate().single.widget
+      as Text;
 }
 
 // tester.tap() not working for some reasons. Workaround:
 // https://github.com/flutter/flutter/issues/31066#issuecomment-530507319
-void clickSubmitButton() => submitButtonWidget().onPressed();
-void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed();
-void clickGoBackButton() => goBackButtonWidget().onPressed();
-void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed();
+void clickSubmitButton() => submitButtonWidget().onPressed!();
+void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed!();
+void clickGoBackButton() => goBackButtonWidget().onPressed!();
+void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed!();
+void clickFirstProvider() => firstProviderButton().onPressed();
 
 /// this prevents this error:
 /// A Timer is still pending even after the widget tree was disposed.
@@ -160,4 +189,4 @@ void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed();
 /// go away.
 /// https://stackoverflow.com/a/57930945/9449426
 void waitForFlushbarToClose(WidgetTester tester) async =>
-    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await tester.pump(const Duration(seconds: 4));

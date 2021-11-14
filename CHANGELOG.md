@@ -1,3 +1,72 @@
+## 3.0.0
+First stable release of 3.0.0.
+Please see the changelog entries of the beta versions for all changes.
+New features include:
+* Additional signup fields!
+* Confirmation card for password recovery.
+* Confirmation card for user registration.
+
+This release also fixes:
+* White space visible when animation is complete
+* Several other animation improvements
+
+## 3.0.0-beta.2
+Besides the existing loginProvider icons, you can now also add a LoginButton as provider widget.
+Please check out [flutter_signin_button](https://pub.dev/packages/flutter_signin_button) for supported buttons.
+
+BREAKING CHANGES:
+* Provider has been updated to 6.0.1.
+* Instead of hideSignUpButton, you can now set onSignup parameter to null (or just leave it out) in
+order to hide the signup button.
+  
+Fixed several other small bugs like color not being applied correctly to all widgets.
+
+## 3.0.0-beta.1
+You can now add more signup-fields! Please keep in mind that this is a beta release and may still
+contain bugs.
+
+Other features:
+* You can now use an ImageProvider instead of only an AssetImage. [#216](https://github.com/NearHuscarl/flutter_login/pull/216)
+
+## 2.2.1
+Bug fixes
+* Fixes issue with switch auth button not calculating correct color. [#210](https://github.com/NearHuscarl/flutter_login/pull/210)
+
+## 2.2.0
+Features
+* Added possibility to disable custom page transformer. [#202](https://github.com/NearHuscarl/flutter_login/pull/202)
+* Added possibility to automatically navigate back to login page after successful recovery. [#207](https://github.com/NearHuscarl/flutter_login/pull/207)
+
+Bug fixes
+* Fixed primary color not applying to input decoration. ([@SalahAdDin](https://github.com/SalahAdDin) in [#201](https://github.com/NearHuscarl/flutter_login/pull/201))
+* Fixed forgot password button not coloring. [#203](https://github.com/NearHuscarl/flutter_login/pull/203)
+* Fixed black text when night mode is enabled and no other theme is provided. [#206](https://github.com/NearHuscarl/flutter_login/pull/206)
+* Fixed routing issue in example app. [#204](https://github.com/NearHuscarl/flutter_login/pull/204)
+
+## 2.1.0
+Features
+* Added possibility to change switch authentication button color. [#195](https://github.com/NearHuscarl/flutter_login/pull/195)
+* Added possibility to change logo size. [#193](https://github.com/NearHuscarl/flutter_login/pull/193)
+* Added labels to LoginProviders. [#192](https://github.com/NearHuscarl/flutter_login/pull/192)
+* Added a bar with title/description above providers. Can be disabled using hideProvidersTitle. See [#181](https://github.com/NearHuscarl/flutter_login/pull/181)
+
+Bug fixes
+* Fixed animation padding not filling screen. [#194](https://github.com/NearHuscarl/flutter_login/pull/194)
+
+## 2.0.0
+Stable release of null-safety
+
+Changed
+* emailValidator is now userValidator
+
+Features
+* Add bottom padding to LoginTheme
+
+Also fixed numerous other bugs.
+
+## 2.0.0-nullsafety.0
+Migrated to null-safety
+
 ## 1.1.0
 Features (30/03/2021)
 * Possibility to hide the sign-up and forgot password button [#115](https://github.com/NearHuscarl/flutter_login/pull/115)
