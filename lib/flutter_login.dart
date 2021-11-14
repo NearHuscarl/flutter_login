@@ -598,6 +598,14 @@ class _FlutterLoginState extends State<FlutterLogin>
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
+    final footerStyle = theme.textTheme.bodyText1!
+        .copyWith(
+          color: loginTheme.accentColor ??
+              (isDefaultBlackText
+                  ? Colors.white
+                  : theme.textTheme.headline3!.color),
+        )
+        .merge(loginTheme.footerTextStyle);
     final textStyle = theme.textTheme.bodyText2!
         .copyWith(color: blackOrWhite)
         .merge(loginTheme.bodyStyle);
@@ -690,6 +698,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         headline3: titleStyle,
         bodyText2: textStyle,
         subtitle1: textFieldStyle,
+        subtitle2: footerStyle,
         button: buttonStyle,
       ),
       colorScheme:
@@ -717,7 +726,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         padding: EdgeInsets.only(bottom: loginTheme.footerBottomPadding),
         child: Text(
           widget.footer!,
-          style: loginTheme.footerTextStyle,
+          style: theme.textTheme.subtitle2,
+          textAlign: TextAlign.center,
         ),
       );
     }
