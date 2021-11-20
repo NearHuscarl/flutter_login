@@ -40,17 +40,17 @@ typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 class Auth with ChangeNotifier {
   Auth(
       {this.loginProviders = const [],
-      this.onLogin,
-      this.onSignup,
-      this.onRecoverPassword,
-      this.onConfirmRecover,
-      this.onConfirmSignup,
-      this.onResendCode,
-      String email = '',
-      String password = '',
-      String confirmPassword = '',
-      AuthMode initialAuthMode = AuthMode.login,
-      this.termsOfService = const []})
+        this.onLogin,
+        this.onSignup,
+        this.onRecoverPassword,
+        this.onConfirmRecover,
+        this.onConfirmSignup,
+        this.onResendCode,
+        String email = '',
+        String password = '',
+        String confirmPassword = '',
+        AuthMode initialAuthMode = AuthMode.login,
+        this.termsOfService = const []})
       : _email = email,
         _password = password,
         _confirmPassword = confirmPassword,
@@ -119,8 +119,20 @@ class Auth with ChangeNotifier {
     notifyListeners();
   }
 
+  Map<String, String>? _customLoginData;
+  Map<String, String>? _customRecoverData;
   Map<String, String>? _additionalSignupData;
+  Map<String, String>? get customLoginData => _customLoginData;
+  Map<String, String>? get customRecoverData => _customRecoverData;
   Map<String, String>? get additionalSignupData => _additionalSignupData;
+  set customLoginData(Map<String, String>? customLoginData) {
+    _customLoginData = customLoginData;
+    notifyListeners();
+  }
+  set customRecoverData(Map<String, String>? customRecoverData) {
+    _customRecoverData = customRecoverData;
+    notifyListeners();
+  }
   set additionalSignupData(Map<String, String>? additionalSignupData) {
     _additionalSignupData = additionalSignupData;
     notifyListeners();
