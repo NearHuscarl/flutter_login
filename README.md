@@ -24,7 +24,8 @@ onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit butto
 onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
 onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
-onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode</sub>
+onRecoverPassword |   `RecoverCallback`     | <sub>Called when the user hit the submit button when in recover password mode. Use this if you didn't used recoverFields</sub>
+onRecoverPasswordCustom |   `RecoverCallbackCustom`     | <sub>Most likely to be removed in next version. Called when the user hit the submit button when in recover password mode. Use this if you used recoverFields. Very important.</sub>
 onConfirmRecover | `ConfirmRecoverCallback` | <sub>Called when the user submits confirmation code and sets password in recover password mode. If not specified, a confirmation code will not be used to recover password.</sub>
 title |   `String`     | <sub>The large text above the login [Card], usually the app or company name. Leave the string empty or null if you want no title.</sub>
 logo |   `ImageProvider or String`     | <sub>The image provider or asset path string for the logo image to be displayed</sub>
@@ -40,7 +41,9 @@ showDebugButtons |   `bool`     | <sub>Display the debug buttons to quickly forw
 hideForgotPasswordButton |   `bool`     | <sub>Hides the Forgot Password button if set to true</sub>
 hideProvidersTitle |   `bool`     | <sub>Hides the title above login providers if set to true. In case the providers List is empty this is uneffective, as the title is hidden anyways. The default is `false`</sub>
 disableCustomPageTransformer |   `bool`     | <sub>Disables the custom transition which causes RenderBox was not laid out error. See [#97](https://github.com/NearHuscarl/flutter_login/issues/97) for more info.</sub>
-additionalSignUpFields | `Map<String, UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up. You can provide at most 6 additional fields. </sub>
+loginFields | `List<UserFormField>` | <sub> Used to specify the form fields; the form is shown in login screen.</sub>
+recoverFields | `List<UserFormField>` | <sub> Used to specify the form fields; the form is shown in recover password screen. </sub>
+additionalSignUpFields | `List<UserFormField>` | <sub> Used to specify the additional form fields; the form is shown right after signin up. You can provide at most 6 additional fields. </sub>
 navigateBackAfterRecovery |   `bool`     | <sub>Navigate back to the login page after successful recovery.</sub>
 savedEmail |   `String`     | <sub>Prefilled value for user field (ie. saved from previous session via other means, ie. via SharedPreferences)</sub>
 savedPassword |   `String`     | <sub>Prefilled value for password field (ie. saved from previous session via other means, ie. via SharedPreferences). Will set also confirmation password in Auth class</sub>
