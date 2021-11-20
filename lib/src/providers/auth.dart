@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login/src/models/recover_data.dart';
 import 'package:flutter_login/src/models/signup_data.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 
@@ -32,6 +33,9 @@ typedef ProviderAuthCallback = Future<String?>? Function();
 typedef RecoverCallback = Future<String?>? Function(String);
 
 /// The result is an error message, callback successes if message is null
+typedef RecoverCallbackCustom = Future<String?>? Function(RecoverData);
+
+/// The result is an error message, callback successes if message is null
 typedef ConfirmSignupCallback = Future<String?>? Function(String, LoginData);
 
 /// The result is an error message, callback successes if message is null
@@ -42,7 +46,9 @@ class Auth with ChangeNotifier {
       {this.loginProviders = const [],
         this.onLogin,
         this.onSignup,
+        // ToDo: use single onRecoverPassword on version 4.0
         this.onRecoverPassword,
+        this.onRecoverPasswordCustom,
         this.onConfirmRecover,
         this.onConfirmSignup,
         this.onResendCode,
@@ -58,7 +64,9 @@ class Auth with ChangeNotifier {
 
   final LoginCallback? onLogin;
   final SignupCallback? onSignup;
+  // ToDo: use single onRecoverPassword on version 4.0
   final RecoverCallback? onRecoverPassword;
+  final RecoverCallbackCustom? onRecoverPasswordCustom;
   final List<LoginProvider> loginProviders;
   final ConfirmRecoverCallback? onConfirmRecover;
   final ConfirmSignupCallback? onConfirmSignup;

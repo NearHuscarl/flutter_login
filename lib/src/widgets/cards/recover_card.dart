@@ -6,6 +6,7 @@ class _RecoverCard extends StatefulWidget {
       required this.userValidator,
       required this.onBack,
       required this.userType,
+      this.recoverFields,
       this.loginTheme,
       required this.navigateBack,
       required this.onSubmitCompleted,
@@ -15,6 +16,7 @@ class _RecoverCard extends StatefulWidget {
   final FormFieldValidator<String>? userValidator;
   final Function onBack;
   final LoginUserType userType;
+  final List<UserFormField>? recoverFields;
   final LoginTheme? loginTheme;
   final bool navigateBack;
   final AnimationController loadingController;
@@ -41,6 +43,20 @@ class _RecoverCardState extends State<_RecoverCard>
 
     final auth = Provider.of<Auth>(context, listen: false);
     _nameController = TextEditingController(text: auth.email);
+    if (widget.recoverFields != null) {
+      List<UserFormField> formFields = widget.recoverFields!;
+      _nameControllers =
+          HashMap<String, TextEditingController>.fromIterable(formFields,
+              key: (formFields) => formFields.keyName,
+              value: (formFields) => TextEditingController(
+                    text: formFields.defaultValue,
+                  ));
+
+      if (_nameControllers.length != formFields.length) {
+        throw ArgumentError(
+            'Some of the formFields have duplicated names, and this is not allowed.');
+      }
+    }
 
     _submitController = AnimationController(
       vsync: this,
@@ -64,7 +80,16 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword!(auth.email);
+    String? error;
+    // ToDo: use single onRecoverPassword on version 4.0
+    if (widget.recoverFields != null) {
+      auth.customRecoverData =
+          _nameControllers.map((key, value) => MapEntry(key, value.text));
+      error = await auth.onRecoverPasswordCustom!(
+          RecoverData(customRecoverData: auth.customRecoverData));
+    } else {
+      error = await auth.onRecoverPassword!(auth.email);
+    }
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
@@ -125,6 +150,20 @@ class _RecoverCardState extends State<_RecoverCard>
     );
   }
 
+  late HashMap<String, TextEditingController> _nameControllers;
+
+  Widget _buildCustomRecoverFields(double width) {
+    List<UserFormField> formFields = [];
+    if (widget.recoverFields == null) {
+      return Container();
+    } else {
+      formFields = widget.recoverFields!;
+    }
+    return Column(
+        children: formFieldsBuilder(
+            formFields, _nameControllers, width, widget.loadingController));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -157,7 +196,9 @@ class _RecoverCardState extends State<_RecoverCard>
                   style: theme.textTheme.bodyText2,
                 ),
                 const SizedBox(height: 20),
-                _buildRecoverNameField(textFieldWidth, messages, auth),
+                widget.recoverFields == null
+                    ? _buildRecoverNameField(textFieldWidth, messages, auth)
+                    : _buildCustomRecoverFields(textFieldWidth),
                 const SizedBox(height: 20),
                 Text(
                   auth.onConfirmRecover != null

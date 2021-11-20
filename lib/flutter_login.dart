@@ -27,6 +27,7 @@ import 'src/widgets/hero_text.dart';
 import 'theme.dart';
 
 export 'src/models/login_data.dart';
+export 'src/models/recover_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/models/signup_data.dart';
 export 'src/models/user_form_field.dart';
@@ -271,7 +272,10 @@ class FlutterLogin extends StatefulWidget {
     Key? key,
     this.onSignup,
     required this.onLogin,
-    required this.onRecoverPassword,
+    // ToDo: use single onRecoverPassword on version 4.0
+    this.onRecoverPassword,
+    this.onRecoverPasswordCustom,
+
     this.title,
 
     /// The [ImageProvider] or asset path [String] for the logo image to be displayed
@@ -292,7 +296,7 @@ class FlutterLogin extends StatefulWidget {
     this.hideProvidersTitle = false,
     this.loginFields,
     this.signupFields,
-    this.recoverPasswordFields,
+    this.recoverFields,
     this.additionalSignupFields,
     this.disableCustomPageTransformer = false,
     this.navigateBackAfterRecovery = false,
@@ -325,7 +329,9 @@ class FlutterLogin extends StatefulWidget {
   final List<LoginProvider> loginProviders;
 
   /// Called when the user hit the submit button when in recover password mode
-  final RecoverCallback onRecoverPassword;
+  // ToDo: use single onRecoverPassword on version 4.0
+  final RecoverCallback? onRecoverPassword;
+  final RecoverCallbackCustom? onRecoverPasswordCustom;
 
   /// The large text above the login [Card], usually the app or company name
   final String? title;
@@ -377,7 +383,7 @@ class FlutterLogin extends StatefulWidget {
 
   /// This List contains the recover password fields.
   /// These fields will be displayed in recover password form. If you didn't set this, default recover password fields will be used
-  final List<UserFormField>? recoverPasswordFields;
+  final List<UserFormField>? recoverFields;
 
   /// This List contains the additional signup fields.
   /// By setting this, after signup another card with a form for additional user data is shown
@@ -749,7 +755,9 @@ class _FlutterLoginState extends State<FlutterLogin>
           create: (context) => Auth(
             onLogin: widget.onLogin,
             onSignup: widget.onSignup,
+            // ToDo: use single onRecoverPassword on version 4.0
             onRecoverPassword: widget.onRecoverPassword,
+            onRecoverPasswordCustom: widget.onRecoverPasswordCustom,
             loginProviders: widget.loginProviders,
             email: widget.savedEmail,
             password: widget.savedPassword,
@@ -796,6 +804,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
                         loginFields: widget.loginFields,
+                        recoverFields: widget.recoverFields,
+                        signupFields: widget.signupFields,
                         additionalSignUpFields: widget.additionalSignupFields,
                         disableCustomPageTransformer:
                         widget.disableCustomPageTransformer,

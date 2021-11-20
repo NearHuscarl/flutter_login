@@ -5,10 +5,12 @@ class _ConfirmSignupCard extends StatefulWidget {
     Key? key,
     required this.onBack,
     required this.onSubmitCompleted,
+    this.signupFields,
     this.loginAfterSignUp = true,
     required this.loadingController,
   }) : super(key: key);
 
+  final List<UserFormField>? signupFields;
   final bool loginAfterSignUp;
   final VoidCallback onBack;
   final VoidCallback onSubmitCompleted;

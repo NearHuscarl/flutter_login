@@ -10,6 +10,7 @@ import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/dart_helper.dart';
 import 'package:flutter_login/src/matrix.dart';
 import 'package:flutter_login/src/models/login_data.dart';
+import 'package:flutter_login/src/models/recover_data.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/signup_data.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
@@ -55,6 +56,8 @@ class AuthCard extends StatefulWidget {
         this.loginAfterSignUp = true,
         this.hideProvidersTitle = false,
         this.loginFields,
+        this.signupFields,
+        this.recoverFields,
         this.additionalSignUpFields,
         this.disableCustomPageTransformer = false,
         this.loginTheme,
@@ -75,6 +78,8 @@ class AuthCard extends StatefulWidget {
 
   final List<UserFormField>? additionalSignUpFields;
   final List<UserFormField>? loginFields;
+  final List<UserFormField>? signupFields;
+  final List<UserFormField>? recoverFields;
 
   final bool disableCustomPageTransformer;
   final LoginTheme? loginTheme;
@@ -353,6 +358,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         return _RecoverCard(
             userValidator: widget.userValidator,
             userType: widget.userType,
+            recoverFields: widget.recoverFields,
             loginTheme: widget.loginTheme,
             loadingController: formController,
             navigateBack: widget.navigateBackAfterRecovery,
@@ -406,6 +412,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           theme: Theme.of(context),
           child: _ConfirmSignupCard(
             key: _confirmSignUpCardKey,
+            signupFields: widget.signupFields,
             onBack: () => _changeCard(_loginPageIndex),
             loadingController: formController,
             onSubmitCompleted: () {
