@@ -183,20 +183,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     if (widget.loginFields != null) {
       auth.customLoginData =
           _nameControllers.map((key, value) => MapEntry(key, value.text));
+      auth.email = "";
+      auth.password = "";
+    } else {
+      auth.customLoginData = null;
     }
 
     auth.authType = AuthType.userPassword;
 
-    if (auth.isLogin && widget.loginFields != null) {
+    if (auth.isLogin) {
       error = await auth.onLogin?.call(LoginData(
         name: auth.email,
         password: auth.password,
         customLoginData: auth.customLoginData,
-      ));
-    } else if (auth.isLogin) {
-      error = await auth.onLogin?.call(LoginData(
-        name: auth.email,
-        password: auth.password,
       ));
     } else {
       if (!widget.requireAdditionalSignUpFields) {

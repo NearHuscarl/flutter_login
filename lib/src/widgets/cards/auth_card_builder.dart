@@ -54,6 +54,7 @@ class AuthCard extends StatefulWidget {
         this.hideSignUpButton = false,
         this.loginAfterSignUp = true,
         this.hideProvidersTitle = false,
+        this.loginFields,
         this.additionalSignUpFields,
         this.disableCustomPageTransformer = false,
         this.loginTheme,
@@ -73,6 +74,7 @@ class AuthCard extends StatefulWidget {
   final bool hideProvidersTitle;
 
   final List<UserFormField>? additionalSignUpFields;
+  final List<UserFormField>? loginFields;
 
   final bool disableCustomPageTransformer;
   final LoginTheme? loginTheme;
@@ -326,6 +328,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           theme: Theme.of(context),
           child: _LoginCard(
             key: _loginCardKey,
+            loginFields: widget.loginFields,
             userType: widget.userType,
             loadingController: formController,
             userValidator: widget.userValidator,
