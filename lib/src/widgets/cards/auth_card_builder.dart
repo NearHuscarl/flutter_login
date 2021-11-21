@@ -339,6 +339,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 widget.onSubmitCompleted!();
               });
             },
+            requireSignUpConfirmation: auth.onConfirmSignup != null,
+            onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
             loginAfterSignUp: widget.loginAfterSignUp,
@@ -402,12 +404,18 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           theme: Theme.of(context),
           child: _ConfirmSignupCard(
             key: _confirmSignUpCardKey,
-            onBack: () => _changeCard(_loginPageIndex),
+            onBack: () => auth.additionalSignupData == null
+                ? _changeCard(_loginPageIndex)
+                : _changeCard(_additionalSignUpIndex),
             loadingController: formController,
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
-                widget.onSubmitCompleted!();
-              });
+              if (widget.loginAfterSignUp) {
+                _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
+                  widget.onSubmitCompleted!();
+                });
+              } else {
+                _changeCard(_loginPageIndex);
+              }
             },
             loginAfterSignUp: widget.loginAfterSignUp,
           ),
