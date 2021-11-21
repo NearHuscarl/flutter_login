@@ -205,11 +205,11 @@ class __HeaderState extends State<_Header> {
 
     var logo = displayLogo
         ? Image(
-      image: widget.logo!,
-      filterQuality: FilterQuality.high,
-      height: logoHeight,
-      width: widget.logoWidth * cardWidth,
-    )
+            image: widget.logo!,
+            filterQuality: FilterQuality.high,
+            height: logoHeight,
+            width: widget.logoWidth * cardWidth,
+          )
         : const SizedBox.shrink();
 
     if (widget.logoTag != null) {
@@ -275,7 +275,6 @@ class FlutterLogin extends StatefulWidget {
     // ToDo: use single onRecoverPassword on version 4.0
     this.onRecoverPassword,
     this.onRecoverPasswordCustom,
-
     this.title,
 
     /// The [ImageProvider] or asset path [String] for the logo image to be displayed
@@ -472,15 +471,15 @@ class _FlutterLoginState extends State<FlutterLogin>
       vsync: this,
       duration: loadingDuration,
     )..addStatusListener((status) {
-      if (status == AnimationStatus.forward) {
-        _logoController.forward();
-        _titleController.forward();
-      }
-      if (status == AnimationStatus.reverse) {
-        _logoController.reverse();
-        _titleController.reverse();
-      }
-    });
+        if (status == AnimationStatus.forward) {
+          _logoController.forward();
+          _titleController.forward();
+        }
+        if (status == AnimationStatus.reverse) {
+          _logoController.reverse();
+          _titleController.reverse();
+        }
+      });
     _logoController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -592,7 +591,7 @@ class _FlutterLoginState extends State<FlutterLogin>
   ThemeData _mergeTheme(
       {required ThemeData theme, required LoginTheme loginTheme}) {
     final blackOrWhite =
-    theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
+        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
     final primaryOrWhite = theme.brightness == Brightness.light
         ? theme.primaryColor
         : Colors.white;
@@ -611,13 +610,13 @@ class _FlutterLoginState extends State<FlutterLogin>
         Typography.blackMountainView.headline3!.color;
     final titleStyle = theme.textTheme.headline3!
         .copyWith(
-      color: loginTheme.accentColor ??
-          (isDefaultBlackText
-              ? Colors.white
-              : theme.textTheme.headline3!.color),
-      fontSize: loginTheme.beforeHeroFontSize,
-      fontWeight: FontWeight.w300,
-    )
+          color: loginTheme.accentColor ??
+              (isDefaultBlackText
+                  ? Colors.white
+                  : theme.textTheme.headline3!.color),
+          fontSize: loginTheme.beforeHeroFontSize,
+          fontWeight: FontWeight.w300,
+        )
         .merge(loginTheme.titleStyle);
     final textStyle = theme.textTheme.bodyText2!
         .copyWith(color: blackOrWhite)
@@ -706,7 +705,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
       // put it here because floatingActionButtonTheme doesnt have highlightColor property
       highlightColor:
-      loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
+          loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
         headline3: titleStyle,
         bodyText2: textStyle,
@@ -714,7 +713,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         button: buttonStyle,
       ),
       colorScheme:
-      Theme.of(context).colorScheme.copyWith(secondary: accentColor),
+          Theme.of(context).colorScheme.copyWith(secondary: accentColor),
     );
   }
 
@@ -800,7 +799,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,
                         hideSignUpButton: widget.onSignup == null,
                         hideForgotPasswordButton:
-                        widget.hideForgotPasswordButton,
+                            widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
                         hideProvidersTitle: widget.hideProvidersTitle,
                         loginFields: widget.loginFields,
@@ -808,10 +807,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                         signupFields: widget.signupFields,
                         additionalSignUpFields: widget.additionalSignupFields,
                         disableCustomPageTransformer:
-                        widget.disableCustomPageTransformer,
+                            widget.disableCustomPageTransformer,
                         loginTheme: widget.theme,
                         navigateBackAfterRecovery:
-                        widget.navigateBackAfterRecovery,
+                            widget.navigateBackAfterRecovery,
                       ),
                     ),
                     Positioned(

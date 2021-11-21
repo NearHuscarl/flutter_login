@@ -44,19 +44,19 @@ typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 class Auth with ChangeNotifier {
   Auth(
       {this.loginProviders = const [],
-        this.onLogin,
-        this.onSignup,
-        // ToDo: use single onRecoverPassword on version 4.0
-        this.onRecoverPassword,
-        this.onRecoverPasswordCustom,
-        this.onConfirmRecover,
-        this.onConfirmSignup,
-        this.onResendCode,
-        String email = '',
-        String password = '',
-        String confirmPassword = '',
-        AuthMode initialAuthMode = AuthMode.login,
-        this.termsOfService = const []})
+      this.onLogin,
+      this.onSignup,
+      // ToDo: use single onRecoverPassword on version 4.0
+      this.onRecoverPassword,
+      this.onRecoverPasswordCustom,
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode,
+      String email = '',
+      String password = '',
+      String confirmPassword = '',
+      AuthMode initialAuthMode = AuthMode.login,
+      this.termsOfService = const []})
       : _email = email,
         _password = password,
         _confirmPassword = confirmPassword,
@@ -137,10 +137,12 @@ class Auth with ChangeNotifier {
     _customLoginData = customLoginData;
     notifyListeners();
   }
+
   set customRecoverData(Map<String, String>? customRecoverData) {
     _customRecoverData = customRecoverData;
     notifyListeners();
   }
+
   set additionalSignupData(Map<String, String>? additionalSignupData) {
     _additionalSignupData = additionalSignupData;
     notifyListeners();

@@ -44,24 +44,24 @@ part 'signup_confirm_card.dart';
 class AuthCard extends StatefulWidget {
   const AuthCard(
       {Key? key,
-        required this.userType,
-        this.padding = const EdgeInsets.all(0),
-        required this.loadingController,
-        this.userValidator,
-        this.passwordValidator,
-        this.onSubmit,
-        this.onSubmitCompleted,
-        this.hideForgotPasswordButton = false,
-        this.hideSignUpButton = false,
-        this.loginAfterSignUp = true,
-        this.hideProvidersTitle = false,
-        this.loginFields,
-        this.signupFields,
-        this.recoverFields,
-        this.additionalSignUpFields,
-        this.disableCustomPageTransformer = false,
-        this.loginTheme,
-        this.navigateBackAfterRecovery = false})
+      required this.userType,
+      this.padding = const EdgeInsets.all(0),
+      required this.loadingController,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmit,
+      this.onSubmitCompleted,
+      this.hideForgotPasswordButton = false,
+      this.hideSignUpButton = false,
+      this.loginAfterSignUp = true,
+      this.hideProvidersTitle = false,
+      this.loginFields,
+      this.signupFields,
+      this.recoverFields,
+      this.additionalSignUpFields,
+      this.disableCustomPageTransformer = false,
+      this.loginTheme,
+      this.navigateBackAfterRecovery = false})
       : super(key: key);
 
   final EdgeInsets padding;
@@ -162,15 +162,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _cardOverlayHeightFactorAnimation =
         Tween<double>(begin: double.minPositive, end: 1.0)
             .animate(CurvedAnimation(
-          parent: _routeTransitionController,
-          curve: const Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
-        ));
+      parent: _routeTransitionController,
+      curve: const Interval(.27272727, .5 /* ~250ms */, curve: Curves.linear),
+    ));
 
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(CurvedAnimation(
-          parent: _routeTransitionController,
-          curve: const Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
-        ));
+      parent: _routeTransitionController,
+      curve: const Interval(.5, .72727272 /* ~250ms */, curve: Curves.linear),
+    ));
 
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
@@ -180,10 +180,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _cardRotationAnimation =
         Tween<double>(begin: 0, end: pi / 2).animate(CurvedAnimation(
-          parent: _routeTransitionController,
-          curve: const Interval(.72727272, 1 /* ~300ms */,
-              curve: Curves.easeInOutCubic),
-        ));
+      parent: _routeTransitionController,
+      curve: const Interval(.72727272, 1 /* ~300ms */,
+          curve: Curves.easeInOutCubic),
+    ));
   }
 
   @override
@@ -233,15 +233,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _cardSize2AnimationX =
         Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
-          parent: _routeTransitionController,
-          curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-        ));
+      parent: _routeTransitionController,
+      curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+    ));
     _cardSize2AnimationY =
         Tween<double>(begin: 1.0, end: widthRatio / cardSizeScaleEnd)
             .animate(CurvedAnimation(
-          parent: _routeTransitionController,
-          curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-        ));
+      parent: _routeTransitionController,
+      curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+    ));
 
     widget.onSubmit?.call();
 
@@ -339,7 +339,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userValidator: widget.userValidator,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
-            widget.additionalSignUpFields != null,
+                widget.additionalSignUpFields != null,
             onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),

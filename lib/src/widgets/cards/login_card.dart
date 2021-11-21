@@ -95,30 +95,30 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _providerControllerList = auth.loginProviders
         .map(
           (e) => AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 1000),
-      ),
-    )
+            vsync: this,
+            duration: const Duration(milliseconds: 1000),
+          ),
+        )
         .toList();
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
     _textButtonLoadingAnimationInterval =
-    const Interval(.6, 1.0, curve: Curves.easeOut);
+        const Interval(.6, 1.0, curve: Curves.easeOut);
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: widget.loadingController,
-          curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
-        ));
+      parent: widget.loadingController,
+      curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
+    ));
 
     if (widget.loginFields != null) {
       List<UserFormField> formFields = widget.loginFields!;
       _nameControllers =
-      HashMap<String, TextEditingController>.fromIterable(formFields,
-          key: (formFields) => formFields.keyName,
-          value: (formFields) => TextEditingController(
-            text: formFields.defaultValue,
-          ));
+          HashMap<String, TextEditingController>.fromIterable(formFields,
+              key: (formFields) => formFields.keyName,
+              value: (formFields) => TextEditingController(
+                    text: formFields.defaultValue,
+                  ));
 
       if (_nameControllers.length != formFields.length) {
         throw ArgumentError(
@@ -268,7 +268,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
-        AnimationController? control}) async {
+      AnimationController? control}) async {
     await control?.forward();
 
     final auth = Provider.of<Auth>(context, listen: false);
@@ -314,10 +314,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Widget _buildUserField(
-      double width,
-      LoginMessages messages,
-      Auth auth,
-      ) {
+    double width,
+    LoginMessages messages,
+    Auth auth,
+  ) {
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
@@ -348,11 +348,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       autofillHints: _isSubmitting
           ? null
           : (auth.isLogin
-          ? [AutofillHints.password]
-          : [AutofillHints.newPassword]),
+              ? [AutofillHints.password]
+              : [AutofillHints.newPassword]),
       controller: _passController,
       textInputAction:
-      auth.isLogin ? TextInputAction.done : TextInputAction.next,
+          auth.isLogin ? TextInputAction.done : TextInputAction.next,
       focusNode: _passwordFocusNode,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
@@ -383,11 +383,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) => _submit(),
       validator: auth.isSignup
           ? (value) {
-        if (value != _passController.text) {
-          return messages.confirmPasswordError;
-        }
-        return null;
-      }
+              if (value != _passController.text) {
+                return messages.confirmPasswordError;
+              }
+              return null;
+            }
           : (value) => null,
       onSaved: (value) => auth.confirmPassword = value!,
     );
@@ -402,10 +402,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: TextButton(
         onPressed: buttonEnabled
             ? () {
-          // save state to populate email field on recovery card
-          _formKey.currentState!.save();
-          widget.onSwitchRecoveryPassword();
-        }
+                // save state to populate email field on recovery card
+                _formKey.currentState!.save();
+                widget.onSwitchRecoveryPassword();
+              }
             : null,
         child: Text(
           messages.forgotPasswordButton,
@@ -431,9 +431,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget _buildSwitchAuthButton(ThemeData theme, LoginMessages messages,
       Auth auth, LoginTheme loginTheme) {
     final calculatedTextColor =
-    (theme.cardTheme.color!.computeLuminance() < 0.5)
-        ? Colors.white
-        : theme.primaryColor;
+        (theme.cardTheme.color!.computeLuminance() < 0.5)
+            ? Colors.white
+            : theme.primaryColor;
     return FadeIn(
       controller: widget.loadingController,
       offset: .5,
@@ -639,11 +639,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               children: widget.loginFields != null
                   ? _buildCustomLoginFields(textFieldWidth)
                   : <Widget>[
-                _buildUserField(textFieldWidth, messages, auth),
-                const SizedBox(height: 20),
-                _buildPasswordField(textFieldWidth, messages, auth),
-                const SizedBox(height: 10),
-              ],
+                      _buildUserField(textFieldWidth, messages, auth),
+                      const SizedBox(height: 20),
+                      _buildPasswordField(textFieldWidth, messages, auth),
+                      const SizedBox(height: 10),
+                    ],
             ),
           ),
           ExpandableContainer(
@@ -672,23 +672,23 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 if (auth.isSignup && auth.termsOfService.isNotEmpty)
                   ...auth.termsOfService
                       .map((e) => ScaleTransition(
-                    scale: _buttonScaleAnimation,
-                    child: TermCheckbox(
-                      termOfService: e,
-                    ),
-                  ))
+                            scale: _buttonScaleAnimation,
+                            child: TermCheckbox(
+                              termOfService: e,
+                            ),
+                          ))
                       .toList(),
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)
                     : SizedBox.fromSize(
-                  size: const Size.fromHeight(16),
-                ),
+                        size: const Size.fromHeight(16),
+                      ),
                 _buildSubmitButton(theme, messages, auth),
                 !widget.hideSignUpButton
                     ? _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                     : SizedBox.fromSize(
-                  size: const Size.fromHeight(10),
-                ),
+                        size: const Size.fromHeight(10),
+                      ),
                 auth.loginProviders.isNotEmpty && !widget.hideProvidersTitle
                     ? _buildProvidersTitleFirst(messages)
                     : Container(),

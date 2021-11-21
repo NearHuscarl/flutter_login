@@ -15,7 +15,7 @@ List<Widget> formFieldsBuilder(List<UserFormField> formFields, _nameControllers,
           width: width,
           labelText: formField.displayName,
           prefixIcon:
-          formField.icon ?? const Icon(FontAwesomeIcons.solidUserCircle),
+              formField.icon ?? const Icon(FontAwesomeIcons.solidUserCircle),
           keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
           autofillHints: [TextFieldUtils.getAutofillHints(formField.userType)],
           textInputAction: formField.keyName == formFields.last.keyName

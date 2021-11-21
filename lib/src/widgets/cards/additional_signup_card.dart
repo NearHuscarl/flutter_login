@@ -53,11 +53,11 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     super.initState();
 
     _nameControllers =
-    HashMap<String, TextEditingController>.fromIterable(widget.formFields,
-        key: (formFields) => formFields.keyName,
-        value: (formFields) => TextEditingController(
-          text: formFields.defaultValue,
-        ));
+        HashMap<String, TextEditingController>.fromIterable(widget.formFields,
+            key: (formFields) => formFields.keyName,
+            value: (formFields) => TextEditingController(
+                  text: formFields.defaultValue,
+                ));
 
     if (_nameControllers.length != widget.formFields.length) {
       throw ArgumentError(
@@ -66,7 +66,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     _fieldAnimationControllers = widget.formFields
         .map((e) => AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000)))
+            vsync: this, duration: const Duration(milliseconds: 1000)))
         .toList();
 
     // List<double> intervalBegin = List<double>.generate(widget.formFields.length, (i) => 0.15 / i);
@@ -82,9 +82,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     _buttonScaleAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: widget.loadingController,
-          curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
-        ));
+      parent: widget.loadingController,
+      curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
+    ));
   }
 
   @override
@@ -153,7 +153,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
   Widget _buildFields(double width) {
     return Column(
-      children: formFieldsBuilder(widget.formFields, _nameControllers, width, widget.loadingController),
+      children: formFieldsBuilder(
+          widget.formFields, _nameControllers, width, widget.loadingController),
     );
   }
 
@@ -171,17 +172,17 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
   Widget _buildBackButton(
       ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
     final calculatedTextColor =
-    (theme.cardTheme.color!.computeLuminance() < 0.5)
-        ? Colors.white
-        : theme.primaryColor;
+        (theme.cardTheme.color!.computeLuminance() < 0.5)
+            ? Colors.white
+            : theme.primaryColor;
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: MaterialButton(
         onPressed: !_isSubmitting
             ? () {
-          _formCompleteSignupKey.currentState!.save();
-          widget.onBack();
-        }
+                _formCompleteSignupKey.currentState!.save();
+                widget.onBack();
+              }
             : null,
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
