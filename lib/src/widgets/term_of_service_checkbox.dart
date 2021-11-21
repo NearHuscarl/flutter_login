@@ -25,10 +25,12 @@ class _TermCheckboxState extends State<TermCheckbox> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    widget.termOfService.text,
-                    style: Theme.of(context).textTheme.bodyText2,
-                    textAlign: TextAlign.left,
+                  Flexible(
+                    child: Text(
+                      widget.termOfService.text,
+                      style: Theme.of(context).textTheme.bodyText2,
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
