@@ -138,9 +138,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       setState(() => _isSubmitting = false);
       return false;
     } else {
-      showSuccessToast(context, messages.flushbarTitleSuccess,
+      /*showSuccessToast(context, messages.flushbarTitleSuccess,
           messages.signUpSuccess, const Duration(seconds: 4));
-      setState(() => _isSubmitting = false);
+      setState(() => _isSubmitting = false);*/
       // await _loadingController.reverse();
       widget.onSubmitCompleted.call();
       return true;
