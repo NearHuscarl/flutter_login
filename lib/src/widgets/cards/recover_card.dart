@@ -160,8 +160,8 @@ class _RecoverCardState extends State<_RecoverCard>
       formFields = widget.recoverFields!;
     }
     return Column(
-        children: formFieldsBuilder(
-            formFields, _nameControllers, width, widget.loadingController));
+        children: formFieldsBuilder(context, formFields, _nameControllers,
+            width, widget.loadingController, _isSubmitting));
   }
 
   @override

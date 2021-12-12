@@ -153,8 +153,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
   Widget _buildFields(double width) {
     return Column(
-      children: formFieldsBuilder(
-          widget.formFields, _nameControllers, width, widget.loadingController),
+      children: formFieldsBuilder(context, widget.formFields, _nameControllers,
+          width, widget.loadingController, _isSubmitting),
     );
   }
 

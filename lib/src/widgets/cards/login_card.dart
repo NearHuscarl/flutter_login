@@ -602,15 +602,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   late HashMap<String, TextEditingController> _nameControllers;
 
-  List<Widget> _buildCustomLoginFields(double width) {
+  List<Widget> _buildCustomLoginFields(BuildContext context, double width) {
     List<UserFormField> formFields = [];
     if (widget.loginFields == null) {
       return [Container()];
     } else {
       formFields = widget.loginFields!;
     }
-    return formFieldsBuilder(
-        formFields, _nameControllers, width, widget.loadingController);
+    return formFieldsBuilder(context, formFields, _nameControllers, width,
+        widget.loadingController, _isSubmitting);
   }
 
   @override
@@ -637,7 +637,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.loginFields != null
-                  ? _buildCustomLoginFields(textFieldWidth)
+                  ? _buildCustomLoginFields(context, textFieldWidth)
                   : <Widget>[
                       _buildUserField(textFieldWidth, messages, auth),
                       const SizedBox(height: 20),
