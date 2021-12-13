@@ -267,40 +267,41 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin({
-    Key? key,
-    this.onSignup,
-    required this.onLogin,
-    required this.onRecoverPassword,
-    this.title,
+  FlutterLogin(
+      {Key? key,
+      this.onSignup,
+      required this.onLogin,
+      required this.onRecoverPassword,
+      this.title,
 
-    /// The [ImageProvider] or asset path [String] for the logo image to be displayed
-    dynamic logo,
-    this.messages,
-    this.theme,
-    this.userValidator,
-    this.passwordValidator,
-    this.onSubmitAnimationCompleted,
-    this.logoTag,
-    this.userType = LoginUserType.email,
-    this.titleTag,
-    this.showDebugButtons = false,
-    this.loginProviders = const <LoginProvider>[],
-    this.hideForgotPasswordButton = false,
-    this.loginAfterSignUp = true,
-    this.footer,
-    this.hideProvidersTitle = false,
-    this.additionalSignupFields,
-    this.disableCustomPageTransformer = false,
-    this.navigateBackAfterRecovery = false,
-    this.termsOfService = const <TermOfService>[],
-    this.onConfirmRecover,
-    this.onConfirmSignup,
-    this.onResendCode,
-    this.savedEmail = '',
-    this.savedPassword = '',
-    this.initialAuthMode = AuthMode.login,
-  })  : assert((logo is String?) || (logo is ImageProvider?)),
+      /// The [ImageProvider] or asset path [String] for the logo image to be displayed
+      dynamic logo,
+      this.messages,
+      this.theme,
+      this.userValidator,
+      this.passwordValidator,
+      this.onSubmitAnimationCompleted,
+      this.logoTag,
+      this.userType = LoginUserType.email,
+      this.titleTag,
+      this.showDebugButtons = false,
+      this.loginProviders = const <LoginProvider>[],
+      this.hideForgotPasswordButton = false,
+      this.loginAfterSignUp = true,
+      this.footer,
+      this.hideProvidersTitle = false,
+      this.additionalSignupFields,
+      this.disableCustomPageTransformer = false,
+      this.navigateBackAfterRecovery = false,
+      this.termsOfService = const <TermOfService>[],
+      this.onConfirmRecover,
+      this.onConfirmSignup,
+      this.onResendCode,
+      this.savedEmail = '',
+      this.savedPassword = '',
+      this.initialAuthMode = AuthMode.login,
+      this.children})
+      : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
 
@@ -413,6 +414,9 @@ class FlutterLogin extends StatefulWidget {
   /// The initial auth mode for the widget to show. This defaults to [AuthMode.login]
   /// if not specified. This field can allow you to show the sign up state by default.
   final AuthMode initialAuthMode;
+
+  /// Supply custom widgets to the auth stack such as a custom logo widget
+  final List<Widget>? children;
 
   static String? defaultEmailValidator(value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -805,7 +809,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                     Positioned.fill(
                         child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: footerWidget))
+                            child: footerWidget)),
+                    ...?widget.children,
                   ],
                 ),
               ),

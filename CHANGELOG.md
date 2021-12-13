@@ -1,3 +1,8 @@
+## 3.1.0
+Features:
+* Add children parameter to FlutterLogin which takes a list of widgets that can be added in the
+background of the Login view. For example: a custom banner or a custom logo.
+
 ## 3.0.0
 First stable release of 3.0.0.
 Please see the changelog entries of the beta versions for all changes.
