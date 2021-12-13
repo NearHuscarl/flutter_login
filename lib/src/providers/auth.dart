@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login/src/models/signup_data.dart';
-import 'package:flutter_login/src/models/term_of_service.dart';
 
 import '../../flutter_login.dart';
-import '../models/login_data.dart';
 
 enum AuthMode { signup, login }
 
