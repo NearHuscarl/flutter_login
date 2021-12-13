@@ -416,7 +416,6 @@ class FlutterLogin extends StatefulWidget {
   final AuthMode initialAuthMode;
 
   /// Supply custom widgets to the auth stack such as a custom logo widget
-  /// You can use disableLogo
   final List<Widget>? children;
 
   static String? defaultEmailValidator(value) {
