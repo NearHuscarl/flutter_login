@@ -45,6 +45,7 @@ navigateBackAfterRecovery |   `bool`     | <sub>Navigate back to the login page 
 savedEmail |   `String`     | <sub>Prefilled value for user field (ie. saved from previous session via other means, ie. via SharedPreferences)</sub>
 savedPassword |   `String`     | <sub>Prefilled value for password field (ie. saved from previous session via other means, ie. via SharedPreferences). Will set also confirmation password in Auth class</sub>
 termsOfService | [`TermOfService`](#TermOfService) | <sub>List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of [`TermOfServiceResult`](#TermOfServiceResult) </sub>
+children | [`Widget`] | <sub>List of widgets that can be added to the stack of the login screen. Can be used to show custom banners or logos. </sub>
 
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the

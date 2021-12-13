@@ -1,3 +1,14 @@
+## 3.1.0
+Features:
+* Add children parameter to FlutterLogin which takes a list of widgets that can be added in the
+background of the Login view. For example: a custom banner or a custom logo.
+* Improved footer style
+
+Bugs fixed:
+* The signup confirmation page is now also shown when additionalSignupData is not provided or loginAfterSignUp is disabled. 
+* Back button of confirmSignUp page now returns Login or AdditionalSignUpData page depending on whether additionalSignupData has been provided or not.
+
+
 ## 3.0.0
 First stable release of 3.0.0.
 Please see the changelog entries of the beta versions for all changes.
