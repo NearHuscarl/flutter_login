@@ -10,7 +10,8 @@ class _LoginCard extends StatefulWidget {
     required this.onSwitchSignUpAdditionalData,
     required this.userType,
     required this.requireAdditionalSignUpFields,
-    this.onSwitchConfirmSignup,
+    required this.onSwitchConfirmSignup,
+    required this.requireSignUpConfirmation,
     this.onSwitchAuth,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -24,7 +25,7 @@ class _LoginCard extends StatefulWidget {
   final FormFieldValidator<String>? passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function onSwitchSignUpAdditionalData;
-  final Function? onSwitchConfirmSignup;
+  final Function onSwitchConfirmSignup;
   final Function? onSwitchAuth;
   final Function? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -33,6 +34,7 @@ class _LoginCard extends StatefulWidget {
   final bool hideProvidersTitle;
   final LoginUserType userType;
   final bool requireAdditionalSignUpFields;
+  final bool requireSignUpConfirmation;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -202,35 +204,20 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     if (auth.isSignup) {
-      if (!widget.loginAfterSignUp && !widget.requireAdditionalSignUpFields) {
+      if (widget.requireAdditionalSignUpFields) {
+        widget.onSwitchSignUpAdditionalData();
+        // The login page wil be shown in login mode (used if loginAfterSignUp disabled)
+        _switchAuthMode();
+        return false;
+      } else if (widget.requireSignUpConfirmation) {
+        widget.onSwitchConfirmSignup();
+        _switchAuthMode();
+        return false;
+      } else if (!widget.loginAfterSignUp) {
         showSuccessToast(
             context, messages.flushbarTitleSuccess, messages.signUpSuccess);
         _switchAuthMode();
         setState(() => _isSubmitting = false);
-
-        return false;
-      } else if (widget.loginAfterSignUp &&
-          !widget.requireAdditionalSignUpFields &&
-          widget.onSwitchConfirmSignup != null) {
-        widget.onSwitchConfirmSignup!();
-      } else if (!widget.loginAfterSignUp &&
-          widget.requireAdditionalSignUpFields) {
-        // proceed to the card with the additional fields
-        widget.onSwitchSignUpAdditionalData();
-//FIRST
-        // The login page is shown in login mode
-        _switchAuthMode();
-
-        return false;
-      } else if (widget.loginAfterSignUp &&
-          widget.requireAdditionalSignUpFields &&
-          widget.onSwitchConfirmSignup != null) {
-        widget.onSwitchConfirmSignup!();
-      } else if (widget.loginAfterSignUp &&
-          widget.requireAdditionalSignUpFields) {
-        // proceed to the card with the additional fields
-        widget.onSwitchSignUpAdditionalData();
-
         return false;
       }
     }
