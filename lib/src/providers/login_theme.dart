@@ -57,7 +57,7 @@ class LoginTheme with ChangeNotifier {
       this.footerTextStyle,
       this.authButtonPadding,
       this.providerButtonPadding,
-      this.footerBottomPadding = 0,
+      this.footerBottomPadding = 5,
       this.logoWidth,
       this.primaryColorAsInputLabel = false});
 
