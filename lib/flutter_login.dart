@@ -765,10 +765,11 @@ class _FlutterLoginState extends State<FlutterLogin>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
+            
             GradientBox(
               colors: [
-                loginTheme.pageColorLight ?? theme.primaryColor,
-                loginTheme.pageColorDark ?? theme.primaryColorDark,
+                Colors.black,
+                Color(0xFF0C0C0C),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -779,6 +780,31 @@ class _FlutterLoginState extends State<FlutterLogin>
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
+
+                    CircularParticle(
+                      // key: UniqueKey(),
+                      awayRadius: 150,
+                      numberOfParticles: 50,
+                      speedOfParticles: 1,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      onTapAnimation: true,
+                      particleColor: Colors.white.withAlpha(120),
+                      awayAnimationDuration: Duration(milliseconds: 600),
+                      maxParticleSize: 4,
+                      isRandSize: true,
+                      isRandomColor: true,
+                      randColorList: [
+                        Colors.deepPurple.withAlpha(200),
+                        Colors.white60.withAlpha(150),
+                      ],
+                      awayAnimationCurve: Curves.easeInOutBack,
+                      enableHover: true,
+                      hoverColor: Colors.white,
+                      hoverRadius: 120,
+                      connectDots: true, //not recommended
+                    ),
+
                     Positioned(
                       child: AuthCard(
                         key: authCardKey,
@@ -815,8 +841,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                 ),
               ),
             ),
-            if (!kReleaseMode && widget.showDebugButtons)
-              _buildDebugAnimationButtons(),
+            //if (!kReleaseMode && widget.showDebugButtons)
+              //_buildDebugAnimationButtons(),
           ],
         ),
       ),
