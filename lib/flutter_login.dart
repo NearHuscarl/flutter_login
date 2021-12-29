@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
+import 'package:particles_flutter/particles_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/button_list.dart';
 
