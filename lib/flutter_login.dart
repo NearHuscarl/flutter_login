@@ -34,6 +34,7 @@ export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 export 'src/models/term_of_service.dart';
 export 'src/providers/auth.dart';
+export 'package:flutter_signin_button/button_list.dart';
 
 class LoginProvider {
   /// Used for custom sign-in buttons.
@@ -55,7 +56,9 @@ class LoginProvider {
   /// It must return null on success, or a `String` describing the error on failure.
   final ProviderAuthCallback? callback;
 
-  /// Optional. Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`.
+  /// Optional
+  ///
+  /// Requires that the `additionalSignUpFields` argument is passed to `FlutterLogin`.
   /// When given, this callback must return a `Future<bool>`.
   /// If it evaluates to `true` the card containing the additional signup fields is shown, right after the evaluation of `callback`.
   /// If not given the default behaviour is not to show the signup card.
@@ -63,8 +66,8 @@ class LoginProvider {
 
   /// Enable or disable the animation of the button.
   ///
-  /// Default: enabled
-  // final bool animated;
+  /// Default: true
+  final bool animated;
 
   const LoginProvider({
     this.button,
@@ -72,7 +75,7 @@ class LoginProvider {
     this.callback,
     this.label = '',
     this.providerNeedsSignUpCallback,
-    // this.animated = true
+    this.animated = true
   }) : assert(button != null || icon != null);
 }
 

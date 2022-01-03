@@ -438,7 +438,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (BuildContext context, int index) {
           return Align(
             alignment: Alignment.topCenter,
-            child: _changeToCard(context, index),
+            child: Scrollbar(
+                // isAlwaysShown: true,
+                // controller: ScrollController(),
+                child: SingleChildScrollView(child: _changeToCard(context, index))),
           );
         },
       ),

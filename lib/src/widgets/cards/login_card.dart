@@ -230,6 +230,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
       AnimationController? control}) async {
+
+    if (!loginProvider.animated) {
+      loginProvider.callback!();
+      return false;
+    }
     await control?.forward();
 
     final auth = Provider.of<Auth>(context, listen: false);
@@ -456,6 +461,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           label: loginProvider.label,
           button: loginProvider.button,
           callback: loginProvider.callback,
+          animated: loginProvider.animated
         ));
       } else if (loginProvider.icon != null) {
         iconProvidersList.add(LoginProvider(
@@ -463,6 +469,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           label: loginProvider.label,
           button: loginProvider.button,
           callback: loginProvider.callback,
+          animated: loginProvider.animated
         ));
       }
     }
