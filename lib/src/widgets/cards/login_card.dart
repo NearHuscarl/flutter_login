@@ -230,7 +230,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
       AnimationController? control}) async {
-
     if (!loginProvider.animated) {
       String? error = await loginProvider.callback();
 
