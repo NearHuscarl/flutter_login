@@ -49,7 +49,8 @@ class AuthCard extends StatefulWidget {
       this.additionalSignUpFields,
       this.disableCustomPageTransformer = false,
       this.loginTheme,
-      this.navigateBackAfterRecovery = false})
+      this.navigateBackAfterRecovery = false,
+      required this.scrollable})
       : super(key: key);
 
   final EdgeInsets padding;
@@ -69,6 +70,8 @@ class AuthCard extends StatefulWidget {
   final bool disableCustomPageTransformer;
   final LoginTheme? loginTheme;
   final bool navigateBackAfterRecovery;
+
+  final bool scrollable;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -420,6 +423,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+
     Widget current = Container(
       height: deviceSize.height,
       width: deviceSize.width,
@@ -436,13 +440,19 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             ? null
             : CustomPageTransformer(),
         itemBuilder: (BuildContext context, int index) {
-          return Align(
-            alignment: Alignment.topCenter,
-            child: Scrollbar(
-                // isAlwaysShown: true,
-                // controller: ScrollController(),
-                child: SingleChildScrollView(child: _changeToCard(context, index))),
-          );
+          if (widget.scrollable) {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: Scrollbar(
+                  child: SingleChildScrollView(
+                      child: _changeToCard(context, index))),
+            );
+          } else {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: _changeToCard(context, index),
+            );
+          }
         },
       ),
     );

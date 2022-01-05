@@ -91,7 +91,7 @@ packages:
     source: path
     version: "3.1.0"
   flutter_signin_button:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_signin_button
       url: "https://pub.dartlang.org"
