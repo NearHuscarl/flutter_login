@@ -273,6 +273,7 @@ class FlutterLogin extends StatefulWidget {
       required this.onLogin,
       required this.onRecoverPassword,
       this.title,
+      this.regexUserValidation,
 
       /// The [ImageProvider] or asset path [String] for the logo image to be displayed
       dynamic logo,
@@ -300,7 +301,9 @@ class FlutterLogin extends StatefulWidget {
       this.savedEmail = '',
       this.savedPassword = '',
       this.initialAuthMode = AuthMode.login,
-      this.children})
+      this.children,
+
+      })
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -339,6 +342,10 @@ class FlutterLogin extends StatefulWidget {
   /// shown in the demo gifs and use the colorsheme in the closest `Theme`
   /// widget
   final LoginTheme? theme;
+
+  /// Email validating logic using RegExp, Returns an error string to display if the input is
+  /// invalid, or null otherwise
+  final RegExp? regexUserValidation;
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
@@ -418,12 +425,12 @@ class FlutterLogin extends StatefulWidget {
   /// Supply custom widgets to the auth stack such as a custom logo widget
   final List<Widget>? children;
 
-  static String? defaultEmailValidator(value) {
-    if (value!.isEmpty || !Regex.email.hasMatch(value)) {
-      return 'Invalid email!';
-    }
-    return null;
-  }
+  //static String? defaultEmailValidator(value) {
+  //  if (value!.isEmpty || !Regex.email.hasMatch(value)) {
+  //    return 'Invalid email!';
+  //  }
+  //  return null;
+  //}
 
   static String? defaultPasswordValidator(value) {
     if (value!.isEmpty || value.length <= 2) {
@@ -719,8 +726,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     const cardInitialHeight = 300;
     final cardTopPosition = deviceSize.height / 2 - cardInitialHeight / 2;
     final headerHeight = cardTopPosition - headerMargin;
-    final userValidator =
-        widget.userValidator ?? FlutterLogin.defaultEmailValidator;
+    final userValidator = widget.userValidator;
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
@@ -785,7 +791,13 @@ class _FlutterLoginState extends State<FlutterLogin>
                         userType: widget.userType,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
-                        userValidator: userValidator,
+                        userValidator: userValidator ?? (v) {
+                          Regex.regexp = widget.regexUserValidation ?? Regex.regexp;
+                          if (v!.isEmpty || !Regex.regexp.hasMatch(v)) {
+                            return 'Invalid user!';
+                          }
+                          return null;
+                        },
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,

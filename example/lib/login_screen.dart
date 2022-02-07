@@ -267,6 +267,7 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
+      //regexUserValidation: RegExp(r'\d'),
       showDebugButtons: true,
     );
   }
