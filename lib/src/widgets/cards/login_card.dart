@@ -603,21 +603,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             alignment: Alignment.topLeft,
             color: theme.cardTheme.color,
             width: cardWidth,
-            padding: const EdgeInsets.symmetric(
-              horizontal: cardPadding,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: cardPadding),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: Column(children: [
-              _buildConfirmPasswordField(textFieldWidth, messages, auth),
-              ...auth.termsOfService
-                  .map((e) => ScaleTransition(
-                        scale: _buttonScaleAnimation,
-                        child: TermCheckbox(
-                          termOfService: e,
-                        ),
-                      ))
-                  .toList(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child:
+                    _buildConfirmPasswordField(textFieldWidth, messages, auth),
+              ),
+              for (var e in auth.termsOfService) TermCheckbox(termOfService: e),
             ]),
           ),
           Container(
