@@ -4,8 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class TermCheckbox extends StatefulWidget {
   final TermOfService termOfService;
+  final bool validation;
 
-  const TermCheckbox({Key? key, required this.termOfService}) : super(key: key);
+  const TermCheckbox({
+    Key? key,
+    required this.termOfService,
+    this.validation = true,
+  }) : super(key: key);
 
   @override
   _TermCheckboxState createState() => _TermCheckboxState();
@@ -49,10 +54,12 @@ class _TermCheckboxState extends State<TermCheckbox> {
               textAlign: TextAlign.left,
             ),
       validator: (bool? value) {
-        if (widget.termOfService.mandatory == true &&
+        if (widget.validation &&
+            widget.termOfService.mandatory == true &&
             widget.termOfService.getStatus() != true) {
           return widget.termOfService.validationErrorMessage;
         }
+        return null;
       },
     );
   }
