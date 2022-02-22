@@ -202,6 +202,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         error = await auth.onSignup!(SignupData.fromSignupForm(
             name: auth.email,
             password: auth.password,
+            customLoginData: auth.customLoginData,
             termsOfService: auth.getTermsOfServiceResults()));
       }
     }

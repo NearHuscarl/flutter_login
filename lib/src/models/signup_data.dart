@@ -11,7 +11,8 @@ class SignupData {
       {required this.name,
       required this.password,
       this.additionalSignupData,
-      this.termsOfService = const []});
+      this.termsOfService = const [],
+      Map<String, String>? customLoginData});
 
   SignupData.fromProvider({
     required this.additionalSignupData,
