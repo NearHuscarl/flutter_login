@@ -6,19 +6,21 @@ class SignupData {
   final String? password;
   final List<TermOfServiceResult> termsOfService;
   final Map<String, String>? additionalSignupData;
+  final Map<String, String>? customLoginData;
 
   SignupData.fromSignupForm(
       {required this.name,
       required this.password,
       this.additionalSignupData,
       this.termsOfService = const [],
-      Map<String, String>? customLoginData});
+      this.customLoginData});
 
   SignupData.fromProvider({
     required this.additionalSignupData,
     this.termsOfService = const [],
   })  : name = null,
-        password = null;
+        password = null,
+        customLoginData = null;
 
   @override
   bool operator ==(Object other) {
