@@ -55,8 +55,8 @@ class _TermCheckboxState extends State<TermCheckbox> {
             ),
       validator: (bool? value) {
         if (widget.validation &&
-            widget.termOfService.mandatory == true &&
-            widget.termOfService.getStatus() != true) {
+            widget.termOfService.mandatory &&
+            !widget.termOfService.getStatus()) {
           return widget.termOfService.validationErrorMessage;
         }
         return null;
