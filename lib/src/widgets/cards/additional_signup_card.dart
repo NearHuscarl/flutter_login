@@ -118,8 +118,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     // We have to convert the Map<String, TextEditingController> to a Map<String, String>
     // and pass it to the function given by the user
-    auth.additionalSignupData =
-        _nameControllers.map((key, value) => MapEntry(key, value.text));
+    auth.additionalSignupData = _nameControllers.map((key, value) =>
+        MapEntry(key, value.text)); // TODO: Also add custom login data
 
     switch (auth.authType) {
       case AuthType.provider:

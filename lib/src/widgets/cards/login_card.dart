@@ -183,6 +183,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     if (widget.loginFields != null) {
       auth.customLoginData =
           _nameControllers.map((key, value) => MapEntry(key, value.text));
+      auth.additionalSignupData?.addEntries(_nameControllers
+          .map((key, value) => MapEntry(key, value.text))
+          .entries);
       auth.email = "";
       auth.password = "";
     } else {
