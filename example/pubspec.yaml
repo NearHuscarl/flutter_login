@@ -13,7 +13,6 @@ dependencies:
     path: ../
   cupertino_icons: ^1.0.3
   font_awesome_flutter: ^9.1.0
-  flutter_signin_button: ^2.0.0
   intl: ^0.17.0
 
 dev_dependencies:

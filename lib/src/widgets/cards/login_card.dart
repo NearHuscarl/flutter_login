@@ -230,6 +230,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Future<bool> _loginProviderSubmit(
       {required LoginProvider loginProvider,
       AnimationController? control}) async {
+    if (!loginProvider.animated) {
+      String? error = await loginProvider.callback();
+
+      final messages = Provider.of<LoginMessages>(context, listen: false);
+
+      if (!DartHelper.isNullOrEmpty(error)) {
+        showErrorToast(context, messages.flushbarTitleError, error!);
+        return false;
+      }
+
+      return true;
+    }
+
     await control?.forward();
 
     final auth = Provider.of<Auth>(context, listen: false);
@@ -238,7 +251,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     String? error;
 
-    error = await loginProvider.callback!();
+    error = await loginProvider.callback();
 
     // workaround to run after _cardSizeAnimation in parent finished
     // need a cleaner way but currently it works so..
@@ -452,18 +465,18 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     for (var loginProvider in auth.loginProviders) {
       if (loginProvider.button != null) {
         buttonProvidersList.add(LoginProvider(
-          icon: loginProvider.icon,
-          label: loginProvider.label,
-          button: loginProvider.button,
-          callback: loginProvider.callback,
-        ));
+            icon: loginProvider.icon,
+            label: loginProvider.label,
+            button: loginProvider.button,
+            callback: loginProvider.callback,
+            animated: loginProvider.animated));
       } else if (loginProvider.icon != null) {
         iconProvidersList.add(LoginProvider(
-          icon: loginProvider.icon,
-          label: loginProvider.label,
-          button: loginProvider.button,
-          callback: loginProvider.callback,
-        ));
+            icon: loginProvider.icon,
+            label: loginProvider.label,
+            button: loginProvider.button,
+            callback: loginProvider.callback,
+            animated: loginProvider.animated));
       }
     }
     if (buttonProvidersList.isNotEmpty) {
@@ -519,6 +532,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               child: Column(
                 children: [
                   AnimatedIconButton(
+                    color: Colors.transparent,
                     icon: loginProvider.icon!,
                     controller: _providerControllerList[index],
                     tooltip: loginProvider.label,
