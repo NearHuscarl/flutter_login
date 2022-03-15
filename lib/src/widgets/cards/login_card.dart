@@ -284,7 +284,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       width: width,
       loadingController: widget.loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: TextFieldUtils.getLabelText(widget.userType),
+      labelText:
+          messages.userHint ?? TextFieldUtils.getLabelText(widget.userType),
       autofillHints: _isSubmitting
           ? null
           : [TextFieldUtils.getAutofillHints(widget.userType)],
