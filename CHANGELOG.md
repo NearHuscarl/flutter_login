@@ -1,3 +1,10 @@
+## 3.2.0
+Features:
+* It is now possible to enable scrolling instead of resizing the login card. You can enable this by setting the `scrollable` parameter to true.
+* The prefix icon of the user/email field now changes depending on the type.
+* Custom sign-in buttons using [flutter_signin_button](https://pub.dev/packages/flutter_signin_button) package is now integrated. See the example app for an example.
+* Add an animation to the termsOfService buttons.
+
 ## 3.1.0
 Features:
 * Add children parameter to FlutterLogin which takes a list of widgets that can be added in the
