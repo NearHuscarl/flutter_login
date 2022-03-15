@@ -35,31 +35,35 @@ class LoginButtonTheme {
 }
 
 class LoginTheme with ChangeNotifier {
-  LoginTheme(
-      {this.pageColorLight,
-      this.pageColorDark,
-      this.primaryColor,
-      this.accentColor,
-      this.errorColor,
-      this.cardTheme = const CardTheme(),
-      this.inputTheme = const InputDecorationTheme(
-        filled: true,
-      ),
-      this.buttonTheme = const LoginButtonTheme(),
-      this.titleStyle,
-      this.bodyStyle,
-      this.textFieldStyle,
-      this.buttonStyle,
-      this.beforeHeroFontSize = 48.0,
-      this.afterHeroFontSize = 15.0,
-      this.footerBackgroundColor,
-      this.switchAuthTextColor,
-      this.footerTextStyle,
-      this.authButtonPadding,
-      this.providerButtonPadding,
-      this.footerBottomPadding = 5,
-      this.logoWidth,
-      this.primaryColorAsInputLabel = false});
+  LoginTheme({
+    this.pageColorLight,
+    this.pageColorDark,
+    this.primaryColor,
+    this.accentColor,
+    this.errorColor,
+    this.cardTheme = const CardTheme(),
+    this.inputTheme = const InputDecorationTheme(
+      filled: true,
+    ),
+    this.buttonTheme = const LoginButtonTheme(),
+    this.titleStyle,
+    this.bodyStyle,
+    this.textFieldStyle,
+    this.buttonStyle,
+    this.beforeHeroFontSize = 48.0,
+    this.afterHeroFontSize = 15.0,
+    this.footerBackgroundColor,
+    this.switchAuthTextColor,
+    this.footerTextStyle,
+    this.authButtonPadding,
+    this.providerButtonPadding,
+    this.footerBottomPadding = 5,
+    this.logoWidth,
+    this.primaryColorAsInputLabel = false,
+    this.headerMargin,
+    this.cardInitialHeight,
+    this.cardTopPosition,
+  });
 
   /// The background color of the login page for light gradient; if provided,
   /// overrides the [primaryColor] for page background
@@ -135,4 +139,19 @@ class LoginTheme with ChangeNotifier {
 
   /// Set to true if you want to use the primary color for input labels.
   final bool primaryColorAsInputLabel;
+
+  /// The distance between the header and the login screen
+  ///
+  /// Default: 15
+  final double? headerMargin;
+
+  /// The initial height of the login card
+  ///
+  /// Default: 300
+  final double? cardInitialHeight;
+
+  /// The top position of the login card
+  ///
+  /// Default: deviceSize.height / 2 - cardInitialHeight / 2
+  final double? cardTopPosition;
 }
