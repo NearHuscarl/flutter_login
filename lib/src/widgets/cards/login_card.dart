@@ -297,11 +297,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       width: width,
       loadingController: widget.loadingController,
       interval: _nameTextFieldLoadingAnimationInterval,
-      labelText: messages.userHint,
+      labelText:
+          messages.userHint ?? TextFieldUtils.getLabelText(widget.userType),
       autofillHints: _isSubmitting
           ? null
           : [TextFieldUtils.getAutofillHints(widget.userType)],
-      prefixIcon: const Icon(FontAwesomeIcons.solidUserCircle),
+      prefixIcon: TextFieldUtils.getPrefixIcon(widget.userType),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
