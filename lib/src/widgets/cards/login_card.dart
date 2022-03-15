@@ -618,27 +618,26 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             alignment: Alignment.topLeft,
             color: theme.cardTheme.color,
             width: cardWidth,
-            padding: const EdgeInsets.symmetric(
-              horizontal: cardPadding,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: cardPadding),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child:
+                    _buildConfirmPasswordField(textFieldWidth, messages, auth),
+              ),
+              for (var e in auth.termsOfService)
+                TermCheckbox(
+                  termOfService: e,
+                  validation: auth.isSignup,
+                ),
+            ]),
           ),
           Container(
             padding: Paddings.fromRBL(cardPadding),
             width: cardWidth,
             child: Column(
               children: <Widget>[
-                if (auth.isSignup && auth.termsOfService.isNotEmpty)
-                  ...auth.termsOfService
-                      .map((e) => ScaleTransition(
-                            scale: _buttonScaleAnimation,
-                            child: TermCheckbox(
-                              termOfService: e,
-                            ),
-                          ))
-                      .toList(),
                 !widget.hideForgotPasswordButton
                     ? _buildForgotPassword(theme, messages)
                     : SizedBox.fromSize(
