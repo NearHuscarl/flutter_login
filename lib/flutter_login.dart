@@ -11,7 +11,7 @@ import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_signin_button/button_list.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 import 'src/color_helper.dart';
 import 'src/constants.dart';
@@ -34,7 +34,7 @@ export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 export 'src/models/term_of_service.dart';
 export 'src/providers/auth.dart';
-export 'package:flutter_signin_button/button_list.dart';
+export 'package:sign_in_button/src/button_list.dart';
 
 class LoginProvider {
   /// Used for custom sign-in buttons.
@@ -727,7 +727,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     final headerMargin = loginTheme.headerMargin ?? 15;
     final cardInitialHeight = loginTheme.cardInitialHeight ?? 300;
     final cardTopPosition = loginTheme.cardTopPosition ??
-        deviceSize.height / 2 - cardInitialHeight / 2;
+        max(deviceSize.height / 2 - cardInitialHeight / 2, 85);
     final headerHeight = cardTopPosition - headerMargin;
     final userValidator =
         widget.userValidator ?? FlutterLogin.defaultEmailValidator;

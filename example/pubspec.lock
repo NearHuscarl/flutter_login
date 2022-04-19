@@ -90,13 +90,6 @@ packages:
       relative: true
     source: path
     version: "3.2.0"
-  flutter_signin_button:
-    dependency: transitive
-    description:
-      name: flutter_signin_button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -113,7 +106,7 @@ packages:
       name: font_awesome_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.1.0"
+    version: "10.1.0"
   intl:
     dependency: "direct main"
     description:
@@ -191,6 +184,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  sign_in_button:
+    dependency: transitive
+    description:
+      name: sign_in_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

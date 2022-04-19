@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
       loginAfterSignUp: false,
       loginProviders: [
         LoginProvider(
-          button: Buttons.LinkedIn,
+          button: Buttons.linkedIn,
           label: 'Sign in with LinkedIn',
           callback: () async {
             return null;
@@ -101,7 +101,7 @@ class LoginScreen extends StatelessWidget {
       ],
       additionalSignupFields: [
         const UserFormField(
-            keyName: 'Username', icon: Icon(FontAwesomeIcons.userAlt)),
+            keyName: 'Username', icon: Icon(FontAwesomeIcons.userLarge)),
         const UserFormField(keyName: 'Name'),
         const UserFormField(keyName: 'Surname'),
         UserFormField(
