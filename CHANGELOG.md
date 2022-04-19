@@ -1,3 +1,8 @@
+## 4.0.0
+BREAKING CHANGES:
+* Upgraded font_awesome_flutter from v9 to v10
+
+
 ## 3.2.0
 Features:
 * It is now possible to enable scrolling instead of resizing the login card. You can enable this by setting the `scrollable` parameter to true.

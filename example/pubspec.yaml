@@ -12,7 +12,7 @@ dependencies:
   flutter_login:
     path: ../
   cupertino_icons: ^1.0.3
-  font_awesome_flutter: ^9.1.0
+  font_awesome_flutter: ^10.0.0
   intl: ^0.17.0
 
 dev_dependencies:

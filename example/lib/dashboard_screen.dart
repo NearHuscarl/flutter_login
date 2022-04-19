@@ -72,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       onPressed: () {},
     );
     final signOutBtn = IconButton(
-      icon: const Icon(FontAwesomeIcons.signOutAlt),
+      icon: const Icon(FontAwesomeIcons.rightFromBracket),
       color: theme.colorScheme.secondary,
       onPressed: () => _goToLogin(context),
     );
@@ -216,7 +216,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             padding: const EdgeInsets.only(left: 16.0),
             alignment: Alignment.centerLeft,
             child: const Icon(
-              FontAwesomeIcons.moneyBillAlt,
+              FontAwesomeIcons.moneyBill1,
               size: 20,
             ),
           ),
@@ -224,7 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: const Icon(FontAwesomeIcons.handHoldingUsd),
+          icon: const Icon(FontAwesomeIcons.handHoldingDollar),
           label: 'Payment',
           interval: const Interval(step * 2, aniInterval + step * 2),
         ),
@@ -239,22 +239,22 @@ class _DashboardScreenState extends State<DashboardScreen>
           interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: const Icon(FontAwesomeIcons.history),
+          icon: const Icon(FontAwesomeIcons.clockRotateLeft),
           label: 'History',
           interval: const Interval(step * 2, aniInterval + step * 2),
         ),
         _buildButton(
-          icon: const Icon(FontAwesomeIcons.ellipsisH),
+          icon: const Icon(FontAwesomeIcons.ellipsis),
           label: 'Other',
           interval: const Interval(0, aniInterval),
         ),
         _buildButton(
-          icon: const Icon(FontAwesomeIcons.search, size: 20),
+          icon: const Icon(FontAwesomeIcons.magnifyingGlass, size: 20),
           label: 'Search',
           interval: const Interval(step, aniInterval + step),
         ),
         _buildButton(
-          icon: const Icon(FontAwesomeIcons.slidersH, size: 20),
+          icon: const Icon(FontAwesomeIcons.sliders, size: 20),
           label: 'Settings',
           interval: const Interval(step * 2, aniInterval + step * 2),
         ),

@@ -83,7 +83,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
     return AnimatedTextFormField(
       width: width,
       labelText: messages.recoveryCodeHint,
-      prefixIcon: const Icon(FontAwesomeIcons.solidCheckCircle),
+      prefixIcon: const Icon(FontAwesomeIcons.solidCircleCheck),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
