@@ -8,8 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'utils.dart';
 
 void main() {
-  final binding = TestWidgetsFlutterBinding.ensureInitialized()
-      as TestWidgetsFlutterBinding;
+  final binding = TestWidgetsFlutterBinding.ensureInitialized();
 
   void setScreenSize(Size size) {
     binding.window.physicalSizeTestValue = size;
