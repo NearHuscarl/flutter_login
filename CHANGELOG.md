@@ -1,3 +1,7 @@
+## 4.0.0
+BREAKING CHANGES:
+Flutter 3 or higher is required. All other dependencies are updated to match this.
+
 ## 4.0.0-beta.1
 BREAKING CHANGES:
 * Upgraded font_awesome_flutter from v9 to v10
