@@ -20,7 +20,7 @@ class AnimatedButton extends StatefulWidget {
   final AnimationController? controller;
 
   @override
-  _AnimatedButtonState createState() => _AnimatedButtonState();
+  State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
 class _AnimatedButtonState extends State<AnimatedButton>

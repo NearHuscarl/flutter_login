@@ -132,7 +132,6 @@ class _Header extends StatefulWidget {
     this.logoController,
     this.titleController,
     required this.loginTheme,
-    this.footer,
   });
 
   final ImageProvider? logo;
@@ -144,7 +143,6 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController? logoController;
   final AnimationController? titleController;
-  final String? footer;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -442,7 +440,7 @@ class FlutterLogin extends StatefulWidget {
   }
 
   @override
-  _FlutterLoginState createState() => _FlutterLoginState();
+  State<FlutterLogin> createState() => _FlutterLoginState();
 }
 
 class _FlutterLoginState extends State<FlutterLogin>

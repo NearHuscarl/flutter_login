@@ -13,7 +13,7 @@ class TermCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TermCheckboxState createState() => _TermCheckboxState();
+  State<TermCheckbox> createState() => _TermCheckboxState();
 }
 
 class _TermCheckboxState extends State<TermCheckbox> {
@@ -25,7 +25,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
       title: widget.termOfService.linkUrl != null
           ? InkWell(
               onTap: () {
-                launch(widget.termOfService.linkUrl!);
+                launchUrl(Uri(path: widget.termOfService.linkUrl!));
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

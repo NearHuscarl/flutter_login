@@ -23,7 +23,7 @@ class AnimatedText extends StatefulWidget {
   final AnimatedTextRotation textRotation;
 
   @override
-  _AnimatedTextState createState() => _AnimatedTextState();
+  State<AnimatedText> createState() => _AnimatedTextState();
 }
 
 class _AnimatedTextState extends State<AnimatedText>
@@ -54,7 +54,7 @@ class _AnimatedTextState extends State<AnimatedText>
 
     _oldText = widget.text;
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => _layoutHeight = getWidgetSize(_textKey)?.height);
     });
   }

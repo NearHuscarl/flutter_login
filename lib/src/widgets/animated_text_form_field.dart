@@ -70,7 +70,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final TextFieldInertiaDirection? inertiaDirection;
 
   @override
-  _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
+  State<AnimatedTextFormField> createState() => _AnimatedTextFormFieldState();
 }
 
 class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
@@ -291,7 +291,7 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   @override
-  _AnimatedPasswordTextFormFieldState createState() =>
+  State<AnimatedPasswordTextFormField> createState() =>
       _AnimatedPasswordTextFormFieldState();
 }
 

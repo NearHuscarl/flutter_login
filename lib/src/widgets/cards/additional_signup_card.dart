@@ -113,6 +113,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     _formCompleteSignupKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
+
     final auth = Provider.of<Auth>(context, listen: false);
     String? error;
 

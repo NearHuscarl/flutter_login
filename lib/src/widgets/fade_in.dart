@@ -32,7 +32,7 @@ class FadeIn extends StatefulWidget {
   final Curve? curve;
 
   @override
-  _FadeInState createState() => _FadeInState();
+  State<FadeIn> createState() => _FadeInState();
 }
 
 class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {

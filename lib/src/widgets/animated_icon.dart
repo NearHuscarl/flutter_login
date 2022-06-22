@@ -24,7 +24,7 @@ class AnimatedIconButton extends StatefulWidget {
   final IconData icon;
 
   @override
-  _AnimatedIconButtonState createState() => _AnimatedIconButtonState();
+  State<AnimatedIconButton> createState() => _AnimatedIconButtonState();
 }
 
 class _AnimatedIconButtonState extends State<AnimatedIconButton>
