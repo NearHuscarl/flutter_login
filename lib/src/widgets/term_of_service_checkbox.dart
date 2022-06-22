@@ -13,7 +13,7 @@ class TermCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TermCheckboxState createState() => _TermCheckboxState();
+  State<TermCheckbox> createState() => _TermCheckboxState();
 }
 
 class _TermCheckboxState extends State<TermCheckbox> {

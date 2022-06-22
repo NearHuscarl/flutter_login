@@ -440,7 +440,7 @@ class FlutterLogin extends StatefulWidget {
   }
 
   @override
-  _FlutterLoginState createState() => _FlutterLoginState();
+  State<FlutterLogin> createState() => _FlutterLoginState();
 }
 
 class _FlutterLoginState extends State<FlutterLogin>

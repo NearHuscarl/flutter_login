@@ -23,7 +23,7 @@ class AnimatedText extends StatefulWidget {
   final AnimatedTextRotation textRotation;
 
   @override
-  _AnimatedTextState createState() => _AnimatedTextState();
+  State<AnimatedText> createState() => _AnimatedTextState();
 }
 
 class _AnimatedTextState extends State<AnimatedText>
