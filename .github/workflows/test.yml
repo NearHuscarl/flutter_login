@@ -13,7 +13,7 @@ jobs:
     - uses: actions/setup-java@v3
       with:
         distribution: 'temurin' 
-        java-version: '12.x'
+        java-version: '11'
     # Use the community Action to install Flutter
     - uses: subosito/flutter-action@v1
     - name: Version
