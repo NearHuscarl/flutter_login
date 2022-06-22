@@ -15,7 +15,7 @@ jobs:
         distribution: 'temurin' 
         java-version: '11'
     # Use the community Action to install Flutter
-    - uses: subosito/flutter-action@v1
+    - uses: subosito/flutter-action@v2
     - name: Version
       run: flutter doctor -v
     - name: Install dependencies
