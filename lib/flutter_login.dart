@@ -302,7 +302,8 @@ class FlutterLogin extends StatefulWidget {
       this.savedPassword = '',
       this.initialAuthMode = AuthMode.login,
       this.children,
-      this.scrollable = false})
+      this.scrollable = false,
+      this.beforeSwitchSignUpAdditionalData})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -424,6 +425,12 @@ class FlutterLogin extends StatefulWidget {
   /// of resizing the window.
   /// Default: false
   final bool scrollable;
+
+  /// Called when the user hit the submit button when in sign up mode, before
+  /// additionalSignupFields are shown
+  /// Optional
+  final BeforeSwitchSignUpAdditionalDataCallback?
+      beforeSwitchSignUpAdditionalData;
 
   static String? defaultEmailValidator(value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -763,6 +770,8 @@ class _FlutterLoginState extends State<FlutterLogin>
             confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
+            beforeSwitchSignUpAdditionalData:
+                widget.beforeSwitchSignUpAdditionalData,
             onResendCode: widget.onResendCode,
             termsOfService: widget.termsOfService,
             initialAuthMode: widget.initialAuthMode,

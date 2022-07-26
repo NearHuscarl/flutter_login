@@ -37,6 +37,10 @@ typedef ConfirmSignupCallback = Future<String?>? Function(String, LoginData);
 /// The result is an error message, callback successes if message is null
 typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
+/// The result is an error message, callback successes if message is null
+typedef BeforeSwitchSignUpAdditionalDataCallback = Future<String?>? Function(
+    SignupData);
+
 class Auth with ChangeNotifier {
   Auth(
       {this.loginProviders = const [],
@@ -46,6 +50,7 @@ class Auth with ChangeNotifier {
       this.onConfirmRecover,
       this.onConfirmSignup,
       this.onResendCode,
+      this.beforeSwitchSignUpAdditionalData,
       String email = '',
       String password = '',
       String confirmPassword = '',
@@ -64,6 +69,8 @@ class Auth with ChangeNotifier {
   final ConfirmSignupCallback? onConfirmSignup;
   final SignupCallback? onResendCode;
   final List<TermOfService> termsOfService;
+  final BeforeSwitchSignUpAdditionalDataCallback?
+      beforeSwitchSignUpAdditionalData;
 
   AuthType _authType = AuthType.userPassword;
 
