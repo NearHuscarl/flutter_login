@@ -267,7 +267,43 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
-      showDebugButtons: true,
+      showDebugButtons: false,
+      introWidget: const IntroWidget(),
+    );
+  }
+}
+
+class IntroWidget extends StatelessWidget {
+  const IntroWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text.rich(
+          TextSpan(children: [
+            const TextSpan(
+                text: "You are trying to login/sign up on server hosted on "),
+            const TextSpan(
+                text: "example.com",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const TextSpan(text: ". "),
+            TextSpan(
+                text: "Click here",
+                style: TextStyle(color: Colors.blue.shade300)),
+            const TextSpan(text: " to change the server ")
+          ]),
+          textAlign: TextAlign.justify,
+        ),
+        Row(children: const <Widget>[
+          Expanded(child: Divider()),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Authenticate"),
+          ),
+          Expanded(child: Divider()),
+        ]),
+      ],
     );
   }
 }
