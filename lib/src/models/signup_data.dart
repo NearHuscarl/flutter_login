@@ -4,12 +4,14 @@ import 'package:quiver/core.dart';
 class SignupData {
   final String? name;
   final String? password;
+  final String? extraEmail;
   final List<TermOfServiceResult> termsOfService;
   final Map<String, String>? additionalSignupData;
 
   SignupData.fromSignupForm(
       {required this.name,
       required this.password,
+      required this.extraEmail,
       this.additionalSignupData,
       this.termsOfService = const []});
 
@@ -17,6 +19,7 @@ class SignupData {
     required this.additionalSignupData,
     this.termsOfService = const [],
   })  : name = null,
+        extraEmail = null,
         password = null;
 
   @override

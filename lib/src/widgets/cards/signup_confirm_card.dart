@@ -96,7 +96,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     final error = await auth.onResendCode!(SignupData.fromSignupForm(
         name: auth.email,
         password: auth.password,
-        termsOfService: auth.getTermsOfServiceResults()));
+        termsOfService: auth.getTermsOfServiceResults(), extraEmail: auth.extraEmail));
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);

@@ -32,6 +32,9 @@ class _RecoverCardState extends State<_RecoverCard>
   bool _isSubmitting = false;
 
   late TextEditingController _nameController;
+  late TextEditingController _extraEmailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _newPasswordController;
 
   late AnimationController _submitController;
 
@@ -41,6 +44,9 @@ class _RecoverCardState extends State<_RecoverCard>
 
     final auth = Provider.of<Auth>(context, listen: false);
     _nameController = TextEditingController(text: auth.email);
+    _extraEmailController = TextEditingController(text: auth.extraEmail);
+    _phoneController = TextEditingController(text: auth.email);
+    _newPasswordController = TextEditingController(text: auth.password);
 
     _submitController = AnimationController(
       vsync: this,
@@ -64,7 +70,7 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword!(auth.email);
+    final error = await auth.onRecoverPassword!(RecoverData(phone: auth.email, email: auth.extraEmail, newPassword: auth.password));
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
@@ -93,6 +99,73 @@ class _RecoverCardState extends State<_RecoverCard>
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.userValidator,
+      onSaved: (value) => auth.email = value!,
+    );
+  }
+
+  Widget _buildRecoverEmailField(
+      double width,
+      LoginMessages messages,
+      Auth auth,
+      ) {
+    return AnimatedTextFormField(
+      controller: _extraEmailController,
+      width: width,
+      loadingController: widget.loadingController,
+      labelText: '邮箱',
+      autofillHints: [TextFieldUtils.getAutofillHints(LoginUserType.email)],
+      prefixIcon: TextFieldUtils.getPrefixIcon(LoginUserType.email),
+      keyboardType: TextFieldUtils.getKeyboardType(LoginUserType.email),
+      textInputAction: TextInputAction.next,
+      validator: FlutterLogin.defaultEmailValidator,
+      onSaved: (value) => auth.extraEmail = value!,
+    );
+  }
+
+
+  Widget _buildNewPasswordField(double width, LoginMessages messages, Auth auth) {
+    return AnimatedPasswordTextFormField(
+      animatedWidth: width,
+      loadingController: widget.loadingController,
+      labelText: '新密码',
+      controller: _newPasswordController,
+      textInputAction: TextInputAction.done,
+      focusNode: FocusNode(),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return '密码不能为空';
+        }
+        return null;
+      },
+      onSaved: (value) => auth.password = value!,
+      enabled: !_isSubmitting,
+    );
+  }
+
+  Widget _buildRecoverPhoneField(
+      double width,
+      LoginMessages messages,
+      Auth auth,
+      ) {
+    return AnimatedTextFormField(
+      controller: _phoneController,
+      width: width,
+      loadingController: widget.loadingController,
+      labelText: '手机号',
+      autofillHints: [TextFieldUtils.getAutofillHints(LoginUserType.phone)],
+      prefixIcon: TextFieldUtils.getPrefixIcon(LoginUserType.phone),
+      keyboardType: TextFieldUtils.getKeyboardType(LoginUserType.phone),
+      textInputAction: TextInputAction.next,
+      validator: (value) {
+        var phoneRegExp = RegExp(
+            '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
+        if (value != null &&
+            value.length < 7 &&
+            !phoneRegExp.hasMatch(value)) {
+          return "This isn't a valid phone number";
+        }
+        return null;
+      },
       onSaved: (value) => auth.email = value!,
     );
   }
@@ -157,7 +230,12 @@ class _RecoverCardState extends State<_RecoverCard>
                   style: theme.textTheme.bodyText2,
                 ),
                 const SizedBox(height: 20),
-                _buildRecoverNameField(textFieldWidth, messages, auth),
+                // _buildRecoverNameField(textFieldWidth, messages, auth),
+                _buildRecoverPhoneField(textFieldWidth, messages, auth),
+                const SizedBox(height: 20),
+                _buildRecoverEmailField(textFieldWidth, messages, auth),
+                const SizedBox(height: 20),
+                _buildNewPasswordField(textFieldWidth, messages, auth),
                 const SizedBox(height: 20),
                 Text(
                   auth.onConfirmRecover != null

@@ -27,6 +27,7 @@ import 'src/widgets/hero_text.dart';
 import 'theme.dart';
 
 export 'src/models/login_data.dart';
+export 'src/models/recover_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/models/signup_data.dart';
 export 'src/models/user_form_field.dart';

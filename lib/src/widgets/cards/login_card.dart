@@ -47,6 +47,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _passController;
   late TextEditingController _confirmPassController;
+  late TextEditingController _extraEmailController;
 
   var _isLoading = false;
   var _isSubmitting = false;
@@ -75,6 +76,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _nameController = TextEditingController(text: auth.email);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
+    _extraEmailController = TextEditingController(text: auth.extraEmail);
 
     widget.loadingController.addStatusListener(handleLoadingAnimationStatus);
 
@@ -176,7 +178,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         error = await auth.onSignup!(SignupData.fromSignupForm(
             name: auth.email,
             password: auth.password,
-            termsOfService: auth.getTermsOfServiceResults()));
+            termsOfService: auth.getTermsOfServiceResults(), extraEmail: auth.extraEmail));
       }
     }
 
@@ -308,6 +310,32 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       },
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
+      enabled: !_isSubmitting,
+    );
+  }
+
+  Widget _buildEmailField(
+      double width,
+      LoginMessages messages,
+      Auth auth,
+      ) {
+    return AnimatedTextFormField(
+      controller: _extraEmailController,
+      width: width,
+      loadingController: widget.loadingController,
+      interval: _nameTextFieldLoadingAnimationInterval,
+      labelText: '邮箱',
+      autofillHints: _isSubmitting
+          ? null
+          : [TextFieldUtils.getAutofillHints(LoginUserType.email)],
+      prefixIcon: TextFieldUtils.getPrefixIcon(LoginUserType.email),
+      keyboardType: TextFieldUtils.getKeyboardType(LoginUserType.email),
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      validator: widget.userValidator,
+      onSaved: (value) => auth.extraEmail = value!,
       enabled: !_isSubmitting,
     );
   }
@@ -624,6 +652,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 child:
                     _buildConfirmPasswordField(textFieldWidth, messages, auth),
               ),
+              _buildEmailField(textFieldWidth, messages, auth),
               for (var e in auth.termsOfService)
                 TermCheckbox(
                   termOfService: e,

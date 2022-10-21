@@ -45,9 +45,9 @@ List<SignupData> signupStubCallback(MockCallback mockCallback) {
   reset(mockCallback);
 
   final user =
-      SignupData.fromSignupForm(name: 'near@gmail.com', password: '12345');
+      SignupData.fromSignupForm(name: 'near@gmail.com', password: '12345', extraEmail: '');
   final invalidUser =
-      SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
+      SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '', extraEmail: '');
 
   when(mockCallback.userValidator(user.name)).thenReturn(null);
   when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');

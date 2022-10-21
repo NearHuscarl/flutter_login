@@ -133,7 +133,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             name: auth.email,
             password: auth.password,
             additionalSignupData: auth.additionalSignupData,
-            termsOfService: auth.getTermsOfServiceResults()));
+            termsOfService: auth.getTermsOfServiceResults(), extraEmail: auth.extraEmail));
         break;
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../flutter_login.dart';
+import '../models/recover_data.dart';
 
 enum AuthMode { signup, login }
 
@@ -29,7 +30,7 @@ typedef ProviderAuthCallback = Future<String?>? Function();
 typedef ProviderDirectCallback = Future? Function();
 
 /// The result is an error message, callback successes if message is null
-typedef RecoverCallback = Future<String?>? Function(String);
+typedef RecoverCallback = Future<String?>? Function(RecoverData);
 
 /// The result is an error message, callback successes if message is null
 typedef ConfirmSignupCallback = Future<String?>? Function(String, LoginData);
@@ -49,11 +50,13 @@ class Auth with ChangeNotifier {
       String email = '',
       String password = '',
       String confirmPassword = '',
+      String extraEmail = '',
       AuthMode initialAuthMode = AuthMode.login,
       this.termsOfService = const []})
       : _email = email,
         _password = password,
         _confirmPassword = confirmPassword,
+        _extraEmail = extraEmail,
         _mode = initialAuthMode;
 
   final LoginCallback? onLogin;
@@ -104,6 +107,14 @@ class Auth with ChangeNotifier {
     _email = email;
     notifyListeners();
   }
+
+  String _extraEmail = '';
+  String get extraEmail => _extraEmail;
+  set extraEmail(String extraEmail) {
+    _extraEmail = extraEmail;
+    notifyListeners();
+  }
+
 
   String _password = '';
   String get password => _password;

@@ -33,9 +33,9 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  Future<String?> _recoverPassword(String name) {
+  Future<String?> _recoverPassword(RecoverData recoverData) {
     return Future.delayed(loginTime).then((_) {
-      if (!mockUsers.containsKey(name)) {
+      if (!mockUsers.containsKey(recoverData.email)) {
         return 'User not exists';
       }
       return null;
@@ -243,6 +243,8 @@ class LoginScreen extends StatelessWidget {
         debugPrint('Signup info');
         debugPrint('Name: ${signupData.name}');
         debugPrint('Password: ${signupData.password}');
+        debugPrint('extraEmail: ${signupData.extraEmail}');
+        debugPrint('------------');
 
         signupData.additionalSignupData?.forEach((key, value) {
           debugPrint('$key: $value');
@@ -261,10 +263,12 @@ class LoginScreen extends StatelessWidget {
           builder: (context) => const DashboardScreen(),
         ));
       },
-      onRecoverPassword: (name) {
+      onRecoverPassword: (recoverData) {
         debugPrint('Recover password info');
-        debugPrint('Name: $name');
-        return _recoverPassword(name);
+        debugPrint('phone: ${recoverData.phone}');
+        debugPrint('email: ${recoverData.email}');
+        debugPrint('newPassword: ${recoverData.newPassword}');
+        return _recoverPassword(recoverData);
         // Show new password dialog
       },
       showDebugButtons: true,
