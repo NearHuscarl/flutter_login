@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:flutter_login/src/models/confirm_signup_settings.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
@@ -26,15 +27,16 @@ import 'src/widgets/gradient_box.dart';
 import 'src/widgets/hero_text.dart';
 import 'theme.dart';
 
+export 'package:sign_in_button/src/button_list.dart';
+
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/models/signup_data.dart';
+export 'src/models/term_of_service.dart';
 export 'src/models/user_form_field.dart';
+export 'src/providers/auth.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
-export 'src/models/term_of_service.dart';
-export 'src/providers/auth.dart';
-export 'package:sign_in_button/src/button_list.dart';
 
 class LoginProvider {
   /// Used for custom sign-in buttons.
@@ -268,42 +270,43 @@ class __HeaderState extends State<_Header> {
 }
 
 class FlutterLogin extends StatefulWidget {
-  FlutterLogin(
-      {Key? key,
-      this.onSignup,
-      required this.onLogin,
-      required this.onRecoverPassword,
-      this.title,
+  FlutterLogin({
+    Key? key,
+    this.onSignup,
+    required this.onLogin,
+    required this.onRecoverPassword,
+    this.title,
 
-      /// The [ImageProvider] or asset path [String] for the logo image to be displayed
-      dynamic logo,
-      this.messages,
-      this.theme,
-      this.userValidator,
-      this.passwordValidator,
-      this.onSubmitAnimationCompleted,
-      this.logoTag,
-      this.userType = LoginUserType.email,
-      this.titleTag,
-      this.showDebugButtons = false,
-      this.loginProviders = const <LoginProvider>[],
-      this.hideForgotPasswordButton = false,
-      this.loginAfterSignUp = true,
-      this.footer,
-      this.hideProvidersTitle = false,
-      this.additionalSignupFields,
-      this.disableCustomPageTransformer = false,
-      this.navigateBackAfterRecovery = false,
-      this.termsOfService = const <TermOfService>[],
-      this.onConfirmRecover,
-      this.onConfirmSignup,
-      this.onResendCode,
-      this.savedEmail = '',
-      this.savedPassword = '',
-      this.initialAuthMode = AuthMode.login,
-      this.children,
-      this.scrollable = false})
-      : assert((logo is String?) || (logo is ImageProvider?)),
+    /// The [ImageProvider] or asset path [String] for the logo image to be displayed
+    dynamic logo,
+    this.messages,
+    this.theme,
+    this.userValidator,
+    this.passwordValidator,
+    this.onSubmitAnimationCompleted,
+    this.logoTag,
+    this.userType = LoginUserType.email,
+    this.titleTag,
+    this.showDebugButtons = false,
+    this.loginProviders = const <LoginProvider>[],
+    this.hideForgotPasswordButton = false,
+    this.loginAfterSignUp = true,
+    this.footer,
+    this.hideProvidersTitle = false,
+    this.additionalSignupFields,
+    this.disableCustomPageTransformer = false,
+    this.navigateBackAfterRecovery = false,
+    this.termsOfService = const <TermOfService>[],
+    this.onConfirmRecover,
+    this.onConfirmSignup,
+    this.onResendCode,
+    this.savedEmail = '',
+    this.savedPassword = '',
+    this.initialAuthMode = AuthMode.login,
+    this.children,
+    this.scrollable = false,
+    this.confirmSignupSettings = const ConfirmSignupSettings(),
+  })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
 
@@ -394,8 +397,16 @@ class FlutterLogin extends StatefulWidget {
   /// Optional
   final ConfirmRecoverCallback? onConfirmRecover;
 
+  /// Settings for confirm sign up step.
+  ///
+  /// If this is null, we consider confirm sign up step to be omitted.
+  final ConfirmSignupSettings confirmSignupSettings;
+
   /// Called when the user hits the submit button when in confirm signup mode
   /// Optional
+  @Deprecated(
+      'Deprecated in favour of [confirmSignupSettings] field. Please, use that field, '
+      '[onConfirmSignup] will be removed in future releases.')
   final ConfirmSignupCallback? onConfirmSignup;
 
   /// Called when the user hits the resend code button in confirm signup mode
@@ -762,7 +773,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             password: widget.savedPassword,
             confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
-            onConfirmSignup: widget.onConfirmSignup,
+            onConfirmSignup: widget.confirmSignupSettings.onConfirmSignup,
             onResendCode: widget.onResendCode,
             termsOfService: widget.termsOfService,
             initialAuthMode: widget.initialAuthMode,
@@ -809,6 +820,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
                         scrollable: widget.scrollable,
+                        signupConfirmCardKeyboardType:
+                            widget.confirmSignupSettings.keyboardType,
                       ),
                     ),
                     Positioned(

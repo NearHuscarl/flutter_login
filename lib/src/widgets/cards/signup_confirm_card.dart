@@ -1,5 +1,6 @@
 part of auth_card_builder;
 
+/// Default value for keyboard type is [TextInputType.text].
 class _ConfirmSignupCard extends StatefulWidget {
   const _ConfirmSignupCard({
     Key? key,
@@ -7,12 +8,14 @@ class _ConfirmSignupCard extends StatefulWidget {
     required this.onSubmitCompleted,
     this.loginAfterSignUp = true,
     required this.loadingController,
+    required this.keyboardType,
   }) : super(key: key);
 
   final bool loginAfterSignUp;
   final VoidCallback onBack;
   final VoidCallback onSubmitCompleted;
   final AnimationController loadingController;
+  final TextInputType keyboardType;
 
   @override
   _ConfirmSignupCardState createState() => _ConfirmSignupCardState();
@@ -127,6 +130,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
         return null;
       },
       onSaved: (value) => _code = value!,
+      keyboardType: widget.keyboardType,
     );
   }
 
