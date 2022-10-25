@@ -29,6 +29,7 @@ import 'theme.dart';
 
 export 'package:sign_in_button/src/button_list.dart';
 
+export 'src/models/confirm_signup_settings.dart';
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/models/signup_data.dart';
