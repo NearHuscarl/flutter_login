@@ -303,7 +303,8 @@ class FlutterLogin extends StatefulWidget {
       this.initialAuthMode = AuthMode.login,
       this.children,
       this.scrollable = false,
-      this.confirmSignupKeyboardType})
+      this.confirmSignupKeyboardType,
+        this.headerWidget})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -372,6 +373,11 @@ class FlutterLogin extends StatefulWidget {
   /// By setting this, after signup another card with a form for additional user data is shown
   final List<UserFormField>? additionalSignupFields;
 
+  /// Called when the user hit the submit button when in sign up mode, before
+  /// additionalSignupFields are shown
+  /// Optional
+  final BeforeAdditionalFieldsCallback? onSwitchToAdditionalFields;
+
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
 
@@ -430,6 +436,9 @@ class FlutterLogin extends StatefulWidget {
   /// of resizing the window.
   /// Default: false
   final bool scrollable;
+
+  /// A widget that can be placed on top of the loginCard.
+  final Widget? headerWidget;
 
   static String? defaultEmailValidator(value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -769,6 +778,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
+            beforeAdditionalFieldsCallback: widget.onSwitchToAdditionalFields,
             onResendCode: widget.onResendCode,
             termsOfService: widget.termsOfService,
             initialAuthMode: widget.initialAuthMode,
@@ -817,6 +827,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         scrollable: widget.scrollable,
                         confirmSignupKeyboardType:
                             widget.confirmSignupKeyboardType,
+                        introWidget: widget.headerWidget,
                       ),
                     ),
                     Positioned(
