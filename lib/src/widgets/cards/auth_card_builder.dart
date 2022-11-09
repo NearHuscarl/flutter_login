@@ -50,6 +50,7 @@ class AuthCard extends StatefulWidget {
       this.loginTheme,
       this.navigateBackAfterRecovery = false,
       required this.scrollable,
+      required this.confirmSignupKeyboardType,
       this.introWidget})
       : super(key: key);
 
@@ -72,6 +73,7 @@ class AuthCard extends StatefulWidget {
   final bool navigateBackAfterRecovery;
 
   final bool scrollable;
+  final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
 
   @override
@@ -416,6 +418,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               }
             },
             loginAfterSignUp: widget.loginAfterSignUp,
+            keyboardType: widget.confirmSignupKeyboardType,
           ),
         );
     }

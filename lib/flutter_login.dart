@@ -303,8 +303,9 @@ class FlutterLogin extends StatefulWidget {
       this.initialAuthMode = AuthMode.login,
       this.children,
       this.scrollable = false,
-      this.onSwitchToAdditionalFields,
-      this.headerWidget})
+      this.confirmSignupKeyboardType,
+      this.headerWidget,
+      this.onSwitchToAdditionalFields})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -404,6 +405,11 @@ class FlutterLogin extends StatefulWidget {
   /// Called when the user hits the submit button when in confirm signup mode
   /// Optional
   final ConfirmSignupCallback? onConfirmSignup;
+
+  /// Sets [TextInputType] of sign up confirmation form.
+  ///
+  /// Defaults to [TextInputType.text].
+  final TextInputType? confirmSignupKeyboardType;
 
   /// Called when the user hits the resend code button in confirm signup mode
   /// Only when onConfirmSignup is set
@@ -820,6 +826,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
                         scrollable: widget.scrollable,
+                        confirmSignupKeyboardType:
+                            widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                       ),
                     ),
