@@ -21,8 +21,7 @@ typedef AdditionalFieldsCallback = Future<String?>? Function(
 
 /// A callback which can be used to check data before switching
 /// The result is an error message, callback successes if message is null
-typedef BeforeAdditionalFieldsCallback = Future<String?>? Function(
-    SignupData);
+typedef BeforeAdditionalFieldsCallback = Future<String?>? Function(SignupData);
 
 /// If the callback returns true, the additional data card is shown
 typedef ProviderNeedsSignUpCallback = Future<bool> Function();
@@ -70,8 +69,7 @@ class Auth with ChangeNotifier {
   final ConfirmSignupCallback? onConfirmSignup;
   final SignupCallback? onResendCode;
   final List<TermOfService> termsOfService;
-  final BeforeAdditionalFieldsCallback?
-      beforeAdditionalFieldsCallback;
+  final BeforeAdditionalFieldsCallback? beforeAdditionalFieldsCallback;
 
   AuthType _authType = AuthType.userPassword;
 

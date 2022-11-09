@@ -17,7 +17,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
-import '../../../flutter_login.dart';
 import '../animated_button.dart';
 import '../animated_icon.dart';
 import '../animated_text.dart';
