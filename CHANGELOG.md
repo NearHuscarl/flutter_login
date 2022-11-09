@@ -1,3 +1,16 @@
+## 4.1.0
+Features:
+* You can now select the keyboardType for the confirm Signup Code with [confirmSignupKeyboardType]. (Thanks @0ttik !)
+* Added a [headerWidget] that can be used to provide some text above the loginCard. (Thanks @cloudonlanapps !)
+* You can now perform checks between switching to additionalData (if provided) using [onSwitchToAdditionalFields] (Thanks @blanquartf !)
+
+Bugs fixed:
+* Fixed termOfService.linkUrl. (Thanks @fotiDim !)
+
+Other improvements:
+* Migrated to lint and applied all suggested lints.
+* Updated dependencies.
+
 ## 4.0.0
 BREAKING CHANGES:
 Flutter 3 or higher is required. All other dependencies are updated to match this.
