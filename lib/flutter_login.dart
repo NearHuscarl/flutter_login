@@ -304,7 +304,8 @@ class FlutterLogin extends StatefulWidget {
       this.children,
       this.scrollable = false,
       this.confirmSignupKeyboardType,
-        this.headerWidget})
+      this.headerWidget,
+      this.onSwitchToAdditionalFields})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
