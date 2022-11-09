@@ -268,7 +268,7 @@ class LoginScreen extends StatelessWidget {
         // Show new password dialog
       },
       showDebugButtons: false,
-      introWidget: const IntroWidget(),
+      headerWidget: const IntroWidget(),
     );
   }
 }
@@ -280,18 +280,13 @@ class IntroWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text.rich(
+        const Text.rich(
           TextSpan(children: [
-            const TextSpan(
+            TextSpan(
                 text: "You are trying to login/sign up on server hosted on "),
-            const TextSpan(
+            TextSpan(
                 text: "example.com",
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            const TextSpan(text: ". "),
-            TextSpan(
-                text: "Click here",
-                style: TextStyle(color: Colors.blue.shade300)),
-            const TextSpan(text: " to change the server ")
           ]),
           textAlign: TextAlign.justify,
         ),
