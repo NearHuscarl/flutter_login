@@ -179,6 +179,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             name: auth.email,
             password: auth.password,
             termsOfService: auth.getTermsOfServiceResults()));
+      } else {
+        if (auth.beforeAdditionalFieldsCallback != null) {
+          error = await auth.beforeAdditionalFieldsCallback!(
+              SignupData.fromSignupForm(
+                  name: auth.email,
+                  password: auth.password,
+                  termsOfService: auth.getTermsOfServiceResults()));
+        }
       }
     }
 

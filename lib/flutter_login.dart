@@ -303,6 +303,7 @@ class FlutterLogin extends StatefulWidget {
       this.initialAuthMode = AuthMode.login,
       this.children,
       this.scrollable = false,
+      this.onSwitchToAdditionalFields,
       this.introWidget})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
@@ -371,6 +372,11 @@ class FlutterLogin extends StatefulWidget {
   /// This List contains the additional signup fields.
   /// By setting this, after signup another card with a form for additional user data is shown
   final List<UserFormField>? additionalSignupFields;
+
+  /// Called when the user hit the submit button when in sign up mode, before
+  /// additionalSignupFields are shown
+  /// Optional
+  final BeforeAdditionalFieldsCallback? onSwitchToAdditionalFields;
 
   /// Set to true to hide the Forgot Password button
   final bool hideForgotPasswordButton;
@@ -768,6 +774,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
+            beforeAdditionalFieldsCallback: widget.onSwitchToAdditionalFields,
             onResendCode: widget.onResendCode,
             termsOfService: widget.termsOfService,
             initialAuthMode: widget.initialAuthMode,
