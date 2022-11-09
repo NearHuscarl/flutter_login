@@ -1,25 +1,24 @@
 part of auth_card_builder;
 
 class _RecoverCard extends StatefulWidget {
-  const _RecoverCard(
-      {Key? key,
-      required this.userValidator,
-      required this.onBack,
-      required this.userType,
-      this.loginTheme,
-      required this.navigateBack,
-      required this.onSubmitCompleted,
-      required this.loadingController})
-      : super(key: key);
+  const _RecoverCard({
+    required this.userValidator,
+    required this.onBack,
+    required this.userType,
+    this.loginTheme,
+    required this.navigateBack,
+    required this.onSubmitCompleted,
+    required this.loadingController,
+  });
 
   final FormFieldValidator<String>? userValidator;
-  final Function onBack;
+  final VoidCallback onBack;
   final LoginUserType userType;
   final LoginTheme? loginTheme;
   final bool navigateBack;
   final AnimationController loadingController;
 
-  final Function onSubmitCompleted;
+  final VoidCallback onSubmitCompleted;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -72,8 +71,11 @@ class _RecoverCardState extends State<_RecoverCard>
       await _submitController.reverse();
       return false;
     } else {
-      showSuccessToast(context, messages.flushbarTitleSuccess,
-          messages.recoverPasswordSuccess);
+      showSuccessToast(
+        context,
+        messages.flushbarTitleSuccess,
+        messages.recoverPasswordSuccess,
+      );
       setState(() => _isSubmitting = false);
       widget.onSubmitCompleted();
       return true;
@@ -81,7 +83,10 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   Widget _buildRecoverNameField(
-      double width, LoginMessages messages, Auth auth) {
+    double width,
+    LoginMessages messages,
+    Auth auth,
+  ) {
     return AnimatedTextFormField(
       controller: _nameController,
       loadingController: widget.loadingController,
@@ -106,7 +111,10 @@ class _RecoverCardState extends State<_RecoverCard>
   }
 
   Widget _buildBackButton(
-      ThemeData theme, LoginMessages messages, LoginTheme? loginTheme) {
+    ThemeData theme,
+    LoginMessages messages,
+    LoginTheme? loginTheme,
+  ) {
     final calculatedTextColor =
         (theme.cardTheme.color!.computeLuminance() < 0.5)
             ? Colors.white

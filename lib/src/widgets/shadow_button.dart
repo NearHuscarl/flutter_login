@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class ShadowButton extends StatelessWidget {
   const ShadowButton({
-    Key? key,
+    super.key,
     this.text,
-    this.borderRadius = const BorderRadius.all(Radius.circular(0.0)),
+    this.borderRadius = BorderRadius.zero,
     this.color,
     this.onPressed,
     this.onHighlightChanged,
@@ -12,12 +12,12 @@ class ShadowButton extends StatelessWidget {
     this.width,
     this.height,
     this.boxShadow,
-  }) : super(key: key);
+  });
 
   final String? text;
   final BorderRadius borderRadius;
   final Color? color;
-  final Function? onPressed;
+  final VoidCallback? onPressed;
   final ValueChanged<bool>? onHighlightChanged;
   final Color? splashColor;
   final double? width;
@@ -38,7 +38,7 @@ class ShadowButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: borderRadius),
         color: color,
         child: InkWell(
-          onTap: onPressed as void Function()?,
+          onTap: onPressed,
           onHighlightChanged: onHighlightChanged,
           splashColor: splashColor,
           borderRadius: borderRadius,

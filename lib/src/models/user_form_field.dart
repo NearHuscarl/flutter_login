@@ -25,7 +25,7 @@ class UserFormField {
 
   const UserFormField({
     required this.keyName,
-    displayName,
+    String? displayName,
     this.defaultValue = '',
     this.icon,
     this.fieldValidator,

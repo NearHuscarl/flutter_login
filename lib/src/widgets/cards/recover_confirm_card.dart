@@ -2,11 +2,11 @@ part of auth_card_builder;
 
 class _ConfirmRecoverCard extends StatefulWidget {
   const _ConfirmRecoverCard({
-    Key? key,
+    super.key,
     required this.passwordValidator,
     required this.onBack,
     required this.onSubmitCompleted,
-  }) : super(key: key);
+  });
 
   final FormFieldValidator<String> passwordValidator;
   final VoidCallback onBack;
@@ -71,8 +71,11 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
       await _submitController.reverse();
       return false;
     } else {
-      showSuccessToast(context, messages.flushbarTitleSuccess,
-          messages.confirmRecoverSuccess);
+      showSuccessToast(
+        context,
+        messages.flushbarTitleSuccess,
+        messages.confirmRecoverSuccess,
+      );
       setState(() => _isSubmitting = false);
       widget.onSubmitCompleted();
       return true;

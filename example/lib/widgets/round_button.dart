@@ -70,7 +70,6 @@ class _RoundButtonState extends State<RoundButton>
         scale: _scaleLoadingAnimation,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ScaleTransition(
               scale: _scaleAnimation,

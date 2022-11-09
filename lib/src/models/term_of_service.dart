@@ -5,22 +5,30 @@ class TermOfService {
   String? linkUrl;
   String validationErrorMessage;
   bool initialValue;
-  bool _checked = false;
-  TermOfService(
-      {required this.id,
-      required this.mandatory,
-      required this.text,
-      this.linkUrl,
-      this.initialValue = false,
-      this.validationErrorMessage = 'Required'}) {
-    _checked = initialValue;
-  }
-  void setStatus(bool checked) {
-    _checked = checked;
+  bool checked = false;
+  TermOfService({
+    required this.id,
+    required this.mandatory,
+    required this.text,
+    this.linkUrl,
+    this.initialValue = false,
+    this.validationErrorMessage = 'Required',
+  }) {
+    checked = initialValue;
   }
 
+  @Deprecated('Please use [checked] instead of this setter.')
+  // ignore: use_setters_to_change_properties
+  void setStatus(
+    // ignore: avoid_positional_boolean_parameters
+    bool checked,
+  ) {
+    this.checked = checked;
+  }
+
+  @Deprecated('Please use [checked] instead of this getter.')
   bool getStatus() {
-    return _checked;
+    return checked;
   }
 }
 

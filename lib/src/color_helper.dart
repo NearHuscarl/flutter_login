@@ -62,8 +62,10 @@ Brightness estimateBrightnessForColor(Color color) {
 }
 
 /// get the dark shades version of current color,
-List<Color?> getDarkShades(Color color,
-    [ColorShade minShade = ColorShade.fifthLightest]) {
+List<Color?> getDarkShades(
+  Color color, [
+  ColorShade minShade = ColorShade.fifthLightest,
+]) {
   final materialColor =
       color is MaterialColor ? color : getMaterialColor(color);
   final darkShades = <Color>[];

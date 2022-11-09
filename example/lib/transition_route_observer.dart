@@ -29,7 +29,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
   /// [routeAware] is no longer informed about changes to its route. If the given argument was
   /// subscribed to multiple types, this will unregister it (once) from each type.
   void unsubscribe(TransitionRouteAware routeAware) {
-    for (var route in _listeners.keys) {
+    for (final route in _listeners.keys) {
       final subscribers = _listeners[route];
       subscribers?.remove(routeAware);
     }
@@ -41,7 +41,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
       final previousSubscribers = _listeners[previousRoute]?.toList();
 
       if (previousSubscribers != null) {
-        for (var routeAware in previousSubscribers) {
+        for (final routeAware in previousSubscribers) {
           routeAware.didPopNext();
         }
       }
@@ -49,7 +49,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
       final subscribers = _listeners[route as R]?.toList();
 
       if (subscribers != null) {
-        for (var routeAware in subscribers) {
+        for (final routeAware in subscribers) {
           routeAware.didPop();
         }
       }
@@ -62,7 +62,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
       final previousSubscribers = _listeners[previousRoute];
 
       if (previousSubscribers != null) {
-        for (var routeAware in previousSubscribers) {
+        for (final routeAware in previousSubscribers) {
           routeAware.didPushNext();
         }
       }

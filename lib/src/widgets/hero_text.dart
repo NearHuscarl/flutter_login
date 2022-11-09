@@ -11,7 +11,6 @@ enum ViewState {
 class _HeroTextContent extends StatefulWidget {
   const _HeroTextContent(
     this.text, {
-    Key? key,
     required this.viewState,
     required this.smallFontSize,
     required this.largeFontSize,
@@ -22,7 +21,7 @@ class _HeroTextContent extends StatefulWidget {
     this.maxLines = 1,
     this.locale,
     this.strutStyle,
-  }) : super(key: key);
+  });
 
   final String? text;
   final ViewState viewState;
@@ -144,7 +143,7 @@ class __HeroTextContentState extends State<_HeroTextContent>
 class HeroText extends StatelessWidget {
   const HeroText(
     this.text, {
-    Key? key,
+    super.key,
     required this.tag,
     required this.viewState,
     this.smallFontSize = 15.0,
@@ -156,9 +155,9 @@ class HeroText extends StatelessWidget {
     this.maxLines = 1,
     this.locale,
     this.strutStyle,
-  })  : assert(
-            viewState == ViewState.shrunk || viewState == ViewState.enlarged),
-        super(key: key);
+  }) : assert(
+          viewState == ViewState.shrunk || viewState == ViewState.enlarged,
+        );
 
   final String? text;
   final Object? tag;
@@ -224,10 +223,10 @@ class HeroText extends StatelessWidget {
 
 class HeroTextWidget extends StatelessWidget {
   const HeroTextWidget({
-    Key? key,
+    super.key,
     this.child,
     required this.tag,
-  }) : super(key: key);
+  });
 
   final Widget? child;
   final Object tag;

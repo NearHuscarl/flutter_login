@@ -9,17 +9,18 @@ enum FadeDirection {
 
 class FadeIn extends StatefulWidget {
   const FadeIn({
-    Key? key,
+    super.key,
     this.fadeDirection = FadeDirection.startToEnd,
     this.offset = 1.0,
     this.controller,
     this.duration,
     this.curve = Curves.easeOut,
     required this.child,
-  })  : assert(controller == null && duration != null ||
-            controller != null && duration == null),
-        assert(offset > 0),
-        super(key: key);
+  })  : assert(
+          controller == null && duration != null ||
+              controller != null && duration == null,
+        ),
+        assert(offset > 0);
 
   /// [FadeIn] animation can be controlled via external [controller]. If
   /// [controller] is not provided, it will use the default internal controller
@@ -63,36 +64,40 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
     switch (widget.fadeDirection) {
       case FadeDirection.startToEnd:
         begin = Offset(-offset, 0);
-        end = const Offset(0, 0);
+        end = Offset.zero;
         break;
       case FadeDirection.endToStart:
         begin = Offset(offset, 0);
-        end = const Offset(0, 0);
+        end = Offset.zero;
         break;
       case FadeDirection.topToBottom:
         begin = Offset(0, -offset);
-        end = const Offset(0, 0);
+        end = Offset.zero;
         break;
       case FadeDirection.bottomToTop:
         begin = Offset(0, offset);
-        end = const Offset(0, 0);
+        end = Offset.zero;
         break;
     }
 
     _slideAnimation = Tween<Offset>(
       begin: begin,
       end: end,
-    ).animate(CurvedAnimation(
-      parent: _effectiveController!,
-      curve: widget.curve!,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _effectiveController!,
+        curve: widget.curve!,
+      ),
+    );
     _opacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _effectiveController!,
-      curve: widget.curve!,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _effectiveController!,
+        curve: widget.curve!,
+      ),
+    );
   }
 
   AnimationController? get _effectiveController =>

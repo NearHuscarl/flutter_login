@@ -14,10 +14,12 @@ class AnimatedNumericText extends StatelessWidget {
         numberAnimation = Tween<double>(
           begin: initialValue,
           end: targetValue,
-        ).animate(CurvedAnimation(
-          parent: controller,
-          curve: curve,
-        )),
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: curve,
+          ),
+        ),
         super(key: key);
 
   final double initialValue;

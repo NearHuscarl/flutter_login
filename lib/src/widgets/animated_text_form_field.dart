@@ -25,7 +25,7 @@ Interval _getInternalInterval(
 
 class AnimatedTextFormField extends StatefulWidget {
   const AnimatedTextFormField({
-    Key? key,
+    super.key,
     this.interval = const Interval(0.0, 1.0),
     required this.width,
     this.loadingController,
@@ -45,9 +45,10 @@ class AnimatedTextFormField extends StatefulWidget {
     this.onSaved,
     this.autocorrect = false,
     this.autofillHints,
-  })  : assert((inertiaController == null && inertiaDirection == null) ||
-            (inertiaController != null && inertiaDirection != null)),
-        super(key: key);
+  }) : assert(
+          (inertiaController == null && inertiaDirection == null) ||
+              (inertiaController != null && inertiaDirection != null),
+        );
 
   final Interval? interval;
   final AnimationController? loadingController;
@@ -95,16 +96,24 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       scaleAnimation = Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: loadingController,
-        curve: _getInternalInterval(
-            0, .2, interval!.begin, interval.end, Curves.easeOutBack),
-      ));
-      suffixIconOpacityAnimation =
-          Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: loadingController,
-        curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
-      ));
+      ).animate(
+        CurvedAnimation(
+          parent: loadingController,
+          curve: _getInternalInterval(
+            0,
+            .2,
+            interval!.begin,
+            interval.end,
+            Curves.easeOutBack,
+          ),
+        ),
+      );
+      suffixIconOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: loadingController,
+          curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
+        ),
+      );
       _updateSizeAnimation();
     }
 
@@ -116,24 +125,28 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       fieldTranslateAnimation = Tween<double>(
         begin: 0.0,
         end: sign * 15.0,
-      ).animate(CurvedAnimation(
-        parent: inertiaController,
-        curve: const Interval(0, .5, curve: Curves.easeOut),
-        reverseCurve: Curves.easeIn,
-      ));
+      ).animate(
+        CurvedAnimation(
+          parent: inertiaController,
+          curve: const Interval(0, .5, curve: Curves.easeOut),
+          reverseCurve: Curves.easeIn,
+        ),
+      );
       iconRotationAnimation =
-          Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */)
-              .animate(CurvedAnimation(
-        parent: inertiaController,
-        curve: const Interval(.5, 1.0, curve: Curves.easeOut),
-        reverseCurve: Curves.easeIn,
-      ));
-      iconTranslateAnimation =
-          Tween<double>(begin: 0.0, end: 8.0).animate(CurvedAnimation(
-        parent: inertiaController,
-        curve: const Interval(.5, 1.0, curve: Curves.easeOut),
-        reverseCurve: Curves.easeIn,
-      ));
+          Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */).animate(
+        CurvedAnimation(
+          parent: inertiaController,
+          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          reverseCurve: Curves.easeIn,
+        ),
+      );
+      iconTranslateAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+        CurvedAnimation(
+          parent: inertiaController,
+          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          reverseCurve: Curves.easeIn,
+        ),
+      );
     }
   }
 
@@ -144,12 +157,19 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     sizeAnimation = Tween<double>(
       begin: 48.0,
       end: widget.width,
-    ).animate(CurvedAnimation(
-      parent: loadingController,
-      curve: _getInternalInterval(
-          .2, 1.0, interval.begin, interval.end, Curves.linearToEaseOut),
-      reverseCurve: Curves.easeInExpo,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: loadingController,
+        curve: _getInternalInterval(
+          .2,
+          1.0,
+          interval.begin,
+          interval.end,
+          Curves.linearToEaseOut,
+        ),
+        reverseCurve: Curves.easeInExpo,
+      ),
+    );
   }
 
   @override
@@ -167,7 +187,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     super.dispose();
   }
 
-  void handleAnimationStatus(status) {
+  void handleAnimationStatus(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
       widget.inertiaController?.reverse();
     }
@@ -195,12 +215,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     return InputDecoration(
       labelText: widget.labelText,
       prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
-      suffixIcon: _buildInertiaAnimation(widget.loadingController != null
-          ? FadeTransition(
-              opacity: suffixIconOpacityAnimation,
-              child: widget.suffixIcon,
-            )
-          : widget.suffixIcon),
+      suffixIcon: _buildInertiaAnimation(
+        widget.loadingController != null
+            ? FadeTransition(
+                opacity: suffixIconOpacityAnimation,
+                child: widget.suffixIcon,
+              )
+            : widget.suffixIcon,
+      ),
     );
   }
 
@@ -254,7 +276,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
 class AnimatedPasswordTextFormField extends StatefulWidget {
   const AnimatedPasswordTextFormField({
-    Key? key,
+    super.key,
     this.interval = const Interval(0.0, 1.0),
     required this.animatedWidth,
     this.loadingController,
@@ -270,9 +292,10 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onSaved,
     this.autofillHints,
-  })  : assert((inertiaController == null && inertiaDirection == null) ||
-            (inertiaController != null && inertiaDirection != null)),
-        super(key: key);
+  }) : assert(
+          (inertiaController == null && inertiaDirection == null) ||
+              (inertiaController != null && inertiaDirection != null),
+        );
 
   final Interval? interval;
   final AnimationController? loadingController;
