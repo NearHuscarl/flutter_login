@@ -48,6 +48,7 @@ savedPassword |   `String`     | <sub>Prefilled value for password field (ie. sa
 termsOfService | [`TermOfService`](#TermOfService) | <sub>List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of [`TermOfServiceResult`](#TermOfServiceResult) </sub>
 children | [`Widget`] | <sub>List of widgets that can be added to the stack of the login screen. Can be used to show custom banners or logos. </sub>
 scrollable |   `bool`     | <sub>When set to true, the login card becomes scrollable instead of resizing when needed.
+headerWidget |   `Widget`     | <sub>A widget that can be placed on top of the loginCard.</sub> 
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the
 same in both places. For title's hero animation use the

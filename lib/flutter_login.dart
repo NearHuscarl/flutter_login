@@ -303,7 +303,8 @@ class FlutterLogin extends StatefulWidget {
       this.initialAuthMode = AuthMode.login,
       this.children,
       this.scrollable = false,
-      this.onSwitchToAdditionalFields})
+      this.onSwitchToAdditionalFields,
+      this.headerWidget})
       : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo,
         super(key: key);
@@ -430,6 +431,9 @@ class FlutterLogin extends StatefulWidget {
   /// of resizing the window.
   /// Default: false
   final bool scrollable;
+
+  /// A widget that can be placed on top of the loginCard.
+  final Widget? headerWidget;
 
   static String? defaultEmailValidator(value) {
     if (value!.isEmpty || !Regex.email.hasMatch(value)) {
@@ -816,6 +820,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         navigateBackAfterRecovery:
                             widget.navigateBackAfterRecovery,
                         scrollable: widget.scrollable,
+                        introWidget: widget.headerWidget,
                       ),
                     ),
                     Positioned(
