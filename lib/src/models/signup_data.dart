@@ -7,11 +7,12 @@ class SignupData {
   final List<TermOfServiceResult> termsOfService;
   final Map<String, String>? additionalSignupData;
 
-  SignupData.fromSignupForm(
-      {required this.name,
-      required this.password,
-      this.additionalSignupData,
-      this.termsOfService = const []});
+  SignupData.fromSignupForm({
+    required this.name,
+    required this.password,
+    this.additionalSignupData,
+    this.termsOfService = const [],
+  });
 
   SignupData.fromProvider({
     required this.additionalSignupData,

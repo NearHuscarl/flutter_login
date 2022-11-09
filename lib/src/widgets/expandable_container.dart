@@ -7,7 +7,7 @@ enum ExpandableContainerState {
 
 class ExpandableContainer extends StatefulWidget {
   const ExpandableContainer({
-    Key? key,
+    super.key,
     required this.child,
     required this.controller,
     this.onExpandCompleted,
@@ -18,10 +18,10 @@ class ExpandableContainer extends StatefulWidget {
     this.height,
     this.padding,
     this.initialState = ExpandableContainerState.shrunk,
-  }) : super(key: key);
+  });
 
   final AnimationController controller;
-  final Function? onExpandCompleted;
+  final VoidCallback? onExpandCompleted;
   final Widget child;
   final Alignment? alignment;
   final Color? backgroundColor;
@@ -53,19 +53,22 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
     _sizeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, .6875, curve: Curves.bounceOut),
-      reverseCurve: const Interval(0.0, .6875, curve: Curves.bounceIn),
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, .6875, curve: Curves.bounceOut),
+        reverseCurve: const Interval(0.0, .6875, curve: Curves.bounceIn),
+      ),
+    );
     _slideAnimation = Tween<Offset>(
       begin: const Offset(-1, 0),
-      end: const Offset(0, 0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
-    ))
-      ..addStatusListener((status) {
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           widget.onExpandCompleted!();
         }

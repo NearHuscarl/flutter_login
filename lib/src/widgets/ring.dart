@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 /// A circle with a hole
 class Ring extends StatelessWidget {
   const Ring({
-    Key? key,
+    super.key,
     this.color,
     this.size = 40.0,
     this.thickness = 2.0,
     this.value = 1.0,
   })  : assert(size - thickness > 0),
-        assert(thickness >= 0),
-        super(key: key);
+        assert(thickness >= 0);
 
   final Color? color;
   final double size;

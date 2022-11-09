@@ -3,10 +3,10 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'constants.dart';
-import 'custom_route.dart';
-import 'dashboard_screen.dart';
-import 'users.dart';
+import 'package:login_example/constants.dart';
+import 'package:login_example/custom_route.dart';
+import 'package:login_example/dashboard_screen.dart';
+import 'package:login_example/users.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
@@ -90,18 +90,22 @@ class LoginScreen extends StatelessWidget {
       ],
       termsOfService: [
         TermOfService(
-            id: 'newsletter',
-            mandatory: false,
-            text: 'Newsletter subscription'),
+          id: 'newsletter',
+          mandatory: false,
+          text: 'Newsletter subscription',
+        ),
         TermOfService(
-            id: 'general-term',
-            mandatory: true,
-            text: 'Term of services',
-            linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
+          id: 'general-term',
+          mandatory: true,
+          text: 'Term of services',
+          linkUrl: 'https://github.com/NearHuscarl/flutter_login',
+        ),
       ],
       additionalSignupFields: [
         const UserFormField(
-            keyName: 'Username', icon: Icon(FontAwesomeIcons.userLarge)),
+          keyName: 'Username',
+          icon: Icon(FontAwesomeIcons.userLarge),
+        ),
         const UserFormField(keyName: 'Name'),
         const UserFormField(keyName: 'Surname'),
         UserFormField(
@@ -109,8 +113,9 @@ class LoginScreen extends StatelessWidget {
           displayName: 'Phone Number',
           userType: LoginUserType.phone,
           fieldValidator: (value) {
-            var phoneRegExp = RegExp(
-                '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
+            final phoneRegExp = RegExp(
+              '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$',
+            );
             if (value != null &&
                 value.length < 7 &&
                 !phoneRegExp.hasMatch(value)) {
@@ -120,7 +125,6 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ],
-      initialAuthMode: AuthMode.login,
       // scrollable: true,
       // hideProvidersTitle: false,
       // loginAfterSignUp: false,
@@ -249,17 +253,20 @@ class LoginScreen extends StatelessWidget {
         });
         if (signupData.termsOfService.isNotEmpty) {
           debugPrint('Terms of service: ');
-          for (var element in signupData.termsOfService) {
+          for (final element in signupData.termsOfService) {
             debugPrint(
-                ' - ${element.term.id}: ${element.accepted == true ? 'accepted' : 'rejected'}');
+              ' - ${element.term.id}: ${element.accepted == true ? 'accepted' : 'rejected'}',
+            );
           }
         }
         return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => const DashboardScreen(),
-        ));
+        Navigator.of(context).pushReplacement(
+          FadePageRoute(
+            builder: (context) => const DashboardScreen(),
+          ),
+        );
       },
       onRecoverPassword: (name) {
         debugPrint('Recover password info');
@@ -267,7 +274,6 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
-      showDebugButtons: false,
       headerWidget: const IntroWidget(),
     );
   }
@@ -281,23 +287,29 @@ class IntroWidget extends StatelessWidget {
     return Column(
       children: [
         const Text.rich(
-          TextSpan(children: [
-            TextSpan(
-                text: "You are trying to login/sign up on server hosted on "),
-            TextSpan(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: "You are trying to login/sign up on server hosted on ",
+              ),
+              TextSpan(
                 text: "example.com",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-          ]),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
           textAlign: TextAlign.justify,
         ),
-        Row(children: const <Widget>[
-          Expanded(child: Divider()),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text("Authenticate"),
-          ),
-          Expanded(child: Divider()),
-        ]),
+        Row(
+          children: const <Widget>[
+            Expanded(child: Divider()),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text("Authenticate"),
+            ),
+            Expanded(child: Divider()),
+          ],
+        ),
       ],
     );
   }

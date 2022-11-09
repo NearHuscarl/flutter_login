@@ -1,14 +1,14 @@
 part of auth_card_builder;
 
 class _ConfirmSignupCard extends StatefulWidget {
-  const _ConfirmSignupCard(
-      {Key? key,
-      required this.onBack,
-      required this.onSubmitCompleted,
-      this.loginAfterSignUp = true,
-      required this.loadingController,
-      required this.keyboardType})
-      : super(key: key);
+  const _ConfirmSignupCard({
+    super.key,
+    required this.onBack,
+    required this.onSubmitCompleted,
+    this.loginAfterSignUp = true,
+    required this.loadingController,
+    required this.keyboardType,
+  });
 
   final bool loginAfterSignUp;
   final VoidCallback onBack;
@@ -59,11 +59,12 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     await _fieldSubmitController.forward();
     setState(() => _isSubmitting = true);
     final error = await auth.onConfirmSignup!(
-        _code,
-        LoginData(
-          name: auth.email,
-          password: auth.password,
-        ));
+      _code,
+      LoginData(
+        name: auth.email,
+        password: auth.password,
+      ),
+    );
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
@@ -73,7 +74,10 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     }
 
     showSuccessToast(
-        context, messages.flushbarTitleSuccess, messages.confirmSignupSuccess);
+      context,
+      messages.flushbarTitleSuccess,
+      messages.confirmSignupSuccess,
+    );
     setState(() => _isSubmitting = false);
     await _fieldSubmitController.reverse();
 
@@ -95,10 +99,13 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
     await _fieldSubmitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onResendCode!(SignupData.fromSignupForm(
+    final error = await auth.onResendCode!(
+      SignupData.fromSignupForm(
         name: auth.email,
         password: auth.password,
-        termsOfService: auth.getTermsOfServiceResults()));
+        termsOfService: auth.getTermsOfServiceResults(),
+      ),
+    );
 
     if (error != null) {
       showErrorToast(context, messages.flushbarTitleError, error);
@@ -108,7 +115,10 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     }
 
     showSuccessToast(
-        context, messages.flushbarTitleSuccess, messages.resendCodeSuccess);
+      context,
+      messages.flushbarTitleSuccess,
+      messages.resendCodeSuccess,
+    );
     setState(() => _isSubmitting = false);
     await _fieldSubmitController.reverse();
     return true;

@@ -188,5 +188,5 @@ void clickFirstProvider() => firstProviderButton().onPressed();
 /// the flushbar in my code is displayed for 4 seconds. So we wait for it to
 /// go away.
 /// https://stackoverflow.com/a/57930945/9449426
-void waitForFlushbarToClose(WidgetTester tester) async =>
-    await tester.pump(const Duration(seconds: 4));
+Future<void> waitForFlushbarToClose(WidgetTester tester) async =>
+    tester.pump(const Duration(seconds: 4));
