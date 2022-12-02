@@ -20,7 +20,9 @@ class _TermCheckboxState extends State<TermCheckbox> {
   @override
   Widget build(BuildContext context) {
     return CheckboxFormField(
-      onChanged: (value) => widget.termOfService.checked,
+      onChanged: (value) {
+        widget.termOfService.checked = value ?? false;
+      },
       initialValue: widget.termOfService.initialValue,
       title: widget.termOfService.linkUrl != null
           ? InkWell(
