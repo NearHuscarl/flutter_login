@@ -1,3 +1,9 @@
+## 4.1.1
+Bugs fixed:
+- Fixed an issue with keyboard unfocusing. (Thanks @otto-dev !)
+- Fixed an issue with checkboxFormField not updating value. (Thanks @Mojo1917 !)
+- Updated dependencies.
+
 ## 4.1.0
 Features:
 * You can now select the keyboardType for the confirm Signup Code with [confirmSignupKeyboardType]. (Thanks @0ttik !)
