@@ -47,7 +47,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
   }
 
   Future<bool> _submit() async {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).unfocus();
 
     if (!_formRecoverKey.currentState!.validate()) {
       return false;
@@ -92,7 +92,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
   }
 
   Future<bool> _resendCode() async {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).unfocus();
 
     final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);

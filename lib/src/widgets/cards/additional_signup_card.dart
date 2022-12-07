@@ -106,10 +106,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
   }
 
   Future<bool> _submit() async {
-    // a hack to force unfocus the soft keyboard. If not, after change-route
-    // animation completes, it will trigger rebuilding this widget and show all
-    // textfields and buttons again before going to new route
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).unfocus();
 
     final messages = Provider.of<LoginMessages>(context, listen: false);
 

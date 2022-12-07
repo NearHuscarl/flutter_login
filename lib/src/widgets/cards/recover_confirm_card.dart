@@ -46,7 +46,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
   }
 
   Future<bool> _submit() async {
-    FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+    FocusScope.of(context).unfocus(); // close keyboard
 
     if (!_formRecoverKey.currentState!.validate()) {
       return false;
