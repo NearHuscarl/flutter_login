@@ -26,6 +26,7 @@ Interval _getInternalInterval(
 class AnimatedTextFormField extends StatefulWidget {
   const AnimatedTextFormField({
     super.key,
+    this.textFormFieldKey,
     this.interval = const Interval(0.0, 1.0),
     required this.width,
     this.loadingController,
@@ -50,6 +51,7 @@ class AnimatedTextFormField extends StatefulWidget {
               (inertiaController != null && inertiaDirection != null),
         );
 
+  final Key? textFormFieldKey;
   final Interval? interval;
   final AnimationController? loadingController;
   final AnimationController? inertiaController;
@@ -230,6 +232,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget textField = TextFormField(
+      key: widget.textFormFieldKey,
       cursorColor: theme.primaryColor,
       controller: widget.controller,
       focusNode: widget.focusNode,

@@ -36,6 +36,7 @@ class AuthCard extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     required this.loadingController,
     this.userValidator,
+    this.validateUserImmediately,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -55,6 +56,7 @@ class AuthCard extends StatefulWidget {
   final EdgeInsets padding;
   final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
+  final bool? validateUserImmediately;
   final FormFieldValidator<String>? passwordValidator;
   final VoidCallback? onSubmit;
   final VoidCallback? onSubmitCompleted;
@@ -339,6 +341,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userType: widget.userType,
             loadingController: formController,
             userValidator: widget.userValidator,
+            validateUserImmediately: widget.validateUserImmediately,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
                 widget.additionalSignUpFields != null,
