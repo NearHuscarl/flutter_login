@@ -297,10 +297,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (showSignupAdditionalFields) {
       widget.onSwitchSignUpAdditionalData();
+    } else {
+      widget.onSubmitCompleted!();
     }
-
-    widget.onSubmitCompleted!();
-
     return true;
   }
 
@@ -503,6 +502,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             button: loginProvider.button,
             callback: loginProvider.callback,
             animated: loginProvider.animated,
+            providerNeedsSignUpCallback: loginProvider.providerNeedsSignUpCallback,
           ),
         );
       } else if (loginProvider.icon != null) {
@@ -513,6 +513,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             button: loginProvider.button,
             callback: loginProvider.callback,
             animated: loginProvider.animated,
+            providerNeedsSignUpCallback: loginProvider.providerNeedsSignUpCallback,
           ),
         );
       }
