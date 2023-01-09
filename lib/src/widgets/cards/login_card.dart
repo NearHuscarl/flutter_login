@@ -18,6 +18,12 @@ class _LoginCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.introWidget,
+    this.userIcon,
+    this.phoneIcon,
+    this.emailIcon,
+    this.lockIcon,
+    this.visibilityOnIcon,
+    this.visibilityOffIcon,
   });
 
   final AnimationController loadingController;
@@ -35,6 +41,12 @@ class _LoginCard extends StatefulWidget {
   final bool requireAdditionalSignUpFields;
   final bool requireSignUpConfirmation;
   final Widget? introWidget;
+  final Icon? userIcon;
+  final Icon? phoneIcon;
+  final Icon? emailIcon;
+  final Icon? lockIcon;
+  final Icon? visibilityOnIcon;
+  final Icon? visibilityOffIcon;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -319,7 +331,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       autofillHints: _isSubmitting
           ? null
           : [TextFieldUtils.getAutofillHints(widget.userType)],
-      prefixIcon: TextFieldUtils.getPrefixIcon(widget.userType),
+      prefixIcon: TextFieldUtils.getPrefixIcon(
+        widget.userType,
+        widget.userIcon,
+        widget.emailIcon,
+        widget.phoneIcon,
+      ),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (value) {
@@ -371,6 +388,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       loadingController: widget.loadingController,
       inertiaController: _postSwitchAuthController,
       inertiaDirection: TextFieldInertiaDirection.right,
+      prefixIcon: widget.lockIcon,
+      visibilityOnIcon: widget.visibilityOnIcon,
+      visibilityOffIcon: widget.visibilityOffIcon,
       labelText: messages.confirmPasswordHint,
       controller: _confirmPassController,
       textInputAction: TextInputAction.done,

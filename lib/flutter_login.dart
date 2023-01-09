@@ -804,6 +804,12 @@ class _FlutterLoginState extends State<FlutterLogin>
                     Positioned(
                       child: AuthCard(
                         key: authCardKey,
+                        emailIcon: widget.theme?.emailIcon,
+                        lockIcon: widget.theme?.lockIcon,
+                        phoneIcon: widget.theme?.phoneIcon,
+                        userIcon: widget.theme?.userIcon,
+                        visibilityOffIcon: widget.theme?.visibilityOffIcon,
+                        visibilityOnIcon: widget.theme?.visibilityOnIcon,
                         userType: widget.userType,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,

@@ -27,10 +27,15 @@ class TextFieldUtils {
     }
   }
 
-  static Icon getPrefixIcon(LoginUserType userType) {
+  static Icon getPrefixIcon(
+    LoginUserType userType,
+    Icon? userIcon,
+    Icon? phoneIcon,
+    Icon? emailIcon,
+  ) {
     switch (userType) {
       case LoginUserType.name:
-        return const Icon(FontAwesomeIcons.circleUser);
+        return userIcon ?? const Icon(FontAwesomeIcons.circleUser);
       case LoginUserType.phone:
         return const Icon(FontAwesomeIcons.squarePhoneFlip);
       case LoginUserType.email:

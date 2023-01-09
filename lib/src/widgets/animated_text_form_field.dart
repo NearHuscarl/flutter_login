@@ -292,6 +292,9 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onSaved,
     this.autofillHints,
+    this.prefixIcon,
+    this.visibilityOnIcon,
+    this.visibilityOffIcon,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -312,6 +315,9 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final FormFieldSetter<String>? onSaved;
   final TextFieldInertiaDirection? inertiaDirection;
   final Iterable<String>? autofillHints;
+  final Icon? prefixIcon;
+  final Icon? visibilityOnIcon;
+  final Icon? visibilityOffIcon;
 
   @override
   State<AnimatedPasswordTextFormField> createState() =>
@@ -332,7 +338,8 @@ class _AnimatedPasswordTextFormFieldState
       enabled: widget.enabled,
       autofillHints: widget.autofillHints,
       labelText: widget.labelText,
-      prefixIcon: const Icon(FontAwesomeIcons.lock, size: 20),
+      prefixIcon:
+          widget.prefixIcon ?? const Icon(FontAwesomeIcons.lock, size: 20),
       suffixIcon: GestureDetector(
         onTap: () => setState(() => _obscureText = !_obscureText),
         dragStartBehavior: DragStartBehavior.down,
@@ -347,16 +354,18 @@ class _AnimatedPasswordTextFormFieldState
               children: <Widget>[bottomChild, topChild],
             );
           },
-          firstChild: const Icon(
-            Icons.visibility,
-            size: 25.0,
-            semanticLabel: 'show password',
-          ),
-          secondChild: const Icon(
-            Icons.visibility_off,
-            size: 25.0,
-            semanticLabel: 'hide password',
-          ),
+          firstChild: widget.visibilityOnIcon ??
+              const Icon(
+                Icons.visibility,
+                size: 25.0,
+                semanticLabel: 'show password',
+              ),
+          secondChild: widget.visibilityOffIcon ??
+              const Icon(
+                Icons.visibility_off,
+                size: 25.0,
+                semanticLabel: 'hide password',
+              ),
           crossFadeState: _obscureText
               ? CrossFadeState.showFirst
               : CrossFadeState.showSecond,

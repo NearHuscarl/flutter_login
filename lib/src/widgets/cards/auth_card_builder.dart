@@ -50,6 +50,12 @@ class AuthCard extends StatefulWidget {
     required this.scrollable,
     required this.confirmSignupKeyboardType,
     this.introWidget,
+    this.userIcon,
+    this.phoneIcon,
+    this.emailIcon,
+    this.lockIcon,
+    this.visibilityOnIcon,
+    this.visibilityOffIcon,
   });
 
   final EdgeInsets padding;
@@ -73,6 +79,12 @@ class AuthCard extends StatefulWidget {
   final bool scrollable;
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
+  final Icon? userIcon;
+  final Icon? phoneIcon;
+  final Icon? emailIcon;
+  final Icon? lockIcon;
+  final Icon? visibilityOnIcon;
+  final Icon? visibilityOffIcon;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -336,6 +348,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           theme: Theme.of(context),
           child: _LoginCard(
             key: _loginCardKey,
+            userIcon: widget.userIcon,
+            phoneIcon: widget.userIcon,
+            emailIcon: widget.emailIcon,
+            lockIcon: widget.lockIcon,
+            visibilityOnIcon: widget.visibilityOnIcon,
+            visibilityOffIcon: widget.visibilityOffIcon,
             userType: widget.userType,
             loadingController: formController,
             userValidator: widget.userValidator,

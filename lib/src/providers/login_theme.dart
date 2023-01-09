@@ -63,6 +63,12 @@ class LoginTheme with ChangeNotifier {
     this.headerMargin,
     this.cardInitialHeight,
     this.cardTopPosition,
+    this.userIcon,
+    this.phoneIcon,
+    this.emailIcon,
+    this.lockIcon,
+    this.visibilityOnIcon,
+    this.visibilityOffIcon,
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -154,4 +160,11 @@ class LoginTheme with ChangeNotifier {
   ///
   /// Default: deviceSize.height / 2 - cardInitialHeight / 2
   final double? cardTopPosition;
+
+  final Icon? userIcon;
+  final Icon? phoneIcon;
+  final Icon? emailIcon;
+  final Icon? lockIcon;
+  final Icon? visibilityOnIcon;
+  final Icon? visibilityOffIcon;
 }
