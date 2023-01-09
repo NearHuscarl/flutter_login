@@ -296,6 +296,25 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         await loginProvider.providerNeedsSignUpCallback?.call() ?? false;
 
     if (showSignupAdditionalFields) {
+      if (auth.beforeAdditionalFieldsCallback != null) {
+        error = await auth.beforeAdditionalFieldsCallback!(
+          SignupData.fromSignupForm(
+            name: auth.email,
+            password: auth.password,
+            termsOfService: auth.getTermsOfServiceResults(),
+            additionalSignupData: auth.additionalSignupData
+          ),
+        );
+        if (!DartHelper.isNullOrEmpty(error)) {
+          showErrorToast(context, messages.flushbarTitleError, error!);
+          Future.delayed(const Duration(milliseconds: 271), () {
+            if (mounted) {
+              setState(() => _showShadow = true);
+            }
+          });
+          return false;
+        }
+      }
       widget.onSwitchSignUpAdditionalData();
     }
 
