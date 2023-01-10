@@ -132,7 +132,7 @@ Property |   Type     | Description |
 -------- |------------| ------------| 
 keyName  | `String` | The identifier of the fields, it will be the key in the returned map. Please ensure this is unique, otherwise an Error will be thrown
 displayName | `String` | The name of the field displayed on the form. Defaults to `keyName` if not given
-defaultValue | `String` | The default value of the field, if given the field will be pre-filled in with this
+defaultValueProvider | `DefaultValueProvider` | The provider of the default value of the field, if given the field will be pre-filled in with this
 fieldValidator | `FormFieldValidator<String>` | A function to validate the field. It should return null on success, or a string with the explanation of the error
 icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
 userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`

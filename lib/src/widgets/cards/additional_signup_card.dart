@@ -56,7 +56,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     _nameControllers = {
       for (var formField in widget.formFields)
         formField.keyName: TextEditingController(
-          text: formField.defaultValue,
+          text: formField.defaultValueProvider?.call() ?? ''
         )
     };
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
+import 'package:flutter_login/src/providers/auth.dart';
 
 class UserFormField {
   /// The name of the field retrieved as key.
@@ -9,8 +10,8 @@ class UserFormField {
   /// The name of the field displayed on the form. Defaults to `keyName` if not given
   final String displayName;
 
-  /// The default value of the field
-  final String defaultValue;
+  /// Provider of the daulft value of the field
+  final DefaultValueProvider? defaultValueProvider;
 
   /// A function to validate the field.
   /// It should return null on success, or a string with the explanation of the error
@@ -26,7 +27,7 @@ class UserFormField {
   const UserFormField({
     required this.keyName,
     String? displayName,
-    this.defaultValue = '',
+    this.defaultValueProvider,
     this.icon,
     this.fieldValidator,
     this.userType = LoginUserType.name,

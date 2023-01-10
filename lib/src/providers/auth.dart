@@ -27,6 +27,9 @@ typedef BeforeAdditionalFieldsCallback = Future<String?>? Function(SignupData);
 /// If the callback returns true, the additional data card is shown
 typedef ProviderNeedsSignUpCallback = Future<bool> Function();
 
+// Provides default value for the field
+typedef DefaultValueProvider = String? Function();
+
 /// The result is an error message, callback successes if message is null
 typedef ProviderAuthCallback = Future<String?>? Function();
 
