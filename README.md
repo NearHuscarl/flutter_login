@@ -124,6 +124,7 @@ Enum     |   Description |
 EMAIL | The User Field will be set to be email
 NAME  | The User Field will be set to be username
 PHONE  | The User Field will be set to be phone
+INTLPHONE  | The User Field will be set to be phone with country code selection
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 

@@ -1,1 +1,1 @@
-enum LoginUserType { email, name, phone }
+enum LoginUserType { email, name, phone, intlPhone }

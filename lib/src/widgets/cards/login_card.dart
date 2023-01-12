@@ -310,6 +310,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     Auth auth,
   ) {
     return AnimatedTextFormField(
+      userType: widget.userType,
       controller: _nameController,
       width: width,
       loadingController: widget.loadingController,
