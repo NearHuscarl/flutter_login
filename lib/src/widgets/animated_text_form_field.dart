@@ -271,8 +271,13 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           onSaved: (pn) => widget.onSaved?.call(pn.phoneNumber),
           validator: widget.validator,
           autofillHints: widget.autofillHints,
-          onInputChanged: (phoneNumber) =>
-              widget.controller?.text = phoneNumber.phoneNumber ?? '',
+          onInputChanged: (phoneNumber) {
+            if (phoneNumber.phoneNumber == phoneNumber.dialCode) {
+              widget.controller?.text = '';
+            } else {
+              widget.controller?.text = phoneNumber.phoneNumber ?? '';
+            }
+          },
           isEnabled: widget.enabled,
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
