@@ -22,6 +22,7 @@ Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode. It receives a `SignupData` object, with name, password and, if `additionalSignUpFields` is not null, the additional fields filled in by the user in a `Map<String,String>`</sub>
 onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
+confirmSignupRequired | `ConfirmSignupRequiredCallback` | <sub>Additional option to decide in runtime if confirmation is required. If not specified, signup will be confirmed by user if onConfirmSignup is specified.</sub>
 confirmSignupKeyboardType| `TextInputType` | <sub>The keyboard type of the confirm signup field</sub>
 onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
