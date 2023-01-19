@@ -190,6 +190,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       ? TextInputAction.done
                       : TextInputAction.next,
               validator: formField.fieldValidator,
+              suggestionsCallback: formField.suggestionsCallback,
             ),
             const SizedBox(
               height: 5,

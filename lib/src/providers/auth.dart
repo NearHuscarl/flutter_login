@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_login/flutter_login.dart';
@@ -26,6 +28,9 @@ typedef BeforeAdditionalFieldsCallback = Future<String?>? Function(SignupData);
 
 /// If the callback returns true, the additional data card is shown
 typedef ProviderNeedsSignUpCallback = Future<bool> Function();
+
+// Callback that returns suggestion for the given input
+typedef SuggestionsCallback = FutureOr<Iterable<String>> Function(String);
 
 /// The result is an error message, callback successes if message is null
 typedef ProviderAuthCallback = Future<String?>? Function();

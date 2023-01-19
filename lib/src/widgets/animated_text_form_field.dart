@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart' as ac;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum TextFieldInertiaDirection {
@@ -45,6 +47,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.onSaved,
     this.autocorrect = false,
     this.autofillHints,
+    this.suggestionsCallback,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -57,6 +60,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final bool enabled;
   final bool autocorrect;
   final Iterable<String>? autofillHints;
+  final SuggestionsCallback? suggestionsCallback;
   final String? labelText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -229,21 +233,60 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Widget textField = TextFormField(
-      cursorColor: theme.primaryColor,
-      controller: widget.controller,
-      focusNode: widget.focusNode,
-      decoration: _getInputDecoration(theme),
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      obscureText: widget.obscureText,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      onSaved: widget.onSaved,
-      validator: widget.validator,
-      enabled: widget.enabled,
-      autocorrect: widget.autocorrect,
-      autofillHints: widget.autofillHints,
-    );
+    Widget textField;
+    if (widget.suggestionsCallback != null) {
+      textField = ac.TypeAheadFormField<String>(
+        textFieldConfiguration: ac.TextFieldConfiguration(
+          controller: widget.controller,
+          cursorColor: theme.primaryColor,
+          focusNode: widget.focusNode,
+          decoration: _getInputDecoration(theme),
+          keyboardType: widget.keyboardType ?? TextInputType.text,
+          textInputAction: widget.textInputAction,
+          obscureText: widget.obscureText,
+          enabled: widget.enabled,
+          autocorrect: widget.autocorrect,
+        ),
+        suggestionsCallback: widget.suggestionsCallback!,
+        itemBuilder: (context, suggestion) {
+          return ListTile(
+            title: Text(suggestion),
+          );
+        },
+        transitionBuilder: (context, suggestionsBox, controller) {
+          return suggestionsBox;
+        },
+        onSuggestionSelected: (suggestion) {
+          widget.controller?.text = suggestion;
+        },
+        validator: widget.validator,
+        onSaved: widget.onSaved,
+        minCharsForSuggestions: 3,
+        suggestionsBoxDecoration: ac.SuggestionsBoxDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            side: BorderSide(color: theme.primaryColor, width: 1.5),
+          ),
+        ),
+        autoFlipDirection: true,
+      );
+    } else {
+      textField = TextFormField(
+        cursorColor: theme.primaryColor,
+        controller: widget.controller,
+        focusNode: widget.focusNode,
+        decoration: _getInputDecoration(theme),
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        obscureText: widget.obscureText,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        onSaved: widget.onSaved,
+        validator: widget.validator,
+        enabled: widget.enabled,
+        autocorrect: widget.autocorrect,
+        autofillHints: widget.autofillHints,
+      );
+    }
 
     if (widget.loadingController != null) {
       textField = ScaleTransition(
