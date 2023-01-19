@@ -269,6 +269,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           ),
         ),
         autoFlipDirection: true,
+        hideOnEmpty: true,
       );
     } else {
       textField = TextFormField(
