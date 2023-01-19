@@ -136,6 +136,7 @@ defaultValue | `String` | The default value of the field, if given the field wil
 fieldValidator | `FormFieldValidator<String>` | A function to validate the field. It should return null on success, or a string with the explanation of the error
 icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
 userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`
+suggestionsCallback | `SuggestionsCallback` | Autocomplete suggestions callback
 
 
 ### LoginProvider
