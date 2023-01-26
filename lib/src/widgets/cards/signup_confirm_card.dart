@@ -1,13 +1,14 @@
 part of auth_card_builder;
 
 class _ConfirmSignupCard extends StatefulWidget {
-  const _ConfirmSignupCard({
+  _ConfirmSignupCard({
     super.key,
     required this.onBack,
     required this.onSubmitCompleted,
     this.loginAfterSignUp = true,
     required this.loadingController,
     required this.keyboardType,
+    this.initialCode,
   });
 
   final bool loginAfterSignUp;
@@ -15,13 +16,14 @@ class _ConfirmSignupCard extends StatefulWidget {
   final VoidCallback onSubmitCompleted;
   final AnimationController loadingController;
   final TextInputType? keyboardType;
+  String? initialCode;
 
   @override
   _ConfirmSignupCardState createState() => _ConfirmSignupCardState();
 }
 
 class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, CodeAutoFill {
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
   // List of animation controller for every field
@@ -29,6 +31,8 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
   var _isSubmitting = false;
   var _code = '';
+
+  final TextEditingController _codeTextController = TextEditingController();
 
   @override
   void initState() {
@@ -38,12 +42,15 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
+
+    listenForCode();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _fieldSubmitController.dispose();
+    cancel();
+    super.dispose();
   }
 
   Future<bool> _submit() async {
@@ -140,6 +147,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       },
       onSaved: (value) => _code = value!,
       keyboardType: widget.keyboardType,
+      controller: _codeTextController,
     );
   }
 
@@ -182,6 +190,23 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
   }
 
   @override
+  void codeUpdated() {
+    final actual = _codeTextController.text;
+    _enterCode(code, actual);
+  }
+
+  void _enterCode(String? code, String actual) {
+    _codeTextController.text = code ?? actual;
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (!_isSubmitting) {
+        _submit();
+      }
+    });
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
@@ -189,6 +214,11 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     final cardWidth = min(deviceSize.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
+
+    if (widget.initialCode != null) {
+      widget.initialCode = null;
+      Future.delayed(Duration(seconds: 1), () => _enterCode(widget.initialCode, ''));
+    }
 
     return FittedBox(
       child: Card(

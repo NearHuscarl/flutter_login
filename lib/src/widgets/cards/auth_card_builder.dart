@@ -1,5 +1,6 @@
 library auth_card_builder;
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 part 'additional_signup_card.dart';
 part 'login_card.dart';
@@ -108,6 +110,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   late Animation<double> _cardOverlayHeightFactorAnimation;
   late Animation<double> _cardOverlaySizeAndOpacityAnimation;
 
+  final SmsAutoFill _smsAutoFill = SmsAutoFill();
+  StreamSubscription<String>? _codeSubscription;
+  String? _initialCode;
+
   @override
   void initState() {
     super.initState();
@@ -185,6 +191,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         ),
       ),
     );
+
+    _smsAutoFill.listenForCode();
+    _codeSubscription = _smsAutoFill.code.listen((code) {
+      _initialCode = code;
+    });
   }
 
   @override
@@ -192,6 +203,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _formLoadingController.dispose();
     _pageController.dispose();
     _routeTransitionController.dispose();
+    _smsAutoFill.unregisterListener();
+    _codeSubscription?.cancel();
     super.dispose();
   }
 
@@ -432,6 +445,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             },
             loginAfterSignUp: widget.loginAfterSignUp,
             keyboardType: widget.confirmSignupKeyboardType,
+            initialCode: _initialCode,
           ),
         );
     }
