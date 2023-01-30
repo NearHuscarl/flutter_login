@@ -666,7 +666,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               ],
             ),
           ),
-          if(!widget.hidePassword) {
           ExpandableContainer(
             backgroundColor: _switchAuthController.isCompleted
                 ? null
@@ -697,7 +696,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                   ),
               ],
             ),
-          ),}
+          ),
           Container(
             padding: Paddings.fromRBL(cardPadding),
             width: cardWidth,
