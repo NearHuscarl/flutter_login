@@ -662,7 +662,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                   _buildPasswordField(textFieldWidth, messages, auth)
                 else
                   SizedBox.fromSize(
-                    size: const Size.fromHeight(10),
+                    size: const Size.fromHeight(0),
                   ),
                 const SizedBox(height: 10),
               ],
@@ -683,14 +683,19 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: _buildConfirmPasswordField(
-                    textFieldWidth,
-                    messages,
-                    auth,
+                if (!widget.hidePassword)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: _buildConfirmPasswordField(
+                      textFieldWidth,
+                      messages,
+                      auth,
+                    ),
+                  )
+                else
+                  SizedBox.fromSize(
+                    size: const Size.fromHeight(0),
                   ),
-                ),
                 for (var e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
