@@ -693,9 +693,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     ),
                   )
                 else
-                  SizedBox.fromSize(
-                    size: const Size.fromHeight(0),
-                  ),
+                  Container(),
                 for (var e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
