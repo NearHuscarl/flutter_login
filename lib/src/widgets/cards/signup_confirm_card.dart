@@ -26,6 +26,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
   // List of animation controller for every field
   late AnimationController _fieldSubmitController;
+  final TextEditingController _codeTextController = TextEditingController();
 
   var _isSubmitting = false;
   var _code = '';
@@ -38,12 +39,15 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
+
+    ConfirmationListeners.instance.register((code) => _enterCode(code, ''));
   }
 
   @override
   void dispose() {
-    super.dispose();
     _fieldSubmitController.dispose();
+    ConfirmationListeners.instance.clear();
+    super.dispose();
   }
 
   Future<bool> _submit() async {
@@ -140,6 +144,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       },
       onSaved: (value) => _code = value!,
       keyboardType: widget.keyboardType,
+      controller: _codeTextController,
     );
   }
 
@@ -179,6 +184,15 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
         child: Text(messages.goBackButton),
       ),
     );
+  }
+
+  void _enterCode(String? code, String actual) {
+    _codeTextController.text = code ?? actual;
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (!_isSubmitting) {
+        _submit();
+      }
+    });
   }
 
   @override

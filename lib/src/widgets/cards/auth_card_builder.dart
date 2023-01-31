@@ -6,6 +6,7 @@ import 'package:another_transformer_page_view/another_transformer_page_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/controller/confirmation_listeners.dart';
 import 'package:flutter_login/src/dart_helper.dart';
 import 'package:flutter_login/src/matrix.dart';
 import 'package:flutter_login/src/paddings.dart';
@@ -435,7 +436,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         );
     }
-    throw IndexError(index, 5);
+    throw IndexError.withLength(index, 5);
   }
 
   @override

@@ -27,6 +27,7 @@ import 'package:sign_in_button/sign_in_button.dart';
 
 export 'package:sign_in_button/src/button_list.dart';
 
+export 'src/controller/confirmation_controller.dart';
 export 'src/models/login_data.dart';
 export 'src/models/login_user_type.dart';
 export 'src/models/signup_data.dart';
