@@ -661,9 +661,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 if (!widget.hidePassword)
                   _buildPasswordField(textFieldWidth, messages, auth)
                 else
-                  SizedBox.fromSize(
-                    size: const Size.fromHeight(0),
-                  ),
+                  Container(),
                 const SizedBox(height: 10),
               ],
             ),
