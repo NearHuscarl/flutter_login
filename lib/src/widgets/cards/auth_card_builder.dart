@@ -88,9 +88,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey _confirmSignUpCardKey = GlobalKey();
 
   static const int _loginPageIndex = 0;
-  static const int _recoveryIndex = 1;
+  static const int _recoveryIndex = 3;
   static const int _additionalSignUpIndex = 2;
-  static const int _confirmSignup = 3;
+  static const int _confirmSignup = 1;
   static const int _confirmRecover = 4;
 
   int _pageIndex = _loginPageIndex;
