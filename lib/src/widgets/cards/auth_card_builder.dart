@@ -89,8 +89,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   static const int _loginPageIndex = 0;
   static const int _recoveryIndex = 1;
-  static const int _additionalSignUpIndex = 3;
-  static const int _confirmSignup = 2;
+  static const int _additionalSignUpIndex = 2;
+  static const int _confirmSignup = 3;
   static const int _confirmRecover = 4;
 
   int _pageIndex = _loginPageIndex;
@@ -346,15 +346,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             requireAdditionalSignUpFields:
                 widget.additionalSignUpFields != null,
             onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
-            onSwitchSignUpAdditionalData: () =>
-                _changeCard(_additionalSignUpIndex),
+            onSwitchSignUpAdditionalData: () => _changeCard(_confirmSignup),
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation(_loginCardKey).then((_) {
                 widget.onSubmitCompleted!();
               });
             },
             requireSignUpConfirmation: auth.onConfirmSignup != null,
-            onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
+            onSwitchConfirmSignup: () => _changeCard(_additionalSignUpIndex),
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
             loginAfterSignUp: widget.loginAfterSignUp,
@@ -394,9 +393,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
             onSubmitCompleted: () {
-              if (auth.onConfirmSignup != null) {
-                _changeCard(_confirmSignup);
-              } else if (widget.loginAfterSignUp) {
+              if (widget.loginAfterSignUp) {
                 _forwardChangeRouteAnimation(_additionalSignUpCardKey)
                     .then((_) {
                   widget.onSubmitCompleted!();
@@ -426,13 +423,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 : _changeCard(_additionalSignUpIndex),
             loadingController: formController,
             onSubmitCompleted: () {
-              if (widget.loginAfterSignUp) {
-                _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
-                  widget.onSubmitCompleted!();
-                });
-              } else {
-                _changeCard(_loginPageIndex);
-              }
+              _changeCard(_additionalSignUpIndex);
             },
             loginAfterSignUp: widget.loginAfterSignUp,
             keyboardType: widget.confirmSignupKeyboardType,

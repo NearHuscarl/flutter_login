@@ -155,9 +155,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       showSuccessToast(
         context,
         messages.flushbarTitleSuccess,
-        messages.signUpSuccess,
-        const Duration(seconds: 4),
+        messages.confirmSignupSuccess,
       );
+
       setState(() => _isSubmitting = false);
       // await _loadingController.reverse();
       widget.onSubmitCompleted.call();
