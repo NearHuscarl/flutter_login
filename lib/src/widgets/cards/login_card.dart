@@ -226,9 +226,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           context,
           messages.flushbarTitleSuccess,
           messages.signUpSuccess,
-          const Duration(seconds: 4),
+          const Duration(seconds: 3),
         );
-        _switchAuthMode();
         return false;
       } else if (widget.requireSignUpConfirmation) {
         widget.onSwitchConfirmSignup();

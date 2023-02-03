@@ -77,7 +77,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       context,
       messages.flushbarTitleSuccess,
       messages.confirmRecoverIntro,
-      const Duration(seconds: 4),
+      const Duration(seconds: 3),
     );
     setState(() => _isSubmitting = false);
     await _fieldSubmitController.reverse();
