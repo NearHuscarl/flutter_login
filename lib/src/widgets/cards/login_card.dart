@@ -244,6 +244,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         setState(() => _isSubmitting = false);
         return false;
       }
+    } else {
+      widget.onSwitchSignUpAdditionalData();
+      showSuccessToast(
+        context,
+        messages.flushbarTitleSuccess,
+        messages.signUpSuccess,
+        const Duration(seconds: 4),
+      );
+      return false;
     }
 
     widget.onSubmitCompleted?.call();
