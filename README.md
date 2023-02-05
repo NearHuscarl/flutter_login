@@ -124,6 +124,7 @@ Enum     |   Description |
 EMAIL | The User Field will be set to be email
 NAME  | The User Field will be set to be username
 PHONE  | The User Field will be set to be phone
+DROPDOWN  | The User Field will be set to be value selected from the dropdown
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 
@@ -136,6 +137,7 @@ defaultValue | `String` | The default value of the field, if given the field wil
 fieldValidator | `FormFieldValidator<String>` | A function to validate the field. It should return null on success, or a string with the explanation of the error
 icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
 userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`
+possibleValues | `List<String>` | If userType=dropdown, then use this as a list of possible values
 
 
 ### LoginProvider

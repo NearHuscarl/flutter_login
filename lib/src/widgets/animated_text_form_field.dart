@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum TextFieldInertiaDirection {
@@ -26,6 +27,7 @@ Interval _getInternalInterval(
 class AnimatedTextFormField extends StatefulWidget {
   const AnimatedTextFormField({
     super.key,
+    this.userType,
     this.interval = const Interval(0.0, 1.0),
     required this.width,
     this.loadingController,
@@ -45,11 +47,13 @@ class AnimatedTextFormField extends StatefulWidget {
     this.onSaved,
     this.autocorrect = false,
     this.autofillHints,
+    this.possibleValues,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
         );
 
+  final LoginUserType? userType;
   final Interval? interval;
   final AnimationController? loadingController;
   final AnimationController? inertiaController;
@@ -69,6 +73,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
   final TextFieldInertiaDirection? inertiaDirection;
+  final List<String>? possibleValues;
 
   @override
   State<AnimatedTextFormField> createState() => _AnimatedTextFormFieldState();
@@ -82,6 +87,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> fieldTranslateAnimation;
   late Animation<double> iconRotationAnimation;
   late Animation<double> iconTranslateAnimation;
+  FocusNode? _focusNode;
 
   @override
   void initState() {
@@ -148,6 +154,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         ),
       );
     }
+
+    _focusNode = widget.focusNode ?? FocusNode();
   }
 
   void _updateSizeAnimation() {
@@ -229,21 +237,50 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Widget textField = TextFormField(
-      cursorColor: theme.primaryColor,
-      controller: widget.controller,
-      focusNode: widget.focusNode,
-      decoration: _getInputDecoration(theme),
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      obscureText: widget.obscureText,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      onSaved: widget.onSaved,
-      validator: widget.validator,
-      enabled: widget.enabled,
-      autocorrect: widget.autocorrect,
-      autofillHints: widget.autofillHints,
-    );
+    Widget textField;
+    if (widget.userType == LoginUserType.dropdown) {
+      textField = DropdownButtonFormField<String>(
+        items: (widget.possibleValues ?? [])
+            .map(
+              (e) =>
+              DropdownMenuItem<String>(
+                value: e,
+                child: Text(e),
+              ),
+        )
+            .toList(),
+        onChanged: (newValue) {
+          if (newValue != null) {
+            widget.controller?.text = newValue;
+          } else {
+            widget.controller?.clear();
+          }
+        },
+        value: (widget.controller?.text.isNotEmpty ?? false)
+            ? widget.controller?.text
+            : null,
+        decoration: _getInputDecoration(theme),
+        onSaved: widget.onSaved,
+        focusNode: _focusNode,
+        validator: widget.validator,
+      );
+    } else {
+      textField = TextFormField(
+        cursorColor: theme.primaryColor,
+        controller: widget.controller,
+        focusNode: _focusNode,
+        decoration: _getInputDecoration(theme),
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        obscureText: widget.obscureText,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        onSaved: widget.onSaved,
+        validator: widget.validator,
+        enabled: widget.enabled,
+        autocorrect: widget.autocorrect,
+        autofillHints: widget.autofillHints,
+      );
+    }
 
     if (widget.loadingController != null) {
       textField = ScaleTransition(

@@ -23,6 +23,9 @@ class UserFormField {
   /// Defaults to LoginUserType.user
   final LoginUserType userType;
 
+  // list of possible values for the dropdown (only makes sense if userType=dropdown)
+  final List<String>? possibleValues;
+
   const UserFormField({
     required this.keyName,
     String? displayName,
@@ -30,5 +33,6 @@ class UserFormField {
     this.icon,
     this.fieldValidator,
     this.userType = LoginUserType.name,
+    this.possibleValues,
   }) : displayName = displayName ?? keyName;
 }

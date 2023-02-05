@@ -174,6 +174,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
               height: 10,
             ),
             AnimatedTextFormField(
+              userType: formField.userType,
               controller: _nameControllers[formField.keyName],
               // interval: _fieldAnimationIntervals[widget.formFields.indexOf(formField)],
               loadingController: widget.loadingController,
@@ -190,6 +191,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       ? TextInputAction.done
                       : TextInputAction.next,
               validator: formField.fieldValidator,
+              possibleValues: formField.possibleValues,
             ),
             const SizedBox(
               height: 5,
