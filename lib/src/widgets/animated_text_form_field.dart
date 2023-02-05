@@ -223,14 +223,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     return InputDecoration(
       labelText: widget.labelText,
       prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
-      suffixIcon: _buildInertiaAnimation(
+      suffixIcon: widget.suffixIcon!= null ? _buildInertiaAnimation(
         widget.loadingController != null
             ? FadeTransition(
                 opacity: suffixIconOpacityAnimation,
                 child: widget.suffixIcon,
               )
             : widget.suffixIcon,
-      ),
+      ) : null,
     );
   }
 
@@ -245,7 +245,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               (e) =>
               DropdownMenuItem<String>(
                 value: e,
-                child: Text(e),
+                child: Text(
+                  e,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
         )
             .toList(),
@@ -263,6 +266,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         onSaved: widget.onSaved,
         focusNode: _focusNode,
         validator: widget.validator,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        isExpanded: true,
       );
     } else {
       textField = TextFormField(
