@@ -268,16 +268,22 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               labelText: 'Search by country name or dial code'),
           keyboardType: widget.keyboardType ?? TextInputType.phone,
           onFieldSubmitted: widget.onFieldSubmitted,
-          onSaved: (pn) => widget.onSaved?.call(pn.phoneNumber),
-          validator: widget.validator,
-          autofillHints: widget.autofillHints,
-          onInputChanged: (phoneNumber) {
+          onSaved: (phoneNumber) {
             if (phoneNumber.phoneNumber == phoneNumber.dialCode) {
               widget.controller?.text = '';
             } else {
               widget.controller?.text = phoneNumber.phoneNumber ?? '';
             }
+            widget.controller?.selection = TextSelection.collapsed(offset: widget.controller?.text.length ?? 0);
+            widget.onSaved?.call(phoneNumber.phoneNumber);
           },
+
+          validator: widget.validator,
+          autofillHints: widget.autofillHints,
+          onInputChanged: (phoneNumber) {
+            widget.controller?.selection = TextSelection.collapsed(offset: widget.controller?.text.length ?? 0);
+          },
+          textFieldController: widget.controller,
           isEnabled: widget.enabled,
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
