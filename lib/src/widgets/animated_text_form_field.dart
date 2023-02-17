@@ -89,6 +89,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> iconTranslateAnimation;
 
   PhoneNumber? _phoneNumberInitialValue;
+  TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -274,16 +275,15 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             } else {
               widget.controller?.text = phoneNumber.phoneNumber ?? '';
             }
-            widget.controller?.selection = TextSelection.collapsed(offset: widget.controller?.text.length ?? 0);
+            _phoneNumberController.selection = TextSelection.collapsed(offset: _phoneNumberController.text.length);
             widget.onSaved?.call(phoneNumber.phoneNumber);
           },
-
           validator: widget.validator,
           autofillHints: widget.autofillHints,
           onInputChanged: (phoneNumber) {
-            widget.controller?.selection = TextSelection.collapsed(offset: widget.controller?.text.length ?? 0);
+            _phoneNumberController.selection = TextSelection.collapsed(offset: _phoneNumberController.text.length);
           },
-          textFieldController: widget.controller,
+          textFieldController: _phoneNumberController,
           isEnabled: widget.enabled,
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
