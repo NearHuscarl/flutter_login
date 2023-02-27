@@ -281,6 +281,12 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           validator: widget.validator,
           autofillHints: widget.autofillHints,
           onInputChanged: (phoneNumber) {
+            if (phoneNumber.phoneNumber != null && phoneNumber.dialCode != null && phoneNumber.phoneNumber!.startsWith('+')) {
+              _phoneNumberController.text = _phoneNumberController.text.replaceAll(
+                RegExp('^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)'),
+                '',
+              );
+            }
             _phoneNumberController.selection = TextSelection.collapsed(offset: _phoneNumberController.text.length);
           },
           textFieldController: _phoneNumberController,
