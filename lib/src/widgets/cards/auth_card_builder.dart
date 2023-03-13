@@ -333,6 +333,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
     final formController = _formLoadingController;
     // if (!_isLoadingFirstTime) formController = _formLoadingController..value = 1.0;
+    Future<bool> requireSignUpConfirmation() async {
+      final confirmSignupRequired = await auth.confirmSignupRequired?.call(
+            LoginData(
+              name: auth.email,
+              password: auth.password,
+            ),
+          ) ?? true;
+      return auth.onConfirmSignup != null && confirmSignupRequired;
+    }
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -354,7 +363,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 widget.onSubmitCompleted!();
               });
             },
-            requireSignUpConfirmation: auth.onConfirmSignup != null,
+            requireSignUpConfirmation: requireSignUpConfirmation,
             onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
@@ -393,8 +402,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loadingController: formController,
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
-            onSubmitCompleted: () {
-              if (auth.onConfirmSignup != null) {
+            onSubmitCompleted: () async {
+              final requireSignupConfirmation = await requireSignUpConfirmation();
+              if (requireSignupConfirmation) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
                 _forwardChangeRouteAnimation(_additionalSignUpCardKey)

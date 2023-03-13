@@ -35,7 +35,7 @@ class _LoginCard extends StatefulWidget {
   final bool hideProvidersTitle;
   final LoginUserType userType;
   final bool requireAdditionalSignUpFields;
-  final bool requireSignUpConfirmation;
+  final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
 
   @override
@@ -228,12 +228,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     if (auth.isSignup) {
+      final requireSignUpConfirmation = await widget.requireSignUpConfirmation();
       if (widget.requireAdditionalSignUpFields) {
         widget.onSwitchSignUpAdditionalData();
         // The login page wil be shown in login mode (used if loginAfterSignUp disabled)
         _switchAuthMode();
         return false;
-      } else if (widget.requireSignUpConfirmation) {
+      } else if (requireSignUpConfirmation) {
         widget.onSwitchConfirmSignup();
         _switchAuthMode();
         return false;
