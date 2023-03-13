@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/dart_helper.dart';
@@ -36,6 +37,7 @@ class AuthCard extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     required this.loadingController,
     this.userValidator,
+    this.validateUserImmediately,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -55,6 +57,7 @@ class AuthCard extends StatefulWidget {
   final EdgeInsets padding;
   final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
+  final bool? validateUserImmediately;
   final FormFieldValidator<String>? passwordValidator;
   final VoidCallback? onSubmit;
   final VoidCallback? onSubmitCompleted;
@@ -339,6 +342,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userType: widget.userType,
             loadingController: formController,
             userValidator: widget.userValidator,
+            validateUserImmediately: widget.validateUserImmediately,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
                 widget.additionalSignUpFields != null,

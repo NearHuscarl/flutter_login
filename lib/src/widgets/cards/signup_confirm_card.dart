@@ -42,8 +42,8 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
   @override
   void dispose() {
-    super.dispose();
     _fieldSubmitController.dispose();
+    super.dispose();
   }
 
   Future<bool> _submit() async {

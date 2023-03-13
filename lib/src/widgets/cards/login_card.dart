@@ -5,6 +5,7 @@ class _LoginCard extends StatefulWidget {
     super.key,
     required this.loadingController,
     required this.userValidator,
+    required this.validateUserImmediately,
     required this.passwordValidator,
     required this.onSwitchRecoveryPassword,
     required this.onSwitchSignUpAdditionalData,
@@ -22,6 +23,7 @@ class _LoginCard extends StatefulWidget {
 
   final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
+  final bool? validateUserImmediately;
   final FormFieldValidator<String>? passwordValidator;
   final VoidCallback onSwitchRecoveryPassword;
   final VoidCallback onSwitchSignUpAdditionalData;
@@ -43,6 +45,8 @@ class _LoginCard extends StatefulWidget {
 class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
+  final _userFieldKey = GlobalKey<FormFieldState>();
+  final _userFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
@@ -111,6 +115,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
       ),
     );
+    
+    _userFocusNode.addListener(() {
+      if (!_userFocusNode.hasFocus && (widget.validateUserImmediately ?? false)) {
+        _userFieldKey.currentState?.validate();
+      }
+    });
   }
 
   void handleLoadingAnimationStatus(AnimationStatus status) {
@@ -125,6 +135,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   @override
   void dispose() {
     widget.loadingController.removeStatusListener(handleLoadingAnimationStatus);
+    _userFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
 
@@ -237,7 +248,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         return false;
       }
     }
-
+    TextInput.finishAutofillContext();
     widget.onSubmitCompleted?.call();
 
     return true;
@@ -317,9 +328,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
       await control?.reverse();
       widget.onSwitchSignUpAdditionalData();
+    } else {
+      widget.onSubmitCompleted!();
     }
-
-    await control?.reverse();widget.onSubmitCompleted!();
+    await control?.reverse();
+    widget.onSubmitCompleted!();
     return true;
   }
 
@@ -329,6 +342,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     Auth auth,
   ) {
     return AnimatedTextFormField(
+      textFormFieldKey: _userFieldKey,
       controller: _nameController,
       width: width,
       loadingController: widget.loadingController,
@@ -341,6 +355,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       prefixIcon: TextFieldUtils.getPrefixIcon(widget.userType),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
+      focusNode: _userFocusNode,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
@@ -522,6 +537,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             button: loginProvider.button,
             callback: loginProvider.callback,
             animated: loginProvider.animated,
+            providerNeedsSignUpCallback: loginProvider.providerNeedsSignUpCallback,
           ),
         );
       } else if (loginProvider.icon != null) {
@@ -532,6 +548,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             button: loginProvider.button,
             callback: loginProvider.callback,
             animated: loginProvider.animated,
+            providerNeedsSignUpCallback: loginProvider.providerNeedsSignUpCallback,
           ),
         );
       }
@@ -669,15 +686,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               top: cardPadding + 10,
             ),
             width: cardWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (widget.introWidget != null) widget.introWidget!,
-                _buildUserField(textFieldWidth, messages, auth),
-                const SizedBox(height: 20),
-                _buildPasswordField(textFieldWidth, messages, auth),
-                const SizedBox(height: 10),
-              ],
+            child: AutofillGroup(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if (widget.introWidget != null) widget.introWidget!,
+                  _buildUserField(textFieldWidth, messages, auth),
+                  const SizedBox(height: 20),
+                  _buildPasswordField(textFieldWidth, messages, auth),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
           ExpandableContainer(

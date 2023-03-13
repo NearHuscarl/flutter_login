@@ -33,6 +33,7 @@ messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the l
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
 userType |   [`LoginUserType`](#LoginUserType)     | <sub>FlutterLogin's user type. If not specified, it will use the default user type as email</sub>
 userValidator |   <sub>`FormFieldValidator<String>`</sub>     | <sub>User field validating logic, add your custom validation here. The default is email validation logic. Expects to return an error message [String] to be display if validation fails or [null] if validation succeeds</sub>
+validateUserImmediately |   <sub>`bool`</sub>     | <sub>Should email be validated after losing focus [true] or after form submissions [false]. Default: [false]</sub>
 passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `userValidator` but for password</sub>
 <sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here</sub>
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
