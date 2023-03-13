@@ -20,7 +20,7 @@ class TextFieldUtils {
       case LoginUserType.name:
         return TextInputType.name;
       case LoginUserType.phone:
-        return TextInputType.number;
+        return TextInputType.phone;
       case LoginUserType.email:
       default:
         return TextInputType.emailAddress;
