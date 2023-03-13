@@ -150,7 +150,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
         onPressed: !_isSubmitting ? _resendCode : null,
         child: Text(
           messages.resendCodeButton,
-          style: theme.textTheme.bodyText2,
+          style: theme.textTheme.bodyMedium,
           textAlign: TextAlign.left,
         ),
       ),
@@ -210,7 +210,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
                   child: Text(
                     messages.confirmSignupIntro,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyText2,
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
                 const SizedBox(height: 20),

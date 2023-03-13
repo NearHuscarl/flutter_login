@@ -339,9 +339,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               name: auth.email,
               password: auth.password,
             ),
-          ) ?? true;
+          ) ??
+          true;
       return auth.onConfirmSignup != null && confirmSignupRequired;
     }
+
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -403,7 +405,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
             onSubmitCompleted: () async {
-              final requireSignupConfirmation = await requireSignUpConfirmation();
+              final requireSignupConfirmation =
+                  await requireSignUpConfirmation();
               if (requireSignupConfirmation) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
@@ -449,7 +452,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         );
     }
-    throw IndexError(index, 5);
+    throw IndexError.withLength(index, 5);
   }
 
   @override

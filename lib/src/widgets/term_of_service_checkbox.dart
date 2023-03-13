@@ -34,7 +34,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
                   Flexible(
                     child: Text(
                       widget.termOfService.text,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -42,8 +42,8 @@ class _TermCheckboxState extends State<TermCheckbox> {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Icon(
                       Icons.open_in_new,
-                      color: Theme.of(context).textTheme.bodyText2!.color,
-                      size: Theme.of(context).textTheme.bodyText2!.fontSize,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                      size: Theme.of(context).textTheme.bodyMedium!.fontSize,
                     ),
                   )
                 ],
@@ -51,7 +51,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
             )
           : Text(
               widget.termOfService.text,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.left,
             ),
       validator: (bool? value) {
@@ -87,7 +87,7 @@ class CheckboxFormField extends FormField<bool> {
                   ? Builder(
                       builder: (BuildContext context) => Text(
                         state.errorText!,
-                        style: TextStyle(color: Theme.of(context).errorColor),
+                        style: TextStyle(color: Theme.of(context).colorScheme.error),
                       ),
                     )
                   : null,
