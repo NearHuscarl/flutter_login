@@ -97,7 +97,7 @@ class _RoundButtonState extends State<RoundButton>
             Text(
               widget.label!,
               style:
-                  theme.textTheme.caption!.copyWith(color: theme.primaryColor),
+                  theme.textTheme.bodySmall!.copyWith(color: theme.primaryColor),
               textAlign: TextAlign.center,
             ),
           ],

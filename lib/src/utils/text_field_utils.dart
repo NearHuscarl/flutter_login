@@ -7,6 +7,10 @@ class TextFieldUtils {
     switch (userType) {
       case LoginUserType.name:
         return AutofillHints.username;
+      case LoginUserType.firstName:
+        return AutofillHints.givenName;
+      case LoginUserType.lastName:
+        return AutofillHints.familyName;
       case LoginUserType.phone:
       case LoginUserType.intlPhone:
         return AutofillHints.telephoneNumber;
@@ -20,9 +24,13 @@ class TextFieldUtils {
     switch (userType) {
       case LoginUserType.name:
         return TextInputType.name;
+      case LoginUserType.firstName:
+      case LoginUserType.lastName:
+      case LoginUserType.text:
+        return TextInputType.text;
       case LoginUserType.phone:
       case LoginUserType.intlPhone:
-        return TextInputType.number;
+        return TextInputType.phone;
       case LoginUserType.email:
       default:
         return TextInputType.emailAddress;
@@ -32,6 +40,8 @@ class TextFieldUtils {
   static Icon getPrefixIcon(LoginUserType userType) {
     switch (userType) {
       case LoginUserType.name:
+      case LoginUserType.firstName:
+      case LoginUserType.lastName:
         return const Icon(FontAwesomeIcons.circleUser);
       case LoginUserType.phone:
       case LoginUserType.intlPhone:
@@ -46,6 +56,10 @@ class TextFieldUtils {
     switch (userType) {
       case LoginUserType.name:
         return "Name";
+      case LoginUserType.firstName:
+        return "First Name";
+      case LoginUserType.lastName:
+        return "Last Name";
       case LoginUserType.phone:
       case LoginUserType.intlPhone:
         return "Phone";

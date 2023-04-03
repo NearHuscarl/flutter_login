@@ -1,10 +1,10 @@
 name: flutter_login
 description: A login widget with login/signup functionalities to help speed up development
-version: 4.1.1
+version: 5.0.0
 repository: https://github.com/NearHuscarl/flutter_login
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.19.0 <3.0.0'
 
 dependencies:
   another_flushbar: ^1.10.29
