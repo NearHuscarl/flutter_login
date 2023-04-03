@@ -93,7 +93,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> iconTranslateAnimation;
 
   PhoneNumber? _phoneNumberInitialValue;
-  TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -168,9 +168,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           final parsed = pnp.PhoneNumber.parse(widget.controller!.value.text);
           if (parsed.isValid()) {
             _phoneNumberInitialValue = PhoneNumber(
-                phoneNumber: parsed.nsn,
-                isoCode: parsed.isoCode.name,
-                dialCode: parsed.countryCode);
+              phoneNumber: parsed.nsn,
+              isoCode: parsed.isoCode.name,
+              dialCode: parsed.countryCode,
+            );
           }
         } on pnp.PhoneNumberException {
           // ignore
@@ -269,8 +270,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           focusNode: widget.focusNode,
           inputDecoration: _getInputDecoration(theme),
           searchBoxDecoration: const InputDecoration(
-              contentPadding: EdgeInsets.only(left: 20),
-              labelText: 'Search by country name or dial code'),
+            contentPadding: EdgeInsets.only(left: 20),
+            labelText: 'Search by country name or dial code',
+          ),
           keyboardType: widget.keyboardType ?? TextInputType.phone,
           onFieldSubmitted: widget.onFieldSubmitted,
           onSaved: (phoneNumber) {
@@ -280,7 +282,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               widget.controller?.text = phoneNumber.phoneNumber ?? '';
             }
             _phoneNumberController.selection = TextSelection.collapsed(
-                offset: _phoneNumberController.text.length);
+              offset: _phoneNumberController.text.length,
+            );
             widget.onSaved?.call(phoneNumber.phoneNumber);
           },
           validator: widget.validator,
@@ -297,15 +300,18 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               );
             }
             _phoneNumberController.selection = TextSelection.collapsed(
-                offset: _phoneNumberController.text.length);
+              offset: _phoneNumberController.text.length,
+            );
           },
           textFieldController: _phoneNumberController,
           isEnabled: widget.enabled,
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
             trailingSpace: false,
-            countryComparator: (c1, c2) => int.parse(c1.dialCode!.substring(1))
-                .compareTo(int.parse(c2.dialCode!.substring(1))),
+            countryComparator: (c1, c2) =>
+                int.parse(c1.dialCode!.substring(1)).compareTo(
+              int.parse(c2.dialCode!.substring(1)),
+            ),
           ),
           spaceBetweenSelectorAndTextField: 0,
           initialValue: _phoneNumberInitialValue,
