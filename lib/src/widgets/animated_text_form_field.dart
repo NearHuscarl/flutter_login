@@ -295,7 +295,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               _phoneNumberController.text =
                   _phoneNumberController.text.replaceAll(
                 RegExp(
-                    '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)'),
+                  '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)',
+                ),
                 '',
               );
             }
