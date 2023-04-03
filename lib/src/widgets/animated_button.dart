@@ -138,14 +138,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
   /// sets width and size animation
   void _updateWidth() {
     final theme = Theme.of(context);
-    final fontSize = theme.textTheme.button!.fontSize!;
+    final fontSize = theme.textTheme.labelLarge!.fontSize!;
     final renderParagraph = RenderParagraph(
       TextSpan(
         text: widget.text,
         style: TextStyle(
           fontSize: fontSize,
-          fontWeight: theme.textTheme.button!.fontWeight,
-          letterSpacing: theme.textTheme.button!.letterSpacing,
+          fontWeight: theme.textTheme.labelLarge!.fontWeight,
+          letterSpacing: theme.textTheme.labelLarge!.letterSpacing,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -178,7 +178,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       opacity: _textOpacityAnimation,
       child: AnimatedText(
         text: widget.text,
-        style: theme.textTheme.button,
+        style: theme.textTheme.labelLarge,
       ),
     );
   }

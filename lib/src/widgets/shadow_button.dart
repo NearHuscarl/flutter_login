@@ -48,7 +48,7 @@ class ShadowButton extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text!,
-              style: TextStyle(color: theme.primaryTextTheme.button!.color),
+              style: TextStyle(color: theme.primaryTextTheme.labelLarge!.color),
               overflow: TextOverflow.visible,
               softWrap: false,
             ),

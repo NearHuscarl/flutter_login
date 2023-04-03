@@ -25,6 +25,7 @@ class UserFormField {
 
   // Autocomplete suggestions callback for the user form field
   final SuggestionsCallback? suggestionsCallback;
+  final InlineSpan? tooltip;
 
   const UserFormField({
     required this.keyName,
@@ -34,5 +35,6 @@ class UserFormField {
     this.fieldValidator,
     this.userType = LoginUserType.name,
     this.suggestionsCallback,
+    this.tooltip,
   }) : displayName = displayName ?? keyName;
 }

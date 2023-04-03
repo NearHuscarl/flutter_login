@@ -191,6 +191,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       : TextInputAction.next,
               validator: formField.fieldValidator,
               suggestionsCallback: formField.suggestionsCallback,
+              tooltip: formField.tooltip,
             ),
             const SizedBox(
               height: 5,
@@ -268,7 +269,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                     messages.additionalSignUpFormDescription,
                     key: kRecoverPasswordIntroKey,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyText2,
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
                 _buildFields(textFieldWidth),

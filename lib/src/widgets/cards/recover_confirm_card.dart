@@ -180,7 +180,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
                 Text(
                   messages.confirmRecoverIntro,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2,
+                  style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 20),
                 _buildVerificationCodeField(textFieldWidth, messages),

@@ -22,6 +22,7 @@ Property |   Type     | Description
 -------- |------------| ---------------
 onSignup |   `AuthCallback`     | <sub>Called when the user hit the submit button when in sign up mode. It receives a `SignupData` object, with name, password and, if `additionalSignUpFields` is not null, the additional fields filled in by the user in a `Map<String,String>`</sub>
 onConfirmSignup | `ConfirmSignupCallback` | <sub>Called when the user hits the submit button when confirming signup. If not specified, signup will not be confirmed by user.</sub>
+confirmSignupRequired | `ConfirmSignupRequiredCallback` | <sub>Additional option to decide in runtime if confirmation is required. If not specified, signup will be confirmed by user if onConfirmSignup is specified.</sub>
 confirmSignupKeyboardType| `TextInputType` | <sub>The keyboard type of the confirm signup field</sub>
 onResendCode | `AuthCallback` | <sub>Called when the user hits the resend code button when confirming signup. Only required when onConfirmSignup is provided.</sub>
 onLogin |   `AuthCallback`     | <sub>Called when the user hit the submit button when in login mode</sub>
@@ -33,6 +34,7 @@ messages |   [`LoginMessages`](#LoginMessages)     | <sub>Describes all of the l
 theme |   [`LoginTheme`](#LoginTheme)     | <sub>FlutterLogin's theme. If not specified, it will use the default theme as shown in the demo gifs and use the colorsheme in the closest `Theme` widget</sub>
 userType |   [`LoginUserType`](#LoginUserType)     | <sub>FlutterLogin's user type. If not specified, it will use the default user type as email</sub>
 userValidator |   <sub>`FormFieldValidator<String>`</sub>     | <sub>User field validating logic, add your custom validation here. The default is email validation logic. Expects to return an error message [String] to be display if validation fails or [null] if validation succeeds</sub>
+validateUserImmediately |   <sub>`bool`</sub>     | <sub>Should email be validated after losing focus [true] or after form submissions [false]. Default: [false]</sub>
 passwordValidator | <sub>`FormFieldValidator<String>`</sub>     | <sub>Same as `userValidator` but for password</sub>
 <sub>onSubmitAnimationCompleted</sub> |   `Function`     | <sub>Called after the submit animation's completed. Put your route transition logic here</sub>
 logoTag |   `String`     | <sub>`Hero` tag for logo image. If not specified, it will simply fade out when changing route</sub>
@@ -123,7 +125,10 @@ Enum     |   Description |
 -------- |---------------|
 EMAIL | The User Field will be set to be email
 NAME  | The User Field will be set to be username
+FIRSTNAME  | The User Field will be set to be first name
+LASTNAME  | The User Field will be set to be last name
 PHONE  | The User Field will be set to be phone
+TEXT  | The User Field will be set to be text
 
 [LoginUserType] will change how the user field [TextField] behaves. Autofills and Keyboard Type will be adjusted automatically for the type of user that you pass.
 
@@ -137,6 +142,7 @@ fieldValidator | `FormFieldValidator<String>` | A function to validate the field
 icon | `Icon?` | The icon shown on the left of the field. Defaults to the user icon when not provided
 userType | `LoginUserType` | The LoginUserType of the form. The right keyboard and suggestions will be shown accordingly. Defaults to `LoginUserType.user`
 suggestionsCallback | `SuggestionsCallback` | Autocomplete suggestions callback
+tooltip | `InlineSpan` | Additional description for that field
 
 
 ### LoginProvider
