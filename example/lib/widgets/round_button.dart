@@ -96,8 +96,8 @@ class _RoundButtonState extends State<RoundButton>
             const SizedBox(height: 10),
             Text(
               widget.label!,
-              style:
-                  theme.textTheme.bodySmall!.copyWith(color: theme.primaryColor),
+              style: theme.textTheme.bodySmall!
+                  .copyWith(color: theme.primaryColor),
               textAlign: TextAlign.center,
             ),
           ],
