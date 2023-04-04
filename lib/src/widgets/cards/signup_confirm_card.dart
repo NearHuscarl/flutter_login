@@ -16,7 +16,7 @@ class _ConfirmSignupCard extends StatefulWidget {
   final VoidCallback onSubmitCompleted;
   final AnimationController loadingController;
   final TextInputType? keyboardType;
-  String? initialCode;
+  final String? initialCode;
 
   @override
   _ConfirmSignupCardState createState() => _ConfirmSignupCardState();
@@ -216,7 +216,9 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     if (widget.initialCode != null) {
       widget.initialCode = null;
       Future.delayed(
-          Duration(seconds: 1), () => _enterCode(widget.initialCode, ''));
+        const Duration(seconds: 1),
+        () => _enterCode(widget.initialCode, ''),
+      );
     }
 
     return FittedBox(
