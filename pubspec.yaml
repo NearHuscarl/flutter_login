@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.0.0
+  intl_phone_number_input: ^0.7.2
+  phone_numbers_parser: ^7.0.0+1
   provider: ^6.0.1
   quiver: ^3.0.1
   sign_in_button: ^3.0.0

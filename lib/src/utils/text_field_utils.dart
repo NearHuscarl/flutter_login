@@ -12,6 +12,7 @@ class TextFieldUtils {
       case LoginUserType.lastName:
         return AutofillHints.familyName;
       case LoginUserType.phone:
+      case LoginUserType.intlPhone:
         return AutofillHints.telephoneNumber;
       case LoginUserType.email:
       default:
@@ -28,6 +29,7 @@ class TextFieldUtils {
       case LoginUserType.text:
         return TextInputType.text;
       case LoginUserType.phone:
+      case LoginUserType.intlPhone:
         return TextInputType.phone;
       case LoginUserType.email:
       default:
@@ -42,6 +44,7 @@ class TextFieldUtils {
       case LoginUserType.lastName:
         return const Icon(FontAwesomeIcons.circleUser);
       case LoginUserType.phone:
+      case LoginUserType.intlPhone:
         return const Icon(FontAwesomeIcons.squarePhoneFlip);
       case LoginUserType.email:
       default:
@@ -58,6 +61,7 @@ class TextFieldUtils {
       case LoginUserType.lastName:
         return "Last Name";
       case LoginUserType.phone:
+      case LoginUserType.intlPhone:
         return "Phone";
       case LoginUserType.email:
       default:

@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
 
 enum TextFieldInertiaDirection {
   left,
@@ -29,6 +32,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.textFormFieldKey,
     this.interval = const Interval(0.0, 1.0),
     required this.width,
+    this.userType,
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -57,6 +61,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final AnimationController? loadingController;
   final AnimationController? inertiaController;
   final double width;
+  final LoginUserType? userType;
   final bool enabled;
   final bool autocorrect;
   final Iterable<String>? autofillHints;
@@ -86,6 +91,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> fieldTranslateAnimation;
   late Animation<double> iconRotationAnimation;
   late Animation<double> iconTranslateAnimation;
+
+  PhoneNumber? _phoneNumberInitialValue;
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -151,6 +159,26 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           reverseCurve: Curves.easeIn,
         ),
       );
+    }
+
+    if (widget.userType == LoginUserType.intlPhone) {
+      _phoneNumberInitialValue = PhoneNumber(isoCode: 'US', dialCode: '+1');
+      if (widget.controller?.value.text != null) {
+        try {
+          final parsed = pnp.PhoneNumber.parse(widget.controller!.value.text);
+          if (parsed.isValid()) {
+            _phoneNumberInitialValue = PhoneNumber(
+              phoneNumber: parsed.nsn,
+              isoCode: parsed.isoCode.name,
+              dialCode: parsed.countryCode,
+            );
+          }
+        } on pnp.PhoneNumberException {
+          // ignore
+        } finally {
+          widget.controller!.text = '';
+        }
+      }
     }
   }
 
@@ -233,22 +261,80 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Widget textField = TextFormField(
-      key: widget.textFormFieldKey,
-      cursorColor: theme.primaryColor,
-      controller: widget.controller,
-      focusNode: widget.focusNode,
-      decoration: _getInputDecoration(theme),
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      obscureText: widget.obscureText,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      onSaved: widget.onSaved,
-      validator: widget.validator,
-      enabled: widget.enabled,
-      autocorrect: widget.autocorrect,
-      autofillHints: widget.autofillHints,
-    );
+    Widget textField;
+    if (widget.userType == LoginUserType.intlPhone) {
+      textField = Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: InternationalPhoneNumberInput(
+          cursorColor: theme.primaryColor,
+          focusNode: widget.focusNode,
+          inputDecoration: _getInputDecoration(theme),
+          searchBoxDecoration: const InputDecoration(
+            contentPadding: EdgeInsets.only(left: 20),
+            labelText: 'Search by country name or dial code',
+          ),
+          keyboardType: widget.keyboardType ?? TextInputType.phone,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          onSaved: (phoneNumber) {
+            if (phoneNumber.phoneNumber == phoneNumber.dialCode) {
+              widget.controller?.text = '';
+            } else {
+              widget.controller?.text = phoneNumber.phoneNumber ?? '';
+            }
+            _phoneNumberController.selection = TextSelection.collapsed(
+              offset: _phoneNumberController.text.length,
+            );
+            widget.onSaved?.call(phoneNumber.phoneNumber);
+          },
+          validator: widget.validator,
+          autofillHints: widget.autofillHints,
+          onInputChanged: (phoneNumber) {
+            if (phoneNumber.phoneNumber != null &&
+                phoneNumber.dialCode != null &&
+                phoneNumber.phoneNumber!.startsWith('+')) {
+              _phoneNumberController.text =
+                  _phoneNumberController.text.replaceAll(
+                RegExp(
+                  '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)',
+                ),
+                '',
+              );
+            }
+            _phoneNumberController.selection = TextSelection.collapsed(
+              offset: _phoneNumberController.text.length,
+            );
+          },
+          textFieldController: _phoneNumberController,
+          isEnabled: widget.enabled,
+          selectorConfig: SelectorConfig(
+            selectorType: PhoneInputSelectorType.DIALOG,
+            trailingSpace: false,
+            countryComparator: (c1, c2) =>
+                int.parse(c1.dialCode!.substring(1)).compareTo(
+              int.parse(c2.dialCode!.substring(1)),
+            ),
+          ),
+          spaceBetweenSelectorAndTextField: 0,
+          initialValue: _phoneNumberInitialValue,
+        ),
+      );
+    } else {
+      textField = TextFormField(
+        cursorColor: theme.primaryColor,
+        controller: widget.controller,
+        focusNode: widget.focusNode,
+        decoration: _getInputDecoration(theme),
+        keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
+        obscureText: widget.obscureText,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        onSaved: widget.onSaved,
+        validator: widget.validator,
+        enabled: widget.enabled,
+        autocorrect: widget.autocorrect,
+        autofillHints: widget.autofillHints,
+      );
+    }
 
     if (widget.tooltip != null) {
       final tooltipKey = GlobalKey<TooltipState>();
