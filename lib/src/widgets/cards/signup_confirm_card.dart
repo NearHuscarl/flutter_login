@@ -204,8 +204,6 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -217,7 +215,8 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
     if (widget.initialCode != null) {
       widget.initialCode = null;
-      Future.delayed(Duration(seconds: 1), () => _enterCode(widget.initialCode, ''));
+      Future.delayed(
+          Duration(seconds: 1), () => _enterCode(widget.initialCode, ''));
     }
 
     return FittedBox(
