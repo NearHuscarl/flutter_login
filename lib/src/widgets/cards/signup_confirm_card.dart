@@ -1,7 +1,7 @@
 part of auth_card_builder;
 
 class _ConfirmSignupCard extends StatefulWidget {
-  _ConfirmSignupCard({
+  const _ConfirmSignupCard({
     super.key,
     required this.onBack,
     required this.onSubmitCompleted,
@@ -31,6 +31,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
   var _isSubmitting = false;
   var _code = '';
+  String? initialCode;
 
   final TextEditingController _codeTextController = TextEditingController();
 
@@ -42,7 +43,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
-
+    initialCode = widget.initialCode;
     listenForCode();
   }
 
@@ -213,11 +214,11 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 
-    if (widget.initialCode != null) {
-      widget.initialCode = null;
+    if (initialCode != null) {
+      initialCode = null;
       Future.delayed(
         const Duration(seconds: 1),
-        () => _enterCode(widget.initialCode, ''),
+        () => _enterCode(initialCode!, ''),
       );
     }
 
