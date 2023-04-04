@@ -312,10 +312,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       if (auth.beforeAdditionalFieldsCallback != null) {
         error = await auth.beforeAdditionalFieldsCallback!(
           SignupData.fromSignupForm(
-              name: auth.email,
-              password: auth.password,
-              termsOfService: auth.getTermsOfServiceResults(),
-              additionalSignupData: auth.additionalSignupData,),
+            name: auth.email,
+            password: auth.password,
+            termsOfService: auth.getTermsOfServiceResults(),
+            additionalSignupData: auth.additionalSignupData,
+          ),
         );
         await control?.reverse();
         if (!DartHelper.isNullOrEmpty(error)) {
