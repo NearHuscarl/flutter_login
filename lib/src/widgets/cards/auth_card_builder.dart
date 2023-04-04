@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/constants.dart';
 import 'package:flutter_login/src/dart_helper.dart';
@@ -38,6 +39,7 @@ class AuthCard extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     required this.loadingController,
     this.userValidator,
+    this.validateUserImmediately,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -57,6 +59,7 @@ class AuthCard extends StatefulWidget {
   final EdgeInsets padding;
   final AnimationController loadingController;
   final FormFieldValidator<String>? userValidator;
+  final bool? validateUserImmediately;
   final FormFieldValidator<String>? passwordValidator;
   final VoidCallback? onSubmit;
   final VoidCallback? onSubmitCompleted;
@@ -343,6 +346,17 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final auth = Provider.of<Auth>(context, listen: false);
     final formController = _formLoadingController;
     // if (!_isLoadingFirstTime) formController = _formLoadingController..value = 1.0;
+    Future<bool> requireSignUpConfirmation() async {
+      final confirmSignupRequired = await auth.confirmSignupRequired?.call(
+            LoginData(
+              name: auth.email,
+              password: auth.password,
+            ),
+          ) ??
+          true;
+      return auth.onConfirmSignup != null && confirmSignupRequired;
+    }
+
     switch (index) {
       case _loginPageIndex:
         return _buildLoadingAnimator(
@@ -352,6 +366,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             userType: widget.userType,
             loadingController: formController,
             userValidator: widget.userValidator,
+            validateUserImmediately: widget.validateUserImmediately,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
                 widget.additionalSignUpFields != null,
@@ -363,7 +378,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 widget.onSubmitCompleted!();
               });
             },
-            requireSignUpConfirmation: auth.onConfirmSignup != null,
+            requireSignUpConfirmation: requireSignUpConfirmation,
             onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
             hideSignUpButton: widget.hideSignUpButton,
             hideForgotPasswordButton: widget.hideForgotPasswordButton,
@@ -402,8 +417,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loadingController: formController,
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
-            onSubmitCompleted: () {
-              if (auth.onConfirmSignup != null) {
+            onSubmitCompleted: () async {
+              final requireSignupConfirmation =
+                  await requireSignUpConfirmation();
+              if (requireSignupConfirmation) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
                 _forwardChangeRouteAnimation(_additionalSignUpCardKey)
@@ -449,7 +466,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           ),
         );
     }
-    throw IndexError(index, 5);
+    throw IndexError.withLength(index, 5);
   }
 
   @override

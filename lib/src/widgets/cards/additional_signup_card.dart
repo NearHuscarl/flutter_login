@@ -174,6 +174,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
               height: 10,
             ),
             AnimatedTextFormField(
+              userType: formField.userType,
               controller: _nameControllers[formField.keyName],
               // interval: _fieldAnimationIntervals[widget.formFields.indexOf(formField)],
               loadingController: widget.loadingController,
@@ -190,6 +191,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       ? TextInputAction.done
                       : TextInputAction.next,
               validator: formField.fieldValidator,
+              tooltip: formField.tooltip,
             ),
             const SizedBox(
               height: 5,
@@ -267,7 +269,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                     messages.additionalSignUpFormDescription,
                     key: kRecoverPasswordIntroKey,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyText2,
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
                 _buildFields(textFieldWidth),

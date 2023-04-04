@@ -23,6 +23,8 @@ class UserFormField {
   /// Defaults to LoginUserType.user
   final LoginUserType userType;
 
+  final InlineSpan? tooltip;
+
   const UserFormField({
     required this.keyName,
     String? displayName,
@@ -30,5 +32,6 @@ class UserFormField {
     this.icon,
     this.fieldValidator,
     this.userType = LoginUserType.name,
+    this.tooltip,
   }) : displayName = displayName ?? keyName;
 }
