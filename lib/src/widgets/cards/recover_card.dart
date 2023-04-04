@@ -90,6 +90,7 @@ class _RecoverCardState extends State<_RecoverCard>
     return AnimatedTextFormField(
       controller: _nameController,
       loadingController: widget.loadingController,
+      userType: widget.userType,
       width: width,
       labelText: messages.userHint,
       prefixIcon: const Icon(FontAwesomeIcons.solidCircleUser),
