@@ -218,7 +218,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       initialCode = null;
       Future.delayed(
         const Duration(seconds: 1),
-        () => _enterCode(initialCode!, ''),
+        () => _enterCode(initialCode, ''),
       );
     }
 
