@@ -612,10 +612,12 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.userValidator(
-      invalidUser.name,
-      AuthMode.signup,
-    ));
+    verifyNever(
+      mockCallback.userValidator(
+        invalidUser.name,
+        AuthMode.signup,
+      ),
+    );
     verifyNever(
       mockCallback.passwordValidator(
         invalidUser.password,
