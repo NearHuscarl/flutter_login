@@ -424,7 +424,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       case _confirmRecover:
         return _ConfirmRecoverCard(
           key: _confirmRecoverCardKey,
-          passwordValidator: (s) => widget.passwordValidator!.call(s, AuthMode.signup),
+          passwordValidator: (s) =>
+              widget.passwordValidator!.call(s, AuthMode.signup),
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
         );

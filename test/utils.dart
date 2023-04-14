@@ -29,10 +29,13 @@ List<LoginData> loginStubCallback(MockCallback mockCallback) {
   final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
 
   when(mockCallback.userValidator(user.name, AuthMode.login)).thenReturn(null);
-  when(mockCallback.userValidator('invalid-name', AuthMode.login)).thenReturn('Invalid!');
+  when(mockCallback.userValidator('invalid-name', AuthMode.login))
+      .thenReturn('Invalid!');
 
-  when(mockCallback.passwordValidator(user.password, AuthMode.login)).thenReturn(null);
-  when(mockCallback.passwordValidator('invalid-name', AuthMode.login)).thenReturn('Invalid!');
+  when(mockCallback.passwordValidator(user.password, AuthMode.login))
+      .thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name', AuthMode.login))
+      .thenReturn('Invalid!');
 
   when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
@@ -50,10 +53,13 @@ List<SignupData> signupStubCallback(MockCallback mockCallback) {
       SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
 
   when(mockCallback.userValidator(user.name, AuthMode.signup)).thenReturn(null);
-  when(mockCallback.userValidator('invalid-name', AuthMode.signup)).thenReturn('Invalid!');
+  when(mockCallback.userValidator('invalid-name', AuthMode.signup))
+      .thenReturn('Invalid!');
 
-  when(mockCallback.passwordValidator(user.password, AuthMode.signup)).thenReturn(null);
-  when(mockCallback.passwordValidator('invalid-name', AuthMode.signup)).thenReturn('Invalid!');
+  when(mockCallback.passwordValidator(user.password, AuthMode.signup))
+      .thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name', AuthMode.signup))
+      .thenReturn('Invalid!');
 
   when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))

@@ -613,7 +613,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyNever(mockCallback.userValidator(invalidUser.name, AuthMode.signup));
-    verifyNever(mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
+    verifyNever(
+        mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 
@@ -697,11 +698,13 @@ void main() {
             additionalSignupFields: <UserFormField>[
               UserFormField(
                 keyName: 'Name',
-                fieldValidator: (s) => mockCallback.userValidator(s, AuthMode.signup),
+                fieldValidator: (s) =>
+                    mockCallback.userValidator(s, AuthMode.signup),
               ),
               UserFormField(
                 keyName: 'Surname',
-                fieldValidator: (s) => mockCallback.userValidator(s, AuthMode.signup),
+                fieldValidator: (s) =>
+                    mockCallback.userValidator(s, AuthMode.signup),
               ),
             ],
           ),
@@ -729,7 +732,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyNever(mockCallback.userValidator(invalidUser.name, AuthMode.signup));
-    verifyNever(mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
+    verifyNever(
+        mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 

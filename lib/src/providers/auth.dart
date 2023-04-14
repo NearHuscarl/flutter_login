@@ -46,7 +46,8 @@ typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
 /// Validator that also provides auth mode to the function, so that client code
 /// can execute different validation for login/signup
-typedef AuthModeAwareValidator<T> = String? Function(T? value, AuthMode authMode);
+typedef AuthModeAwareValidator<T> = String? Function(
+    T? value, AuthMode authMode);
 
 class Auth with ChangeNotifier {
   Auth({
