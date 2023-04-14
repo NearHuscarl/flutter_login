@@ -22,9 +22,9 @@ class _LoginCard extends StatefulWidget {
   });
 
   final AnimationController loadingController;
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
   final bool? validateUserImmediately;
-  final FormFieldValidator<String>? passwordValidator;
+  final AuthModeAwareValidator<String>? passwordValidator;
   final VoidCallback onSwitchRecoveryPassword;
   final VoidCallback onSwitchSignUpAdditionalData;
   final VoidCallback onSwitchConfirmSignup;
@@ -363,7 +363,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
       },
-      validator: widget.userValidator,
+      validator: (s) => widget.userValidator?.call(s, auth.mode),
       onSaved: (value) => auth.email = value!,
       enabled: !_isSubmitting,
     );
@@ -392,7 +392,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
         }
       },
-      validator: widget.passwordValidator,
+      validator: (String? value) => widget.passwordValidator?.call(value, auth.mode),
       onSaved: (value) => auth.password = value!,
       enabled: !_isSubmitting,
     );

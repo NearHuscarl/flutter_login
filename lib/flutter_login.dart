@@ -346,14 +346,14 @@ class FlutterLogin extends StatefulWidget {
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
 
   /// Should email be validated after losing focus [true] or after form
   /// submissions [false]. Default: [false]
   final bool? validateUserImmediately;
 
   /// Same as [userValidator] but for password
-  final FormFieldValidator<String>? passwordValidator;
+  final AuthModeAwareValidator<String>? passwordValidator;
 
   /// Called after the submit animation's completed. Put your route transition
   /// logic here. Recommend to use with [logoTag] and [titleTag]
@@ -448,14 +448,14 @@ class FlutterLogin extends StatefulWidget {
   /// A widget that can be placed on top of the loginCard.
   final Widget? headerWidget;
 
-  static String? defaultEmailValidator(String? value) {
+  static String? defaultEmailValidator(String? value, AuthMode authMode) {
     if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
     }
     return null;
   }
 
-  static String? defaultPasswordValidator(String? value) {
+  static String? defaultPasswordValidator(String? value, AuthMode authMode) {
     if (value == null || value.isEmpty || value.length <= 2) {
       return 'Password is too short!';
     }

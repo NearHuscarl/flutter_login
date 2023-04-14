@@ -56,9 +56,9 @@ class AuthCard extends StatefulWidget {
 
   final EdgeInsets padding;
   final AnimationController loadingController;
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
   final bool? validateUserImmediately;
-  final FormFieldValidator<String>? passwordValidator;
+  final AuthModeAwareValidator<String>? passwordValidator;
   final VoidCallback? onSubmit;
   final VoidCallback? onSubmitCompleted;
   final bool hideForgotPasswordButton;
@@ -424,7 +424,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       case _confirmRecover:
         return _ConfirmRecoverCard(
           key: _confirmRecoverCardKey,
-          passwordValidator: widget.passwordValidator!,
+          passwordValidator: (s) => widget.passwordValidator!.call(s, AuthMode.signup),
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
         );

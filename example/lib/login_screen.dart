@@ -225,13 +225,13 @@ class LoginScreen extends StatelessWidget {
       //     // shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(55.0)),
       //   ),
       // ),
-      userValidator: (value) {
+      userValidator: (value, _) {
         if (!value!.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";
         }
         return null;
       },
-      passwordValidator: (value) {
+      passwordValidator: (value, _) {
         if (value!.isEmpty) {
           return 'Password is empty';
         }
