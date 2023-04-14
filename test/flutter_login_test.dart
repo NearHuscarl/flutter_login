@@ -612,9 +612,16 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.userValidator(invalidUser.name, AuthMode.signup));
+    verifyNever(mockCallback.userValidator(
+      invalidUser.name,
+      AuthMode.signup,
+    ));
     verifyNever(
-        mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
+      mockCallback.passwordValidator(
+        invalidUser.password,
+        AuthMode.signup,
+      ),
+    );
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 
@@ -731,9 +738,18 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.userValidator(invalidUser.name, AuthMode.signup));
     verifyNever(
-        mockCallback.passwordValidator(invalidUser.password, AuthMode.signup));
+      mockCallback.userValidator(
+        invalidUser.name,
+        AuthMode.signup,
+      ),
+    );
+    verifyNever(
+      mockCallback.passwordValidator(
+        invalidUser.password,
+        AuthMode.signup,
+      ),
+    );
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 

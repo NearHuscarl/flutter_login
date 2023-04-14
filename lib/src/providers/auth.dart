@@ -47,7 +47,9 @@ typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 /// Validator that also provides auth mode to the function, so that client code
 /// can execute different validation for login/signup
 typedef AuthModeAwareValidator<T> = String? Function(
-    T? value, AuthMode authMode);
+  T? value,
+  AuthMode authMode,
+);
 
 class Auth with ChangeNotifier {
   Auth({
@@ -85,19 +87,23 @@ class Auth with ChangeNotifier {
 
   /// Used to decide if the login/signup comes from a provider or normal login
   AuthType get authType => _authType;
+
   set authType(AuthType authType) {
     _authType = authType;
     notifyListeners();
   }
 
   AuthMode _mode = AuthMode.login;
+
   AuthMode get mode => _mode;
+
   set mode(AuthMode value) {
     _mode = value;
     notifyListeners();
   }
 
   bool get isLogin => _mode == AuthMode.login;
+
   bool get isSignup => _mode == AuthMode.signup;
   int currentCardIndex = 0;
 
@@ -115,28 +121,36 @@ class Auth with ChangeNotifier {
   }
 
   String _email = '';
+
   String get email => _email;
+
   set email(String email) {
     _email = email;
     notifyListeners();
   }
 
   String _password = '';
+
   String get password => _password;
+
   set password(String password) {
     _password = password;
     notifyListeners();
   }
 
   String _confirmPassword = '';
+
   String get confirmPassword => _confirmPassword;
+
   set confirmPassword(String confirmPassword) {
     _confirmPassword = confirmPassword;
     notifyListeners();
   }
 
   Map<String, String>? _additionalSignupData;
+
   Map<String, String>? get additionalSignupData => _additionalSignupData;
+
   set additionalSignupData(Map<String, String>? additionalSignupData) {
     _additionalSignupData = additionalSignupData;
     notifyListeners();
