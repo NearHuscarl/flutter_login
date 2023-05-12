@@ -409,8 +409,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return Row(
       children: [
         Checkbox(
-          checkColor: Colors.white,
-          //fillColor: MaterialStateProperty.resolveWith(getColor),
           value: auth.rememberMe,
           onChanged: (bool? value) {
             setState(() {
