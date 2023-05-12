@@ -63,6 +63,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       LoginData(
         name: auth.email,
         password: auth.password,
+        rememberMe: auth.rememberMe,
       ),
     );
 

@@ -19,6 +19,7 @@ class _LoginCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.introWidget,
+    this.showRememberMe = false,
   });
 
   final AnimationController loadingController;
@@ -37,6 +38,7 @@ class _LoginCard extends StatefulWidget {
   final bool requireAdditionalSignUpFields;
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
+  final bool showRememberMe;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -183,6 +185,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         LoginData(
           name: auth.email,
           password: auth.password,
+          rememberMe: auth.rememberMe,
         ),
       );
     } else {
@@ -397,6 +400,65 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       enabled: !_isSubmitting,
     );
   }
+
+  Widget _buildRememberMe(
+    double width,
+    LoginMessages messages,
+    Auth auth,
+  ) {
+    return Row(
+      children: [
+        Checkbox(
+          checkColor: Colors.white,
+          //fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: auth.rememberMe,
+          onChanged: (bool? value) {
+            setState(() {
+              auth.rememberMe = value!;
+            });
+          },
+        ),
+        const Text('Remember me'),
+      ],
+    );
+  }
+
+  /*
+    return CheckboxListTile(
+      title: const Text('Remember me'),
+      controlAffinity: ListTileControlAffinity.leading, 
+      checkColor: Colors.white,
+      //fillColor: MaterialStateProperty.resolveWith(getColor),
+      value: auth.rememberMe,
+      onChanged: (bool? value) {
+        setState(() {
+          auth.rememberMe = value;
+        });
+      },*/
+
+  /*return AnimatedTextFormField(
+      textFormFieldKey: _userFieldKey,
+      userType: widget.userType,
+      controller: _nameController,
+      width: width,
+      loadingController: widget.loadingController,
+      interval: _nameTextFieldLoadingAnimationInterval,
+      labelText:
+          messages.userHint ?? TextFieldUtils.getLabelText(widget.userType),
+      autofillHints: _isSubmitting
+          ? null
+          : [TextFieldUtils.getAutofillHints(widget.userType)],
+      prefixIcon: TextFieldUtils.getPrefixIcon(widget.userType),
+      keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
+      textInputAction: TextInputAction.next,
+      focusNode: _userFocusNode,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      validator: widget.userValidator,
+      onSaved: (value) => auth.email = value!,
+      enabled: !_isSubmitting,
+    );*/
 
   Widget _buildConfirmPasswordField(
     double width,
@@ -701,6 +763,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                   const SizedBox(height: 20),
                   _buildPasswordField(textFieldWidth, messages, auth),
                   const SizedBox(height: 10),
+                  if (widget.showRememberMe)
+                    _buildRememberMe(textFieldWidth, messages, auth),
+                  if (widget.showRememberMe) const SizedBox(height: 10),
                 ],
               ),
             ),

@@ -58,11 +58,13 @@ class Auth with ChangeNotifier {
     String email = '',
     String password = '',
     String confirmPassword = '',
+    bool rememberMe = false,
     AuthMode initialAuthMode = AuthMode.login,
     this.termsOfService = const [],
   })  : _email = email,
         _password = password,
         _confirmPassword = confirmPassword,
+        _rememberMe = rememberMe,
         _mode = initialAuthMode;
 
   final LoginCallback? onLogin;
@@ -127,6 +129,13 @@ class Auth with ChangeNotifier {
   String get confirmPassword => _confirmPassword;
   set confirmPassword(String confirmPassword) {
     _confirmPassword = confirmPassword;
+    notifyListeners();
+  }
+
+  bool _rememberMe;
+  bool get rememberMe => _rememberMe;
+  set rememberMe(bool rememberMe) {
+    _rememberMe = rememberMe;
     notifyListeners();
   }
 

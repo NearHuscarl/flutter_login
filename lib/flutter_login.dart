@@ -300,11 +300,13 @@ class FlutterLogin extends StatefulWidget {
     this.onResendCode,
     this.savedEmail = '',
     this.savedPassword = '',
+    this.savedRememberMe = false,
     this.initialAuthMode = AuthMode.login,
     this.children,
     this.scrollable = false,
     this.confirmSignupKeyboardType,
     this.headerWidget,
+    this.showRememberMe = false,
     this.onSwitchToAdditionalFields,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
@@ -430,6 +432,9 @@ class FlutterLogin extends StatefulWidget {
   /// to Auth class password and confirmation password)
   final String savedPassword;
 
+  /// Prefilled (ie. saved from previous session) value at startup for rememberMe check box (if used)
+  final bool savedRememberMe;
+
   /// List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of TermOfServiceResult
   final List<TermOfService> termsOfService;
 
@@ -447,6 +452,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// A widget that can be placed on top of the loginCard.
   final Widget? headerWidget;
+
+  /// Indicate if we want a check box "remember me" after credentials
+  final bool showRememberMe;
 
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -787,6 +795,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             loginProviders: widget.loginProviders,
             email: widget.savedEmail,
             password: widget.savedPassword,
+            rememberMe: widget.savedRememberMe,
             confirmPassword: widget.savedPassword,
             onConfirmRecover: widget.onConfirmRecover,
             onConfirmSignup: widget.onConfirmSignup,
@@ -840,6 +849,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         confirmSignupKeyboardType:
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
+                        showRememberMe: widget.showRememberMe,
                       ),
                     ),
                     Positioned(

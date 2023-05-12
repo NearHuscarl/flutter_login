@@ -62,6 +62,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
       LoginData(
         name: auth.email,
         password: auth.password,
+        rememberMe: auth.rememberMe,
       ),
     );
 
