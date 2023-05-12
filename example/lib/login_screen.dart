@@ -55,7 +55,6 @@ class LoginScreen extends StatelessWidget {
       logo: const AssetImage('assets/images/ecorp.png'),
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
-      showRememberMe: true,
       navigateBackAfterRecovery: true,
       onConfirmRecover: _signupConfirm,
       onConfirmSignup: _signupConfirm,
