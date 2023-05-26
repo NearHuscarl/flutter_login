@@ -51,6 +51,8 @@ class AnimatedTextFormField extends StatefulWidget {
     this.autocorrect = false,
     this.autofillHints,
     this.tooltip,
+    this.onChanged,
+    this.formFieldController,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -78,6 +80,8 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldSetter<String>? onSaved;
   final TextFieldInertiaDirection? inertiaDirection;
   final InlineSpan? tooltip;
+  final ValueChanged<String?>? onChanged;
+  final FormFieldController? formFieldController;
 
   @override
   State<AnimatedTextFormField> createState() => _AnimatedTextFormFieldState();
@@ -180,6 +184,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         }
       }
     }
+    widget.formFieldController?.addListener(handleValueChange);
   }
 
   void _updateSizeAnimation() {
@@ -216,7 +221,17 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   void dispose() {
     widget.inertiaController?.removeStatusListener(handleAnimationStatus);
+    widget.formFieldController?.removeListener(handleValueChange);
     super.dispose();
+  }
+
+  void handleValueChange() {
+    setState(() {
+      if (widget.controller != null) {
+        widget.controller!.text = widget.formFieldController!.value ?? '';
+      }
+      _phoneNumberController.text = widget.formFieldController!.value ?? '';
+    });
   }
 
   void handleAnimationStatus(AnimationStatus status) {
@@ -299,6 +314,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
                 ),
                 '',
               );
+              widget.onChanged?.call(_phoneNumberController.text);
             }
             _phoneNumberController.selection = TextSelection.collapsed(
               offset: _phoneNumberController.text.length,
@@ -333,6 +349,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         enabled: widget.enabled,
         autocorrect: widget.autocorrect,
         autofillHints: widget.autofillHints,
+        onChanged: widget.onChanged,
       );
     }
 

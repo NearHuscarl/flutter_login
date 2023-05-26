@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 
 class UserFormField {
@@ -25,6 +26,12 @@ class UserFormField {
 
   final InlineSpan? tooltip;
 
+  // executed when value of user form field changes
+  final ValueChanged<String?>? onChanged;
+
+  // controller to change value of form field
+  final FormFieldController? controller;
+
   const UserFormField({
     required this.keyName,
     String? displayName,
@@ -33,5 +40,7 @@ class UserFormField {
     this.fieldValidator,
     this.userType = LoginUserType.name,
     this.tooltip,
+    this.onChanged,
+    this.controller,
   }) : displayName = displayName ?? keyName;
 }

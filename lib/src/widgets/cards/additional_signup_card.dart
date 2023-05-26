@@ -192,6 +192,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       : TextInputAction.next,
               validator: formField.fieldValidator,
               tooltip: formField.tooltip,
+              onChanged: formField.onChanged,
+              formFieldController: formField.controller,
             ),
             const SizedBox(
               height: 5,
