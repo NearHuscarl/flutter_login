@@ -3,9 +3,12 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum TextFieldInertiaDirection {
   left,
@@ -38,6 +41,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.inertiaDirection,
     this.enabled = true,
     this.labelText,
+    this.linkUrl,
     this.prefixIcon,
     this.suffixIcon,
     this.keyboardType,
@@ -66,6 +70,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final bool autocorrect;
   final Iterable<String>? autofillHints;
   final String? labelText;
+  final String? linkUrl;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
@@ -261,9 +266,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Widget textField;
+    Widget inputField;
     if (widget.userType == LoginUserType.intlPhone) {
-      textField = Padding(
+      inputField = Padding(
         padding: const EdgeInsets.only(left: 8),
         child: InternationalPhoneNumberInput(
           cursorColor: theme.primaryColor,
@@ -292,8 +297,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             if (phoneNumber.phoneNumber != null &&
                 phoneNumber.dialCode != null &&
                 phoneNumber.phoneNumber!.startsWith('+')) {
-              _phoneNumberController.text =
-                  _phoneNumberController.text.replaceAll(
+              _phoneNumberController.text = _phoneNumberController.text.replaceAll(
                 RegExp(
                   '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)',
                 ),
@@ -309,8 +313,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
             trailingSpace: false,
-            countryComparator: (c1, c2) =>
-                int.parse(c1.dialCode!.substring(1)).compareTo(
+            countryComparator: (c1, c2) => int.parse(c1.dialCode!.substring(1)).compareTo(
               int.parse(c2.dialCode!.substring(1)),
             ),
           ),
@@ -318,8 +321,47 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           initialValue: _phoneNumberInitialValue,
         ),
       );
+    } else if (widget.userType == LoginUserType.checkbox) {
+      inputField = CheckboxFormField(
+        initialValue: widget.controller?.text == 'true',
+        validator: (value) => widget.validator?.call((value ?? false).toString()),
+        onChanged: (value) {
+          widget.onSaved?.call((value ?? false).toString());
+          widget.controller?.text = (value ?? false).toString();
+        },
+        title: widget.linkUrl != null
+            ? InkWell(
+                onTap: () {
+                  launchUrl(Uri.parse(widget.linkUrl!));
+                },
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.labelText ?? '',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Icon(
+                        Icons.open_in_new,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                        size: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : Text(
+                widget.labelText ?? '',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+      );
     } else {
-      textField = TextFormField(
+      inputField = TextFormField(
         cursorColor: theme.primaryColor,
         controller: widget.controller,
         focusNode: widget.focusNode,
@@ -344,9 +386,9 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         showDuration: const Duration(seconds: 30),
         triggerMode: TooltipTriggerMode.manual,
         margin: const EdgeInsets.all(4),
-        child: textField,
+        child: inputField,
       );
-      textField = Row(
+      inputField = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
@@ -364,7 +406,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
 
     if (widget.loadingController != null) {
-      textField = ScaleTransition(
+      inputField = ScaleTransition(
         scale: scaleAnimation,
         child: AnimatedBuilder(
           animation: sizeAnimation,
@@ -372,23 +414,23 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             constraints: BoxConstraints.tightFor(width: sizeAnimation.value),
             child: child,
           ),
-          child: textField,
+          child: inputField,
         ),
       );
     }
 
     if (widget.inertiaController != null) {
-      textField = AnimatedBuilder(
+      inputField = AnimatedBuilder(
         animation: fieldTranslateAnimation,
         builder: (context, child) => Transform.translate(
           offset: Offset(fieldTranslateAnimation.value, 0),
           child: child,
         ),
-        child: textField,
+        child: inputField,
       );
     }
 
-    return textField;
+    return inputField;
   }
 }
 
@@ -432,12 +474,10 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   @override
-  State<AnimatedPasswordTextFormField> createState() =>
-      _AnimatedPasswordTextFormFieldState();
+  State<AnimatedPasswordTextFormField> createState() => _AnimatedPasswordTextFormFieldState();
 }
 
-class _AnimatedPasswordTextFormFieldState
-    extends State<AnimatedPasswordTextFormField> {
+class _AnimatedPasswordTextFormFieldState extends State<AnimatedPasswordTextFormField> {
   var _obscureText = true;
 
   @override
@@ -475,9 +515,7 @@ class _AnimatedPasswordTextFormFieldState
             size: 25.0,
             semanticLabel: 'hide password',
           ),
-          crossFadeState: _obscureText
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+          crossFadeState: _obscureText ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         ),
       ),
       obscureText: _obscureText,
