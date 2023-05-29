@@ -226,12 +226,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   void handleValueChange() {
-    setState(() {
-      if (widget.controller != null) {
-        widget.controller!.text = widget.formFieldController!.value ?? '';
-      }
-      _phoneNumberController.text = widget.formFieldController!.value ?? '';
-    });
+    setState(
+      () {
+        if (widget.controller != null) {
+          widget.controller!.text = widget.formFieldController!.value ?? '';
+        }
+        _phoneNumberController.text = widget.formFieldController!.value ?? '';
+      },
+    );
   }
 
   void handleAnimationStatus(AnimationStatus status) {
