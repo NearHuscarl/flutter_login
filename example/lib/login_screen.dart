@@ -102,13 +102,13 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
       additionalSignupFields: [
-        const UserFormField(
+        const UserTextFormField(
           keyName: 'Username',
           icon: Icon(FontAwesomeIcons.userLarge),
         ),
-        const UserFormField(keyName: 'Name'),
-        const UserFormField(keyName: 'Surname'),
-        UserFormField(
+        const UserTextFormField(keyName: 'Name'),
+        const UserTextFormField(keyName: 'Surname'),
+        UserTextFormField(
           keyName: 'phone_number',
           displayName: 'Phone Number',
           userType: LoginUserType.phone,
@@ -116,13 +116,16 @@ class LoginScreen extends StatelessWidget {
             final phoneRegExp = RegExp(
               '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$',
             );
-            if (value != null &&
-                value.length < 7 &&
-                !phoneRegExp.hasMatch(value)) {
+            if (value != null && value.length < 7 && !phoneRegExp.hasMatch(value)) {
               return "This isn't a valid phone number";
             }
             return null;
           },
+        ),
+        UserCheckboxFormField(
+          keyName: 'newsletter',
+          validator: (value) => value == false ? 'You need to accept the newsletter, so that we can inform you' : null,
+          displayName: 'Subscribe to our newsletter',
         ),
       ],
       // scrollable: true,
@@ -284,9 +287,9 @@ class IntroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const Text.rich(
+        Text.rich(
           TextSpan(
             children: [
               TextSpan(
@@ -301,7 +304,7 @@ class IntroWidget extends StatelessWidget {
           textAlign: TextAlign.justify,
         ),
         Row(
-          children: const <Widget>[
+          children: <Widget>[
             Expanded(child: Divider()),
             Padding(
               padding: EdgeInsets.all(8.0),

@@ -695,11 +695,11 @@ void main() {
             passwordValidator: mockCallback.passwordValidator,
             onSubmitAnimationCompleted: mockCallback.onSubmitAnimationCompleted,
             additionalSignupFields: <UserFormField>[
-              UserFormField(
+              UserTextFormField(
                 keyName: 'Name',
                 fieldValidator: mockCallback.userValidator,
               ),
-              UserFormField(
+              UserTextFormField(
                 keyName: 'Surname',
                 fieldValidator: mockCallback.userValidator,
               ),
@@ -1094,8 +1094,8 @@ void main() {
             onRecoverPassword: (data) => null,
             passwordValidator: (value) => null,
             additionalSignupFields: const [
-              UserFormField(keyName: 'Name'),
-              UserFormField(keyName: 'Surname'),
+              UserTextFormField(keyName: 'Name'),
+              UserTextFormField(keyName: 'Surname'),
             ],
           ),
         );
@@ -1148,8 +1148,8 @@ void main() {
             onRecoverPassword: (data) => null,
             passwordValidator: (value) => null,
             additionalSignupFields: const [
-              UserFormField(keyName: 'Name'),
-              UserFormField(keyName: 'Surname'),
+              UserTextFormField(keyName: 'Name'),
+              UserTextFormField(keyName: 'Surname'),
             ],
           ),
         );
@@ -1194,11 +1194,10 @@ void main() {
             onRecoverPassword: (data) => null,
             passwordValidator: (value) => null,
             additionalSignupFields: const [
-              UserFormField(keyName: 'Name'),
-              UserFormField(keyName: 'Surname'),
+              UserTextFormField(keyName: 'Name'),
+              UserTextFormField(keyName: 'Surname'),
             ],
-            onSubmitAnimationCompleted: () =>
-                onSubmitAnimationCompletedExecuted = true,
+            onSubmitAnimationCompleted: () => onSubmitAnimationCompletedExecuted = true,
           ),
         );
 
