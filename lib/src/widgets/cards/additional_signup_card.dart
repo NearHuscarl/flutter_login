@@ -202,6 +202,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard> with Ticke
                 loadingController: widget.loadingController,
                 width: width,
                 labelText: formField.displayName,
+                linkUrl: formField.linkUrl,
                 validator: formField.validator,
                 tooltip: formField.tooltip,
                 onChanged: (value) => _checkboxValues[formField.keyName] = value ?? false,
