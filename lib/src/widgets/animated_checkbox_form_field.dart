@@ -40,7 +40,7 @@ class AnimatedCheckboxFormField extends StatefulWidget {
   final double width;
   final bool enabled;
   final String? labelText;
-  final FormFieldValidator<bool> validator;
+  final FormFieldValidator<bool>? validator;
   final bool initialValue;
   final ValueChanged<bool?> onChanged;
   final String? linkUrl;
@@ -128,7 +128,7 @@ class _AnimatedCheckboxFormFieldState extends State<AnimatedCheckboxFormField> {
     final theme = Theme.of(context);
     Widget textField = CheckboxFormField(
       initialValue: widget.initialValue,
-      validator: widget.validator,
+      validator: widget.validator ?? (_) => null,
       onChanged: widget.onChanged,
       title: widget.linkUrl != null
           ? InkWell(

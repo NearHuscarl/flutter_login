@@ -23,13 +23,13 @@ class UserCheckboxFormField extends UserFormField {
   final String? linkUrl;
 
   /// The validator of the checkbox
-  final FormFieldValidator<bool> validator;
+  final FormFieldValidator<bool>? validator;
 
   final InlineSpan? tooltip;
 
   const UserCheckboxFormField({
     required super.keyName,
-    required this.validator,
+    this.validator,
     super.displayName,
     this.tooltip,
     this.linkUrl,
