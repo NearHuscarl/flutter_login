@@ -1,3 +1,17 @@
+## 4.2.0
+Features:
+- Added validateUserImmediately property. Should email be validated after losing focus [true] or after form submissions. 
+- Added confirmSignupRequired property. Additional option to decide in runtime if confirmation is required. 
+- Added UserFormField tooltip. 
+- Added LoginUserType Firstname, Lastname, Text and Intlphone.
+
+Bugs fixed:
+- Fix autofill 
+- Fixed dispose() method must be called before super.dispose() 
+- Fixed providerNeedsSignUpCallback not being called. 
+- Provider Sign-up now also executes beforeAdditionalFieldsCallback() 
+- LoginUserType.phone now returns TextInputType.number
+
 ## 4.1.1
 Bugs fixed:
 - Fixed an issue with keyboard unfocusing. (Thanks @otto-dev !)

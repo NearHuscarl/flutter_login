@@ -8,15 +8,15 @@ import 'package:mockito/mockito.dart';
 import 'utils.dart';
 
 void main() {
-  final binding = TestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-  void setScreenSize(Size size) {
-    binding.window.physicalSizeTestValue = size;
-    binding.window.devicePixelRatioTestValue = 1.0;
+  void setScreenSize(Size size, WidgetTester tester) {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
   }
 
-  void clearScreenSize() {
-    binding.window.clearPhysicalSizeTestValue();
+  void clearScreenSize(WidgetTester tester) {
+    tester.view.resetPhysicalSize();
   }
 
   testWidgets('Default email validator throws error if not match email regex',
@@ -430,7 +430,7 @@ void main() {
   testWidgets('Leave logo parameter empty should not display login logo image',
       (WidgetTester tester) async {
     // default device height is 600. Logo is hidden in all cases because there is no space to display
-    setScreenSize(const Size(786, 1024));
+    setScreenSize(const Size(786, 1024), tester);
 
     var flutterLogin = widget(
       FlutterLogin(
@@ -458,7 +458,7 @@ void main() {
     expect(findLogoImage(), findsOneWidget);
 
     // resets the screen to its orinal size after the test end
-    addTearDown(() => clearScreenSize());
+    addTearDown(() => clearScreenSize(tester));
   });
 
   testWidgets('Leave title parameter empty should not display login title',
@@ -854,12 +854,12 @@ void main() {
     const enoughHeight = 680.0;
     const verySmallHeight = 500.0;
 
-    setScreenSize(const Size(480, veryLargeHeight));
+    setScreenSize(const Size(480, veryLargeHeight), tester);
     await tester.pumpWidget(flutterLogin);
     await tester.pumpAndSettle(loadingAnimationDuration);
     expect(logoWidget(tester).height, kMaxLogoHeight);
 
-    setScreenSize(const Size(480, enoughHeight));
+    setScreenSize(const Size(480, enoughHeight), tester);
     await tester.pumpWidget(flutterLogin);
     await tester.pumpAndSettle(loadingAnimationDuration);
     expect(
@@ -867,13 +867,13 @@ void main() {
       inInclusiveRange(kMinLogoHeight, kMaxLogoHeight),
     );
 
-    setScreenSize(const Size(480, verySmallHeight));
+    setScreenSize(const Size(480, verySmallHeight), tester);
     await tester.pumpWidget(flutterLogin);
     await tester.pumpAndSettle(loadingAnimationDuration);
     expect(findLogoImage(), findsNothing);
 
     // resets the screen to its orinal size after the test end
-    addTearDown(() => clearScreenSize());
+    addTearDown(() => clearScreenSize(tester));
   });
 
   // TODO: wait for flutter to add support for testing in web environment on Windows 10

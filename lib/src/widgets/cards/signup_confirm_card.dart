@@ -1,4 +1,4 @@
-part of auth_card_builder;
+part of 'auth_card_builder.dart';
 
 class _ConfirmSignupCard extends StatefulWidget {
   const _ConfirmSignupCard({

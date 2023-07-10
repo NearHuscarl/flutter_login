@@ -1,4 +1,4 @@
-part of auth_card_builder;
+part of 'auth_card_builder.dart';
 
 class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({
