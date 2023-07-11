@@ -101,6 +101,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final TransformerPageController _pageController = TransformerPageController();
   late AnimationController _formLoadingController;
   late AnimationController _routeTransitionController;
+  final _scrollController = ScrollController();
 
   // Card specific animations
   late Animation<double> _flipAnimation;
@@ -195,6 +196,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     _formLoadingController.dispose();
     _pageController.dispose();
     _routeTransitionController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -479,7 +481,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             return Align(
               alignment: Alignment.topCenter,
               child: Scrollbar(
+                controller: _scrollController,
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: _changeToCard(context, index),
                 ),
               ),
