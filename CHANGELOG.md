@@ -3,7 +3,7 @@ Features:
 - Added validateUserImmediately property. Should email be validated after losing focus [true] or after form submissions. 
 - Added confirmSignupRequired property. Additional option to decide in runtime if confirmation is required. 
 - Added UserFormField tooltip. 
-- Added LoginUserType Firstname, Lastname, Text and Intlphone.
+- Added LoginUserType Firstname, Lastname, Text, Intlphone and checkbox.
 
 Bugs fixed:
 - Fix autofill 
