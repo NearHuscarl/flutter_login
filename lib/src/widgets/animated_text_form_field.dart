@@ -7,7 +7,6 @@ import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
-import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum TextFieldInertiaDirection {
@@ -297,7 +296,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             if (phoneNumber.phoneNumber != null &&
                 phoneNumber.dialCode != null &&
                 phoneNumber.phoneNumber!.startsWith('+')) {
-              _phoneNumberController.text = _phoneNumberController.text.replaceAll(
+              _phoneNumberController.text =
+                  _phoneNumberController.text.replaceAll(
                 RegExp(
                   '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)',
                 ),
@@ -313,7 +313,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.DIALOG,
             trailingSpace: false,
-            countryComparator: (c1, c2) => int.parse(c1.dialCode!.substring(1)).compareTo(
+            countryComparator: (c1, c2) =>
+                int.parse(c1.dialCode!.substring(1)).compareTo(
               int.parse(c2.dialCode!.substring(1)),
             ),
           ),
@@ -324,7 +325,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     } else if (widget.userType == LoginUserType.checkbox) {
       inputField = CheckboxFormField(
         initialValue: widget.controller?.text == 'true',
-        validator: (value) => widget.validator?.call((value ?? false).toString()),
+        validator: (value) =>
+            widget.validator?.call((value ?? false).toString()),
         onChanged: (value) {
           widget.onSaved?.call((value ?? false).toString());
           widget.controller?.text = (value ?? false).toString();
@@ -474,10 +476,12 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final Iterable<String>? autofillHints;
 
   @override
-  State<AnimatedPasswordTextFormField> createState() => _AnimatedPasswordTextFormFieldState();
+  State<AnimatedPasswordTextFormField> createState() =>
+      _AnimatedPasswordTextFormFieldState();
 }
 
-class _AnimatedPasswordTextFormFieldState extends State<AnimatedPasswordTextFormField> {
+class _AnimatedPasswordTextFormFieldState
+    extends State<AnimatedPasswordTextFormField> {
   var _obscureText = true;
 
   @override
@@ -515,7 +519,9 @@ class _AnimatedPasswordTextFormFieldState extends State<AnimatedPasswordTextForm
             size: 25.0,
             semanticLabel: 'hide password',
           ),
-          crossFadeState: _obscureText ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          crossFadeState: _obscureText
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
         ),
       ),
       obscureText: _obscureText,
