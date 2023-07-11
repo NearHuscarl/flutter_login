@@ -11,6 +11,7 @@ Bugs fixed:
 - Fixed providerNeedsSignUpCallback not being called. 
 - Provider Sign-up now also executes beforeAdditionalFieldsCallback() 
 - LoginUserType.phone now returns TextInputType.number
+- Scrollbar not attached to scroll controller
 
 ## 4.1.1
 Bugs fixed:
