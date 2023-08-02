@@ -8,6 +8,8 @@ class _AdditionalSignUpCard extends StatefulWidget {
     this.loginTheme,
     required this.onSubmitCompleted,
     required this.loadingController,
+    required this.initialIsoCode,
+    required this.initialDialCode,
   }) {
     if (formFields.isEmpty) {
       throw RangeError('The formFields array must not be empty');
@@ -23,6 +25,8 @@ class _AdditionalSignUpCard extends StatefulWidget {
   final VoidCallback onSubmitCompleted;
   final LoginTheme? loginTheme;
   final AnimationController loadingController;
+  final String? initialIsoCode;
+  final String? initialDialCode;
 
   @override
   _AdditionalSignUpCardState createState() => _AdditionalSignUpCardState();
@@ -192,6 +196,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       : TextInputAction.next,
               validator: formField.fieldValidator,
               tooltip: formField.tooltip,
+              initialDialCode: widget.initialDialCode,
+              initialIsoCode: widget.initialIsoCode,
             ),
             const SizedBox(
               height: 5,

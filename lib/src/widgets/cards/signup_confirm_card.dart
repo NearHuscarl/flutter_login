@@ -8,6 +8,8 @@ class _ConfirmSignupCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     required this.loadingController,
     required this.keyboardType,
+    required this.initialIsoCode,
+    required this.initialDialCode,
   });
 
   final bool loginAfterSignUp;
@@ -15,6 +17,8 @@ class _ConfirmSignupCard extends StatefulWidget {
   final VoidCallback onSubmitCompleted;
   final AnimationController loadingController;
   final TextInputType? keyboardType;
+  final String? initialIsoCode;
+  final String? initialDialCode;
 
   @override
   _ConfirmSignupCardState createState() => _ConfirmSignupCardState();
@@ -140,6 +144,8 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       },
       onSaved: (value) => _code = value!,
       keyboardType: widget.keyboardType,
+      initialDialCode: widget.initialDialCode,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
