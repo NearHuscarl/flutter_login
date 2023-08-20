@@ -7,7 +7,7 @@ environment:
   sdk: '>=2.19.0 <4.0.0'
 
 dependencies:
-  another_flushbar: ^1.10.29
+  another_flushbar: ^1.12.30
   another_transformer_page_view: ^2.0.0
   flutter:
     sdk: flutter
