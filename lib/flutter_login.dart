@@ -201,11 +201,11 @@ class __HeaderState extends State<_Header> {
 
     var logo = displayLogo
         ? Image(
-            image: widget.logo!,
-            filterQuality: FilterQuality.high,
-            height: logoHeight,
-            width: widget.logoWidth * cardWidth,
-          )
+      image: widget.logo!,
+      filterQuality: FilterQuality.high,
+      height: logoHeight,
+      width: widget.logoWidth * cardWidth,
+    )
         : const SizedBox.shrink();
 
     if (widget.logoTag != null) {
@@ -483,15 +483,15 @@ class _FlutterLoginState extends State<FlutterLogin>
       vsync: this,
       duration: loadingDuration,
     )..addStatusListener((status) {
-        if (status == AnimationStatus.forward) {
-          _logoController.forward();
-          _titleController.forward();
-        }
-        if (status == AnimationStatus.reverse) {
-          _logoController.reverse();
-          _titleController.reverse();
-        }
-      });
+      if (status == AnimationStatus.forward) {
+        _logoController.forward();
+        _titleController.forward();
+      }
+      if (status == AnimationStatus.reverse) {
+        _logoController.reverse();
+        _titleController.reverse();
+      }
+    });
     _logoController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -500,8 +500,8 @@ class _FlutterLoginState extends State<FlutterLogin>
       vsync: this,
       duration: loadingDuration,
     );
-
-    Future.delayed(const Duration(seconds: 1), () {
+    /// Future.delayed(const Duration(milliseconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
       if (mounted) {
         _loadingController.forward();
       }
@@ -605,7 +605,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     required LoginTheme loginTheme,
   }) {
     final blackOrWhite =
-        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
+    theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
     final primaryOrWhite = theme.brightness == Brightness.light
         ? theme.primaryColor
         : Colors.white;
@@ -624,21 +624,21 @@ class _FlutterLoginState extends State<FlutterLogin>
         Typography.blackMountainView.displaySmall!.color;
     final titleStyle = theme.textTheme.displaySmall!
         .copyWith(
-          color: loginTheme.accentColor ??
-              (isDefaultBlackText
-                  ? Colors.white
-                  : theme.textTheme.displaySmall!.color),
-          fontSize: loginTheme.beforeHeroFontSize,
-          fontWeight: FontWeight.w300,
-        )
+      color: loginTheme.accentColor ??
+          (isDefaultBlackText
+              ? Colors.white
+              : theme.textTheme.displaySmall!.color),
+      fontSize: loginTheme.beforeHeroFontSize,
+      fontWeight: FontWeight.w300,
+    )
         .merge(loginTheme.titleStyle);
     final footerStyle = theme.textTheme.bodyLarge!
         .copyWith(
-          color: loginTheme.accentColor ??
-              (isDefaultBlackText
-                  ? Colors.white
-                  : theme.textTheme.displaySmall!.color),
-        )
+      color: loginTheme.accentColor ??
+          (isDefaultBlackText
+              ? Colors.white
+              : theme.textTheme.displaySmall!.color),
+    )
         .merge(loginTheme.footerTextStyle);
     final textStyle = theme.textTheme.bodyMedium!
         .copyWith(color: blackOrWhite)
@@ -726,7 +726,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       ),
       // put it here because floatingActionButtonTheme doesnt have highlightColor property
       highlightColor:
-          loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
+      loginTheme.buttonTheme.highlightColor ?? theme.highlightColor,
       textTheme: theme.textTheme.copyWith(
         displaySmall: titleStyle,
         bodyMedium: textStyle,
@@ -797,63 +797,76 @@ class _FlutterLoginState extends State<FlutterLogin>
         ),
       ],
       child: Scaffold(
+        ///Added this
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            GradientBox(
-              colors: [
-                loginTheme.pageColorLight ?? theme.primaryColor,
-                loginTheme.pageColorDark ?? theme.primaryColorDark,
-              ],
-            ),
-            SingleChildScrollView(
-              child: Theme(
-                data: theme,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    Positioned(
-                      child: AuthCard(
-                        key: authCardKey,
-                        userType: widget.userType,
-                        padding: EdgeInsets.only(top: cardTopPosition),
-                        loadingController: _loadingController,
-                        userValidator: userValidator,
-                        validateUserImmediately: validateUserImmediately,
-                        passwordValidator: passwordValidator,
-                        onSubmit: _reverseHeaderAnimation,
-                        onSubmitCompleted: widget.onSubmitAnimationCompleted,
-                        hideSignUpButton: widget.onSignup == null,
-                        hideForgotPasswordButton:
-                            widget.hideForgotPasswordButton,
-                        loginAfterSignUp: widget.loginAfterSignUp,
-                        hideProvidersTitle: widget.hideProvidersTitle,
-                        additionalSignUpFields: widget.additionalSignupFields,
-                        disableCustomPageTransformer:
-                            widget.disableCustomPageTransformer,
-                        loginTheme: widget.theme,
-                        navigateBackAfterRecovery:
-                            widget.navigateBackAfterRecovery,
-                        scrollable: widget.scrollable,
-                        confirmSignupKeyboardType:
-                            widget.confirmSignupKeyboardType,
-                        introWidget: widget.headerWidget,
+            ///Removed this
+            // GradientBox(
+            //   colors: [
+            //     loginTheme.pageColorLight ?? theme.primaryColor,
+            //     loginTheme.pageColorDark ?? theme.primaryColorDark,
+            //   ],
+            // ),
+            Column(
+              children: [
+                Theme(
+                  data: theme,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Positioned(
+                        child: AuthCard(
+                          key: authCardKey,
+                          userType: widget.userType,
+                          ///padding: EdgeInsets.only(top: cardTopPosition),
+                          padding: const EdgeInsets.only(top: 28),
+                          loadingController: _loadingController,
+                          userValidator: userValidator,
+                          validateUserImmediately: validateUserImmediately,
+                          passwordValidator: passwordValidator,
+                          onSubmit: _reverseHeaderAnimation,
+                          onSubmitCompleted: widget.onSubmitAnimationCompleted,
+                          hideSignUpButton: widget.onSignup == null,
+                          hideForgotPasswordButton:
+                          widget.hideForgotPasswordButton,
+                          loginAfterSignUp: widget.loginAfterSignUp,
+                          hideProvidersTitle: widget.hideProvidersTitle,
+                          additionalSignUpFields: widget.additionalSignupFields,
+                          disableCustomPageTransformer:
+                          widget.disableCustomPageTransformer,
+                          loginTheme: widget.theme,
+                          navigateBackAfterRecovery:
+                          widget.navigateBackAfterRecovery,
+                          scrollable: widget.scrollable,
+                          confirmSignupKeyboardType:
+                          widget.confirmSignupKeyboardType,
+                          introWidget: widget.headerWidget,
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      top: cardTopPosition - headerHeight - headerMargin,
-                      child: _buildHeader(headerHeight, loginTheme),
-                    ),
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: footerWidget,
+                      Positioned(
+                        top: cardTopPosition - headerHeight - headerMargin,
+                        child: _buildHeader(headerHeight, loginTheme),
                       ),
-                    ),
-                    ...?widget.children,
-                  ],
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: footerWidget,
+                        ),
+                      ),
+                      ///Added The Positioned.fill around ?widget.children
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: widget.children!.first,
+                        ),
+                      ),
+                      // ...?widget.children,
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
             if (!kReleaseMode && widget.showDebugButtons)
               _buildDebugAnimationButtons(),

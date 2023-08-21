@@ -145,33 +145,33 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _cardSizeAnimation =
         Tween<double>(begin: 1.0, end: cardSizeScaleEnd).animate(
-      CurvedAnimation(
-        parent: _routeTransitionController,
-        curve: const Interval(
-          0,
-          .27272727 /* ~300ms */,
-          curve: Curves.easeInOutCirc,
-        ),
-      ),
-    );
+          CurvedAnimation(
+            parent: _routeTransitionController,
+            curve: const Interval(
+              0,
+              .27272727 /* ~300ms */,
+              curve: Curves.easeInOutCirc,
+            ),
+          ),
+        );
 
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
     _cardOverlayHeightFactorAnimation =
         Tween<double>(begin: double.minPositive, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _routeTransitionController,
-        curve: const Interval(.27272727, .5),
-      ),
-    );
+          CurvedAnimation(
+            parent: _routeTransitionController,
+            curve: const Interval(.27272727, .5),
+          ),
+        );
 
     _cardOverlaySizeAndOpacityAnimation =
         Tween<double>(begin: 1.0, end: 0).animate(
-      CurvedAnimation(
-        parent: _routeTransitionController,
-        curve: const Interval(.5, .72727272),
-      ),
-    );
+          CurvedAnimation(
+            parent: _routeTransitionController,
+            curve: const Interval(.5, .72727272),
+          ),
+        );
 
     _cardSize2AnimationX =
         Tween<double>(begin: 1, end: 1).animate(_routeTransitionController);
@@ -238,18 +238,18 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
     _cardSize2AnimationX =
         Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd).animate(
-      CurvedAnimation(
-        parent: _routeTransitionController,
-        curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-      ),
-    );
+          CurvedAnimation(
+            parent: _routeTransitionController,
+            curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+          ),
+        );
     _cardSize2AnimationY =
         Tween<double>(begin: 1.0, end: widthRatio / cardSizeScaleEnd).animate(
-      CurvedAnimation(
-        parent: _routeTransitionController,
-        curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
-      ),
-    );
+          CurvedAnimation(
+            parent: _routeTransitionController,
+            curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
+          ),
+        );
 
     widget.onSubmit?.call();
 
@@ -337,11 +337,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     // if (!_isLoadingFirstTime) formController = _formLoadingController..value = 1.0;
     Future<bool> requireSignUpConfirmation() async {
       final confirmSignupRequired = await auth.confirmSignupRequired?.call(
-            LoginData(
-              name: auth.email,
-              password: auth.password,
-            ),
-          ) ??
+        LoginData(
+          name: auth.email,
+          password: auth.password,
+        ),
+      ) ??
           true;
       return auth.onConfirmSignup != null && confirmSignupRequired;
     }
@@ -358,7 +358,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             validateUserImmediately: widget.validateUserImmediately,
             passwordValidator: widget.passwordValidator,
             requireAdditionalSignUpFields:
-                widget.additionalSignUpFields != null,
+            widget.additionalSignUpFields != null,
             onSwitchRecoveryPassword: () => _changeCard(_recoveryIndex),
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
@@ -408,7 +408,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loginTheme: widget.loginTheme,
             onSubmitCompleted: () async {
               final requireSignupConfirmation =
-                  await requireSignUpConfirmation();
+              await requireSignUpConfirmation();
               if (requireSignupConfirmation) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
@@ -462,7 +462,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final deviceSize = MediaQuery.of(context).size;
 
     final Widget current = Container(
-      height: deviceSize.height,
+      /// height: deviceSize.height,
+      height: 350,
       width: deviceSize.width,
       padding: widget.padding,
       child: TransformerPageView(
