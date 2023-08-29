@@ -1,3 +1,6 @@
+## 4.2.1
+- Added dynamic prefix-icon on recover card based on user type. (thanks @lucaloiacono !)
+
 ## 4.2.0
 Features:
 - Added validateUserImmediately property. Should email be validated after losing focus [true] or after form submissions. 
