@@ -93,7 +93,7 @@ class _RecoverCardState extends State<_RecoverCard>
       userType: widget.userType,
       width: width,
       labelText: messages.userHint,
-      prefixIcon: const Icon(FontAwesomeIcons.solidCircleUser),
+      prefixIcon: TextFieldUtils.getPrefixIcon(widget.userType),
       keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
       autofillHints: [TextFieldUtils.getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
