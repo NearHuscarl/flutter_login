@@ -55,7 +55,6 @@ class AnimatedTextFormField extends StatefulWidget {
     this.autofillHints,
     this.tooltip,
     required this.initialIsoCode,
-    
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -85,7 +84,6 @@ class AnimatedTextFormField extends StatefulWidget {
   final TextFieldInertiaDirection? inertiaDirection;
   final InlineSpan? tooltip;
   final String? initialIsoCode;
-  
 
   @override
   State<AnimatedTextFormField> createState() => _AnimatedTextFormFieldState();
@@ -359,7 +357,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                         size: Theme.of(context).textTheme.bodyMedium!.fontSize,
                       ),
-                    )
+                    ),
                   ],
                 ),
               )
@@ -409,7 +407,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             color: theme.primaryColor,
             iconSize: 28,
             icon: const Icon(Icons.info),
-          )
+          ),
         ],
       );
     }
@@ -462,7 +460,6 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onSaved,
     this.autofillHints,
     required this.initialIsoCode,
-    
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -484,7 +481,6 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final TextFieldInertiaDirection? inertiaDirection;
   final Iterable<String>? autofillHints;
   final String? initialIsoCode;
-  
 
   @override
   State<AnimatedPasswordTextFormField> createState() =>
