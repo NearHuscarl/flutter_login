@@ -185,13 +185,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'dashboard_screen.dart';
 
-const users = const {
+const users =  {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
 };
 
 class LoginScreen extends StatelessWidget {
-  Duration get loginTime => Duration(milliseconds: 2250);
+  const LoginScreen({super.key});
+
+  Duration get loginTime => const Duration(milliseconds: 2250);
 
   Future<String?> _authUser(LoginData data) {
     debugPrint('Name: ${data.name}, Password: ${data.password}');
@@ -227,12 +229,12 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: AssetImage('assets/images/ecorp-lightblue.png'),
+      logo: const AssetImage('assets/images/ecorp-lightblue.png'),
       onLogin: _authUser,
       onSignup: _signupUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: _recoverPassword,
@@ -252,13 +254,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'dashboard_screen.dart';
 
-const users = const {
+const users = {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
 };
 
 class LoginScreen extends StatelessWidget {
-  Duration get loginTime => Duration(milliseconds: 2250);
+  const LoginScreen({super.key});
+
+  Duration get loginTime => const Duration(milliseconds: 2250);
 
   Future<String?> _authUser(LoginData data) {
     debugPrint('Name: ${data.name}, Password: ${data.password}');
@@ -294,7 +298,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: AssetImage('assets/images/ecorp-lightblue.png'),
+      logo: const AssetImage('assets/images/ecorp-lightblue.png'),
       onLogin: _authUser,
       onSignup: _signupUser,
       
@@ -340,7 +344,7 @@ class LoginScreen extends StatelessWidget {
         ],
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: _recoverPassword,
@@ -373,7 +377,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.orange,
         cursorColor: Colors.orange,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headline3: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 45.0,
@@ -401,12 +405,12 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: AssetImage('assets/images/ecorp.png'),
+      logo: const AssetImage('assets/images/ecorp.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: (_) => Future(null),
@@ -425,16 +429,18 @@ import 'package:flutter_login/flutter_login.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: 'ECORP',
-      logo: AssetImage('assets/images/ecorp.png'),
+      logo: const AssetImage('assets/images/ecorp.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: (_) => Future(null),
@@ -455,6 +461,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 ```
 
 |                 Login/Signup                 |                  Password Recovery                  |
@@ -470,21 +477,23 @@ import 'package:flutter_login/flutter_login.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final inputBorder = BorderRadius.vertical(
+    const inputBorder = BorderRadius.vertical(
       bottom: Radius.circular(10.0),
       top: Radius.circular(20.0),
     );
 
     return FlutterLogin(
       title: 'ECORP',
-      logo: AssetImage('assets/images/ecorp-lightgreen.png'),
+      logo: const AssetImage('assets/images/ecorp-lightgreen.png'),
       onLogin: (_) => Future(null),
       onSignup: (_) => Future(null),
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(),
+          builder: (context) => const DashboardScreen(),
         ));
       },
       onRecoverPassword: (_) => Future(null),
@@ -492,27 +501,27 @@ class LoginScreen extends StatelessWidget {
         primaryColor: Colors.teal,
         accentColor: Colors.yellow,
         errorColor: Colors.deepOrange,
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           color: Colors.greenAccent,
           fontFamily: 'Quicksand',
           letterSpacing: 4,
         ),
-        bodyStyle: TextStyle(
+        bodyStyle: const TextStyle(
           fontStyle: FontStyle.italic,
           decoration: TextDecoration.underline,
         ),
-        textFieldStyle: TextStyle(
+        textFieldStyle: const TextStyle(
           color: Colors.orange,
           shadows: [Shadow(color: Colors.yellow, blurRadius: 2)],
         ),
-        buttonStyle: TextStyle(
+        buttonStyle: const TextStyle(
           fontWeight: FontWeight.w800,
           color: Colors.yellow,
         ),
         cardTheme: CardTheme(
           color: Colors.yellow.shade100,
           elevation: 5,
-          margin: EdgeInsets.only(top: 15),
+          margin: const EdgeInsets.only(top: 15),
           shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(100.0)),
         ),
@@ -520,11 +529,11 @@ class LoginScreen extends StatelessWidget {
           filled: true,
           fillColor: Colors.purple.withOpacity(.1),
           contentPadding: EdgeInsets.zero,
-          errorStyle: TextStyle(
+          errorStyle: const TextStyle(
             backgroundColor: Colors.orange,
             color: Colors.white,
           ),
-          labelStyle: TextStyle(fontSize: 12),
+          labelStyle: const TextStyle(fontSize: 12),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.blue.shade700, width: 4),
             borderRadius: inputBorder,
@@ -541,7 +550,7 @@ class LoginScreen extends StatelessWidget {
             borderSide: BorderSide(color: Colors.red.shade400, width: 8),
             borderRadius: inputBorder,
           ),
-          disabledBorder: UnderlineInputBorder(
+          disabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 5),
             borderRadius: inputBorder,
           ),
