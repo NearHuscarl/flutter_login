@@ -87,7 +87,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
 
     if (!widget.loginAfterSignUp) {
       auth.mode = AuthMode.login;
-      widget.onBack();
+      widget.onSubmitCompleted();
       return false;
     }
 
