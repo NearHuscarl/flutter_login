@@ -7,14 +7,12 @@ class _ConfirmRecoverCard extends StatefulWidget {
     required this.onBack,
     required this.onSubmitCompleted,
     required this.initialIsoCode,
-    
   });
 
   final FormFieldValidator<String> passwordValidator;
   final VoidCallback onBack;
   final VoidCallback onSubmitCompleted;
   final String? initialIsoCode;
-  
 
   @override
   _ConfirmRecoverCardState createState() => _ConfirmRecoverCardState();
@@ -102,7 +100,6 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         return null;
       },
       onSaved: (value) => _code = value!,
-      
       initialIsoCode: widget.initialIsoCode,
     );
   }
@@ -122,7 +119,6 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         final auth = Provider.of<Auth>(context, listen: false);
         auth.password = value!;
       },
-      
       initialIsoCode: widget.initialIsoCode,
     );
   }
@@ -140,7 +136,6 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         }
         return null;
       },
-      
       initialIsoCode: widget.initialIsoCode,
     );
   }

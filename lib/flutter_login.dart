@@ -67,10 +67,19 @@ class LoginProvider {
   /// Default: true
   final bool animated;
 
+  /// Provide a list of errors to not display when a login has failed.
+  /// For example, if the login is cancelled and you don't want to show a error
+  /// message that the login is cancelled. If you provide the error message to this list
+  /// the error is not shown
+  ///
+  /// Default: null
+  final List<String>? errorsToExcludeFromErrorMessage;
+
   const LoginProvider({
     this.button,
     this.icon,
     required this.callback,
+    this.errorsToExcludeFromErrorMessage,
     this.label = '',
     this.providerNeedsSignUpCallback,
     this.animated = true,
@@ -843,7 +852,6 @@ class _FlutterLoginState extends State<FlutterLogin>
                         confirmSignupKeyboardType:
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
-                        
                         initialIsoCode: widget.initialIsoCode,
                       ),
                     ),
