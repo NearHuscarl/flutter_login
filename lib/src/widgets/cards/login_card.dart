@@ -332,7 +332,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         );
         await control?.reverse();
         if (!DartHelper.isNullOrEmpty(error)) {
-
           // Only show error toast if error is not in exclusion list
           if (loginProvider.errorsToExcludeFromErrorMessage == null ||
               !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
@@ -554,29 +553,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final iconProvidersList = <LoginProvider>[];
     for (final loginProvider in auth.loginProviders) {
       if (loginProvider.button != null) {
-        buttonProvidersList.add(
-          LoginProvider(
-            icon: loginProvider.icon,
-            label: loginProvider.label,
-            button: loginProvider.button,
-            callback: loginProvider.callback,
-            animated: loginProvider.animated,
-            providerNeedsSignUpCallback:
-                loginProvider.providerNeedsSignUpCallback,
-          ),
-        );
+        buttonProvidersList.add(loginProvider);
       } else if (loginProvider.icon != null) {
-        iconProvidersList.add(
-          LoginProvider(
-            icon: loginProvider.icon,
-            label: loginProvider.label,
-            button: loginProvider.button,
-            callback: loginProvider.callback,
-            animated: loginProvider.animated,
-            providerNeedsSignUpCallback:
-                loginProvider.providerNeedsSignUpCallback,
-          ),
-        );
+        iconProvidersList.add(loginProvider);
       }
     }
     if (buttonProvidersList.isNotEmpty) {
