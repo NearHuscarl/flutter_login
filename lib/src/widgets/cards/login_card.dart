@@ -302,7 +302,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (!DartHelper.isNullOrEmpty(error)) {
       await control?.reverse();
-      showErrorToast(context, messages.flushbarTitleError, error!);
+
+      // Only show error toast if error is not in exclusion list
+      if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+          !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+        showErrorToast(context, messages.flushbarTitleError, error!);
+      }
+
       Future.delayed(const Duration(milliseconds: 271), () {
         if (mounted) {
           setState(() => _showShadow = true);
@@ -326,7 +332,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         );
         await control?.reverse();
         if (!DartHelper.isNullOrEmpty(error)) {
-          showErrorToast(context, messages.flushbarTitleError, error!);
+
+          // Only show error toast if error is not in exclusion list
+          if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+              !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+            showErrorToast(context, messages.flushbarTitleError, error!);
+          }
+
           Future.delayed(const Duration(milliseconds: 271), () {
             if (mounted) {
               setState(() => _showShadow = true);
