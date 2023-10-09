@@ -21,8 +21,7 @@ class _LoginCard extends StatefulWidget {
     this.introWidget,
     required this.initialIsoCode,
     this.isBlocPattern = false,
-    this.continueLoginSubmit = false,
-    this.continueSignupSubmit = false,
+    this.loginStateController,
   });
 
   final AnimationController loadingController;
@@ -43,9 +42,7 @@ class _LoginCard extends StatefulWidget {
   final Widget? introWidget;
   final String? initialIsoCode;
   final bool? isBlocPattern;
-  final bool? continueLoginSubmit;
-  final bool? continueSignupSubmit;
-
+  final LoginStateController? loginStateController;
   @override
   _LoginCardState createState() => _LoginCardState();
 }
@@ -80,6 +77,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   late Animation<double> _buttonScaleAnimation;
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
+
+  static const failureLoginState = 1;
+  static const successfulLoginState = 2;
+  // late LoginStateController _loginStateController;
 
   @override
   void initState() {
@@ -130,6 +131,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         _userFieldKey.currentState?.validate();
       }
     });
+
+    if (widget.isBlocPattern!) {
+      // _loginStateController = LoginStateController();
+      widget.loginStateController!.addListener(() => handleLoginState(auth));
+    }
   }
 
   void handleLoadingAnimationStatus(AnimationStatus status) {
@@ -147,7 +153,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     _userFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
-
     _switchAuthController.dispose();
     _postSwitchAuthController.dispose();
     _submitController.dispose();
@@ -155,8 +160,45 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     for (final controller in _providerControllerList) {
       controller.dispose();
     }
+    // _loginStateController.dispose();
+    widget.loadingController.removeListener(() => handleLoginState);
+
     super.dispose();
   }
+
+  void handleLoginState(Auth auth) {
+    if (widget.loginStateController!.state == successfulLoginState &&
+        _isSubmitting) {
+      final messages = Provider.of<LoginMessages>(context, listen: false);
+      _continueSubmit(auth, messages, null);
+    } else if (widget.loginStateController!.state == failureLoginState &&
+        _isSubmitting) {
+      _errorSubmit();
+    }
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   final loginStateController = Provider.of<LoginController>(context);
+  //   print('$_isSubmitting , ${loginStateController.state}');
+  //   if (widget.isBlocPattern!) {
+  //     if ((
+  //             // auth.signupState == successfulLoginState ||
+  //             loginStateController.state == successfulLoginState) &&
+  //         _isSubmitting) {
+  //       final auth = Provider.of<Auth>(context);
+  //       final messages = Provider.of<LoginMessages>(context, listen: false);
+  //       _continueSubmit(auth, messages, null);
+  //     } else if ((
+  //             // auth.signupState == failureLoginState ||
+  //             loginStateController.state == failureLoginState) &&
+  //         _isSubmitting) {
+  //       _errorSubmit();
+  //     }
+  //   }
+
+  //   super.didChangeDependencies();
+  // }
 
   void _switchAuthMode() {
     final auth = Provider.of<Auth>(context, listen: false);
@@ -167,6 +209,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     } else {
       _switchAuthController.reverse();
     }
+  }
+
+  Future<void> _errorSubmit() async {
+    Future.delayed(const Duration(milliseconds: 270), () {
+      if (mounted) {
+        setState(() => _showShadow = false);
+      }
+    });
+    await _submitController.reverse();
+    setState(() => _isSubmitting = false);
   }
 
   Future<bool> _continueSubmit(
@@ -221,9 +273,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     }
     TextInput.finishAutofillContext();
-    if (widget.isBlocPattern == true) {
-      setState(() => _isSubmitting = false);
-    }
     widget.onSubmitCompleted?.call();
     return true;
   }
@@ -711,12 +760,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
-    if (widget.isBlocPattern! &&
-        ((widget.continueLoginSubmit == true ||
-                widget.continueSignupSubmit == true) &&
-            _isSubmitting)) {
-      _continueSubmit(auth, messages, null);
-    }
     final authForm = Form(
       key: _formKey,
       child: Column(

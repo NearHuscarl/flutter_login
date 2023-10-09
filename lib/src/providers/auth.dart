@@ -143,3 +143,12 @@ class Auth with ChangeNotifier {
         .toList();
   }
 }
+
+class LoginStateController extends ChangeNotifier {
+  int state = 0;
+  void changeState(int value) {
+    assert(value >= 0 && value <= 2, throw IndexError);
+    state = value;
+    notifyListeners();
+  }
+}
