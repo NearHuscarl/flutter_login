@@ -317,6 +317,9 @@ class FlutterLogin extends StatefulWidget {
     this.isBlocPattern = false,
     this.loginStateController,
     this.signupState = 0,
+    this.onChangedUserField,
+    this.onChangedPasswordField,
+    this.onChangedConfirmPasswordField,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -334,6 +337,21 @@ class FlutterLogin extends StatefulWidget {
   ///
   /// Singup submit transition animation
   final int? signupState;
+
+  /// Exposed onChanged to modify dinamically the bloc states information
+  ///
+  /// User Field onChanged logic
+  final FormFieldSetter<String>? onChangedUserField;
+
+  /// Exposed onChanged to modify dinamically the bloc states information
+  ///
+  /// Password Field onChanged logic
+  final FormFieldSetter<String>? onChangedPasswordField;
+
+  /// Exposed onChanged to modify dinamically the bloc states information
+  ///
+  /// Confirm Password Field onChanged logic
+  final FormFieldSetter<String>? onChangedConfirmPasswordField;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -873,6 +891,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                         initialIsoCode: widget.initialIsoCode,
                         isBlocPattern: widget.isBlocPattern,
                         loginStateController: widget.loginStateController,
+                        onChangedConfirmPasswordField:
+                            widget.onChangedConfirmPasswordField,
+                        onChangedPasswordField: widget.onChangedPasswordField,
+                        onChangedUserField: widget.onChangedUserField,
                       ),
                     ),
                     Positioned(

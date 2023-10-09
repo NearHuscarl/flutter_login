@@ -54,6 +54,9 @@ class AuthCard extends StatefulWidget {
     this.introWidget,
     required this.initialIsoCode,
     this.isBlocPattern = false,
+    this.onChangedUserField,
+    this.onChangedPasswordField,
+    this.onChangedConfirmPasswordField,
     this.loginStateController,
   });
 
@@ -82,7 +85,9 @@ class AuthCard extends StatefulWidget {
   final String? initialIsoCode;
   final bool? isBlocPattern;
   final LoginStateController? loginStateController;
-
+  final FormFieldSetter<String>? onChangedUserField;
+  final FormFieldSetter<String>? onChangedPasswordField;
+  final FormFieldSetter<String>? onChangedConfirmPasswordField;
   @override
   AuthCardState createState() => AuthCardState();
 }
@@ -383,6 +388,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             initialIsoCode: widget.initialIsoCode,
             isBlocPattern: widget.isBlocPattern,
             loginStateController: widget.loginStateController,
+            onChangedConfirmPasswordField: widget.onChangedConfirmPasswordField,
+            onChangedPasswordField: widget.onChangedPasswordField,
+            onChangedUserField: widget.onChangedUserField,
           ),
         );
       case _recoveryIndex:

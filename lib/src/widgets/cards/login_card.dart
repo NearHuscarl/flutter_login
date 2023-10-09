@@ -22,6 +22,9 @@ class _LoginCard extends StatefulWidget {
     required this.initialIsoCode,
     this.isBlocPattern = false,
     this.loginStateController,
+    this.onChangedUserField,
+    this.onChangedPasswordField,
+    this.onChangedConfirmPasswordField,
   });
 
   final AnimationController loadingController;
@@ -42,6 +45,9 @@ class _LoginCard extends StatefulWidget {
   final Widget? introWidget;
   final String? initialIsoCode;
   final bool? isBlocPattern;
+  final FormFieldSetter<String>? onChangedUserField;
+  final FormFieldSetter<String>? onChangedPasswordField;
+  final FormFieldSetter<String>? onChangedConfirmPasswordField;
   final LoginStateController? loginStateController;
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -441,6 +447,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       },
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
+      onChanged: (value) => widget.onChangedUserField?.call(value),
       enabled: !_isSubmitting,
       initialIsoCode: widget.initialIsoCode,
     );
@@ -471,6 +478,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       },
       validator: widget.passwordValidator,
       onSaved: (value) => auth.password = value!,
+      onChanged: (value) => widget.onChangedPasswordField?.call(value),
       enabled: !_isSubmitting,
       initialIsoCode: widget.initialIsoCode,
     );
@@ -501,6 +509,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             }
           : (value) => null,
       onSaved: (value) => auth.confirmPassword = value!,
+      onChanged: (value) => widget.onChangedConfirmPasswordField?.call(value),
       initialIsoCode: widget.initialIsoCode,
     );
   }

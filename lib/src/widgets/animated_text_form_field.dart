@@ -51,6 +51,7 @@ class AnimatedTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
+    this.onChanged,
     this.autocorrect = false,
     this.autofillHints,
     this.tooltip,
@@ -81,6 +82,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
+  final FormFieldSetter<String>? onChanged;
   final TextFieldInertiaDirection? inertiaDirection;
   final InlineSpan? tooltip;
   final String? initialIsoCode;
@@ -382,6 +384,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         enabled: widget.enabled,
         autocorrect: widget.autocorrect,
         autofillHints: widget.autofillHints,
+        onChanged: widget.onChanged,
       );
     }
 
@@ -458,6 +461,7 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onSaved,
+    this.onChanged,
     this.autofillHints,
     required this.initialIsoCode,
   }) : assert(
@@ -478,6 +482,7 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
+  final FormFieldSetter<String>? onChanged;
   final TextFieldInertiaDirection? inertiaDirection;
   final Iterable<String>? autofillHints;
   final String? initialIsoCode;
@@ -539,6 +544,7 @@ class _AnimatedPasswordTextFormFieldState
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
       onSaved: widget.onSaved,
+      onChanged: widget.onChanged,
       inertiaDirection: widget.inertiaDirection,
       initialIsoCode: widget.initialIsoCode,
     );
