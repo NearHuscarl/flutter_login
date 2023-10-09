@@ -53,6 +53,9 @@ class AuthCard extends StatefulWidget {
     required this.confirmSignupKeyboardType,
     this.introWidget,
     required this.initialIsoCode,
+    this.isBlocPattern = false,
+    this.continueLoginSubmit = false,
+    this.continueSignupSubmit = false,
   });
 
   final EdgeInsets padding;
@@ -78,6 +81,9 @@ class AuthCard extends StatefulWidget {
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool? isBlocPattern;
+  final bool? continueLoginSubmit;
+  final bool? continueSignupSubmit;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -377,6 +383,9 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             hideProvidersTitle: widget.hideProvidersTitle,
             introWidget: widget.introWidget,
             initialIsoCode: widget.initialIsoCode,
+            isBlocPattern: widget.isBlocPattern,
+            continueLoginSubmit: widget.continueLoginSubmit,
+            continueSignupSubmit: widget.continueSignupSubmit,
           ),
         );
       case _recoveryIndex:

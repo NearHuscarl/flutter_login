@@ -20,6 +20,9 @@ class _LoginCard extends StatefulWidget {
     this.hideProvidersTitle = false,
     this.introWidget,
     required this.initialIsoCode,
+    this.isBlocPattern = false,
+    this.continueLoginSubmit = false,
+    this.continueSignupSubmit = false,
   });
 
   final AnimationController loadingController;
@@ -39,6 +42,9 @@ class _LoginCard extends StatefulWidget {
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool? isBlocPattern;
+  final bool? continueLoginSubmit;
+  final bool? continueSignupSubmit;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -163,6 +169,65 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
   }
 
+  Future<bool> _continueSubmit(
+      Auth auth, LoginMessages messages, String? error) async {
+    // workaround to run after _cardSizeAnimation in parent finished
+    // need a cleaner way but currently it works so..
+    Future.delayed(const Duration(milliseconds: 270), () {
+      if (mounted) {
+        setState(() => _showShadow = false);
+      }
+    });
+
+    await _submitController.reverse();
+
+    if (!DartHelper.isNullOrEmpty(error)) {
+      showErrorToast(context, messages.flushbarTitleError, error!);
+      Future.delayed(const Duration(milliseconds: 271), () {
+        if (mounted) {
+          setState(() => _showShadow = true);
+        }
+      });
+      setState(() => _isSubmitting = false);
+      return false;
+    }
+
+    if (auth.isSignup) {
+      final requireSignUpConfirmation =
+          await widget.requireSignUpConfirmation();
+      if (widget.requireAdditionalSignUpFields) {
+        widget.onSwitchSignUpAdditionalData();
+        // The login page wil be shown in login mode (used if loginAfterSignUp disabled)
+        _switchAuthMode();
+        return false;
+      } else if (requireSignUpConfirmation) {
+        widget.onSwitchConfirmSignup();
+        _switchAuthMode();
+        return false;
+      } else if (!widget.loginAfterSignUp) {
+        if (widget.isBlocPattern!) {
+          setState(() => _isSubmitting = false);
+          return false;
+        } else {
+          showSuccessToast(
+            context,
+            messages.flushbarTitleSuccess,
+            messages.signUpSuccess,
+          );
+          _switchAuthMode();
+          setState(() => _isSubmitting = false);
+          return false;
+        }
+      }
+    }
+    TextInput.finishAutofillContext();
+    if (widget.isBlocPattern == true) {
+      setState(() => _isSubmitting = false);
+    }
+    widget.onSubmitCompleted?.call();
+    return true;
+  }
+
   Future<bool> _submit() async {
     FocusScope.of(context).unfocus();
 
@@ -209,54 +274,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     }
 
-    // workaround to run after _cardSizeAnimation in parent finished
-    // need a cleaner way but currently it works so..
-    Future.delayed(const Duration(milliseconds: 270), () {
-      if (mounted) {
-        setState(() => _showShadow = false);
-      }
-    });
-
-    await _submitController.reverse();
-
-    if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error!);
-      Future.delayed(const Duration(milliseconds: 271), () {
-        if (mounted) {
-          setState(() => _showShadow = true);
-        }
-      });
-      setState(() => _isSubmitting = false);
-      return false;
+    if (widget.isBlocPattern == true) {
+      return true;
+    } else {
+      return _continueSubmit(auth, messages, error);
     }
-
-    if (auth.isSignup) {
-      final requireSignUpConfirmation =
-          await widget.requireSignUpConfirmation();
-      if (widget.requireAdditionalSignUpFields) {
-        widget.onSwitchSignUpAdditionalData();
-        // The login page wil be shown in login mode (used if loginAfterSignUp disabled)
-        _switchAuthMode();
-        return false;
-      } else if (requireSignUpConfirmation) {
-        widget.onSwitchConfirmSignup();
-        _switchAuthMode();
-        return false;
-      } else if (!widget.loginAfterSignUp) {
-        showSuccessToast(
-          context,
-          messages.flushbarTitleSuccess,
-          messages.signUpSuccess,
-        );
-        _switchAuthMode();
-        setState(() => _isSubmitting = false);
-        return false;
-      }
-    }
-    TextInput.finishAutofillContext();
-    widget.onSubmitCompleted?.call();
-
-    return true;
   }
 
   Future<bool> _loginProviderSubmit({
@@ -689,6 +711,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
+    if (widget.isBlocPattern! &&
+        ((widget.continueLoginSubmit == true ||
+                widget.continueSignupSubmit == true) &&
+            _isSubmitting)) {
+      _continueSubmit(auth, messages, null);
+    }
     final authForm = Form(
       key: _formKey,
       child: Column(

@@ -314,8 +314,26 @@ class FlutterLogin extends StatefulWidget {
     this.headerWidget,
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
+    this.isBlocPattern = false,
+    this.continueLoginSubmit = false,
+    this.continueSignupSubmit = false,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
+
+  /// Bloc patter flag to make the submitController reactive to a state
+  ///
+  ///
+  final bool? isBlocPattern;
+
+  /// Exposing the submitController to state changes for bloc pattern. It requires isBlocPattern flag to be true
+  ///
+  /// Login submit transition animation
+  final bool? continueLoginSubmit;
+
+  /// Exposing the submitController to state changes for bloc pattern. It requires isBlocPattern flag to be true
+  ///
+  /// Singup submit transition animation
+  final bool? continueSignupSubmit;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -853,6 +871,9 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
+                        isBlocPattern: widget.isBlocPattern,
+                        continueLoginSubmit: widget.continueLoginSubmit,
+                        continueSignupSubmit: widget.continueSignupSubmit,
                       ),
                     ),
                     Positioned(
