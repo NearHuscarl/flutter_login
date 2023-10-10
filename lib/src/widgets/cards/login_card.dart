@@ -21,10 +21,12 @@ class _LoginCard extends StatefulWidget {
     this.introWidget,
     required this.initialIsoCode,
     this.isBlocPattern = false,
-    this.loginStateController,
+    this.stateController,
     this.onChangedUserField,
     this.onChangedPasswordField,
     this.onChangedConfirmPasswordField,
+    this.autoValidateModeForm,
+    this.onSwitchButton,
   });
 
   final AnimationController loadingController;
@@ -48,7 +50,9 @@ class _LoginCard extends StatefulWidget {
   final FormFieldSetter<String>? onChangedUserField;
   final FormFieldSetter<String>? onChangedPasswordField;
   final FormFieldSetter<String>? onChangedConfirmPasswordField;
-  final LoginStateController? loginStateController;
+  final StateController? stateController;
+  final AutovalidateMode? autoValidateModeForm;
+  final VoidCallback? onSwitchButton;
   @override
   _LoginCardState createState() => _LoginCardState();
 }
@@ -86,7 +90,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   static const failureLoginState = 1;
   static const successfulLoginState = 2;
-  // late LoginStateController _loginStateController;
 
   @override
   void initState() {
@@ -139,8 +142,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     });
 
     if (widget.isBlocPattern!) {
-      // _loginStateController = LoginStateController();
-      widget.loginStateController!.addListener(() => handleLoginState(auth));
+      widget.stateController!.addListener(() => handleLoginState(auth));
     }
   }
 
@@ -166,49 +168,29 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     for (final controller in _providerControllerList) {
       controller.dispose();
     }
-    // _loginStateController.dispose();
-    widget.loadingController.removeListener(() => handleLoginState);
+
+    widget.stateController!.removeListener(() => handleLoginState);
 
     super.dispose();
   }
 
   void handleLoginState(Auth auth) {
-    if (widget.loginStateController!.state == successfulLoginState &&
+    if (widget.stateController!.state == successfulLoginState &&
         _isSubmitting) {
       final messages = Provider.of<LoginMessages>(context, listen: false);
       _continueSubmit(auth, messages, null);
-    } else if (widget.loginStateController!.state == failureLoginState &&
+    } else if (widget.stateController!.state == failureLoginState &&
         _isSubmitting) {
       _errorSubmit();
     }
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   final loginStateController = Provider.of<LoginController>(context);
-  //   print('$_isSubmitting , ${loginStateController.state}');
-  //   if (widget.isBlocPattern!) {
-  //     if ((
-  //             // auth.signupState == successfulLoginState ||
-  //             loginStateController.state == successfulLoginState) &&
-  //         _isSubmitting) {
-  //       final auth = Provider.of<Auth>(context);
-  //       final messages = Provider.of<LoginMessages>(context, listen: false);
-  //       _continueSubmit(auth, messages, null);
-  //     } else if ((
-  //             // auth.signupState == failureLoginState ||
-  //             loginStateController.state == failureLoginState) &&
-  //         _isSubmitting) {
-  //       _errorSubmit();
-  //     }
-  //   }
-
-  //   super.didChangeDependencies();
-  // }
-
   void _switchAuthMode() {
     final auth = Provider.of<Auth>(context, listen: false);
     final newAuthMode = auth.switchAuth();
+    if (widget.isBlocPattern == true) {
+      widget.onSwitchButton?.call();
+    }
 
     if (newAuthMode == AuthMode.signup) {
       _switchAuthController.forward();
@@ -340,85 +322,92 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     required LoginProvider loginProvider,
     AnimationController? control,
   }) async {
-    if (!loginProvider.animated) {
-      final String? error = await loginProvider.callback();
+    if (widget.isBlocPattern!) {
+      await _submitController.forward();
+      setState(() => _isSubmitting = true);
+      await loginProvider.callback();
+      return true;
+    } else {
+      if (!loginProvider.animated) {
+        final String? error = await loginProvider.callback();
+
+        final messages = Provider.of<LoginMessages>(context, listen: false);
+
+        if (!DartHelper.isNullOrEmpty(error)) {
+          // Only show error toast if error is not in exclusion list
+          if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+              !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+            showErrorToast(context, messages.flushbarTitleError, error!);
+          }
+          return false;
+        }
+
+        return true;
+      }
+
+      await control?.forward();
+
+      final auth = Provider.of<Auth>(context, listen: false);
+
+      auth.authType = AuthType.provider;
+
+      String? error;
+
+      error = await loginProvider.callback();
+
+      // workaround to run after _cardSizeAnimation in parent finished
+      // need a cleaner way but currently it works so..
+      Future.delayed(const Duration(milliseconds: 270), () {
+        if (mounted) {
+          setState(() => _showShadow = false);
+        }
+      });
 
       final messages = Provider.of<LoginMessages>(context, listen: false);
 
       if (!DartHelper.isNullOrEmpty(error)) {
-        // Only show error toast if error is not in exclusion list
-        if (loginProvider.errorsToExcludeFromErrorMessage == null ||
-            !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-          showErrorToast(context, messages.flushbarTitleError, error!);
-        }
+        await control?.reverse();
+        showErrorToast(context, messages.flushbarTitleError, error!);
+        Future.delayed(const Duration(milliseconds: 271), () {
+          if (mounted) {
+            setState(() => _showShadow = true);
+          }
+        });
         return false;
       }
 
+      final showSignupAdditionalFields =
+          await loginProvider.providerNeedsSignUpCallback?.call() ?? false;
+
+      if (showSignupAdditionalFields) {
+        if (auth.beforeAdditionalFieldsCallback != null) {
+          error = await auth.beforeAdditionalFieldsCallback!(
+            SignupData.fromSignupForm(
+              name: auth.email,
+              password: auth.password,
+              termsOfService: auth.getTermsOfServiceResults(),
+              additionalSignupData: auth.additionalSignupData,
+            ),
+          );
+          await control?.reverse();
+          if (!DartHelper.isNullOrEmpty(error)) {
+            showErrorToast(context, messages.flushbarTitleError, error!);
+            Future.delayed(const Duration(milliseconds: 271), () {
+              if (mounted) {
+                setState(() => _showShadow = true);
+              }
+            });
+            return false;
+          }
+        }
+        await control?.reverse();
+        widget.onSwitchSignUpAdditionalData();
+      } else {
+        widget.onSubmitCompleted!();
+      }
+      await control?.reverse();
       return true;
     }
-
-    await control?.forward();
-
-    final auth = Provider.of<Auth>(context, listen: false);
-
-    auth.authType = AuthType.provider;
-
-    String? error;
-
-    error = await loginProvider.callback();
-
-    // workaround to run after _cardSizeAnimation in parent finished
-    // need a cleaner way but currently it works so..
-    Future.delayed(const Duration(milliseconds: 270), () {
-      if (mounted) {
-        setState(() => _showShadow = false);
-      }
-    });
-
-    final messages = Provider.of<LoginMessages>(context, listen: false);
-
-    if (!DartHelper.isNullOrEmpty(error)) {
-      await control?.reverse();
-      showErrorToast(context, messages.flushbarTitleError, error!);
-      Future.delayed(const Duration(milliseconds: 271), () {
-        if (mounted) {
-          setState(() => _showShadow = true);
-        }
-      });
-      return false;
-    }
-
-    final showSignupAdditionalFields =
-        await loginProvider.providerNeedsSignUpCallback?.call() ?? false;
-
-    if (showSignupAdditionalFields) {
-      if (auth.beforeAdditionalFieldsCallback != null) {
-        error = await auth.beforeAdditionalFieldsCallback!(
-          SignupData.fromSignupForm(
-            name: auth.email,
-            password: auth.password,
-            termsOfService: auth.getTermsOfServiceResults(),
-            additionalSignupData: auth.additionalSignupData,
-          ),
-        );
-        await control?.reverse();
-        if (!DartHelper.isNullOrEmpty(error)) {
-          showErrorToast(context, messages.flushbarTitleError, error!);
-          Future.delayed(const Duration(milliseconds: 271), () {
-            if (mounted) {
-              setState(() => _showShadow = true);
-            }
-          });
-          return false;
-        }
-      }
-      await control?.reverse();
-      widget.onSwitchSignUpAdditionalData();
-    } else {
-      widget.onSubmitCompleted!();
-    }
-    await control?.reverse();
-    return true;
   }
 
   Widget _buildUserField(
@@ -770,6 +759,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
+      autovalidateMode: widget.autoValidateModeForm,
       key: _formKey,
       child: Column(
         children: [

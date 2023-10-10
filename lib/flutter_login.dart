@@ -315,11 +315,13 @@ class FlutterLogin extends StatefulWidget {
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
     this.isBlocPattern = false,
-    this.loginStateController,
+    this.stateController,
     this.signupState = 0,
     this.onChangedUserField,
     this.onChangedPasswordField,
     this.onChangedConfirmPasswordField,
+    this.autoValidateModeForm,
+    this.onSwitchButton,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -331,7 +333,7 @@ class FlutterLogin extends StatefulWidget {
   /// Exposing the submitController to state changes for bloc pattern. It requires isBlocPattern flag to be true
   ///
   /// Login submit transition animation
-  final LoginStateController? loginStateController;
+  final StateController? stateController;
 
   /// Exposing the submitController to state changes for bloc pattern. It requires isBlocPattern flag to be true
   ///
@@ -352,6 +354,16 @@ class FlutterLogin extends StatefulWidget {
   ///
   /// Confirm Password Field onChanged logic
   final FormFieldSetter<String>? onChangedConfirmPasswordField;
+
+  /// AutoValidate mode to work together with onChanged fields
+  ///
+  /// If not specified it will work only when the submit button is tapped
+  final AutovalidateMode? autoValidateModeForm;
+
+  /// Additional logic to call when tapping Switch Button
+  ///
+  /// Added to transfer data through forms to blocs when the AuthMode changes
+  final VoidCallback? onSwitchButton;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -890,11 +902,13 @@ class _FlutterLoginState extends State<FlutterLogin>
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
                         isBlocPattern: widget.isBlocPattern,
-                        loginStateController: widget.loginStateController,
+                        stateController: widget.stateController,
                         onChangedConfirmPasswordField:
                             widget.onChangedConfirmPasswordField,
                         onChangedPasswordField: widget.onChangedPasswordField,
                         onChangedUserField: widget.onChangedUserField,
+                        autoValidateModeForm: widget.autoValidateModeForm,
+                        onSwitchButton: widget.onSwitchButton,
                       ),
                     ),
                     Positioned(

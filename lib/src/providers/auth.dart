@@ -144,7 +144,7 @@ class Auth with ChangeNotifier {
   }
 }
 
-class LoginStateController extends ChangeNotifier {
+class StateController extends ChangeNotifier {
   int state = 0;
   void changeState(int value) {
     assert(value >= 0 && value <= 2, throw IndexError);
