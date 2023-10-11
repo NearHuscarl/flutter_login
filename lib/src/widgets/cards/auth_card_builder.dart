@@ -60,6 +60,9 @@ class AuthCard extends StatefulWidget {
     this.stateController,
     this.autoValidateModeForm,
     this.onSwitchButton,
+    this.providerLoginAfterSignup = true,
+    this.onChangedRecoverUser,
+    this.onForgotPasswordSwitch,
   });
 
   final EdgeInsets padding;
@@ -92,6 +95,9 @@ class AuthCard extends StatefulWidget {
   final FormFieldSetter<String>? onChangedConfirmPasswordField;
   final AutovalidateMode? autoValidateModeForm;
   final VoidCallback? onSwitchButton;
+  final bool providerLoginAfterSignup;
+  final FormFieldValidator<String>? onChangedRecoverUser;
+  final VoidCallback? onForgotPasswordSwitch;
   @override
   AuthCardState createState() => AuthCardState();
 }
@@ -397,6 +403,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onChangedUserField: widget.onChangedUserField,
             autoValidateModeForm: widget.autoValidateModeForm,
             onSwitchButton: widget.onSwitchButton,
+            providerLoginAfterSignup: widget.providerLoginAfterSignup,
+            onForgotPasswordSwitch: widget.onForgotPasswordSwitch,
           ),
         );
       case _recoveryIndex:
@@ -407,6 +415,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           loadingController: formController,
           navigateBack: widget.navigateBackAfterRecovery,
           onBack: () => _changeCard(_loginPageIndex),
+          onChangedRecoverUser: (value) =>
+              widget.onChangedRecoverUser?.call(value),
           onSubmitCompleted: () {
             if (auth.onConfirmRecover != null) {
               _changeCard(_confirmRecover);
@@ -415,6 +425,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             }
           },
           initialIsoCode: widget.initialIsoCode,
+          onForgotPasswordSwitch: widget.onForgotPasswordSwitch,
+          isBlocPattern: widget.isBlocPattern,
+          autoValidateModeForm: widget.autoValidateModeForm,
+          stateController: widget.stateController,
         );
 
       case _additionalSignUpIndex:

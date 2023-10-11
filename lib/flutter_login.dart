@@ -322,8 +322,13 @@ class FlutterLogin extends StatefulWidget {
     this.onChangedConfirmPasswordField,
     this.autoValidateModeForm,
     this.onSwitchButton,
+    this.providerLoginAfterSignup = true,
+    this.onChangedRecoverUser,
+    this.onForgotPasswordSwitch,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
+
+  final FormFieldValidator<String>? onChangedRecoverUser;
 
   /// Bloc patter flag to make the submitController reactive to a state
   ///
@@ -364,6 +369,14 @@ class FlutterLogin extends StatefulWidget {
   ///
   /// Added to transfer data through forms to blocs when the AuthMode changes
   final VoidCallback? onSwitchButton;
+
+  /// Set to false to return back to sign in page after successful sign up with LoginProvider
+  final bool providerLoginAfterSignup;
+
+  /// Triggered when forgot password button was tapped, to handle states in bloc pattern
+  ///
+  ///
+  final VoidCallback? onForgotPasswordSwitch;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -909,6 +922,10 @@ class _FlutterLoginState extends State<FlutterLogin>
                         onChangedUserField: widget.onChangedUserField,
                         autoValidateModeForm: widget.autoValidateModeForm,
                         onSwitchButton: widget.onSwitchButton,
+                        providerLoginAfterSignup:
+                            widget.providerLoginAfterSignup,
+                        onChangedRecoverUser: widget.onChangedRecoverUser,
+                        onForgotPasswordSwitch: widget.onForgotPasswordSwitch,
                       ),
                     ),
                     Positioned(

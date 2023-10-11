@@ -27,6 +27,8 @@ class _LoginCard extends StatefulWidget {
     this.onChangedConfirmPasswordField,
     this.autoValidateModeForm,
     this.onSwitchButton,
+    this.onForgotPasswordSwitch,
+    this.providerLoginAfterSignup = true,
   });
 
   final AnimationController loadingController;
@@ -53,6 +55,8 @@ class _LoginCard extends StatefulWidget {
   final StateController? stateController;
   final AutovalidateMode? autoValidateModeForm;
   final VoidCallback? onSwitchButton;
+  final VoidCallback? onForgotPasswordSwitch;
+  final bool providerLoginAfterSignup;
   @override
   _LoginCardState createState() => _LoginCardState();
 }
@@ -71,6 +75,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   var _isLoading = false;
   var _isSubmitting = false;
+  var _isProviderSubmit = false;
   var _showShadow = true;
 
   /// switch between login and signup
@@ -88,8 +93,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
 
-  static const failureLoginState = 1;
-  static const successfulLoginState = 2;
+  static const failureState = 1;
+  static const successfulState = 2;
 
   @override
   void initState() {
@@ -142,16 +147,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     });
 
     if (widget.isBlocPattern!) {
-      widget.stateController!.addListener(() => handleLoginState(auth));
-    }
-  }
-
-  void handleLoadingAnimationStatus(AnimationStatus status) {
-    if (status == AnimationStatus.forward) {
-      setState(() => _isLoading = true);
-    }
-    if (status == AnimationStatus.completed) {
-      setState(() => _isLoading = false);
+      widget.stateController!.addListener(() => handleState(auth));
     }
   }
 
@@ -168,19 +164,26 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     for (final controller in _providerControllerList) {
       controller.dispose();
     }
-
-    widget.stateController!.removeListener(() => handleLoginState);
-
+    if (widget.isBlocPattern!) {
+      widget.stateController!.removeListener(() => handleState);
+    }
     super.dispose();
   }
 
-  void handleLoginState(Auth auth) {
-    if (widget.stateController!.state == successfulLoginState &&
-        _isSubmitting) {
+  void handleLoadingAnimationStatus(AnimationStatus status) {
+    if (status == AnimationStatus.forward) {
+      setState(() => _isLoading = true);
+    }
+    if (status == AnimationStatus.completed) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void handleState(Auth auth) {
+    if (widget.stateController!.state == successfulState && _isSubmitting) {
       final messages = Provider.of<LoginMessages>(context, listen: false);
       _continueSubmit(auth, messages, null);
-    } else if (widget.stateController!.state == failureLoginState &&
-        _isSubmitting) {
+    } else if (widget.stateController!.state == failureState && _isSubmitting) {
       _errorSubmit();
     }
   }
@@ -247,6 +250,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       } else if (!widget.loginAfterSignUp) {
         if (widget.isBlocPattern!) {
           setState(() => _isSubmitting = false);
+          if (_isProviderSubmit) {
+            TextInput.finishAutofillContext();
+            widget.onSubmitCompleted?.call();
+            setState(() => _isProviderSubmit = false);
+          }
           return false;
         } else {
           showSuccessToast(
@@ -256,6 +264,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           );
           _switchAuthMode();
           setState(() => _isSubmitting = false);
+          if (_isProviderSubmit) {
+            TextInput.finishAutofillContext();
+            widget.onSubmitCompleted?.call();
+            setState(() => _isProviderSubmit = false);
+          }
           return false;
         }
       }
@@ -322,6 +335,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     required LoginProvider loginProvider,
     AnimationController? control,
   }) async {
+    if (widget.providerLoginAfterSignup && !widget.loginAfterSignUp) {
+      setState(() => _isProviderSubmit = true);
+    }
     if (widget.isBlocPattern!) {
       await _submitController.forward();
       setState(() => _isSubmitting = true);
@@ -515,6 +531,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 // save state to populate email field on recovery card
                 _formKey.currentState!.save();
                 widget.onSwitchRecoveryPassword();
+                if (widget.isBlocPattern!) {
+                  widget.onForgotPasswordSwitch?.call();
+                }
               }
             : null,
         child: Text(

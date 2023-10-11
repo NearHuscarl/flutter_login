@@ -10,9 +10,15 @@ class _RecoverCard extends StatefulWidget {
     required this.onSubmitCompleted,
     required this.loadingController,
     required this.initialIsoCode,
+    this.onChangedRecoverUser,
+    this.onForgotPasswordSwitch,
+    this.isBlocPattern,
+    this.autoValidateModeForm,
+    this.stateController,
   });
 
   final FormFieldValidator<String>? userValidator;
+  final FormFieldValidator<String>? onChangedRecoverUser;
   final VoidCallback onBack;
   final LoginUserType userType;
   final LoginTheme? loginTheme;
@@ -21,6 +27,10 @@ class _RecoverCard extends StatefulWidget {
 
   final VoidCallback onSubmitCompleted;
   final String? initialIsoCode;
+  final VoidCallback? onForgotPasswordSwitch;
+  final bool? isBlocPattern;
+  final AutovalidateMode? autoValidateModeForm;
+  final StateController? stateController;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -28,6 +38,8 @@ class _RecoverCard extends StatefulWidget {
 
 class _RecoverCardState extends State<_RecoverCard>
     with SingleTickerProviderStateMixin {
+  static const failureState = 1;
+  static const successfulState = 2;
   final GlobalKey<FormState> _formRecoverKey = GlobalKey();
 
   bool _isSubmitting = false;
@@ -47,12 +59,30 @@ class _RecoverCardState extends State<_RecoverCard>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
+    if (widget.isBlocPattern!) {
+      widget.stateController!.addListener(() => handleRecoverCard());
+    }
   }
 
   @override
   void dispose() {
     _submitController.dispose();
+    if (widget.isBlocPattern!) {
+      widget.stateController!.removeListener(() => handleRecoverCard());
+    }
     super.dispose();
+  }
+
+  void handleRecoverCard() {
+    if (widget.stateController!.state == failureState ||
+        widget.stateController!.state == successfulState && _isSubmitting) {
+      _endSubmit();
+    }
+  }
+
+  Future<void> _endSubmit() async {
+    await _submitController.reverse();
+    setState(() => _isSubmitting = false);
   }
 
   Future<bool> _submit() async {
@@ -65,22 +95,27 @@ class _RecoverCardState extends State<_RecoverCard>
     _formRecoverKey.currentState!.save();
     await _submitController.forward();
     setState(() => _isSubmitting = true);
-    final error = await auth.onRecoverPassword!(auth.email);
-
-    if (error != null) {
-      showErrorToast(context, messages.flushbarTitleError, error);
-      setState(() => _isSubmitting = false);
-      await _submitController.reverse();
-      return false;
-    } else {
-      showSuccessToast(
-        context,
-        messages.flushbarTitleSuccess,
-        messages.recoverPasswordSuccess,
-      );
-      setState(() => _isSubmitting = false);
-      widget.onSubmitCompleted();
+    if (widget.isBlocPattern!) {
+      await auth.onRecoverPassword!(auth.email);
       return true;
+    } else {
+      final error = await auth.onRecoverPassword!(auth.email);
+
+      if (error != null) {
+        showErrorToast(context, messages.flushbarTitleError, error);
+        setState(() => _isSubmitting = false);
+        await _submitController.reverse();
+        return false;
+      } else {
+        showSuccessToast(
+          context,
+          messages.flushbarTitleSuccess,
+          messages.recoverPasswordSuccess,
+        );
+        setState(() => _isSubmitting = false);
+        widget.onSubmitCompleted();
+        return true;
+      }
     }
   }
 
@@ -102,6 +137,7 @@ class _RecoverCardState extends State<_RecoverCard>
       onFieldSubmitted: (value) => _submit(),
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
+      onChanged: (value) => widget.onChangedRecoverUser?.call(value),
       initialIsoCode: widget.initialIsoCode,
     );
   }
@@ -128,6 +164,9 @@ class _RecoverCardState extends State<_RecoverCard>
           ? () {
               _formRecoverKey.currentState!.save();
               widget.onBack();
+              if (widget.isBlocPattern!) {
+                widget.onForgotPasswordSwitch?.call();
+              }
             }
           : null,
       padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
@@ -159,6 +198,7 @@ class _RecoverCardState extends State<_RecoverCard>
           width: cardWidth,
           alignment: Alignment.center,
           child: Form(
+            autovalidateMode: widget.autoValidateModeForm,
             key: _formRecoverKey,
             child: Column(
               children: [
