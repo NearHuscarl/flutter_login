@@ -212,6 +212,58 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     setState(() => _isSubmitting = false);
   }
 
+  Future<bool> _submit() async {
+    FocusScope.of(context).unfocus();
+
+    final messages = Provider.of<LoginMessages>(context, listen: false);
+
+    if (!_formKey.currentState!.validate()) {
+      return false;
+    }
+    _formKey.currentState!.save();
+    setState(() => _isSubmitting = true);
+    await _submitController.forward();
+    final auth = Provider.of<Auth>(context, listen: false);
+    String? error;
+
+    auth.authType = AuthType.userPassword;
+
+    if (auth.isLogin) {
+      error = await auth.onLogin?.call(
+        LoginData(
+          name: auth.email,
+          password: auth.password,
+        ),
+      );
+    } else {
+      if (!widget.requireAdditionalSignUpFields) {
+        error = await auth.onSignup!(
+          SignupData.fromSignupForm(
+            name: auth.email,
+            password: auth.password,
+            termsOfService: auth.getTermsOfServiceResults(),
+          ),
+        );
+      } else {
+        if (auth.beforeAdditionalFieldsCallback != null) {
+          error = await auth.beforeAdditionalFieldsCallback!(
+            SignupData.fromSignupForm(
+              name: auth.email,
+              password: auth.password,
+              termsOfService: auth.getTermsOfServiceResults(),
+            ),
+          );
+        }
+      }
+    }
+
+    if (widget.isBlocPattern == true) {
+      return true;
+    } else {
+      return _continueSubmit(auth, messages, error);
+    }
+  }
+
   Future<bool> _continueSubmit(
       Auth auth, LoginMessages messages, String? error) async {
     // workaround to run after _cardSizeAnimation in parent finished
@@ -276,59 +328,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     TextInput.finishAutofillContext();
     widget.onSubmitCompleted?.call();
     return true;
-  }
-
-  Future<bool> _submit() async {
-    FocusScope.of(context).unfocus();
-
-    final messages = Provider.of<LoginMessages>(context, listen: false);
-
-    if (!_formKey.currentState!.validate()) {
-      return false;
-    }
-
-    _formKey.currentState!.save();
-    await _submitController.forward();
-    setState(() => _isSubmitting = true);
-    final auth = Provider.of<Auth>(context, listen: false);
-    String? error;
-
-    auth.authType = AuthType.userPassword;
-
-    if (auth.isLogin) {
-      error = await auth.onLogin?.call(
-        LoginData(
-          name: auth.email,
-          password: auth.password,
-        ),
-      );
-    } else {
-      if (!widget.requireAdditionalSignUpFields) {
-        error = await auth.onSignup!(
-          SignupData.fromSignupForm(
-            name: auth.email,
-            password: auth.password,
-            termsOfService: auth.getTermsOfServiceResults(),
-          ),
-        );
-      } else {
-        if (auth.beforeAdditionalFieldsCallback != null) {
-          error = await auth.beforeAdditionalFieldsCallback!(
-            SignupData.fromSignupForm(
-              name: auth.email,
-              password: auth.password,
-              termsOfService: auth.getTermsOfServiceResults(),
-            ),
-          );
-        }
-      }
-    }
-
-    if (widget.isBlocPattern == true) {
-      return true;
-    } else {
-      return _continueSubmit(auth, messages, error);
-    }
   }
 
   Future<bool> _loginProviderSubmit({

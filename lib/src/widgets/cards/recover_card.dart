@@ -60,7 +60,7 @@ class _RecoverCardState extends State<_RecoverCard>
       duration: const Duration(milliseconds: 1000),
     );
     if (widget.isBlocPattern!) {
-      widget.stateController!.addListener(() => handleRecoverCard());
+      widget.stateController!.addListener(_endSubmit);
     }
   }
 
@@ -68,21 +68,17 @@ class _RecoverCardState extends State<_RecoverCard>
   void dispose() {
     _submitController.dispose();
     if (widget.isBlocPattern!) {
-      widget.stateController!.removeListener(() => handleRecoverCard());
+      widget.stateController!.removeListener(_endSubmit);
     }
     super.dispose();
   }
 
-  void handleRecoverCard() {
+  Future<void> _endSubmit() async {
     if (widget.stateController!.state == failureState ||
         widget.stateController!.state == successfulState && _isSubmitting) {
-      _endSubmit();
+      await _submitController.reverse();
+      setState(() => _isSubmitting = false);
     }
-  }
-
-  Future<void> _endSubmit() async {
-    await _submitController.reverse();
-    setState(() => _isSubmitting = false);
   }
 
   Future<bool> _submit() async {
@@ -93,8 +89,8 @@ class _RecoverCardState extends State<_RecoverCard>
     final messages = Provider.of<LoginMessages>(context, listen: false);
 
     _formRecoverKey.currentState!.save();
-    await _submitController.forward();
     setState(() => _isSubmitting = true);
+    await _submitController.forward();
     if (widget.isBlocPattern!) {
       await auth.onRecoverPassword!(auth.email);
       return true;
