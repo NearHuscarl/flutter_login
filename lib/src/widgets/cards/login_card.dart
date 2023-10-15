@@ -478,18 +478,24 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       offset: .5,
       curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
-      child: MaterialButton(
-        disabledTextColor: theme.primaryColor,
-        onPressed: buttonEnabled ? _switchAuthMode : null,
-        padding: loginTheme.authButtonPadding ??
-            const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textColor: loginTheme.switchAuthTextColor ?? calculatedTextColor,
-        child: AnimatedText(
-          text: auth.isSignup ? messages.loginButton : messages.signupButton,
-          textRotation: AnimatedTextRotation.down,
-          style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline),
-        ),
+      child: Row(
+        children: [
+          if (!auth.isSignup) const Icon(Icons.undo) else const SizedBox(),
+          MaterialButton(
+            disabledTextColor: theme.primaryColor,
+            onPressed: buttonEnabled ? _switchAuthMode : null,
+            padding: loginTheme.authButtonPadding ??
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            textColor: loginTheme.switchAuthTextColor ?? calculatedTextColor,
+            child: AnimatedText(
+              text: auth.isSignup ? messages.loginButton : messages.signupButton,
+              textRotation: AnimatedTextRotation.down,
+              style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline),
+            ),
+          ),
+          if (auth.isSignup) const Icon(Icons.forward) else const SizedBox(),
+        ],
       ),
     );
   }

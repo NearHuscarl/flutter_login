@@ -17,7 +17,6 @@ import 'package:flutter_login/src/providers/login_theme.dart';
 import 'package:flutter_login/src/regex.dart';
 import 'package:flutter_login/src/widgets/cards/auth_card_builder.dart';
 import 'package:flutter_login/src/widgets/fade_in.dart';
-import 'package:flutter_login/src/widgets/gradient_box.dart';
 import 'package:flutter_login/src/widgets/hero_text.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:provider/provider.dart';
