@@ -479,8 +479,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       curve: _textButtonLoadingAnimationInterval,
       fadeDirection: FadeDirection.topToBottom,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (!auth.isSignup) const Icon(Icons.undo) else const SizedBox(),
+          SizedBox(
+            width: 40,
+            child: (auth.isSignup) ? const Icon(Icons.undo) : const SizedBox(width: 40,),
+          ),
           MaterialButton(
             disabledTextColor: theme.primaryColor,
             onPressed: buttonEnabled ? _switchAuthMode : null,
@@ -491,10 +495,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             child: AnimatedText(
               text: auth.isSignup ? messages.loginButton : messages.signupButton,
               textRotation: AnimatedTextRotation.down,
-              style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline),
+              style: const TextStyle(fontSize: 18,decoration: TextDecoration.underline),
             ),
           ),
-          if (auth.isSignup) const Icon(Icons.forward) else const SizedBox(),
+          SizedBox(
+            width: 40,
+            child: (!auth.isSignup) ? const Icon(Icons.forward) : const SizedBox(),
+          ),
+
         ],
       ),
     );
