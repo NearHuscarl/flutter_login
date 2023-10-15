@@ -488,6 +488,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         child: AnimatedText(
           text: auth.isSignup ? messages.loginButton : messages.signupButton,
           textRotation: AnimatedTextRotation.down,
+          style: const TextStyle(fontSize: 20,decoration: TextDecoration.underline),
         ),
       ),
     );
