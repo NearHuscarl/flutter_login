@@ -178,7 +178,8 @@ Text recoverDescriptionTextWidget() {
 // tester.tap() not working for some reasons. Workaround:
 // https://github.com/flutter/flutter/issues/31066#issuecomment-530507319
 void clickSubmitButton() => submitButtonWidget().onPressed?.call();
-void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed?.call();
+void clickForgotPasswordButton() =>
+    forgotPasswordButtonWidget().onPressed?.call();
 void clickGoBackButton() => goBackButtonWidget().onPressed?.call();
 void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed?.call();
 void clickFirstProvider() => firstProviderButton().onPressed();

@@ -629,7 +629,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     loginProvider: loginProvider,
                   ),
                 ),
-                Text(loginProvider.label)
+                Text(loginProvider.label),
               ],
             ),
           ),
@@ -727,7 +727,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     auth,
                   ),
                 ),
-                for (var e in auth.termsOfService)
+                for (final e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
                     validation: auth.isSignup,

@@ -54,10 +54,10 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     super.initState();
 
     _nameControllers = {
-      for (var formField in widget.formFields)
+      for (final formField in widget.formFields)
         formField.keyName: TextEditingController(
           text: formField.defaultValue,
-        )
+        ),
     };
 
     if (_nameControllers.length != widget.formFields.length) {
@@ -184,7 +184,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                   const Icon(FontAwesomeIcons.solidCircleUser),
               keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
               autofillHints: [
-                TextFieldUtils.getAutofillHints(formField.userType)
+                TextFieldUtils.getAutofillHints(formField.userType),
               ],
               textInputAction:
                   formField.keyName == widget.formFields.last.keyName
@@ -195,7 +195,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             ),
             const SizedBox(
               height: 5,
-            )
+            ),
           ],
         );
       }).toList(),

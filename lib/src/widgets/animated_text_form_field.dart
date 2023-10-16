@@ -352,7 +352,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
                         color: Theme.of(context).textTheme.bodyMedium!.color,
                         size: Theme.of(context).textTheme.bodyMedium!.fontSize,
                       ),
-                    )
+                    ),
                   ],
                 ),
               )
@@ -402,7 +402,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
             color: theme.primaryColor,
             iconSize: 28,
             icon: const Icon(Icons.info),
-          )
+          ),
         ],
       );
     }
