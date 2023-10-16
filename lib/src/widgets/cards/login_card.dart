@@ -19,6 +19,7 @@ class _LoginCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.introWidget,
+    required this.initialIsoCode,
   });
 
   final AnimationController loadingController;
@@ -37,6 +38,7 @@ class _LoginCard extends StatefulWidget {
   final bool requireAdditionalSignUpFields;
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
+  final String? initialIsoCode;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -267,7 +269,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       final messages = Provider.of<LoginMessages>(context, listen: false);
 
       if (!DartHelper.isNullOrEmpty(error)) {
-        showErrorToast(context, messages.flushbarTitleError, error!);
+        // Only show error toast if error is not in exclusion list
+        if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+            !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+          showErrorToast(context, messages.flushbarTitleError, error!);
+        }
         return false;
       }
 
@@ -365,6 +371,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
       enabled: !_isSubmitting,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
@@ -394,6 +401,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       validator: widget.passwordValidator,
       onSaved: (value) => auth.password = value!,
       enabled: !_isSubmitting,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
@@ -422,6 +430,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             }
           : (value) => null,
       onSaved: (value) => auth.confirmPassword = value!,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 

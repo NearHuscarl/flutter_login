@@ -67,10 +67,19 @@ class LoginProvider {
   /// Default: true
   final bool animated;
 
+  /// Provide a list of errors to not display when a login has failed.
+  /// For example, if the login is cancelled and you don't want to show a error
+  /// message that the login is cancelled. If you provide the error message to this list
+  /// the error is not shown
+  ///
+  /// Default: null
+  final List<String>? errorsToExcludeFromErrorMessage;
+
   const LoginProvider({
     this.button,
     this.icon,
     required this.callback,
+    this.errorsToExcludeFromErrorMessage,
     this.label = '',
     this.providerNeedsSignUpCallback,
     this.animated = true,
@@ -304,6 +313,7 @@ class FlutterLogin extends StatefulWidget {
     this.confirmSignupKeyboardType,
     this.headerWidget,
     this.onSwitchToAdditionalFields,
+    this.initialIsoCode,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -445,6 +455,10 @@ class FlutterLogin extends StatefulWidget {
 
   /// A widget that can be placed on top of the loginCard.
   final Widget? headerWidget;
+
+  /// The initial Iso Code for the widget to show using [LoginUserType.intlPhone].
+  /// if not specified. This field will show ['US'] by default.
+  final String? initialIsoCode;
 
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -838,6 +852,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         confirmSignupKeyboardType:
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
+                        initialIsoCode: widget.initialIsoCode,
                       ),
                     ),
                     Positioned(

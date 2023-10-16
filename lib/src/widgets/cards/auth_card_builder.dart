@@ -52,6 +52,7 @@ class AuthCard extends StatefulWidget {
     required this.scrollable,
     required this.confirmSignupKeyboardType,
     this.introWidget,
+    required this.initialIsoCode,
   });
 
   final EdgeInsets padding;
@@ -76,6 +77,7 @@ class AuthCard extends StatefulWidget {
   final bool scrollable;
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
+  final String? initialIsoCode;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -374,6 +376,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loginAfterSignUp: widget.loginAfterSignUp,
             hideProvidersTitle: widget.hideProvidersTitle,
             introWidget: widget.introWidget,
+            initialIsoCode: widget.initialIsoCode,
           ),
         );
       case _recoveryIndex:
@@ -391,6 +394,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               _changeCard(_loginPageIndex);
             }
           },
+          initialIsoCode: widget.initialIsoCode,
         );
 
       case _additionalSignUpIndex:
@@ -420,6 +424,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 _changeCard(_loginPageIndex);
               }
             },
+            initialIsoCode: widget.initialIsoCode,
           ),
         );
 
@@ -429,6 +434,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
           passwordValidator: widget.passwordValidator!,
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
+          initialIsoCode: widget.initialIsoCode,
         );
 
       case _confirmSignup:
@@ -451,6 +457,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             },
             loginAfterSignUp: widget.loginAfterSignUp,
             keyboardType: widget.confirmSignupKeyboardType,
+            initialIsoCode: widget.initialIsoCode,
           ),
         );
     }
