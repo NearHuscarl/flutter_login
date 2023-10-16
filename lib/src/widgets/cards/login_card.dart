@@ -332,7 +332,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       await control?.reverse();
       widget.onSwitchSignUpAdditionalData();
     } else {
-      widget.onSubmitCompleted!();
+      widget.onSubmitCompleted?.call();
     }
     await control?.reverse();
     return true;
