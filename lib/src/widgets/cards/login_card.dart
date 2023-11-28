@@ -217,9 +217,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     });
 
-    await _submitController.reverse();
+    if (mounted) {
+      await _submitController.reverse();
+    }
 
-    if (!DartHelper.isNullOrEmpty(error)) {
+    if (!DartHelper.isNullOrEmpty(error) && mounted) {
       showErrorToast(context, messages.flushbarTitleError, error!);
       Future.delayed(const Duration(milliseconds: 271), () {
         if (mounted) {
@@ -230,7 +232,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       return false;
     }
 
-    if (auth.isSignup) {
+    if (auth.isSignup && mounted) {
       final requireSignUpConfirmation =
           await widget.requireSignUpConfirmation();
       if (widget.requireAdditionalSignUpFields) {
@@ -254,7 +256,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     }
     TextInput.finishAutofillContext();
-    widget.onSubmitCompleted?.call();
+
+    if (mounted) {
+      widget.onSubmitCompleted?.call();
+    }
 
     return true;
   }
