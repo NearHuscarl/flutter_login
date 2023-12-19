@@ -53,6 +53,7 @@ class AuthCard extends StatefulWidget {
     required this.confirmSignupKeyboardType,
     this.introWidget,
     required this.initialIsoCode,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
   });
 
   final EdgeInsets padding;
@@ -75,6 +76,9 @@ class AuthCard extends StatefulWidget {
   final bool navigateBackAfterRecovery;
 
   final bool scrollable;
+
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
   final String? initialIsoCode;
@@ -490,6 +494,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               child: Scrollbar(
                 controller: _scrollController,
                 child: SingleChildScrollView(
+                  keyboardDismissBehavior: widget.keyboardDismissBehavior,
                   controller: _scrollController,
                   child: _changeToCard(context, index),
                 ),

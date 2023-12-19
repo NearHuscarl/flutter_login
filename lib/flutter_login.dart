@@ -314,6 +314,7 @@ class FlutterLogin extends StatefulWidget {
     this.headerWidget,
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -459,6 +460,8 @@ class FlutterLogin extends StatefulWidget {
   /// The initial Iso Code for the widget to show using [LoginUserType.intlPhone].
   /// if not specified. This field will show ['US'] by default.
   final String? initialIsoCode;
+
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
@@ -821,6 +824,7 @@ class _FlutterLoginState extends State<FlutterLogin>
               ],
             ),
             SingleChildScrollView(
+              keyboardDismissBehavior: widget.keyboardDismissBehavior,
               child: Theme(
                 data: theme,
                 child: Stack(
@@ -830,6 +834,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                       child: AuthCard(
                         key: authCardKey,
                         userType: widget.userType,
+                        keyboardDismissBehavior: widget.keyboardDismissBehavior,
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
                         userValidator: userValidator,

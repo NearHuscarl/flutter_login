@@ -4,7 +4,7 @@ version: 4.2.3
 repository: https://github.com/NearHuscarl/flutter_login
 
 environment:
-  sdk: '>=2.19.0 <4.0.0'
+  sdk: ">=2.19.0 <4.0.0"
 
 dependencies:
   another_flushbar: ^1.10.29
