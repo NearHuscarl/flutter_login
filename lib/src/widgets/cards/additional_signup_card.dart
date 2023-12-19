@@ -150,7 +150,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
         break;
     }
 
-        if (context.mounted) {
+    if (context.mounted) {
       await _submitController.reverse();
     }
     if (!isNullOrEmpty(error)) {

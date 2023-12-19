@@ -72,9 +72,9 @@ class _RecoverCardState extends State<_RecoverCard>
         showErrorToast(context, messages.flushbarTitleError, error);
       }
       setState(() => _isSubmitting = false);
-          if (context.mounted) {
-      await _submitController.reverse();
-    }
+      if (context.mounted) {
+        await _submitController.reverse();
+      }
       return false;
     } else {
       if (context.mounted) {

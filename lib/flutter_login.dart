@@ -687,7 +687,6 @@ class _FlutterLoginState extends State<FlutterLogin>
         clipBehavior: cardTheme.clipBehavior,
         surfaceTintColor: cardTheme.surfaceTintColor,
         color: cardTheme.color ?? theme.cardColor,
-        surfaceTintColor: cardTheme.surfaceTintColor,
         elevation: cardTheme.elevation ?? 12.0,
         margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
         shape: cardTheme.shape ??
