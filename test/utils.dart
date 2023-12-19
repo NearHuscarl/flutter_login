@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/utils/constants.dart';
 import 'package:flutter_login/src/widgets/animated_button.dart';
 import 'package:flutter_login/src/widgets/animated_icon.dart';
 import 'package:flutter_test/flutter_test.dart';

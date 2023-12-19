@@ -69,17 +69,22 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     );
 
     if (error != null) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      if (context.mounted) {
+        showErrorToast(context, messages.flushbarTitleError, error);
+      }
       setState(() => _isSubmitting = false);
       await _fieldSubmitController.reverse();
       return false;
     }
 
-    showSuccessToast(
-      context,
-      messages.flushbarTitleSuccess,
-      messages.confirmSignupSuccess,
-    );
+    if (context.mounted) {
+      showSuccessToast(
+        context,
+        messages.flushbarTitleSuccess,
+        messages.confirmSignupSuccess,
+      );
+    }
+
     setState(() => _isSubmitting = false);
     await _fieldSubmitController.reverse();
 
@@ -110,17 +115,23 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     );
 
     if (error != null) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      if (context.mounted) {
+        showErrorToast(context, messages.flushbarTitleError, error);
+      }
+
       setState(() => _isSubmitting = false);
       await _fieldSubmitController.reverse();
       return false;
     }
 
-    showSuccessToast(
-      context,
-      messages.flushbarTitleSuccess,
-      messages.resendCodeSuccess,
-    );
+    if (context.mounted) {
+      showSuccessToast(
+        context,
+        messages.flushbarTitleSuccess,
+        messages.resendCodeSuccess,
+      );
+    }
+
     setState(() => _isSubmitting = false);
     await _fieldSubmitController.reverse();
     return true;

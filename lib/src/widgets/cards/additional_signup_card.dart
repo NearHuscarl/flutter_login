@@ -116,11 +116,13 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       return false;
     }
 
+    final auth = Provider.of<Auth>(context, listen: false);
+
     _formCompleteSignupKey.currentState!.save();
     await _submitController.forward();
+
     setState(() => _isSubmitting = true);
 
-    final auth = Provider.of<Auth>(context, listen: false);
     String? error;
 
     // We have to convert the Map<String, TextEditingController> to a Map<String, String>
@@ -148,18 +150,25 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
         break;
     }
 
-    await _submitController.reverse();
-    if (!DartHelper.isNullOrEmpty(error)) {
-      showErrorToast(context, messages.flushbarTitleError, error!);
+    if (context.mounted) {
+      await _submitController.reverse();
+    }
+    if (!isNullOrEmpty(error)) {
+      if (context.mounted) {
+        showErrorToast(context, messages.flushbarTitleError, error!);
+      }
       setState(() => _isSubmitting = false);
       return false;
     } else {
-      showSuccessToast(
-        context,
-        messages.flushbarTitleSuccess,
-        messages.signUpSuccess,
-        const Duration(seconds: 4),
-      );
+      if (context.mounted) {
+        showSuccessToast(
+          context,
+          messages.flushbarTitleSuccess,
+          messages.signUpSuccess,
+          const Duration(seconds: 4),
+        );
+      }
+
       setState(() => _isSubmitting = false);
       // await _loadingController.reverse();
       widget.onSubmitCompleted();
@@ -184,9 +193,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
               labelText: formField.displayName,
               prefixIcon: formField.icon ??
                   const Icon(FontAwesomeIcons.solidCircleUser),
-              keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
+              keyboardType: getKeyboardType(formField.userType),
               autofillHints: [
-                TextFieldUtils.getAutofillHints(formField.userType),
+                getAutofillHints(formField.userType),
               ],
               textInputAction:
                   formField.keyName == widget.formFields.last.keyName
