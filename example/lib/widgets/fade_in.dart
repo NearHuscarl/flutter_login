@@ -9,7 +9,7 @@ enum FadeDirection {
 
 class FadeIn extends StatefulWidget {
   const FadeIn({
-    Key? key,
+    super.key,
     this.fadeDirection = FadeDirection.startToEnd,
     this.offset = 1.0,
     this.controller,
@@ -20,8 +20,7 @@ class FadeIn extends StatefulWidget {
           controller == null && duration != null ||
               controller != null && duration == null,
         ),
-        assert(offset > 0),
-        super(key: key);
+        assert(offset > 0);
 
   /// [FadeIn] animation can be controlled via external [controller]. If
   /// [controller] is not provided, it will use the default internal controller

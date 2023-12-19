@@ -1,3 +1,16 @@
+## 4.3.0
+Features:
+- Added keyboardDismissBehavior parameter to select the behaviour of the keyboard when scrolling.
+- Added initialIsoCode parameter to set the initial iso code for the widget [LoginUserType.intlPhone]. Defaults to ['US'] if not specified.
+- The card surfaceTintColor can now be set using cardTheme.surfaceTintColor.
+
+Bugs fixed:
+- Navigate to login page after pressing sign up confirm button when loginAfterSignUp is disabled and additionalSignupData is not null.
+- Added context checks to prevent crashes when widget is not mounted anymore.
+
+Other improvements:
+- [Android] Upgraded to Gradle 8.
+
 ## 4.2.1
 - Added dynamic prefix-icon on recover card based on user type. (thanks @lucaloiacono !)
 

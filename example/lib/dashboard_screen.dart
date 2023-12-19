@@ -12,7 +12,7 @@ import 'package:login_example/widgets/round_button.dart';
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
 
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

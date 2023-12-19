@@ -1,4 +1,4 @@
-name: code analysis & formatting
+name: Flutter Checks
 
 on:
   push:
@@ -40,8 +40,6 @@ jobs:
           channel: 'stable'
       - name: Version
         run: flutter doctor -v
-      - name: Install dependencies
-        run: flutter pub get --directory ./example
       - name: Install dependencies
         run: flutter pub get
       - name: Linter

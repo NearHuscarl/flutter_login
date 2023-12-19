@@ -10,7 +10,7 @@ import 'package:login_example/users.dart';
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
@@ -280,7 +280,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class IntroWidget extends StatelessWidget {
-  const IntroWidget({Key? key}) : super(key: key);
+  const IntroWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

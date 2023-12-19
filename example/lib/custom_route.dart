@@ -4,12 +4,9 @@ import 'package:login_example/login_screen.dart';
 
 class FadePageRoute<T> extends MaterialPageRoute<T> {
   FadePageRoute({
-    required WidgetBuilder builder,
-    RouteSettings? settings,
-  }) : super(
-          builder: builder,
-          settings: settings,
-        );
+    required super.builder,
+    super.settings,
+  });
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 600);
