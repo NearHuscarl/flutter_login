@@ -1,6 +1,6 @@
 ## 5.0.0
 Breaking Changes:
-- [Android] Upgraded to Gradle 8. Due to a dependency update, the minimum Flutter version is changed to 3.16.
+- [Android] Upgraded to Gradle 8. Due to a dependency update (intl_phone_number_input), the minimum Flutter version is changed to 3.16.
 
 Features:
 - Added keyboardDismissBehavior parameter to select the behaviour of the keyboard when scrolling.
