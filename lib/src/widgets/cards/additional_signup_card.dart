@@ -137,7 +137,6 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             additionalSignupData: auth.additionalSignupData,
           ),
         );
-        break;
       case AuthType.userPassword:
         error = await auth.onSignup!(
           SignupData.fromSignupForm(
@@ -147,7 +146,6 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             termsOfService: auth.getTermsOfServiceResults(),
           ),
         );
-        break;
     }
 
     if (context.mounted) {

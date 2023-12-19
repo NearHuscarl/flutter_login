@@ -77,11 +77,9 @@ class __HeroTextContentState extends State<_HeroTextContent>
             curve: Curves.easeInOut,
           ),
         );
-        break;
 
       case ViewState.enlarged:
         fontSize = widget.largeFontSize;
-        break;
 
       case ViewState.shrink:
         _fontSizeTween = Tween<double>(
@@ -93,11 +91,9 @@ class __HeroTextContentState extends State<_HeroTextContent>
             curve: Curves.easeInOut,
           ),
         );
-        break;
 
       case ViewState.shrunk:
         fontSize = widget.smallFontSize;
-        break;
     }
   }
 

@@ -65,19 +65,15 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       case FadeDirection.startToEnd:
         begin = Offset(-offset, 0);
         end = Offset.zero;
-        break;
       case FadeDirection.endToStart:
         begin = Offset(offset, 0);
         end = Offset.zero;
-        break;
       case FadeDirection.topToBottom:
         begin = Offset(0, -offset);
         end = Offset.zero;
-        break;
       case FadeDirection.bottomToTop:
         begin = Offset(0, offset);
         end = Offset.zero;
-        break;
     }
 
     _slideAnimation = Tween<Offset>(

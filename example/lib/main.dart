@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:login_example/dashboard_screen.dart';
-import 'package:login_example/login_screen.dart';
-import 'package:login_example/transition_route_observer.dart';
+import 'package:flutter_login_example/dashboard_screen.dart';
+import 'package:flutter_login_example/login_screen.dart';
+import 'package:flutter_login_example/transition_route_observer.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(

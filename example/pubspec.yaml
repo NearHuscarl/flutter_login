@@ -1,7 +1,7 @@
-name: login_example
-description: Example of flutter_login package.
+name: flutter_login_example
+description: "Example of flutter_login package."
 version: 1.0.0+1
-publish_to: none
+publish_to: 'none'
 
 environment:
   sdk: ">=3.0.2 <4.0.0"
