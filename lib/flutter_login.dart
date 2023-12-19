@@ -5,16 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
-import 'package:flutter_login/src/color_helper.dart';
-import 'package:flutter_login/src/constants.dart';
-import 'package:flutter_login/src/dart_helper.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:flutter_login/src/providers/auth.dart';
 import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
-import 'package:flutter_login/src/regex.dart';
+import 'package:flutter_login/src/utils/color_helper.dart';
+import 'package:flutter_login/src/utils/constants.dart';
+import 'package:flutter_login/src/utils/dart_helper.dart';
 import 'package:flutter_login/src/widgets/cards/auth_card_builder.dart';
 import 'package:flutter_login/src/widgets/fade_in.dart';
 import 'package:flutter_login/src/widgets/gradient_box.dart';
@@ -159,7 +158,7 @@ class __HeaderState extends State<_Header> {
 
   /// https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
-    if (DartHelper.isNullOrEmpty(widget.title)) {
+    if (isNullOrEmpty(widget.title)) {
       return 0.0;
     }
 
@@ -225,7 +224,7 @@ class __HeaderState extends State<_Header> {
     }
 
     Widget? title;
-    if (widget.titleTag != null && !DartHelper.isNullOrEmpty(widget.title)) {
+    if (widget.titleTag != null && !isNullOrEmpty(widget.title)) {
       title = HeroText(
         widget.title,
         key: kTitleKey,
@@ -235,7 +234,7 @@ class __HeaderState extends State<_Header> {
         style: theme.textTheme.displaySmall,
         viewState: ViewState.enlarged,
       );
-    } else if (!DartHelper.isNullOrEmpty(widget.title)) {
+    } else if (!isNullOrEmpty(widget.title)) {
       title = Text(
         widget.title!,
         key: kTitleKey,
@@ -461,7 +460,7 @@ class FlutterLogin extends StatefulWidget {
   final String? initialIsoCode;
 
   static String? defaultEmailValidator(String? value) {
-    if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
+    if (value == null || value.isEmpty || !email.hasMatch(value)) {
       return 'Invalid email!';
     }
     return null;
@@ -683,6 +682,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       primaryColorDark: primaryColorDark,
       cardTheme: theme.cardTheme.copyWith(
         clipBehavior: cardTheme.clipBehavior,
+        surfaceTintColor: cardTheme.surfaceTintColor,
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
         margin: cardTheme.margin ?? const EdgeInsets.all(4.0),

@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_login/src/math_helper.dart';
-import 'package:flutter_login/src/matrix.dart';
-import 'package:flutter_login/src/widget_helper.dart';
+import 'package:flutter_login/src/utils/math_helper.dart';
+import 'package:flutter_login/src/utils/matrix.dart';
+import 'package:flutter_login/src/utils/widget_helper.dart';
 
 enum AnimatedTextRotation { up, down }
 
@@ -90,7 +90,7 @@ class _AnimatedTextState extends State<AnimatedText>
     if (kIsWeb) {
       return Matrix4.identity();
     }
-    return Matrix.perspective(.006);
+    return perspective(.006);
   }
 
   Matrix4 _getFrontSideUp(double value) {
@@ -155,7 +155,7 @@ class _AnimatedTextState extends State<AnimatedText>
       builder: (context, child) => Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          if (_animation.value <= MathHelper.toRadian(85))
+          if (_animation.value <= toRadian(85))
             Transform(
               alignment: Alignment.center,
               transform: rollUp
@@ -163,7 +163,7 @@ class _AnimatedTextState extends State<AnimatedText>
                   : _getFrontSideDown(_animation.value),
               child: oldText,
             ),
-          if (_animation.value >= MathHelper.toRadian(5))
+          if (_animation.value >= toRadian(5))
             Transform(
               alignment: Alignment.center,
               transform: rollUp
