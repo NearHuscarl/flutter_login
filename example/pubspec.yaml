@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   cupertino_icons: ^1.0.3
@@ -24,9 +24,9 @@ flutter:
   uses-material-design: true
 
   assets:
-  - assets/images/ecorp.png
-  - assets/images/ecorp-lightblue.png
-  - assets/images/ecorp-lightgreen.png
+    - assets/images/ecorp.png
+    - assets/images/ecorp-lightblue.png
+    - assets/images/ecorp-lightgreen.png
 
   fonts:
     - family: OpenSans

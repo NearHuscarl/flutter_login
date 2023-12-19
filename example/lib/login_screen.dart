@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:login_example/constants.dart';
 import 'package:login_example/custom_route.dart';
 import 'package:login_example/dashboard_screen.dart';
@@ -52,6 +51,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: Constants.appName,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       logo: const AssetImage('assets/images/ecorp.png'),
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
