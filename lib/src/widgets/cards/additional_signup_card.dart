@@ -162,7 +162,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       );
       setState(() => _isSubmitting = false);
       // await _loadingController.reverse();
-      widget.onSubmitCompleted.call();
+      widget.onSubmitCompleted();
       return true;
     }
   }
