@@ -128,7 +128,11 @@ class __HeroTextContentState extends State<_HeroTextContent>
         style: widget.style!.copyWith(fontSize: fontSize),
         textAlign: widget.textAlign,
         textDirection: widget.textDirection,
-        textScaleFactor: widget.textScaleFactor,
+        // Deprecated
+        // textScaleFactor: widget.textScaleFactor,
+        textScaler: widget.textScaleFactor != null
+            ? TextScaler.linear(widget.textScaleFactor!)
+            : null,
         maxLines: widget.maxLines,
         locale: widget.locale,
         strutStyle: widget.strutStyle,

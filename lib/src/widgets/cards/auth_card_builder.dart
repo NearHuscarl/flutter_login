@@ -366,7 +366,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
               _forwardChangeRouteAnimation(_loginCardKey).then((_) {
-                widget.onSubmitCompleted!();
+                widget.onSubmitCompleted?.call();
               });
             },
             requireSignUpConfirmation: requireSignUpConfirmation,
@@ -418,7 +418,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               } else if (widget.loginAfterSignUp) {
                 _forwardChangeRouteAnimation(_additionalSignUpCardKey)
                     .then((_) {
-                  widget.onSubmitCompleted!();
+                  widget.onSubmitCompleted?.call();
                 });
               } else {
                 _changeCard(_loginPageIndex);
@@ -449,7 +449,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSubmitCompleted: () {
               if (widget.loginAfterSignUp) {
                 _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
-                  widget.onSubmitCompleted!();
+                  widget.onSubmitCompleted?.call();
                 });
               } else {
                 _changeCard(_loginPageIndex);

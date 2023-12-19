@@ -302,7 +302,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (!DartHelper.isNullOrEmpty(error)) {
       await control?.reverse();
-      showErrorToast(context, messages.flushbarTitleError, error!);
+
+      // Only show error toast if error is not in exclusion list
+      if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+          !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+        showErrorToast(context, messages.flushbarTitleError, error!);
+      }
+
       Future.delayed(const Duration(milliseconds: 271), () {
         if (mounted) {
           setState(() => _showShadow = true);
@@ -326,7 +332,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         );
         await control?.reverse();
         if (!DartHelper.isNullOrEmpty(error)) {
-          showErrorToast(context, messages.flushbarTitleError, error!);
+          // Only show error toast if error is not in exclusion list
+          if (loginProvider.errorsToExcludeFromErrorMessage == null ||
+              !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
+            showErrorToast(context, messages.flushbarTitleError, error!);
+          }
+
           Future.delayed(const Duration(milliseconds: 271), () {
             if (mounted) {
               setState(() => _showShadow = true);
@@ -338,7 +349,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       await control?.reverse();
       widget.onSwitchSignUpAdditionalData();
     } else {
-      widget.onSubmitCompleted!();
+      widget.onSubmitCompleted?.call();
     }
     await control?.reverse();
     return true;
@@ -542,29 +553,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final iconProvidersList = <LoginProvider>[];
     for (final loginProvider in auth.loginProviders) {
       if (loginProvider.button != null) {
-        buttonProvidersList.add(
-          LoginProvider(
-            icon: loginProvider.icon,
-            label: loginProvider.label,
-            button: loginProvider.button,
-            callback: loginProvider.callback,
-            animated: loginProvider.animated,
-            providerNeedsSignUpCallback:
-                loginProvider.providerNeedsSignUpCallback,
-          ),
-        );
+        buttonProvidersList.add(loginProvider);
       } else if (loginProvider.icon != null) {
-        iconProvidersList.add(
-          LoginProvider(
-            icon: loginProvider.icon,
-            label: loginProvider.label,
-            button: loginProvider.button,
-            callback: loginProvider.callback,
-            animated: loginProvider.animated,
-            providerNeedsSignUpCallback:
-                loginProvider.providerNeedsSignUpCallback,
-          ),
-        );
+        iconProvidersList.add(loginProvider);
       }
     }
     if (buttonProvidersList.isNotEmpty) {
@@ -638,7 +629,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     loginProvider: loginProvider,
                   ),
                 ),
-                Text(loginProvider.label)
+                Text(loginProvider.label),
               ],
             ),
           ),
@@ -736,7 +727,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     auth,
                   ),
                 ),
-                for (var e in auth.termsOfService)
+                for (final e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
                     validation: auth.isSignup,
