@@ -22,7 +22,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lint: ^2.2.0
+  lint: ^2.0.20
   mockito: ^5.0.16
 
 flutter:

@@ -1,4 +1,4 @@
-name: Flutter Checks
+name: flutter
 
 on:
   push:
