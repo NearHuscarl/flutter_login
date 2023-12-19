@@ -1,10 +1,11 @@
-name: login_example
-description: Example of flutter_login package.
+name: flutter_login_example
+description: "Example of flutter_login package."
 version: 1.0.0+1
-publish_to: none
+publish_to: 'none'
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ^3.16.0
 
 dependencies:
   cupertino_icons: ^1.0.3
@@ -18,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lint: ^2.2.0
+  lint: ^2.1.2
 
 flutter:
   uses-material-design: true

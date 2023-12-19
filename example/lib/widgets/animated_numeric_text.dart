@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class AnimatedNumericText extends StatelessWidget {
   AnimatedNumericText({
-    Key? key,
+    super.key,
     required this.initialValue,
     required this.targetValue,
     required this.controller,
@@ -19,8 +19,7 @@ class AnimatedNumericText extends StatelessWidget {
             parent: controller,
             curve: curve,
           ),
-        ),
-        super(key: key);
+        );
 
   final double initialValue;
   final double targetValue;

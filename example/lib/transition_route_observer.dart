@@ -74,7 +74,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
 ///
 /// This is used with [TransitionRouteObserver] to make a widget aware of changes to the
 /// [Navigator]'s session history.
-abstract class TransitionRouteAware {
+mixin TransitionRouteAware {
   /// Called when the top route has been popped off, and the current route
   /// shows up.
   void didPopNext() {}

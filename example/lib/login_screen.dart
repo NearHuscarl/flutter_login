@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
+import 'package:flutter_login_example/constants.dart';
+import 'package:flutter_login_example/custom_route.dart';
+import 'package:flutter_login_example/dashboard_screen.dart';
+import 'package:flutter_login_example/users.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:login_example/constants.dart';
-import 'package:login_example/custom_route.dart';
-import 'package:login_example/dashboard_screen.dart';
-import 'package:login_example/users.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
@@ -280,7 +280,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class IntroWidget extends StatelessWidget {
-  const IntroWidget({Key? key}) : super(key: key);
+  const IntroWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
