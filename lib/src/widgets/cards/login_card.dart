@@ -221,12 +221,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     });
 
-    if (context.mounted) {
+    if (mounted) {
       await _submitController.reverse();
     }
 
     if (!isNullOrEmpty(error)) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error!);
       }
 
@@ -252,7 +252,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         _switchAuthMode();
         return false;
       } else if (!widget.loginAfterSignUp) {
-        if (context.mounted) {
+        if (mounted) {
           showSuccessToast(
             context,
             messages.flushbarTitleSuccess,
@@ -283,7 +283,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         // Only show error toast if error is not in exclusion list
         if (loginProvider.errorsToExcludeFromErrorMessage == null ||
             !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-          if (context.mounted) {
+          if (mounted) {
             showErrorToast(context, messages.flushbarTitleError, error!);
           }
         }
@@ -316,7 +316,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       // Only show error toast if error is not in exclusion list
       if (loginProvider.errorsToExcludeFromErrorMessage == null ||
           !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-        if (context.mounted) {
+        if (mounted) {
           showErrorToast(context, messages.flushbarTitleError, error!);
         }
       }
@@ -347,7 +347,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           // Only show error toast if error is not in exclusion list
           if (loginProvider.errorsToExcludeFromErrorMessage == null ||
               !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-            if (context.mounted) {
+            if (mounted) {
               showErrorToast(context, messages.flushbarTitleError, error!);
             }
           }
