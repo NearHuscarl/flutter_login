@@ -14,11 +14,13 @@ class AnimatedIconButton extends StatefulWidget {
     required this.icon,
     this.loadingColor,
     this.color,
+    this.iconColor,
   });
 
   final String tooltip;
   final Color? color;
   final Color? loadingColor;
+  final Color? iconColor;
   final VoidCallback onPressed;
   final AnimationController controller;
   final IconData icon;
@@ -200,7 +202,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
                 width: _height,
                 height: _height,
                 alignment: Alignment.center,
-                child: Icon(widget.icon, color: Colors.white),
+                child:
+                    Icon(widget.icon, color: widget.iconColor ?? Colors.white),
               ),
             ),
           ),

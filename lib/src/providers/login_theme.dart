@@ -5,6 +5,7 @@ class LoginButtonTheme {
     this.backgroundColor,
     this.highlightColor,
     this.splashColor,
+    this.iconColor,
     this.elevation,
     this.highlightElevation,
     this.shape,
@@ -21,6 +22,9 @@ class LoginButtonTheme {
 
   /// The splash color for this button's [InkWell].
   final Color? splashColor;
+
+  /// The color to use for icons. Defaults to [Colors.white]
+  final Color? iconColor;
 
   /// The z-coordinate to be used for the unselected, enabled
   /// button's elevation foreground.

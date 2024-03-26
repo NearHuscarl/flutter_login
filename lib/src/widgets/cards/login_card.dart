@@ -633,6 +633,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 AnimatedIconButton(
                   color: Colors.transparent,
                   icon: loginProvider.icon!,
+                  iconColor: loginTheme.buttonTheme.iconColor,
                   controller: _providerControllerList[index],
                   tooltip: loginProvider.label,
                   onPressed: () => _loginProviderSubmit(
