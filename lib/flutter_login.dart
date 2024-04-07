@@ -156,7 +156,7 @@ class _Header extends StatefulWidget {
 class __HeaderState extends State<_Header> {
   double _titleHeight = 0.0;
 
-  /// https://stackoverflow.com/a/56997641/9449426
+  // https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
     if (isNullOrEmpty(widget.title)) {
       return 0.0;
