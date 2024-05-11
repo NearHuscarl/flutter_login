@@ -23,6 +23,7 @@ class _LoginCard extends StatefulWidget {
     this.hideProvidersTitle = false,
     this.introWidget,
     required this.initialIsoCode,
+    required this.autofocus,
   });
 
   final AnimationController loadingController;
@@ -42,6 +43,7 @@ class _LoginCard extends StatefulWidget {
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool autofocus;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -386,6 +388,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       prefixIcon: getPrefixIcon(widget.userType),
       keyboardType: getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
+      autofocus: widget.autofocus,
       focusNode: _userFocusNode,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
