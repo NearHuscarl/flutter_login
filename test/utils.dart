@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_login/src/constants.dart';
+import 'package:flutter_login/src/utils/constants.dart';
 import 'package:flutter_login/src/widgets/animated_button.dart';
 import 'package:flutter_login/src/widgets/animated_icon.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -177,10 +177,11 @@ Text recoverDescriptionTextWidget() {
 
 // tester.tap() not working for some reasons. Workaround:
 // https://github.com/flutter/flutter/issues/31066#issuecomment-530507319
-void clickSubmitButton() => submitButtonWidget().onPressed!();
-void clickForgotPasswordButton() => forgotPasswordButtonWidget().onPressed!();
-void clickGoBackButton() => goBackButtonWidget().onPressed!();
-void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed!();
+void clickSubmitButton() => submitButtonWidget().onPressed?.call();
+void clickForgotPasswordButton() =>
+    forgotPasswordButtonWidget().onPressed?.call();
+void clickGoBackButton() => goBackButtonWidget().onPressed?.call();
+void clickSwitchAuthButton() => switchAuthButtonWidget().onPressed?.call();
 void clickFirstProvider() => firstProviderButton().onPressed();
 
 /// this prevents this error:

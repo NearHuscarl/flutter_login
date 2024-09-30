@@ -5,16 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
-import 'package:flutter_login/src/color_helper.dart';
-import 'package:flutter_login/src/constants.dart';
-import 'package:flutter_login/src/dart_helper.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:flutter_login/src/models/user_form_field.dart';
 import 'package:flutter_login/src/providers/auth.dart';
 import 'package:flutter_login/src/providers/login_messages.dart';
 import 'package:flutter_login/src/providers/login_theme.dart';
-import 'package:flutter_login/src/regex.dart';
+import 'package:flutter_login/src/utils/color_helper.dart';
+import 'package:flutter_login/src/utils/constants.dart';
+import 'package:flutter_login/src/utils/dart_helper.dart';
 import 'package:flutter_login/src/widgets/cards/auth_card_builder.dart';
 import 'package:flutter_login/src/widgets/fade_in.dart';
 import 'package:flutter_login/src/widgets/hero_text.dart';
@@ -66,10 +65,19 @@ class LoginProvider {
   /// Default: true
   final bool animated;
 
+  /// Provide a list of errors to not display when a login has failed.
+  /// For example, if the login is cancelled and you don't want to show a error
+  /// message that the login is cancelled. If you provide the error message to this list
+  /// the error is not shown
+  ///
+  /// Default: null
+  final List<String>? errorsToExcludeFromErrorMessage;
+
   const LoginProvider({
     this.button,
     this.icon,
     required this.callback,
+    this.errorsToExcludeFromErrorMessage,
     this.label = '',
     this.providerNeedsSignUpCallback,
     this.animated = true,
@@ -149,7 +157,7 @@ class __HeaderState extends State<_Header> {
 
   /// https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
-    if (DartHelper.isNullOrEmpty(widget.title)) {
+    if (isNullOrEmpty(widget.title)) {
       return 0.0;
     }
 
@@ -215,7 +223,7 @@ class __HeaderState extends State<_Header> {
     }
 
     Widget? title;
-    if (widget.titleTag != null && !DartHelper.isNullOrEmpty(widget.title)) {
+    if (widget.titleTag != null && !isNullOrEmpty(widget.title)) {
       title = HeroText(
         widget.title,
         key: kTitleKey,
@@ -225,7 +233,7 @@ class __HeaderState extends State<_Header> {
         style: theme.textTheme.displaySmall,
         viewState: ViewState.enlarged,
       );
-    } else if (!DartHelper.isNullOrEmpty(widget.title)) {
+    } else if (!isNullOrEmpty(widget.title)) {
       title = Text(
         widget.title!,
         key: kTitleKey,
@@ -303,6 +311,8 @@ class FlutterLogin extends StatefulWidget {
     this.confirmSignupKeyboardType,
     this.headerWidget,
     this.onSwitchToAdditionalFields,
+    this.initialIsoCode,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -445,8 +455,14 @@ class FlutterLogin extends StatefulWidget {
   /// A widget that can be placed on top of the loginCard.
   final Widget? headerWidget;
 
+  /// The initial Iso Code for the widget to show using [LoginUserType.intlPhone].
+  /// if not specified. This field will show ['US'] by default.
+  final String? initialIsoCode;
+
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
   static String? defaultEmailValidator(String? value) {
-    if (value == null || value.isEmpty || !Regex.email.hasMatch(value)) {
+    if (value == null || value.isEmpty || !email.hasMatch(value)) {
       return 'Invalid email!';
     }
     return null;
@@ -668,6 +684,7 @@ class _FlutterLoginState extends State<FlutterLogin>
       primaryColorDark: primaryColorDark,
       cardTheme: theme.cardTheme.copyWith(
         clipBehavior: cardTheme.clipBehavior,
+        surfaceTintColor: cardTheme.surfaceTintColor,
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
         margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
@@ -801,48 +818,48 @@ class _FlutterLoginState extends State<FlutterLogin>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            ///Removed this
-            // GradientBox(
-            //   colors: [
-            //     loginTheme.pageColorLight ?? theme.primaryColor,
-            //     loginTheme.pageColorDark ?? theme.primaryColorDark,
-            //   ],
-            // ),
-            Column(
-              children: [
-                Theme(
-                  data: theme,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Positioned(
-                        child: AuthCard(
-                          key: authCardKey,
-                          userType: widget.userType,
-                          ///padding: EdgeInsets.only(top: cardTopPosition),
-                          padding: const EdgeInsets.only(top: 28),
-                          loadingController: _loadingController,
-                          userValidator: userValidator,
-                          validateUserImmediately: validateUserImmediately,
-                          passwordValidator: passwordValidator,
-                          onSubmit: _reverseHeaderAnimation,
-                          onSubmitCompleted: widget.onSubmitAnimationCompleted,
-                          hideSignUpButton: widget.onSignup == null,
-                          hideForgotPasswordButton:
-                          widget.hideForgotPasswordButton,
-                          loginAfterSignUp: widget.loginAfterSignUp,
-                          hideProvidersTitle: widget.hideProvidersTitle,
-                          additionalSignUpFields: widget.additionalSignupFields,
-                          disableCustomPageTransformer:
-                          widget.disableCustomPageTransformer,
-                          loginTheme: widget.theme,
-                          navigateBackAfterRecovery:
-                          widget.navigateBackAfterRecovery,
-                          scrollable: widget.scrollable,
-                          confirmSignupKeyboardType:
-                          widget.confirmSignupKeyboardType,
-                          introWidget: widget.headerWidget,
-                        ),
+            GradientBox(
+              colors: [
+                loginTheme.pageColorLight ?? theme.primaryColor,
+                loginTheme.pageColorDark ?? theme.primaryColorDark,
+              ],
+            ),
+            SingleChildScrollView(
+              keyboardDismissBehavior: widget.keyboardDismissBehavior,
+              child: Theme(
+                data: theme,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    Positioned(
+                      child: AuthCard(
+                        key: authCardKey,
+                        userType: widget.userType,
+                        keyboardDismissBehavior: widget.keyboardDismissBehavior,
+                        ///padding: EdgeInsets.only(top: cardTopPosition),
+                        padding: const EdgeInsets.only(top: 28),
+                        loadingController: _loadingController,
+                        userValidator: userValidator,
+                        validateUserImmediately: validateUserImmediately,
+                        passwordValidator: passwordValidator,
+                        onSubmit: _reverseHeaderAnimation,
+                        onSubmitCompleted: widget.onSubmitAnimationCompleted,
+                        hideSignUpButton: widget.onSignup == null,
+                        hideForgotPasswordButton:
+                            widget.hideForgotPasswordButton,
+                        loginAfterSignUp: widget.loginAfterSignUp,
+                        hideProvidersTitle: widget.hideProvidersTitle,
+                        additionalSignUpFields: widget.additionalSignupFields,
+                        disableCustomPageTransformer:
+                            widget.disableCustomPageTransformer,
+                        loginTheme: widget.theme,
+                        navigateBackAfterRecovery:
+                            widget.navigateBackAfterRecovery,
+                        scrollable: widget.scrollable,
+                        confirmSignupKeyboardType:
+                            widget.confirmSignupKeyboardType,
+                        introWidget: widget.headerWidget,
+                        initialIsoCode: widget.initialIsoCode,
                       ),
                       Positioned(
                         top: cardTopPosition - headerHeight - headerMargin,
@@ -853,7 +870,6 @@ class _FlutterLoginState extends State<FlutterLogin>
                           alignment: Alignment.bottomCenter,
                           child: footerWidget,
                         ),
-                      ),
                       ///Added The Positioned.fill around ?widget.children
                       Positioned.fill(
                         child: Align(
