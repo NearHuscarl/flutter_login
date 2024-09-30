@@ -1,3 +1,19 @@
+## 5.0.0
+Breaking Changes:
+- [Android] Upgraded to Gradle 8. Due to a dependency update (intl_phone_number_input), the minimum Flutter version is changed to 3.16.
+
+Features:
+- Added keyboardDismissBehavior parameter to select the behaviour of the keyboard when scrolling.
+- Added initialIsoCode parameter to set the initial iso code for the widget [LoginUserType.intlPhone]. Defaults to ['US'] if not specified.
+- The card surfaceTintColor can now be set using cardTheme.surfaceTintColor.
+
+Bugs fixed:
+- Navigate to login page after pressing sign up confirm button when loginAfterSignUp is disabled and additionalSignupData is not null.
+- Added context checks to prevent crashes when widget is not mounted anymore.
+
+## 4.2.1
+- Added dynamic prefix-icon on recover card based on user type. (thanks @lucaloiacono !)
+
 ## 4.2.0
 Features:
 - Added validateUserImmediately property. Should email be validated after losing focus [true] or after form submissions. 

@@ -1,10 +1,11 @@
-name: login_example
-description: Example of flutter_login package.
+name: flutter_login_example
+description: "Example of flutter_login package."
 version: 1.0.0+1
-publish_to: none
+publish_to: 'none'
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.16.0"
 
 dependencies:
   cupertino_icons: ^1.0.3
@@ -13,20 +14,20 @@ dependencies:
   flutter_login:
     path: ../
   font_awesome_flutter: ^10.0.0
-  intl: ^0.17.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lint: ^2.0.1
+  lint: ^2.1.2
 
 flutter:
   uses-material-design: true
 
   assets:
-  - assets/images/ecorp.png
-  - assets/images/ecorp-lightblue.png
-  - assets/images/ecorp-lightgreen.png
+    - assets/images/ecorp.png
+    - assets/images/ecorp-lightblue.png
+    - assets/images/ecorp-lightgreen.png
 
   fonts:
     - family: OpenSans

@@ -2,20 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:flutter_login/widgets.dart';
+import 'package:flutter_login_example/constants.dart';
+import 'package:flutter_login_example/transition_route_observer.dart';
+import 'package:flutter_login_example/widgets/animated_numeric_text.dart';
+import 'package:flutter_login_example/widgets/fade_in.dart';
+import 'package:flutter_login_example/widgets/round_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:login_example/constants.dart';
-import 'package:login_example/transition_route_observer.dart';
-import 'package:login_example/widgets/animated_numeric_text.dart';
-import 'package:login_example/widgets/fade_in.dart';
-import 'package:login_example/widgets/round_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
 
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen>
@@ -294,8 +294,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () => _goToLogin(context),
+    return PopScope(
+      onPopInvoked: (hasPopped) => hasPopped ? _goToLogin(context) : null,
       child: SafeArea(
         child: Scaffold(
           appBar: _buildAppBar(theme),

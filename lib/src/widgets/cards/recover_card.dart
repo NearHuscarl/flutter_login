@@ -9,6 +9,7 @@ class _RecoverCard extends StatefulWidget {
     required this.navigateBack,
     required this.onSubmitCompleted,
     required this.loadingController,
+    required this.initialIsoCode,
   });
 
   final FormFieldValidator<String>? userValidator;
@@ -19,6 +20,7 @@ class _RecoverCard extends StatefulWidget {
   final AnimationController loadingController;
 
   final VoidCallback onSubmitCompleted;
+  final String? initialIsoCode;
 
   @override
   _RecoverCardState createState() => _RecoverCardState();
@@ -66,16 +68,23 @@ class _RecoverCardState extends State<_RecoverCard>
     final error = await auth.onRecoverPassword!(auth.email);
 
     if (error != null) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      if (context.mounted) {
+        showErrorToast(context, messages.flushbarTitleError, error);
+      }
       setState(() => _isSubmitting = false);
-      await _submitController.reverse();
+      if (context.mounted) {
+        await _submitController.reverse();
+      }
       return false;
     } else {
-      showSuccessToast(
-        context,
-        messages.flushbarTitleSuccess,
-        messages.recoverPasswordSuccess,
-      );
+      if (context.mounted) {
+        showSuccessToast(
+          context,
+          messages.flushbarTitleSuccess,
+          messages.recoverPasswordSuccess,
+        );
+      }
+
       setState(() => _isSubmitting = false);
       widget.onSubmitCompleted();
       return true;
@@ -93,13 +102,14 @@ class _RecoverCardState extends State<_RecoverCard>
       userType: widget.userType,
       width: width,
       labelText: messages.userHint,
-      prefixIcon: const Icon(FontAwesomeIcons.solidCircleUser),
-      keyboardType: TextFieldUtils.getKeyboardType(widget.userType),
-      autofillHints: [TextFieldUtils.getAutofillHints(widget.userType)],
+      prefixIcon: getPrefixIcon(widget.userType),
+      keyboardType: getKeyboardType(widget.userType),
+      autofillHints: [getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 

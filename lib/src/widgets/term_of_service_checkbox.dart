@@ -45,7 +45,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
                       color: Theme.of(context).textTheme.bodyMedium!.color,
                       size: Theme.of(context).textTheme.bodyMedium!.fontSize,
                     ),
-                  )
+                  ),
                 ],
               ),
             )

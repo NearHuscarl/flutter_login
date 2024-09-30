@@ -70,7 +70,7 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
       ),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          widget.onExpandCompleted!();
+          widget.onExpandCompleted?.call();
         }
       });
   }

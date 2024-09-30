@@ -6,11 +6,13 @@ class _ConfirmRecoverCard extends StatefulWidget {
     required this.passwordValidator,
     required this.onBack,
     required this.onSubmitCompleted,
+    required this.initialIsoCode,
   });
 
   final FormFieldValidator<String> passwordValidator;
   final VoidCallback onBack;
   final VoidCallback onSubmitCompleted;
+  final String? initialIsoCode;
 
   @override
   _ConfirmRecoverCardState createState() => _ConfirmRecoverCardState();
@@ -66,16 +68,23 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
     );
 
     if (error != null) {
-      showErrorToast(context, messages.flushbarTitleError, error);
+      if (context.mounted) {
+        showErrorToast(context, messages.flushbarTitleError, error);
+      }
       setState(() => _isSubmitting = false);
-      await _submitController.reverse();
+      if (context.mounted) {
+        await _submitController.reverse();
+      }
       return false;
     } else {
-      showSuccessToast(
-        context,
-        messages.flushbarTitleSuccess,
-        messages.confirmRecoverSuccess,
-      );
+      if (context.mounted) {
+        showSuccessToast(
+          context,
+          messages.flushbarTitleSuccess,
+          messages.confirmRecoverSuccess,
+        );
+      }
+
       setState(() => _isSubmitting = false);
       widget.onSubmitCompleted();
       return true;
@@ -98,6 +107,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         return null;
       },
       onSaved: (value) => _code = value!,
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
@@ -116,6 +126,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         final auth = Provider.of<Auth>(context, listen: false);
         auth.password = value!;
       },
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
@@ -132,6 +143,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
         }
         return null;
       },
+      initialIsoCode: widget.initialIsoCode,
     );
   }
 
