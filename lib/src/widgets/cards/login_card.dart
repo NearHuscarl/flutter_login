@@ -23,6 +23,8 @@ class _LoginCard extends StatefulWidget {
     this.hideProvidersTitle = false,
     this.introWidget,
     required this.initialIsoCode,
+    required this.hideSignupPasswordFields,
+    required this.onSwitchAuthMode,
   });
 
   final AnimationController loadingController;
@@ -42,6 +44,8 @@ class _LoginCard extends StatefulWidget {
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool hideSignupPasswordFields;
+  final void Function(AuthMode mode) onSwitchAuthMode;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -511,7 +515,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       fadeDirection: FadeDirection.topToBottom,
       child: MaterialButton(
         disabledTextColor: theme.primaryColor,
-        onPressed: buttonEnabled ? _switchAuthMode : null,
+        onPressed: buttonEnabled
+            ? () {
+                _switchAuthMode();
+                widget.onSwitchAuthMode(auth.mode);
+              }
+            : null,
         padding: loginTheme.authButtonPadding ??
             const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -693,6 +702,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context);
     final isLogin = auth.isLogin;
+    final isSignup = auth.isSignup;
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
@@ -716,8 +726,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 children: <Widget>[
                   if (widget.introWidget != null) widget.introWidget!,
                   _buildUserField(textFieldWidth, messages, auth),
-                  const SizedBox(height: 20),
-                  _buildPasswordField(textFieldWidth, messages, auth),
+                  if (!isSignup || !widget.hideSignupPasswordFields) ...[
+                    const SizedBox(height: 20),
+                    _buildPasswordField(textFieldWidth, messages, auth),
+                  ],
                   const SizedBox(height: 10),
                 ],
               ),
@@ -738,14 +750,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: _buildConfirmPasswordField(
-                    textFieldWidth,
-                    messages,
-                    auth,
+                if (!isSignup || !widget.hideSignupPasswordFields)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: _buildConfirmPasswordField(
+                      textFieldWidth,
+                      messages,
+                      auth,
+                    ),
                   ),
-                ),
                 for (final e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
