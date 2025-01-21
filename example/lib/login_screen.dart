@@ -274,12 +274,8 @@ class LoginScreen extends StatelessWidget {
         return _recoverPassword(name);
         // Show new password dialog
       },
-      footerWidget: const Card(child: Column(children: [Text("data"), Text("test")],),),
+      
       headerWidget: const IntroWidget(),
-      children: const [
-        Text("data"),
-        Text("test"),
-      ],
     );
   }
 }
