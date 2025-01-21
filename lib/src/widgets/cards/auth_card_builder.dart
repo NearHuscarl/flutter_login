@@ -53,6 +53,7 @@ class AuthCard extends StatefulWidget {
     required this.confirmSignupKeyboardType,
     this.introWidget,
     required this.initialIsoCode,
+    this.children,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
   });
 
@@ -82,6 +83,7 @@ class AuthCard extends StatefulWidget {
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final List<Widget>? children;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -381,6 +383,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             hideProvidersTitle: widget.hideProvidersTitle,
             introWidget: widget.introWidget,
             initialIsoCode: widget.initialIsoCode,
+            children: widget.children,
           ),
         );
       case _recoveryIndex:

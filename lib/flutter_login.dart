@@ -294,6 +294,7 @@ class FlutterLogin extends StatefulWidget {
     this.loginProviders = const <LoginProvider>[],
     this.hideForgotPasswordButton = false,
     this.loginAfterSignUp = true,
+    this.footerWidget,
     this.footer,
     this.hideProvidersTitle = false,
     this.additionalSignupFields,
@@ -396,7 +397,10 @@ class FlutterLogin extends StatefulWidget {
   /// Set to false to return back to sign in page after successful sign up
   final bool loginAfterSignUp;
 
-  /// Optional footer text for example a copyright notice
+  /// Optional footer widget for example a copyright notice
+  final Widget? footerWidget;
+
+  /// Optional footer text for example a copyright notice (if footerWidget is not set)
   final String? footer;
 
   /// Hide the title above the login providers. If no providers are set this is uneffective
@@ -774,8 +778,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
-    Widget footerWidget = const SizedBox();
-    if (widget.footer != null) {
+    Widget footerWidget = widget.footerWidget ?? const SizedBox();
+    if (widget.footer != null && widget.footerWidget == null) {
       footerWidget = Padding(
         padding: EdgeInsets.only(bottom: loginTheme.footerBottomPadding),
         child: Text(
@@ -858,6 +862,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
+                        children: widget.children,
                       ),
                     ),
                     Positioned(
@@ -870,7 +875,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                         child: footerWidget,
                       ),
                     ),
-                    ...?widget.children,
+                    
                   ],
                 ),
               ),
