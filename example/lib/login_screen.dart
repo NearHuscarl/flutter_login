@@ -59,6 +59,7 @@ class LoginScreen extends StatelessWidget {
       onConfirmRecover: _signupConfirm,
       onConfirmSignup: _signupConfirm,
       loginAfterSignUp: false,
+      autofocus: true,
       loginProviders: [
         LoginProvider(
           button: Buttons.linkedIn,

@@ -314,6 +314,7 @@ class FlutterLogin extends StatefulWidget {
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.autofocus = false,
   })  : assert((logo is String?) || (logo is ImageProvider?)),
         logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
 
@@ -461,6 +462,9 @@ class FlutterLogin extends StatefulWidget {
   final String? initialIsoCode;
 
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
+
+  /// Whether or not to autofocus on the user field
+  final bool autofocus;
 
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !email.hasMatch(value)) {
@@ -858,6 +862,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
+                        autofocus: widget.autofocus,
                       ),
                     ),
                     Positioned(
