@@ -713,7 +713,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (widget.introWidget != null) widget.introWidget!,
+                  if (widget.introWidget != null) ScaleTransition(
+                      scale: _buttonScaleAnimation,
+                      child: widget.introWidget!),
                   _buildUserField(textFieldWidth, messages, auth),
                   const SizedBox(height: 20),
                   _buildPasswordField(textFieldWidth, messages, auth),
