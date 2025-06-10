@@ -54,6 +54,8 @@ class AuthCard extends StatefulWidget {
     this.introWidget,
     required this.initialIsoCode,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    required this.hideSignupPasswordFields,
+    required this.onSwitchAuthMode,
     required this.autofocus,
   });
 
@@ -83,6 +85,8 @@ class AuthCard extends StatefulWidget {
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool hideSignupPasswordFields;
+  final void Function(AuthMode mode) onSwitchAuthMode;
   final bool autofocus;
 
   @override
@@ -387,6 +391,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             hideProvidersTitle: widget.hideProvidersTitle,
             introWidget: widget.introWidget,
             initialIsoCode: widget.initialIsoCode,
+            hideSignupPasswordFields: widget.hideSignupPasswordFields,
+            onSwitchAuthMode: widget.onSwitchAuthMode,
             autofocus: widget.autofocus,
           ),
         );

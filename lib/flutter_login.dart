@@ -281,6 +281,9 @@ class FlutterLogin extends StatefulWidget {
 
     /// The [ImageProvider] or asset path [String] for the logo image to be displayed
     dynamic logo,
+
+    /// The [ImageProvider] or asset path [String] for the background image to be displayed
+    dynamic backgroundImage,
     this.messages,
     this.theme,
     this.userValidator,
@@ -314,9 +317,17 @@ class FlutterLogin extends StatefulWidget {
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.hideSignupPasswordFields = false,
+    this.onSwitchAuthMode,
     this.autofocus = false,
-  })  : assert((logo is String?) || (logo is ImageProvider?)),
-        logo = logo is String ? AssetImage(logo) : logo as ImageProvider?;
+  })  : assert(
+          ((logo is String?) || (logo is ImageProvider?)) &&
+              ((backgroundImage is String?) ||
+                  (backgroundImage is ImageProvider?)),
+        ),
+        backgroundImage = backgroundImage is String
+            ? AssetImage(backgroundImage)
+            : backgroundImage as ImageProvider?;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -343,6 +354,9 @@ class FlutterLogin extends StatefulWidget {
 
   /// The image provider for the logo image to be displayed
   final ImageProvider? logo;
+
+  /// The image provider for the background image to be displayed
+  final ImageProvider? backgroundImage;
 
   /// Describes all of the labels, text hints, button texts and other auth
   /// descriptions
@@ -460,6 +474,14 @@ class FlutterLogin extends StatefulWidget {
   /// The initial Iso Code for the widget to show using [LoginUserType.intlPhone].
   /// if not specified. This field will show ['US'] by default.
   final String? initialIsoCode;
+
+  /// Whether to hide password fields during Signup - useful for login flows that
+  /// may use OTP (e.g. Authenticator apps, 1-time email-codes) only.
+  /// Default: false
+  final bool hideSignupPasswordFields;
+
+  /// Called when the user switches between sign-in and sign-up mode
+  final void Function(AuthMode mode)? onSwitchAuthMode;
 
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
@@ -821,12 +843,22 @@ class _FlutterLoginState extends State<FlutterLogin>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            GradientBox(
-              colors: [
-                loginTheme.pageColorLight ?? theme.primaryColor,
-                loginTheme.pageColorDark ?? theme.primaryColorDark,
-              ],
-            ),
+            if (widget.backgroundImage == null)
+              GradientBox(
+                colors: [
+                  loginTheme.pageColorLight ?? theme.primaryColor,
+                  loginTheme.pageColorDark ?? theme.primaryColorDark,
+                ],
+              )
+            else
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: widget.backgroundImage!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             SingleChildScrollView(
               keyboardDismissBehavior: widget.keyboardDismissBehavior,
               child: Theme(
@@ -862,6 +894,9 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
+                        hideSignupPasswordFields:
+                            widget.hideSignupPasswordFields,
+                        onSwitchAuthMode: widget.onSwitchAuthMode ?? (_) {},
                         autofocus: widget.autofocus,
                       ),
                     ),
