@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 
 class UserFormField {
+  const UserFormField({
+    required this.keyName,
+    String? displayName,
+    this.defaultValue = '',
+    this.linkUrl,
+    this.icon,
+    this.fieldValidator,
+    this.userType = LoginUserType.name,
+    this.tooltip,
+  }) : displayName = displayName ?? keyName;
+
   /// The name of the field retrieved as key.
   /// Please ensure this is unique, otherwise an Error will be thrown
   final String keyName;
@@ -26,15 +37,4 @@ class UserFormField {
   final LoginUserType userType;
 
   final InlineSpan? tooltip;
-
-  const UserFormField({
-    required this.keyName,
-    String? displayName,
-    this.defaultValue = '',
-    this.linkUrl,
-    this.icon,
-    this.fieldValidator,
-    this.userType = LoginUserType.name,
-    this.tooltip,
-  }) : displayName = displayName ?? keyName;
 }

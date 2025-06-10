@@ -6,7 +6,7 @@ Size? getWidgetSize(GlobalKey key) {
   return renderBox?.size;
 }
 
-Flushbar showSuccessToast(
+Flushbar<void> showSuccessToast(
   BuildContext context,
   String title,
   String message, [
@@ -17,7 +17,7 @@ Flushbar showSuccessToast(
     message: message,
     icon: const Icon(
       Icons.check,
-      size: 28.0,
+      size: 28,
       color: Colors.white,
     ),
     duration: duration ?? const Duration(seconds: 4),
@@ -28,13 +28,13 @@ Flushbar showSuccessToast(
   )..show(context);
 }
 
-Flushbar showErrorToast(BuildContext context, String title, String message) {
+Flushbar<void> showErrorToast(BuildContext context, String title, String message) {
   return Flushbar(
     title: title,
     message: message,
     icon: const Icon(
       Icons.error,
-      size: 28.0,
+      size: 28,
       color: Colors.white,
     ),
     duration: const Duration(seconds: 4),

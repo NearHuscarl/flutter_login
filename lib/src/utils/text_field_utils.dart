@@ -54,16 +54,16 @@ Icon getPrefixIcon(LoginUserType userType) {
 String getLabelText(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
-      return "Name";
+      return 'Name';
     case LoginUserType.firstName:
-      return "First Name";
+      return 'First Name';
     case LoginUserType.lastName:
-      return "Last Name";
+      return 'Last Name';
     case LoginUserType.phone:
     case LoginUserType.intlPhone:
-      return "Phone";
+      return 'Phone';
     case LoginUserType.email:
     default:
-      return "Email";
+      return 'Email';
   }
 }

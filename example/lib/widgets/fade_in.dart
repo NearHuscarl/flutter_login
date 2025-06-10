@@ -9,13 +9,13 @@ enum FadeDirection {
 
 class FadeIn extends StatefulWidget {
   const FadeIn({
+    required this.child,
     super.key,
     this.fadeDirection = FadeDirection.startToEnd,
     this.offset = 1.0,
     this.controller,
     this.duration,
     this.curve = Curves.easeOut,
-    required this.child,
   })  : assert(
           controller == null && duration != null ||
               controller != null && duration == null,
@@ -86,8 +86,8 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       ),
     );
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(
       CurvedAnimation(
         parent: _effectiveController!,

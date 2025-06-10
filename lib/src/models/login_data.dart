@@ -1,10 +1,9 @@
 import 'package:quiver/core.dart';
 
 class LoginData {
+  LoginData({required this.name, required this.password});
   final String name;
   final String password;
-
-  LoginData({required this.name, required this.password});
 
   @override
   String toString() {

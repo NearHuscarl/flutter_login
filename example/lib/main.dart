@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
           displaySmall: const TextStyle(
             fontFamily: 'OpenSans',
-            fontSize: 45.0,
+            fontSize: 45,
             // fontWeight: FontWeight.w400,
             color: Colors.orange,
           ),
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           ),
           bodySmall: TextStyle(
             fontFamily: 'NotoSans',
-            fontSize: 12.0,
+            fontSize: 12,
             fontWeight: FontWeight.normal,
             color: Colors.deepPurple[300],
           ),

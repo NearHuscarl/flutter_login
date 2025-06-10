@@ -1,11 +1,4 @@
 class TermOfService {
-  String id;
-  bool mandatory;
-  String text;
-  String? linkUrl;
-  String validationErrorMessage;
-  bool initialValue;
-  bool checked = false;
   TermOfService({
     required this.id,
     required this.mandatory,
@@ -16,6 +9,13 @@ class TermOfService {
   }) {
     checked = initialValue;
   }
+  String id;
+  bool mandatory;
+  String text;
+  String? linkUrl;
+  String validationErrorMessage;
+  bool initialValue;
+  bool checked = false;
 
   @Deprecated('Please use [checked] instead of this setter.')
   // ignore: use_setters_to_change_properties
@@ -33,7 +33,7 @@ class TermOfService {
 }
 
 class TermOfServiceResult {
+  TermOfServiceResult({required this.term, required this.accepted});
   TermOfService term;
   bool accepted;
-  TermOfServiceResult({required this.term, required this.accepted});
 }

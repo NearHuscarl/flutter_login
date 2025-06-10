@@ -30,10 +30,11 @@ Interval _getInternalInterval(
 
 class AnimatedTextFormField extends StatefulWidget {
   const AnimatedTextFormField({
+    required this.width,
+    required this.initialIsoCode,
     super.key,
     this.textFormFieldKey,
-    this.interval = const Interval(0.0, 1.0),
-    required this.width,
+    this.interval = const Interval(0, 1),
     this.userType,
     this.loadingController,
     this.inertiaController,
@@ -55,7 +56,6 @@ class AnimatedTextFormField extends StatefulWidget {
     this.autocorrect = false,
     this.autofillHints,
     this.tooltip,
-    required this.initialIsoCode,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -114,8 +114,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     if (loadingController != null) {
       scaleAnimation = Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(
         CurvedAnimation(
           parent: loadingController,
@@ -128,10 +128,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           ),
         ),
       );
-      suffixIconOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      suffixIconOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
           parent: loadingController,
-          curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
+          curve: _getInternalInterval(.65, 1, interval.begin, interval.end),
         ),
       );
       _updateSizeAnimation();
@@ -143,7 +143,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     if (inertiaController != null) {
       fieldTranslateAnimation = Tween<double>(
-        begin: 0.0,
+        begin: 0,
         end: sign * 15.0,
       ).animate(
         CurvedAnimation(
@@ -153,17 +153,17 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         ),
       );
       iconRotationAnimation =
-          Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */).animate(
+          Tween<double>(begin: 0, end: sign * pi / 12 /* ~15deg */).animate(
         CurvedAnimation(
           parent: inertiaController,
-          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          curve: const Interval(.5, 1, curve: Curves.easeOut),
           reverseCurve: Curves.easeIn,
         ),
       );
-      iconTranslateAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+      iconTranslateAnimation = Tween<double>(begin: 0, end: 8).animate(
         CurvedAnimation(
           parent: inertiaController,
-          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          curve: const Interval(.5, 1, curve: Curves.easeOut),
           reverseCurve: Curves.easeIn,
         ),
       );
@@ -198,14 +198,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final loadingController = widget.loadingController!;
 
     sizeAnimation = Tween<double>(
-      begin: 48.0,
+      begin: 48,
       end: widget.width,
     ).animate(
       CurvedAnimation(
         parent: loadingController,
         curve: _getInternalInterval(
           .2,
-          1.0,
+          1,
           interval.begin,
           interval.end,
           Curves.linearToEaseOut,
@@ -353,7 +353,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Icon(
                         Icons.open_in_new,
                         color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -446,9 +446,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
 class AnimatedPasswordTextFormField extends StatefulWidget {
   const AnimatedPasswordTextFormField({
-    super.key,
-    this.interval = const Interval(0.0, 1.0),
     required this.animatedWidth,
+    required this.initialIsoCode,
+    super.key,
+    this.interval = const Interval(0, 1),
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -462,7 +463,6 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onSaved,
     this.autofillHints,
-    required this.initialIsoCode,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
@@ -521,12 +521,12 @@ class _AnimatedPasswordTextFormFieldState
           },
           firstChild: const Icon(
             Icons.visibility,
-            size: 25.0,
+            size: 25,
             semanticLabel: 'show password',
           ),
           secondChild: const Icon(
             Icons.visibility_off,
-            size: 25.0,
+            size: 25,
             semanticLabel: 'hide password',
           ),
           crossFadeState: _obscureText

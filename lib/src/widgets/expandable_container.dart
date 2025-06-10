@@ -7,9 +7,9 @@ enum ExpandableContainerState {
 
 class ExpandableContainer extends StatefulWidget {
   const ExpandableContainer({
-    super.key,
     required this.child,
     required this.controller,
+    super.key,
     this.onExpandCompleted,
     this.alignment,
     this.backgroundColor,
@@ -51,13 +51,13 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
     }
 
     _sizeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, .6875, curve: Curves.bounceOut),
-        reverseCurve: const Interval(0.0, .6875, curve: Curves.bounceIn),
+        curve: const Interval(0, .6875, curve: Curves.bounceOut),
+        reverseCurve: const Interval(0, .6875, curve: Curves.bounceIn),
       ),
     );
     _slideAnimation = Tween<Offset>(
@@ -66,7 +66,7 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(.6875, 1.0, curve: Curves.fastOutSlowIn),
+        curve: const Interval(.6875, 1, curve: Curves.fastOutSlowIn),
       ),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {

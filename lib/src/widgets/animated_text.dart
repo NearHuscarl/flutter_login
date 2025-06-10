@@ -12,8 +12,8 @@ enum AnimatedTextRotation { up, down }
 /// https://medium.com/flutter-community/flutter-challenge-3d-bottom-navigation-bar-48952a5fd996
 class AnimatedText extends StatefulWidget {
   const AnimatedText({
-    super.key,
     required this.text,
+    super.key,
     this.style,
     this.textRotation = AnimatedTextRotation.up,
   });
@@ -30,8 +30,8 @@ class _AnimatedTextState extends State<AnimatedText>
     with SingleTickerProviderStateMixin {
   var _newText = '';
   var _oldText = '';
-  double? _layoutHeight = 0.0;
-  final _textKey = GlobalKey();
+  double? _layoutHeight = 0;
+  final GlobalKey<State<StatefulWidget>> _textKey = GlobalKey();
 
   late Animation<double> _animation;
   late AnimationController _controller;
@@ -47,7 +47,7 @@ class _AnimatedTextState extends State<AnimatedText>
       duration: const Duration(milliseconds: 500),
     );
 
-    _animation = Tween<double>(begin: 0.0, end: pi / 2).animate(
+    _animation = Tween<double>(begin: 0, end: pi / 2).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeOutBack,

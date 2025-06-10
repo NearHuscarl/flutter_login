@@ -5,10 +5,10 @@ import 'package:flutter_login/src/widgets/ring.dart';
 
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
     required this.text,
     required this.onPressed,
     required this.controller,
+    super.key,
     this.loadingColor,
     this.color,
   });
@@ -39,24 +39,24 @@ class _AnimatedButtonState extends State<AnimatedButton>
   Color? _loadingColor;
 
   static const _height = 40.0;
-  static const _loadingCircleRadius = _height / 2;
+  static const double _loadingCircleRadius = _height / 2;
   static const _loadingCircleThickness = 4.0;
 
   @override
   void initState() {
     super.initState();
 
-    _textOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _textOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller!,
-        curve: const Interval(0.0, .25),
+        curve: const Interval(0, .25),
       ),
     );
 
     // _colorAnimation
     // _width, _sizeAnimation
 
-    _buttonOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _buttonOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller!,
         curve: const Threshold(.65),
@@ -71,10 +71,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
         curve: const Interval(.65, .85),
       ),
     );
-    _ringOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _ringOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller!,
-        curve: const Interval(.85, 1.0),
+        curve: const Interval(.85, 1),
       ),
     );
 
@@ -101,7 +101,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
     ).animate(
       CurvedAnimation(
         parent: widget.controller!,
-        curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
       ),
     );
   }
@@ -152,7 +152,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       maxLines: 1,
     );
 
-    renderParagraph.layout(const BoxConstraints(minWidth: 120.0));
+    renderParagraph.layout(const BoxConstraints(minWidth: 120));
 
     // text width based on fontSize, plus 45.0 for padding
     final textWidth =
@@ -165,10 +165,10 @@ class _AnimatedButtonState extends State<AnimatedButton>
             ? 240.0
             : 120.0;
 
-    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width).animate(
+    _sizeAnimation = Tween<double>(begin: 1, end: _height / _width).animate(
       CurvedAnimation(
         parent: widget.controller!,
-        curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
       ),
     );
   }

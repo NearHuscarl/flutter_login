@@ -2,13 +2,13 @@ part of 'auth_card_builder.dart';
 
 class _AdditionalSignUpCard extends StatefulWidget {
   _AdditionalSignUpCard({
-    super.key,
     required this.formFields,
     required this.onBack,
-    this.loginTheme,
     required this.onSubmitCompleted,
     required this.loadingController,
     required this.initialIsoCode,
+    super.key,
+    this.loginTheme,
   }) {
     if (formFields.isEmpty) {
       throw RangeError('The formFields array must not be empty');
@@ -88,10 +88,10 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       duration: const Duration(milliseconds: 1000),
     );
 
-    _buttonScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _buttonScaleAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: widget.loadingController,
-        curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
+        curve: const Interval(.4, 1, curve: Curves.easeOutBack),
       ),
     );
   }
@@ -152,13 +152,13 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
       await _submitController.reverse();
     }
     if (!isNullOrEmpty(error)) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error!);
       }
       setState(() => _isSubmitting = false);
       return false;
     } else {
-      if (context.mounted) {
+      if (mounted) {
         showSuccessToast(
           context,
           messages.flushbarTitleSuccess,
@@ -241,7 +241,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                 widget.onBack();
               }
             : null,
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
         child: Text(messages.goBackButton),
@@ -254,7 +254,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min(deviceSize.width * 0.75, 360.0);
+    final cardWidth = min<double>(deviceSize.width * 0.75, 360);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 

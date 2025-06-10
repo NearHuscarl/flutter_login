@@ -1,4 +1,4 @@
-library auth_card_builder;
+library;
 
 import 'dart:math';
 
@@ -32,10 +32,16 @@ part 'signup_confirm_card.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard({
-    super.key,
     required this.userType,
-    this.padding = EdgeInsets.zero,
     required this.loadingController,
+    required this.scrollable,
+    required this.confirmSignupKeyboardType,
+    required this.initialIsoCode,
+    required this.hideSignupPasswordFields,
+    required this.onSwitchAuthMode,
+    required this.autofocus,
+    super.key,
+    this.padding = EdgeInsets.zero,
     this.userValidator,
     this.validateUserImmediately,
     this.passwordValidator,
@@ -49,14 +55,8 @@ class AuthCard extends StatefulWidget {
     this.disableCustomPageTransformer = false,
     this.loginTheme,
     this.navigateBackAfterRecovery = false,
-    required this.scrollable,
-    required this.confirmSignupKeyboardType,
     this.introWidget,
-    required this.initialIsoCode,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    required this.hideSignupPasswordFields,
-    required this.onSwitchAuthMode,
-    required this.autofocus,
   });
 
   final EdgeInsets padding;
@@ -155,8 +155,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 1100),
     );
 
-    _cardSizeAnimation =
-        Tween<double>(begin: 1.0, end: cardSizeScaleEnd).animate(
+    _cardSizeAnimation = Tween<double>(begin: 1, end: cardSizeScaleEnd).animate(
       CurvedAnimation(
         parent: _routeTransitionController,
         curve: const Interval(
@@ -170,7 +169,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     // replace 0 with minPositive to pass the test
     // https://github.com/flutter/flutter/issues/42527#issuecomment-575131275
     _cardOverlayHeightFactorAnimation =
-        Tween<double>(begin: double.minPositive, end: 1.0).animate(
+        Tween<double>(begin: double.minPositive, end: 1).animate(
       CurvedAnimation(
         parent: _routeTransitionController,
         curve: const Interval(.27272727, .5),
@@ -178,7 +177,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     );
 
     _cardOverlaySizeAndOpacityAnimation =
-        Tween<double>(begin: 1.0, end: 0).animate(
+        Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: _routeTransitionController,
         curve: const Interval(.5, .72727272),
@@ -253,14 +252,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
     _cardSize2AnimationX =
-        Tween<double>(begin: 1.0, end: heightRatio / cardSizeScaleEnd).animate(
+        Tween<double>(begin: 1, end: heightRatio / cardSizeScaleEnd).animate(
       CurvedAnimation(
         parent: _routeTransitionController,
         curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
       ),
     );
     _cardSize2AnimationY =
-        Tween<double>(begin: 1.0, end: widthRatio / cardSizeScaleEnd).animate(
+        Tween<double>(begin: 1, end: widthRatio / cardSizeScaleEnd).animate(
       CurvedAnimation(
         parent: _routeTransitionController,
         curve: const Interval(.72727272, 1, curve: Curves.easeInOutCubic),
@@ -297,7 +296,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     }
   }
 
-  Widget _buildLoadingAnimator({Widget? child, required ThemeData theme}) {
+  Widget _buildLoadingAnimator({required ThemeData theme, Widget? child}) {
     Widget card;
     Widget overlay;
 

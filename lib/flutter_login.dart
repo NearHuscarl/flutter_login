@@ -34,6 +34,16 @@ export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 
 class LoginProvider {
+  const LoginProvider({
+    required this.callback,
+    this.button,
+    this.icon,
+    this.errorsToExcludeFromErrorMessage,
+    this.label = '',
+    this.providerNeedsSignUpCallback,
+    this.animated = true,
+  }) : assert(button != null || icon != null);
+
   /// Used for custom sign-in buttons.
   ///
   /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
@@ -73,16 +83,6 @@ class LoginProvider {
   ///
   /// Default: null
   final List<String>? errorsToExcludeFromErrorMessage;
-
-  const LoginProvider({
-    this.button,
-    this.icon,
-    required this.callback,
-    this.errorsToExcludeFromErrorMessage,
-    this.label = '',
-    this.providerNeedsSignUpCallback,
-    this.animated = true,
-  }) : assert(button != null || icon != null);
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -102,7 +102,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10),
             child: Text(
               'x1 is normal time, x5 means the animation is 5x times slower for debugging purpose',
               textAlign: TextAlign.center,
@@ -114,7 +114,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
               scrollController: FixedExtentScrollController(
                 initialItem: animationSpeeds.indexOf(initialValue.toInt()),
               ),
-              itemExtent: 30.0,
+              itemExtent: 30,
               backgroundColor: Colors.white,
               onSelectedItemChanged: onChanged as void Function(int)?,
               children: animationSpeeds.map((x) => Text('x$x')).toList(),
@@ -128,6 +128,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
 class _Header extends StatefulWidget {
   const _Header({
+    required this.loginTheme,
     this.logo,
     this.logoTag,
     this.logoWidth = 0.75,
@@ -136,7 +137,6 @@ class _Header extends StatefulWidget {
     this.height = 250.0,
     this.logoController,
     this.titleController,
-    required this.loginTheme,
   });
 
   final ImageProvider? logo;
@@ -154,12 +154,12 @@ class _Header extends StatefulWidget {
 }
 
 class __HeaderState extends State<_Header> {
-  double _titleHeight = 0.0;
+  double _titleHeight = 0;
 
   /// https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
     if (isNullOrEmpty(widget.title)) {
-      return 0.0;
+      return 0;
     }
 
     final theme = Theme.of(context);
@@ -205,7 +205,7 @@ class __HeaderState extends State<_Header> {
       kMaxLogoHeight,
     );
     final displayLogo = widget.logo != null && logoHeight >= kMinLogoHeight;
-    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
+    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360);
 
     var logo = displayLogo
         ? Image(
@@ -273,10 +273,10 @@ class __HeaderState extends State<_Header> {
 
 class FlutterLogin extends StatefulWidget {
   FlutterLogin({
-    super.key,
-    this.onSignup,
     required this.onLogin,
     required this.onRecoverPassword,
+    super.key,
+    this.onSignup,
     this.title,
 
     /// The [ImageProvider] or asset path [String] for the logo image to be displayed
@@ -517,7 +517,7 @@ class _FlutterLoginState extends State<FlutterLogin>
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
 
   static const loadingDuration = Duration(milliseconds: 400);
-  double _selectTimeDilation = 1.0;
+  double _selectTimeDilation = 1;
 
   late AnimationController _loadingController;
   late AnimationController _logoController;
@@ -600,7 +600,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             color: Colors.green,
             onPressed: () {
               timeDilation = 1.0;
-              showModalBottomSheet(
+              showModalBottomSheet<_AnimationTimeDilationDropdown>(
                 context: context,
                 builder: (_) {
                   return _AnimationTimeDilationDropdown(
@@ -720,9 +720,9 @@ class _FlutterLoginState extends State<FlutterLogin>
         surfaceTintColor: cardTheme.surfaceTintColor,
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
-        margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
+        margin: cardTheme.margin ?? const EdgeInsets.all(4),
         shape: cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         filled: inputTheme.filled,
@@ -732,7 +732,7 @@ class _FlutterLoginState extends State<FlutterLogin>
               Colors.grey.withOpacity(.04),
             ),
         contentPadding: inputTheme.contentPadding ??
-            const EdgeInsets.symmetric(vertical: 4.0),
+            const EdgeInsets.symmetric(vertical: 4),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
         labelStyle: inputTheme.labelStyle ?? labelStyle,
         enabledBorder: inputTheme.enabledBorder ??

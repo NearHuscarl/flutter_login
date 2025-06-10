@@ -61,7 +61,7 @@ class __HeroTextContentState extends State<_HeroTextContent>
 
     if (widget.viewState == ViewState.enlarge ||
         widget.viewState == ViewState.shrink) {
-      _controller.forward(from: 0.0);
+      _controller.forward(from: 0);
     }
   }
 
@@ -143,9 +143,9 @@ class __HeroTextContentState extends State<_HeroTextContent>
 class HeroText extends StatelessWidget {
   const HeroText(
     this.text, {
-    super.key,
     required this.tag,
     required this.viewState,
+    super.key,
     this.smallFontSize = 15.0,
     this.largeFontSize = 48.0,
     this.style,
@@ -223,9 +223,9 @@ class HeroText extends StatelessWidget {
 
 class HeroTextWidget extends StatelessWidget {
   const HeroTextWidget({
+    required this.tag,
     super.key,
     this.child,
-    required this.tag,
   });
 
   final Widget? child;

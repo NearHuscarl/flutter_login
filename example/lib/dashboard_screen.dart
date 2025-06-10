@@ -10,9 +10,8 @@ import 'package:flutter_login_example/widgets/round_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DashboardScreen extends StatefulWidget {
-  static const routeName = '/dashboard';
-
   const DashboardScreen({super.key});
+  static const routeName = '/dashboard';
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -84,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Hero(
               tag: Constants.logoTag,
               child: Image.asset(
@@ -140,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         primaryColor.shade800,
         primaryColor.shade200,
       ],
-    ).createShader(const Rect.fromLTWH(0.0, 0.0, 418.0, 78.0));
+    ).createShader(const Rect.fromLTWH(0, 0, 418, 78));
 
     return ScaleTransition(
       scale: _headerScaleAnimation,
@@ -156,7 +155,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '\$',
+                  r'$',
                   style: theme.textTheme.displaySmall!.copyWith(
                     fontWeight: FontWeight.w300,
                     color: accentColor.shade400,
@@ -182,9 +181,9 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildButton({
+    required Interval interval,
     Widget? icon,
     String? label,
-    required Interval interval,
   }) {
     return RoundButton(
       icon: icon,
@@ -205,7 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     return GridView.count(
       padding: const EdgeInsets.symmetric(
-        horizontal: 32.0,
+        horizontal: 32,
         vertical: 20,
       ),
       childAspectRatio: .9,
@@ -220,7 +219,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _buildButton(
           icon: Container(
             // fix icon is not centered like others for some reasons
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16),
             alignment: Alignment.centerLeft,
             child: const Icon(
               FontAwesomeIcons.moneyBill1,
@@ -295,7 +294,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final theme = Theme.of(context);
 
     return PopScope(
-      onPopInvoked: (hasPopped) => hasPopped ? _goToLogin(context) : null,
+      onPopInvokedWithResult: (hasPopped) => hasPopped ? _goToLogin(context) : null,
       child: SafeArea(
         child: Scaffold(
           appBar: _buildAppBar(theme),

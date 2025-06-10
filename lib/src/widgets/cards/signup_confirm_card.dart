@@ -2,13 +2,13 @@ part of 'auth_card_builder.dart';
 
 class _ConfirmSignupCard extends StatefulWidget {
   const _ConfirmSignupCard({
-    super.key,
     required this.onBack,
     required this.onSubmitCompleted,
-    this.loginAfterSignUp = true,
     required this.loadingController,
     required this.keyboardType,
     required this.initialIsoCode,
+    super.key,
+    this.loginAfterSignUp = true,
   });
 
   final bool loginAfterSignUp;
@@ -69,7 +69,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     );
 
     if (error != null) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error);
       }
       setState(() => _isSubmitting = false);
@@ -77,7 +77,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       return false;
     }
 
-    if (context.mounted) {
+    if (mounted) {
       showSuccessToast(
         context,
         messages.flushbarTitleSuccess,
@@ -115,7 +115,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     );
 
     if (error != null) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error);
       }
 
@@ -124,7 +124,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       return false;
     }
 
-    if (context.mounted) {
+    if (mounted) {
       showSuccessToast(
         context,
         messages.flushbarTitleSuccess,
@@ -187,7 +187,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
       scale: widget.loadingController,
       child: MaterialButton(
         onPressed: !_isSubmitting ? widget.onBack : null,
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: theme.primaryColor,
         child: Text(messages.goBackButton),
@@ -200,7 +200,7 @@ class _ConfirmSignupCardState extends State<_ConfirmSignupCard>
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min(deviceSize.width * 0.75, 360.0);
+    final cardWidth = min<double>(deviceSize.width * 0.75, 360);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 

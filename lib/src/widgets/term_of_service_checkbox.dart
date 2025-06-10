@@ -3,14 +3,13 @@ import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TermCheckbox extends StatefulWidget {
-  final TermOfService termOfService;
-  final bool validation;
-
   const TermCheckbox({
-    super.key,
     required this.termOfService,
+    super.key,
     this.validation = true,
   });
+  final TermOfService termOfService;
+  final bool validation;
 
   @override
   State<TermCheckbox> createState() => _TermCheckboxState();
@@ -39,7 +38,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Icon(
                       Icons.open_in_new,
                       color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -68,11 +67,11 @@ class _TermCheckboxState extends State<TermCheckbox> {
 
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField({
-    super.key,
     required Widget title,
     required FormFieldValidator<bool> super.validator,
-    bool super.initialValue = false,
     required ValueChanged<bool?> onChanged,
+    super.key,
+    bool super.initialValue = false,
   }) : super(
           builder: (FormFieldState<bool> state) {
             return CheckboxListTile(

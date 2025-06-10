@@ -13,11 +13,11 @@ class CustomPageTransformer extends PageTransformer {
 
     if (position > 0) {
       transform
-        ..scale(lerp(0.6, 1.0, pageDt))
+        ..scale(lerp(0.6, 1, pageDt))
         ..rotateY(position * -1.5);
     } else {
       transform
-        ..scale(lerp(0.6, 1.0, pageDt))
+        ..scale(lerp(0.6, 1, pageDt))
         ..rotateY(position * 1.5);
     }
 
