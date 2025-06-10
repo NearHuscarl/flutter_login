@@ -240,7 +240,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
 
   Future<void> _forwardChangeRouteAnimation(GlobalKey cardKey) {
     final deviceSize = MediaQuery.of(context).size;
-    final cardSize = getWidgetSize(cardKey)!;
+
+    // Get card size, or use default size so that the animation wont crash.
+    final cardSize = getWidgetSize(cardKey) ?? const Size(370, 580);
+
+    // Add a null check for cardSize
     final widthRatio = deviceSize.width / cardSize.height + 2;
     final heightRatio = deviceSize.height / cardSize.width + .25;
 
