@@ -317,6 +317,8 @@ class FlutterLogin extends StatefulWidget {
     this.onSwitchToAdditionalFields,
     this.initialIsoCode,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.hideSignupPasswordFields = false,
+    this.onSwitchAuthMode,
     this.autofocus = false,
   })  : assert(
           ((logo is String?) || (logo is ImageProvider?)) &&
@@ -472,6 +474,14 @@ class FlutterLogin extends StatefulWidget {
   /// The initial Iso Code for the widget to show using [LoginUserType.intlPhone].
   /// if not specified. This field will show ['US'] by default.
   final String? initialIsoCode;
+
+  /// Whether to hide password fields during Signup - useful for login flows that
+  /// may use OTP (e.g. Authenticator apps, 1-time email-codes) only.
+  /// Default: false
+  final bool hideSignupPasswordFields;
+
+  /// Called when the user switches between sign-in and sign-up mode
+  final void Function(AuthMode mode)? onSwitchAuthMode;
 
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
@@ -884,6 +894,9 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.confirmSignupKeyboardType,
                         introWidget: widget.headerWidget,
                         initialIsoCode: widget.initialIsoCode,
+                        hideSignupPasswordFields:
+                            widget.hideSignupPasswordFields,
+                        onSwitchAuthMode: widget.onSwitchAuthMode ?? (_) {},
                         autofocus: widget.autofocus,
                       ),
                     ),
