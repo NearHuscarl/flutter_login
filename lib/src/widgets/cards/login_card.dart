@@ -23,6 +23,7 @@ class _LoginCard extends StatefulWidget {
     this.hideProvidersTitle = false,
     this.introWidget,
     required this.initialIsoCode,
+    required this.autofocus,
   });
 
   final AnimationController loadingController;
@@ -42,6 +43,7 @@ class _LoginCard extends StatefulWidget {
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
   final String? initialIsoCode;
+  final bool autofocus;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -221,12 +223,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       }
     });
 
-    if (context.mounted) {
+    if (mounted) {
       await _submitController.reverse();
     }
 
     if (!isNullOrEmpty(error)) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error!);
       }
 
@@ -252,7 +254,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         _switchAuthMode();
         return false;
       } else if (!widget.loginAfterSignUp) {
-        if (context.mounted) {
+        if (mounted) {
           showSuccessToast(
             context,
             messages.flushbarTitleSuccess,
@@ -283,7 +285,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         // Only show error toast if error is not in exclusion list
         if (loginProvider.errorsToExcludeFromErrorMessage == null ||
             !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-          if (context.mounted) {
+          if (mounted) {
             showErrorToast(context, messages.flushbarTitleError, error!);
           }
         }
@@ -316,7 +318,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       // Only show error toast if error is not in exclusion list
       if (loginProvider.errorsToExcludeFromErrorMessage == null ||
           !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-        if (context.mounted) {
+        if (mounted) {
           showErrorToast(context, messages.flushbarTitleError, error!);
         }
       }
@@ -347,7 +349,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           // Only show error toast if error is not in exclusion list
           if (loginProvider.errorsToExcludeFromErrorMessage == null ||
               !loginProvider.errorsToExcludeFromErrorMessage!.contains(error)) {
-            if (context.mounted) {
+            if (mounted) {
               showErrorToast(context, messages.flushbarTitleError, error!);
             }
           }
@@ -386,6 +388,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       prefixIcon: getPrefixIcon(widget.userType),
       keyboardType: getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
+      autofocus: widget.autofocus,
       focusNode: _userFocusNode,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
@@ -633,6 +636,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 AnimatedIconButton(
                   color: Colors.transparent,
                   icon: loginProvider.icon!,
+                  iconColor: loginTheme.buttonTheme.iconColor,
                   controller: _providerControllerList[index],
                   tooltip: loginProvider.label,
                   onPressed: () => _loginProviderSubmit(
