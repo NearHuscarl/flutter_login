@@ -53,12 +53,14 @@ class LoginScreen extends StatelessWidget {
       title: Constants.appName,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       logo: const AssetImage('assets/images/ecorp.png'),
+      backgroundImage: const AssetImage('assets/images/bgr.jpg'),
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
       navigateBackAfterRecovery: true,
       onConfirmRecover: _signupConfirm,
       onConfirmSignup: _signupConfirm,
       loginAfterSignUp: false,
+      autofocus: true,
       loginProviders: [
         LoginProvider(
           button: Buttons.linkedIn,

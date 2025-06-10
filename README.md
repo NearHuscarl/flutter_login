@@ -52,6 +52,7 @@ Follow the install instructions [here](https://pub.dev/packages/flutter_login#-i
 | children                              | [`Widget`]                              | <sub>List of widgets that can be added to the stack of the login screen. Can be used to show custom banners or logos. </sub>                                                                                                                           |
 | scrollable                            | `bool`                                  | <sub>When set to true, the login card becomes scrollable instead of resizing when needed.                                                                                                                                                              |
 | headerWidget                          | `Widget`                                | <sub>A widget that can be placed on top of the loginCard.</sub>                                                                                                                                                                                        |
+| autofocus                             | `bool`                                  | <sub>Whether or not to automatically focus on the first field.</sub>                                                                                                                                                                                   |
 
 *NOTE:* It is recommended that the child widget of the `Hero` widget should be the
 same in both places. For title's hero animation use the

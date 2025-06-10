@@ -56,6 +56,7 @@ class AuthCard extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     required this.hideSignupPasswordFields,
     required this.onSwitchAuthMode,
+    required this.autofocus,
   });
 
   final EdgeInsets padding;
@@ -86,6 +87,7 @@ class AuthCard extends StatefulWidget {
   final String? initialIsoCode;
   final bool hideSignupPasswordFields;
   final void Function(AuthMode mode) onSwitchAuthMode;
+  final bool autofocus;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -387,6 +389,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             initialIsoCode: widget.initialIsoCode,
             hideSignupPasswordFields: widget.hideSignupPasswordFields,
             onSwitchAuthMode: widget.onSwitchAuthMode,
+            autofocus: widget.autofocus,
           ),
         );
       case _recoveryIndex:
@@ -405,6 +408,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             }
           },
           initialIsoCode: widget.initialIsoCode,
+          autofocusName: widget.autofocus,
         );
 
       case _additionalSignUpIndex:
