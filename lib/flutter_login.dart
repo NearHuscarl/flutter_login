@@ -321,10 +321,16 @@ class FlutterLogin extends StatefulWidget {
     this.onSwitchAuthMode,
     this.autofocus = false,
   })  : assert(
-          ((logo is String?) || (logo is ImageProvider?)) &&
-              ((backgroundImage is String?) ||
-                  (backgroundImage is ImageProvider?)),
+          logo == null || logo is String || logo is ImageProvider,
+          'logo must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
         ),
+        assert(
+          backgroundImage == null ||
+              backgroundImage is String ||
+              backgroundImage is ImageProvider,
+          'backgroundImage must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
+        ),
+        logo = logo is String ? AssetImage(logo) : logo as ImageProvider?,
         backgroundImage = backgroundImage is String
             ? AssetImage(backgroundImage)
             : backgroundImage as ImageProvider?;
