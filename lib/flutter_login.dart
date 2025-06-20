@@ -172,9 +172,7 @@ class __HeaderState extends State<_Header> {
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
-    );
-
-    renderParagraph.layout(const BoxConstraints());
+    )..layout(const BoxConstraints());
 
     return renderParagraph
         .getMinIntrinsicHeight(widget.loginTheme.beforeHeroFontSize)
@@ -377,8 +375,8 @@ class FlutterLogin extends StatefulWidget {
   /// invalid, or null otherwise
   final FormFieldValidator<String>? userValidator;
 
-  /// Should email be validated after losing focus [true] or after form
-  /// submissions [false]. Default: [false]
+  /// Should email be validated after losing focus true or after form
+  /// submissions false. Default: false
   final bool? validateUserImmediately;
 
   /// Same as [userValidator] but for password
@@ -728,8 +726,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         filled: inputTheme.filled,
         fillColor: inputTheme.fillColor ??
             Color.alphaBlend(
-              primaryOrWhite.withOpacity(.07),
-              Colors.grey.withOpacity(.04),
+              primaryOrWhite.withValues(alpha: .07),
+              Colors.grey.withValues(alpha: .04),
             ),
         contentPadding: inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4),

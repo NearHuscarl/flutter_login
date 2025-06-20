@@ -148,9 +148,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
-    );
-
-    renderParagraph.layout(const BoxConstraints(minWidth: 120));
+    )..layout(const BoxConstraints(minWidth: 120));
 
     // text width based on fontSize, plus 45.0 for padding
     final textWidth =

@@ -212,9 +212,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   void _changeCard(int newCardIndex) {
-    final auth = Provider.of<Auth>(context, listen: false);
-
-    auth.currentCardIndex = newCardIndex;
+    Provider.of<Auth>(context, listen: false).currentCardIndex = newCardIndex;
 
     setState(() {
       _pageController.animateToPage(
@@ -433,7 +431,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
               if (requireSignupConfirmation) {
                 _changeCard(_confirmSignup);
               } else if (widget.loginAfterSignUp) {
-                _forwardChangeRouteAnimation(_additionalSignUpCardKey)
+                await _forwardChangeRouteAnimation(_additionalSignUpCardKey)
                     .then((_) {
                   widget.onSubmitCompleted?.call();
                 });

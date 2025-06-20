@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String?> _loginUser(LoginData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
         return 'User not exists';
       }
@@ -26,13 +26,13 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupUser(SignupData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       return null;
     });
   }
 
   Future<String?> _recoverPassword(String name) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(name)) {
         return 'User not exists';
       }
@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupConfirm(String error, LoginData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       return null;
     });
   }
@@ -83,7 +83,7 @@ class LoginScreen extends StatelessWidget {
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
             debugPrint('start github sign in');
-            await Future.delayed(loginTime);
+            await Future<void>.delayed(loginTime);
             debugPrint('stop github sign in');
             return null;
           },
@@ -264,7 +264,7 @@ class LoginScreen extends StatelessWidget {
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(
-          FadePageRoute(
+          FadePageRoute<void>(
             builder: (context) => const DashboardScreen(),
           ),
         );

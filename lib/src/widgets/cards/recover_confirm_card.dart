@@ -123,8 +123,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
       },
       validator: widget.passwordValidator,
       onSaved: (value) {
-        final auth = Provider.of<Auth>(context, listen: false);
-        auth.password = value!;
+        Provider.of<Auth>(context, listen: false).password = value!;
       },
       initialIsoCode: widget.initialIsoCode,
     );

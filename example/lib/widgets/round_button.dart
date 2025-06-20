@@ -19,10 +19,10 @@ class RoundButton extends StatefulWidget {
   final double size;
 
   @override
-  _RoundButtonState createState() => _RoundButtonState();
+  RoundButtonState createState() => RoundButtonState();
 }
 
-class _RoundButtonState extends State<RoundButton>
+class RoundButtonState extends State<RoundButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _pressController;
   late Animation<double> _scaleLoadingAnimation;

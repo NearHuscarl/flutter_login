@@ -26,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         .then((_) => false);
   }
 
-  final routeObserver = TransitionRouteObserver<PageRoute?>();
+  final routeObserver = TransitionRouteObserver<PageRoute<void>?>();
   static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
@@ -121,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
       ],
       title: title,
-      backgroundColor: theme.primaryColor.withOpacity(.1),
+      backgroundColor: theme.primaryColor.withValues(alpha: .1),
       elevation: 0,
       // toolbarTextStyle: TextStle(),
       // textTheme: theme.accentTextTheme,
@@ -294,14 +294,15 @@ class _DashboardScreenState extends State<DashboardScreen>
     final theme = Theme.of(context);
 
     return PopScope(
-      onPopInvokedWithResult: (hasPopped) => hasPopped ? _goToLogin(context) : null,
+      onPopInvokedWithResult: (hasPopped, result) =>
+          hasPopped ? _goToLogin(context) : null,
       child: SafeArea(
         child: Scaffold(
           appBar: _buildAppBar(theme),
           body: Container(
             width: double.infinity,
             height: double.infinity,
-            color: theme.primaryColor.withOpacity(.1),
+            color: theme.primaryColor.withValues(alpha: .1),
             child: Stack(
               children: <Widget>[
                 Column(

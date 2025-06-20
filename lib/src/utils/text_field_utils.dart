@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 String getAutofillHints(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
+    case LoginUserType.text:
+    case LoginUserType.checkbox:
       return AutofillHints.username;
     case LoginUserType.firstName:
       return AutofillHints.givenName;
@@ -14,7 +16,6 @@ String getAutofillHints(LoginUserType userType) {
     case LoginUserType.intlPhone:
       return AutofillHints.telephoneNumber;
     case LoginUserType.email:
-    default:
       return AutofillHints.email;
   }
 }
@@ -26,12 +27,12 @@ TextInputType getKeyboardType(LoginUserType userType) {
     case LoginUserType.firstName:
     case LoginUserType.lastName:
     case LoginUserType.text:
+    case LoginUserType.checkbox:
       return TextInputType.text;
     case LoginUserType.phone:
     case LoginUserType.intlPhone:
       return TextInputType.phone;
     case LoginUserType.email:
-    default:
       return TextInputType.emailAddress;
   }
 }
@@ -41,12 +42,13 @@ Icon getPrefixIcon(LoginUserType userType) {
     case LoginUserType.name:
     case LoginUserType.firstName:
     case LoginUserType.lastName:
+    case LoginUserType.text:
+    case LoginUserType.checkbox:
       return const Icon(FontAwesomeIcons.circleUser);
     case LoginUserType.phone:
     case LoginUserType.intlPhone:
       return const Icon(FontAwesomeIcons.squarePhoneFlip);
     case LoginUserType.email:
-    default:
       return const Icon(FontAwesomeIcons.squareEnvelope);
   }
 }
@@ -63,7 +65,10 @@ String getLabelText(LoginUserType userType) {
     case LoginUserType.intlPhone:
       return 'Phone';
     case LoginUserType.email:
-    default:
       return 'Email';
+    case LoginUserType.text:
+      return 'Text';
+    case LoginUserType.checkbox:
+      return 'Checkbox';
   }
 }

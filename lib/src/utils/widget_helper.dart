@@ -28,7 +28,8 @@ Flushbar<void> showSuccessToast(
   )..show(context);
 }
 
-Flushbar<void> showErrorToast(BuildContext context, String title, String message) {
+Flushbar<void> showErrorToast(
+    BuildContext context, String title, String message) {
   return Flushbar(
     title: title,
     message: message,

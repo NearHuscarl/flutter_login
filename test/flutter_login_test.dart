@@ -1082,7 +1082,7 @@ void main() {
   testWidgets(
       'Redirect to signup card if there are additional signup fields, test that filled in fields are passed correctly to the callback',
       (WidgetTester tester) async {
-    var signupFields = {};
+    var signupFields = <String, String>{};
     Widget loginBuilder() => widget(
           FlutterLogin(
             loginAfterSignUp: false,

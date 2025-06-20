@@ -28,9 +28,9 @@ const Map<ColorShade, int> shades = {
 
 MaterialColor getMaterialColor(Color color) {
   return Colors.primaries.firstWhere(
-    (c) => c.value == color.value,
+    (c) => c.toARGB32() == color.toARGB32(),
     orElse: () => MaterialColor(
-      color.value,
+      color.toARGB32(),
       <int, Color>{
         shades[ColorShade.lightest]!: color,
         shades[ColorShade.secondLightest]!: color,
@@ -50,7 +50,7 @@ MaterialColor getMaterialColor(Color color) {
 /// Determines whether the given [Color] is [Brightness.light] or
 /// [Brightness.dark].
 /// Copied from [ThemeData.estimateBrightnessForColor(color)]
-/// change [kThreshold] from 0.15 to 0.45 to accept more color
+/// change kThreshold from 0.15 to 0.45 to accept more color
 /// with [Brightness.dark]
 Brightness estimateBrightnessForColor(Color color) {
   final relativeLuminance = color.computeLuminance();

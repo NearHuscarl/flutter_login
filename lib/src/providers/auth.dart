@@ -31,7 +31,7 @@ typedef ProviderNeedsSignUpCallback = Future<bool> Function();
 typedef ProviderAuthCallback = Future<String?>? Function();
 
 /// The result is an error message, callback successes if message is null
-typedef ProviderDirectCallback = Future? Function();
+typedef ProviderDirectCallback = Future<void>? Function();
 
 /// The result is an error message, callback successes if message is null
 typedef RecoverCallback = Future<String?>? Function(String);
