@@ -1,77 +1,98 @@
-name: flutter
+name: 📝 Code Quality
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [ opened, labeled, unlabeled, synchronize ]
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PUB_ENVIRONMENT: bot.github
 
 jobs:
   analysis:
+    name: 🔍 Analysis
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚡ Set Up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          java-version: 17
-          distribution: temurin
-      - uses: subosito/flutter-action@v2
-        with:
+          channel: stable
           cache: true
-      - name: Version
+
+      - name: 🔍 Flutter Version Info
         run: flutter doctor -v
-      - name: Install dependencies
+
+      - name: 📦 Cache Pub Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: 🔧 Bootstrap Workspace
         run: flutter pub get
-      - name: Linter
+
+      - name: ✅ Lint Code
         run: flutter analyze
-        # Min SDK is same as current SDK
-#  analysis_min_sdk:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-java@v4
-#        with:
-#          java-version: 17
-#          distribution: temurin
-#      - uses: subosito/flutter-action@v2.12.0
-#        with:
-#          cache: true
-#          flutter-version: '3.13.9'
-#          channel: 'stable'
-#      - name: Version
-#        run: flutter doctor -v
-#      - name: Install dependencies
-#        run: flutter pub get
-#      - name: Linter
-#        run: flutter analyze
+
   formatting:
+    name: 🎨 Formatting
+    needs: analysis  # This makes formatting start after analysis is complete
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚡ Set Up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          java-version: 17
-          distribution: temurin
-      - uses: subosito/flutter-action@v2
-        with:
+          channel: stable
           cache: true
-      - name: Format
-        run: dart format --set-exit-if-changed .
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
-      - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-      - name: Version
-        run: flutter doctor -v
-      - name: Install dependencies
+
+      - name: 🔧 Bootstrap Workspace
         run: flutter pub get
-      - name: Linter
+
+      - name: 🎯 Check Code Formatting
+        run: dart format --set-exit-if-changed .
+
+  test:
+    name: Testing
+    needs: formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚡ Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: 🔍 Flutter Version Info
+        run: flutter doctor -v
+
+      - name: 📦 Cache Pub Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: 🔧 Bootstrap Workspace
+        run: flutter pub get
+
+      - name: Test
         run: flutter test
