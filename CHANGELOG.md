@@ -1,4 +1,4 @@
-## NEXT
+## 5.1.0
 Features:
 - Added background image (thanks @alenas !)
 - Allow customization of button icon color (thanks @klondikedragon !)
