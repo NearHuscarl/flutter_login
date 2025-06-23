@@ -148,7 +148,12 @@ class Auth with ChangeNotifier {
 
   /// Switches the current mode between login and signup.
   AuthMode switchAuth() {
-    return _mode == AuthMode.login ? AuthMode.signup : AuthMode.login;
+    if (mode == AuthMode.login) {
+      mode = AuthMode.signup;
+    } else if (mode == AuthMode.signup) {
+      mode = AuthMode.login;
+    }
+    return mode;
   }
 
   String _email = '';
