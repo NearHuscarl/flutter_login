@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 
 class AnimatedNumericText extends StatelessWidget {
   AnimatedNumericText({
-    super.key,
     required this.initialValue,
     required this.targetValue,
     required this.controller,
+    super.key,
     this.curve = Curves.linear,
     this.formatter = '#,##0.00',
     this.style,

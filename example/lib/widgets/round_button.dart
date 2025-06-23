@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class RoundButton extends StatefulWidget {
   const RoundButton({
-    super.key,
     required this.icon,
     required this.onPressed,
     required this.label,
     required this.loadingController,
+    super.key,
     this.interval = const Interval(0, 1, curve: Curves.ease),
     this.size = 60,
   });
@@ -19,10 +19,10 @@ class RoundButton extends StatefulWidget {
   final double size;
 
   @override
-  _RoundButtonState createState() => _RoundButtonState();
+  RoundButtonState createState() => RoundButtonState();
 }
 
-class _RoundButtonState extends State<RoundButton>
+class RoundButtonState extends State<RoundButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _pressController;
   late Animation<double> _scaleLoadingAnimation;
@@ -65,7 +65,7 @@ class _RoundButtonState extends State<RoundButton>
         Colors.primaries.where((c) => c == theme.primaryColor).first;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: ScaleTransition(
         scale: _scaleLoadingAnimation,
         child: Column(

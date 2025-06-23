@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
+/// Provides all user-facing messages used in the login and signup flows.
+///
+/// This includes labels, hints, error messages, button text, and success messages
+/// for login, signup, password recovery, and provider authentication.
+///
+/// You can customize this class to support localization or override specific strings.
 class LoginMessages with ChangeNotifier {
+  /// Creates a set of customizable login and signup messages.
+  ///
+  /// Most values have default fallbacks, but you may override any to support
+  /// localization or specific UI requirements.
   LoginMessages({
     this.userHint,
     this.passwordHint = defaultPasswordHint,
@@ -38,44 +48,104 @@ class LoginMessages with ChangeNotifier {
     this.recoverCodePasswordDescription = defaultRecoverCodePasswordDescription,
   });
 
+  /// Default hint for password field.
   static const defaultPasswordHint = 'Password';
+
+  /// Default hint for confirm password field.
   static const defaultConfirmPasswordHint = 'Confirm Password';
+
+  /// Default label for "Forgot Password?" button.
   static const defaultForgotPasswordButton = 'Forgot Password?';
+
+  /// Default label for login button.
   static const defaultLoginButton = 'LOGIN';
+
+  /// Default label for signup button.
   static const defaultSignupButton = 'SIGNUP';
+
+  /// Default label for password recovery button.
   static const defaultRecoverPasswordButton = 'RECOVER';
+
+  /// Default intro text for password recovery form.
   static const defaultRecoverPasswordIntro = 'Reset your password here';
+
+  /// Default description for password recovery (if no confirm recovery).
   static const defaultRecoverPasswordDescription =
       'We will send your plain-text password to this email account.';
+
+  /// Default description when confirm recovery is used.
   static const defaultRecoverCodePasswordDescription =
       'We will send a password recovery code to your email.';
+
+  /// Default label for back button.
   static const defaultGoBackButton = 'BACK';
+
+  /// Default error message when passwords do not match.
   static const defaultConfirmPasswordError = 'Password do not match!';
+
+  /// Default success message after requesting password recovery.
   static const defaultRecoverPasswordSuccess = 'An email has been sent';
-  static const defaultflushbarTitleSuccess = 'Success';
+
+  /// Default title for error toast/snackbar.
   static const defaultflushbarTitleError = 'Error';
+
+  /// Default title for success toast/snackbar.
+  static const defaultflushbarTitleSuccess = 'Success';
+
+  /// Default success message after signup.
   static const defaultSignUpSuccess = 'An activation link has been sent';
+
+  /// Default title for first line above login providers.
   static const defaultProvidersTitleFirst = 'or login with';
+
+  /// Default title for second line above login providers.
   static const defaultProvidersTitleSecond = 'or';
+
+  /// Default label for additional signup submit button.
   static const defaultAdditionalSignUpSubmitButton = 'SUBMIT';
+
+  /// Default description text for additional signup form.
   static const defaultAdditionalSignUpFormDescription =
       'Please fill in this form to complete the signup';
 
+  /// Default intro for confirm recover card.
   static const defaultConfirmRecoverIntro =
       'The recovery code to set a new password was sent to your email.';
+
+  /// Default hint text for the recovery code input field.
   static const defaultRecoveryCodeHint = 'Recovery Code';
+
+  /// Default validation message if recovery code is empty.
   static const defaultRecoveryCodeValidationError = 'Recovery code is empty';
+
+  /// Default label for set password button (after code is entered).
   static const defaultSetPasswordButton = 'SET PASSWORD';
+
+  /// Default success message after confirming password recovery.
   static const defaultConfirmRecoverSuccess = 'Password recovered.';
+
+  /// Default intro for confirm signup card.
   static const defaultConfirmSignupIntro =
       'A confirmation code was sent to your email. '
       'Please enter the code to confirm your account.';
+
+  /// Default hint for confirmation code input.
   static const defaultConfirmationCodeHint = 'Confirmation Code';
+
+  /// Default validation error for empty confirmation code.
   static const defaultConfirmationCodeValidationError =
       'Confirmation code is empty';
+
+  /// Default label for resend code button.
   static const defaultResendCodeButton = 'Resend Code';
+
+  /// Default message after resending the confirmation code.
   static const defaultResendCodeSuccess = 'A new email has been sent.';
+
+  /// Default label for confirm signup button.
   static const defaultConfirmSignupButton = 'CONFIRM';
+
+  /// Default message after successful signup confirmation.
   static const defaultConfirmSignupSuccess = 'Account confirmed.';
 
   /// Hint text of the userHint [TextField]

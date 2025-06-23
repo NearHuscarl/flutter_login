@@ -9,18 +9,22 @@ enum FadeDirection {
 
 class FadeIn extends StatefulWidget {
   const FadeIn({
+    required this.child,
     super.key,
     this.fadeDirection = FadeDirection.startToEnd,
     this.offset = 1.0,
     this.controller,
     this.duration,
     this.curve = Curves.easeOut,
-    required this.child,
   })  : assert(
           controller == null && duration != null ||
               controller != null && duration == null,
+          'You must provide either a [duration] or a [controller], but not both.',
         ),
-        assert(offset > 0);
+        assert(
+          offset > 0,
+          '[offset] must be greater than zero to apply a visible fade/slide effect.',
+        );
 
   /// [FadeIn] animation can be controlled via external [controller]. If
   /// [controller] is not provided, it will use the default internal controller
@@ -33,10 +37,10 @@ class FadeIn extends StatefulWidget {
   final Curve curve;
 
   @override
-  _FadeInState createState() => _FadeInState();
+  FadeInState createState() => FadeInState();
 }
 
-class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
+class FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _opacityAnimation;
@@ -86,8 +90,8 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       ),
     );
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(
       CurvedAnimation(
         parent: _effectiveController!,

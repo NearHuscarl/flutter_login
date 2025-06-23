@@ -3,26 +3,48 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_login/src/widgets/ring.dart';
 
-///similar a AnimatedButton but has an icon instead of textButton
-//(basically its a modified version of the AnimatedButton Widget and may need to be cleaned up)
+/// A custom animated button widget that displays an [IconButton] instead of text,
+/// and animates between a static icon and a loading indicator.
+///
+/// This widget is similar to AnimatedButton, but shows an icon instead of a text label.
+/// It supports animation using the provided [controller], and allows customization of
+/// icon color and loading indicator color.
+///
+/// Typically used in login forms or actions requiring async loading states.
 class AnimatedIconButton extends StatefulWidget {
+  /// Creates an [AnimatedIconButton].
+  ///
+  /// The [tooltip], [onPressed], [controller], and [icon] parameters must not be null.
   const AnimatedIconButton({
-    super.key,
     required this.tooltip,
     required this.onPressed,
     required this.controller,
     required this.icon,
+    super.key,
     this.loadingColor,
     this.color,
     this.iconColor,
   });
 
+  /// Tooltip shown on long press or mouse hover.
   final String tooltip;
+
+  /// Background color of the button.
   final Color? color;
+
+  /// Color of the loading indicator (spinner).
   final Color? loadingColor;
+
+  /// Color of the icon.
   final Color? iconColor;
+
+  /// Called when the button is pressed.
   final VoidCallback onPressed;
+
+  /// The controller used to drive the loading animation.
   final AnimationController controller;
+
+  /// The icon displayed in the button.
   final IconData icon;
 
   @override
@@ -44,7 +66,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
   Color? _loadingColor;
 
   static const _height = 40.0;
-  static const _loadingCircleRadius = _height / 2;
+  static const double _loadingCircleRadius = _height / 2;
   static const _loadingCircleThickness = 4.0;
 
   @override
@@ -54,7 +76,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     // _colorAnimation
     // _width, _sizeAnimation
 
-    _buttonOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _buttonOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller,
         curve: const Threshold(.65),
@@ -69,10 +91,10 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
         curve: const Interval(.65, .85),
       ),
     );
-    _ringOpacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _ringOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller,
-        curve: const Interval(.85, 1.0),
+        curve: const Interval(.85, 1),
       ),
     );
 
@@ -99,7 +121,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     ).animate(
       CurvedAnimation(
         parent: widget.controller,
-        curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
       ),
     );
   }
@@ -148,9 +170,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
-    );
-
-    renderParagraph.layout(const BoxConstraints(minWidth: 120.0));
+    )..layout(const BoxConstraints(minWidth: 120));
 
     // text width based on fontSize, plus 45.0 for padding
     final textWidth =
@@ -163,10 +183,10 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
             ? 240.0
             : 120.0;
 
-    _sizeAnimation = Tween<double>(begin: 1.0, end: _height / _width).animate(
+    _sizeAnimation = Tween<double>(begin: 1, end: _height / _width).animate(
       CurvedAnimation(
         parent: widget.controller,
-        curve: const Interval(0.0, .65, curve: Curves.fastOutSlowIn),
+        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
       ),
     );
   }

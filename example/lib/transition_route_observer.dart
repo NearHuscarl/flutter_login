@@ -13,7 +13,7 @@ class TransitionRouteObserver<R extends TransitionRoute<dynamic>?>
   /// to [route], e.g. when [route] is covered by another route or when [route]
   /// is popped off the [Navigator] stack.
   void subscribe(TransitionRouteAware routeAware, R route) {
-    assert(route != null);
+    assert(route != null, '[route] must not be null when subscribing.');
     final subscribers =
         _listeners.putIfAbsent(route, () => <TransitionRouteAware>{});
     if (subscribers.add(routeAware)) {

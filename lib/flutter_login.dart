@@ -33,7 +33,23 @@ export 'src/providers/auth.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 
+/// Represents a third-party or custom login method (e.g., Google, Facebook).
+/// Includes an icon or button UI and associated authentication callback.
 class LoginProvider {
+  /// Creates an [LoginProvider] for use in authentication UIs.
+  const LoginProvider({
+    required this.callback,
+    this.button,
+    this.icon,
+    this.errorsToExcludeFromErrorMessage,
+    this.label = '',
+    this.providerNeedsSignUpCallback,
+    this.animated = true,
+  }) : assert(
+          button != null || icon != null,
+          'Either [button] or [icon] must be provided for the login provider.',
+        );
+
   /// Used for custom sign-in buttons.
   ///
   /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
@@ -73,16 +89,6 @@ class LoginProvider {
   ///
   /// Default: null
   final List<String>? errorsToExcludeFromErrorMessage;
-
-  const LoginProvider({
-    this.button,
-    this.icon,
-    required this.callback,
-    this.errorsToExcludeFromErrorMessage,
-    this.label = '',
-    this.providerNeedsSignUpCallback,
-    this.animated = true,
-  }) : assert(button != null || icon != null);
 }
 
 class _AnimationTimeDilationDropdown extends StatelessWidget {
@@ -102,7 +108,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(10),
             child: Text(
               'x1 is normal time, x5 means the animation is 5x times slower for debugging purpose',
               textAlign: TextAlign.center,
@@ -114,7 +120,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
               scrollController: FixedExtentScrollController(
                 initialItem: animationSpeeds.indexOf(initialValue.toInt()),
               ),
-              itemExtent: 30.0,
+              itemExtent: 30,
               backgroundColor: Colors.white,
               onSelectedItemChanged: onChanged as void Function(int)?,
               children: animationSpeeds.map((x) => Text('x$x')).toList(),
@@ -128,6 +134,7 @@ class _AnimationTimeDilationDropdown extends StatelessWidget {
 
 class _Header extends StatefulWidget {
   const _Header({
+    required this.loginTheme,
     this.logo,
     this.logoTag,
     this.logoWidth = 0.75,
@@ -136,7 +143,6 @@ class _Header extends StatefulWidget {
     this.height = 250.0,
     this.logoController,
     this.titleController,
-    required this.loginTheme,
   });
 
   final ImageProvider? logo;
@@ -154,12 +160,12 @@ class _Header extends StatefulWidget {
 }
 
 class __HeaderState extends State<_Header> {
-  double _titleHeight = 0.0;
+  double _titleHeight = 0;
 
   /// https://stackoverflow.com/a/56997641/9449426
   double getEstimatedTitleHeight() {
     if (isNullOrEmpty(widget.title)) {
-      return 0.0;
+      return 0;
     }
 
     final theme = Theme.of(context);
@@ -172,9 +178,7 @@ class __HeaderState extends State<_Header> {
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
-    );
-
-    renderParagraph.layout(const BoxConstraints());
+    )..layout(const BoxConstraints());
 
     return renderParagraph
         .getMinIntrinsicHeight(widget.loginTheme.beforeHeroFontSize)
@@ -205,7 +209,7 @@ class __HeaderState extends State<_Header> {
       kMaxLogoHeight,
     );
     final displayLogo = widget.logo != null && logoHeight >= kMinLogoHeight;
-    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
+    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360);
 
     var logo = displayLogo
         ? Image(
@@ -271,12 +275,42 @@ class __HeaderState extends State<_Header> {
   }
 }
 
+/// A customizable, animated login/signup UI component for Flutter apps.
+///
+/// `FlutterLogin` provides an all-in-one solution for authentication screens,
+/// supporting login, signup, password recovery, third-party providers,
+/// and terms of service agreements with beautiful transitions and theming.
+///
+/// ### Features:
+/// - Login, signup, and password recovery flows
+/// - Confirmation steps (e.g., OTP or email codes)
+/// - Support for additional signup fields
+/// - Customizable appearance via [LoginTheme]
+/// - Animated transitions
+/// - Third-party authentication buttons
+/// - Terms of service support
+///
+/// Example usage:
+/// ```dart
+/// FlutterLogin(
+///   onLogin: (loginData) async => null,
+///   onSignup: (signupData) async => null,
+///   onRecoverPassword: (email) async => 'Recover link sent',
+/// )
+/// ```
+///
+/// See [Auth], [LoginTheme], and [LoginMessages] for full customization options.
 class FlutterLogin extends StatefulWidget {
+  /// Creates a [FlutterLogin] widget.
+  ///
+  /// This constructor allows you to customize every aspect of the login/signup
+  /// experience including theming, form validation, animations, auth callbacks,
+  /// and even adding your own custom widgets.
   FlutterLogin({
-    super.key,
-    this.onSignup,
     required this.onLogin,
     required this.onRecoverPassword,
+    super.key,
+    this.onSignup,
     this.title,
 
     /// The [ImageProvider] or asset path [String] for the logo image to be displayed
@@ -377,8 +411,8 @@ class FlutterLogin extends StatefulWidget {
   /// invalid, or null otherwise
   final FormFieldValidator<String>? userValidator;
 
-  /// Should email be validated after losing focus [true] or after form
-  /// submissions [false]. Default: [false]
+  /// Should email be validated after losing focus true or after form
+  /// submissions false. Default: false
   final bool? validateUserImmediately;
 
   /// Same as [userValidator] but for password
@@ -438,8 +472,8 @@ class FlutterLogin extends StatefulWidget {
   /// Optional
   final ConfirmSignupCallback? onConfirmSignup;
 
-  // Additional option to decide in runtime if confirmation is required
-  // Optional
+  /// Additional option to decide in runtime if confirmation is required
+  /// Optional
   final ConfirmSignupRequiredCallback? confirmSignupRequired;
 
   /// Sets [TextInputType] of sign up confirmation form.
@@ -486,14 +520,26 @@ class FlutterLogin extends StatefulWidget {
   /// Default: false
   final bool hideSignupPasswordFields;
 
-  /// Called when the user switches between sign-in and sign-up mode
+  /// Called when the user switches between sign-in and sign-up mode.
+  ///
+  /// Provides the new [AuthMode] (either [AuthMode.login] or [AuthMode.signup])
+  /// to help parent widgets track mode changes.
   final void Function(AuthMode mode)? onSwitchAuthMode;
 
+  /// Controls how the keyboard is dismissed when interacting with scrollable content.
+  ///
+  /// Defaults to [ScrollViewKeyboardDismissBehavior.manual].
+  /// Set to [ScrollViewKeyboardDismissBehavior.onDrag] to dismiss the keyboard when scrolling.
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
-  /// Whether or not to autofocus on the user field
+  /// Whether or not to autofocus on the user input field when the form loads.
+  ///
+  /// Defaults to `false`. If `true`, the user field receives focus automatically.
   final bool autofocus;
 
+  /// Default email validator used when none is supplied.
+  ///
+  /// Returns `'Invalid email!'` if the value is null, empty, or doesn't match a basic email regex.
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !email.hasMatch(value)) {
       return 'Invalid email!';
@@ -501,6 +547,9 @@ class FlutterLogin extends StatefulWidget {
     return null;
   }
 
+  /// Default password validator used when none is supplied.
+  ///
+  /// Returns `'Password is too short!'` if the value is null, empty, or shorter than 3 characters.
   static String? defaultPasswordValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 2) {
       return 'Password is too short!';
@@ -517,7 +566,7 @@ class _FlutterLoginState extends State<FlutterLogin>
   final GlobalKey<AuthCardState> authCardKey = GlobalKey();
 
   static const loadingDuration = Duration(milliseconds: 400);
-  double _selectTimeDilation = 1.0;
+  double _selectTimeDilation = 1;
 
   late AnimationController _loadingController;
   late AnimationController _logoController;
@@ -600,7 +649,7 @@ class _FlutterLoginState extends State<FlutterLogin>
             color: Colors.green,
             onPressed: () {
               timeDilation = 1.0;
-              showModalBottomSheet(
+              showModalBottomSheet<_AnimationTimeDilationDropdown>(
                 context: context,
                 builder: (_) {
                   return _AnimationTimeDilationDropdown(
@@ -720,19 +769,19 @@ class _FlutterLoginState extends State<FlutterLogin>
         surfaceTintColor: cardTheme.surfaceTintColor,
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
-        margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
+        margin: cardTheme.margin ?? const EdgeInsets.all(4),
         shape: cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         filled: inputTheme.filled,
         fillColor: inputTheme.fillColor ??
             Color.alphaBlend(
-              primaryOrWhite.withOpacity(.07),
-              Colors.grey.withOpacity(.04),
+              primaryOrWhite.withValues(alpha: .07),
+              Colors.grey.withValues(alpha: .04),
             ),
         contentPadding: inputTheme.contentPadding ??
-            const EdgeInsets.symmetric(vertical: 4.0),
+            const EdgeInsets.symmetric(vertical: 4),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
         labelStyle: inputTheme.labelStyle ?? labelStyle,
         enabledBorder: inputTheme.enabledBorder ??

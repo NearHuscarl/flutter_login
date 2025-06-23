@@ -2,11 +2,11 @@ part of 'auth_card_builder.dart';
 
 class _ConfirmRecoverCard extends StatefulWidget {
   const _ConfirmRecoverCard({
-    super.key,
     required this.passwordValidator,
     required this.onBack,
     required this.onSubmitCompleted,
     required this.initialIsoCode,
+    super.key,
   });
 
   final FormFieldValidator<String> passwordValidator;
@@ -68,16 +68,16 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
     );
 
     if (error != null) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error);
       }
       setState(() => _isSubmitting = false);
-      if (context.mounted) {
+      if (mounted) {
         await _submitController.reverse();
       }
       return false;
     } else {
-      if (context.mounted) {
+      if (mounted) {
         showSuccessToast(
           context,
           messages.flushbarTitleSuccess,
@@ -123,8 +123,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
       },
       validator: widget.passwordValidator,
       onSaved: (value) {
-        final auth = Provider.of<Auth>(context, listen: false);
-        auth.password = value!;
+        Provider.of<Auth>(context, listen: false).password = value!;
       },
       initialIsoCode: widget.initialIsoCode,
     );
@@ -158,7 +157,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
   Widget _buildBackButton(ThemeData theme, LoginMessages messages) {
     return MaterialButton(
       onPressed: !_isSubmitting ? widget.onBack : null,
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: theme.primaryColor,
       child: Text(messages.goBackButton),
@@ -170,7 +169,7 @@ class _ConfirmRecoverCardState extends State<_ConfirmRecoverCard>
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min(deviceSize.width * 0.75, 360.0);
+    final cardWidth = min<double>(deviceSize.width * 0.75, 360);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 

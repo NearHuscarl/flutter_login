@@ -5,12 +5,12 @@ class _RecoverCard extends StatefulWidget {
     required this.userValidator,
     required this.onBack,
     required this.userType,
-    this.loginTheme,
     required this.navigateBack,
     required this.onSubmitCompleted,
     required this.loadingController,
     required this.initialIsoCode,
     required this.autofocusName,
+    this.loginTheme,
   });
 
   final FormFieldValidator<String>? userValidator;
@@ -70,16 +70,16 @@ class _RecoverCardState extends State<_RecoverCard>
     final error = await auth.onRecoverPassword!(auth.email);
 
     if (error != null) {
-      if (context.mounted) {
+      if (mounted) {
         showErrorToast(context, messages.flushbarTitleError, error);
       }
       setState(() => _isSubmitting = false);
-      if (context.mounted) {
+      if (mounted) {
         await _submitController.reverse();
       }
       return false;
     } else {
-      if (context.mounted) {
+      if (mounted) {
         showSuccessToast(
           context,
           messages.flushbarTitleSuccess,
@@ -140,7 +140,7 @@ class _RecoverCardState extends State<_RecoverCard>
               widget.onBack();
             }
           : null,
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textColor: loginTheme?.switchAuthTextColor ?? calculatedTextColor,
       child: Text(messages.goBackButton),
@@ -153,7 +153,7 @@ class _RecoverCardState extends State<_RecoverCard>
     final auth = Provider.of<Auth>(context, listen: false);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min(deviceSize.width * 0.75, 360.0);
+    final cardWidth = min<double>(deviceSize.width * 0.75, 360);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 

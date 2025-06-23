@@ -8,14 +8,13 @@ import 'package:flutter_login_example/users.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
-  static const routeName = '/auth';
-
   const LoginScreen({super.key});
+  static const routeName = '/auth';
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
   Future<String?> _loginUser(LoginData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(data.name)) {
         return 'User not exists';
       }
@@ -27,13 +26,13 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupUser(SignupData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       return null;
     });
   }
 
   Future<String?> _recoverPassword(String name) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       if (!mockUsers.containsKey(name)) {
         return 'User not exists';
       }
@@ -42,7 +41,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String?> _signupConfirm(String error, LoginData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future<void>.delayed(loginTime).then((_) {
       return null;
     });
   }
@@ -84,7 +83,7 @@ class LoginScreen extends StatelessWidget {
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
             debugPrint('start github sign in');
-            await Future.delayed(loginTime);
+            await Future<void>.delayed(loginTime);
             debugPrint('stop github sign in');
             return null;
           },
@@ -116,7 +115,7 @@ class LoginScreen extends StatelessWidget {
           userType: LoginUserType.phone,
           fieldValidator: (value) {
             final phoneRegExp = RegExp(
-              '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$',
+              r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$',
             );
             if (value != null &&
                 value.length < 7 &&
@@ -265,7 +264,7 @@ class LoginScreen extends StatelessWidget {
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(
-          FadePageRoute(
+          FadePageRoute<void>(
             builder: (context) => const DashboardScreen(),
           ),
         );
@@ -292,10 +291,10 @@ class IntroWidget extends StatelessWidget {
           TextSpan(
             children: [
               TextSpan(
-                text: "You are trying to login/sign up on server hosted on ",
+                text: 'You are trying to login/sign up on server hosted on ',
               ),
               TextSpan(
-                text: "example.com",
+                text: 'example.com',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -306,8 +305,8 @@ class IntroWidget extends StatelessWidget {
           children: <Widget>[
             Expanded(child: Divider()),
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Authenticate"),
+              padding: EdgeInsets.all(8),
+              child: Text('Authenticate'),
             ),
             Expanded(child: Divider()),
           ],

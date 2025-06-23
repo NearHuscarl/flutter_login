@@ -6,7 +6,6 @@ import 'package:flutter_login/src/widgets/animated_icon.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-// TODO: get this value from fluter_login package
 const loadingAnimationDuration = Duration(seconds: 1);
 
 class LoginCallback {
@@ -25,8 +24,8 @@ final mockCallback = MockCallback();
 List<LoginData> loginStubCallback(MockCallback mockCallback) {
   reset(mockCallback);
 
-  final user = LoginData(name: 'near@gmail.com', password: '12345');
-  final invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
+  const user = LoginData(name: 'near@gmail.com', password: '12345');
+  const invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
 
   when(mockCallback.userValidator(user.name)).thenReturn(null);
   when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
@@ -44,9 +43,9 @@ List<LoginData> loginStubCallback(MockCallback mockCallback) {
 List<SignupData> signupStubCallback(MockCallback mockCallback) {
   reset(mockCallback);
 
-  final user =
+  const user =
       SignupData.fromSignupForm(name: 'near@gmail.com', password: '12345');
-  final invalidUser =
+  const invalidUser =
       SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
 
   when(mockCallback.userValidator(user.name)).thenReturn(null);

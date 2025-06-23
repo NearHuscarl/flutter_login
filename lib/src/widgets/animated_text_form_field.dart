@@ -9,11 +9,21 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
 import 'package:url_launcher/url_launcher.dart';
 
+/// Represents the direction of inertial animation applied to a text field.
 enum TextFieldInertiaDirection {
+  /// Slide-in animation from the left.
   left,
+
+  /// Slide-in animation from the right.
   right,
 }
 
+/// Returns an [Interval] for animating a subrange within another interval,
+/// useful for nested animation sequencing.
+///
+/// [start] and [end] define the full range of the parent animation.
+/// [externalStart] and [externalEnd] define the subrange relative to the full range.
+/// [curve] is optional and defines the easing for the interval.
 Interval _getInternalInterval(
   double start,
   double end,
@@ -28,12 +38,24 @@ Interval _getInternalInterval(
   );
 }
 
+/// A custom text field widget with animation and support for
+/// advanced login field types like international phone input, email, etc.
+///
+/// It supports loading animations, inertia-driven entry animations,
+/// form validation, and autofill hints.
 class AnimatedTextFormField extends StatefulWidget {
+  /// Creates an [AnimatedTextFormField].
+  ///
+  /// The [width] and [initialIsoCode] are required.
+  ///
+  /// If [inertiaController] is provided, [inertiaDirection] must also be set,
+  /// and vice versa.
   const AnimatedTextFormField({
+    required this.width,
+    required this.initialIsoCode,
     super.key,
     this.textFormFieldKey,
-    this.interval = const Interval(0.0, 1.0),
-    required this.width,
+    this.interval = const Interval(0, 1),
     this.userType,
     this.loadingController,
     this.inertiaController,
@@ -55,36 +77,85 @@ class AnimatedTextFormField extends StatefulWidget {
     this.autocorrect = false,
     this.autofillHints,
     this.tooltip,
-    required this.initialIsoCode,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
+          'inertiaController and inertiaDirection must either both be null or both be non-null',
         );
 
+  /// A unique key for the internal [TextFormField].
   final Key? textFormFieldKey;
+
+  /// Controls the animation timing of this widget relative to a larger sequence.
   final Interval? interval;
+
+  /// Animation controller for loading transitions (e.g., during form submission).
   final AnimationController? loadingController;
+
+  /// Controller used to animate the text field with inertial entry effects.
   final AnimationController? inertiaController;
-  final double width;
-  final LoginUserType? userType;
-  final bool enabled;
-  final bool autocorrect;
-  final Iterable<String>? autofillHints;
-  final String? labelText;
-  final String? linkUrl;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final bool obscureText;
-  final TextEditingController? controller;
-  final bool autofocus;
-  final FocusNode? focusNode;
-  final FormFieldValidator<String>? validator;
-  final ValueChanged<String>? onFieldSubmitted;
-  final FormFieldSetter<String>? onSaved;
+
+  /// Direction in which the inertial animation should slide in.
   final TextFieldInertiaDirection? inertiaDirection;
+
+  /// Width of the input field (usually based on screen size).
+  final double width;
+
+  /// Type of user input expected (e.g., email, phone, name).
+  final LoginUserType? userType;
+
+  /// Whether the field is enabled for user input.
+  final bool enabled;
+
+  /// Whether to enable auto-correction.
+  final bool autocorrect;
+
+  /// Autofill hints for system autofill functionality.
+  final Iterable<String>? autofillHints;
+
+  /// Label text displayed above the input field.
+  final String? labelText;
+
+  /// Optional URL to link the label text to (e.g., terms and conditions).
+  final String? linkUrl;
+
+  /// An optional icon displayed before the input field.
+  final Widget? prefixIcon;
+
+  /// An optional icon displayed after the input field.
+  final Widget? suffixIcon;
+
+  /// The type of keyboard to display.
+  final TextInputType? keyboardType;
+
+  /// The action button shown on the keyboard (e.g., next, done).
+  final TextInputAction? textInputAction;
+
+  /// Whether to obscure the text (e.g., for password fields).
+  final bool obscureText;
+
+  /// The controller for the input field's value.
+  final TextEditingController? controller;
+
+  /// Whether the field should receive focus when the screen loads.
+  final bool autofocus;
+
+  /// An optional [FocusNode] to manage focus manually.
+  final FocusNode? focusNode;
+
+  /// Form field validator, returns a string error or null.
+  final FormFieldValidator<String>? validator;
+
+  /// Called when the field is submitted (e.g., on keyboard submit).
+  final ValueChanged<String>? onFieldSubmitted;
+
+  /// Called when the field value is saved (on form submit).
+  final FormFieldSetter<String>? onSaved;
+
+  /// Tooltip or helper content displayed inline with the field.
   final InlineSpan? tooltip;
+
+  /// ISO country code used as default for phone number input (e.g., "US", "IN").
   final String? initialIsoCode;
 
   @override
@@ -114,8 +185,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     if (loadingController != null) {
       scaleAnimation = Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(
         CurvedAnimation(
           parent: loadingController,
@@ -128,10 +199,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           ),
         ),
       );
-      suffixIconOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      suffixIconOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
           parent: loadingController,
-          curve: _getInternalInterval(.65, 1.0, interval.begin, interval.end),
+          curve: _getInternalInterval(.65, 1, interval.begin, interval.end),
         ),
       );
       _updateSizeAnimation();
@@ -143,7 +214,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
     if (inertiaController != null) {
       fieldTranslateAnimation = Tween<double>(
-        begin: 0.0,
+        begin: 0,
         end: sign * 15.0,
       ).animate(
         CurvedAnimation(
@@ -153,17 +224,17 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         ),
       );
       iconRotationAnimation =
-          Tween<double>(begin: 0.0, end: sign * pi / 12 /* ~15deg */).animate(
+          Tween<double>(begin: 0, end: sign * pi / 12 /* ~15deg */).animate(
         CurvedAnimation(
           parent: inertiaController,
-          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          curve: const Interval(.5, 1, curve: Curves.easeOut),
           reverseCurve: Curves.easeIn,
         ),
       );
-      iconTranslateAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+      iconTranslateAnimation = Tween<double>(begin: 0, end: 8).animate(
         CurvedAnimation(
           parent: inertiaController,
-          curve: const Interval(.5, 1.0, curve: Curves.easeOut),
+          curve: const Interval(.5, 1, curve: Curves.easeOut),
           reverseCurve: Curves.easeIn,
         ),
       );
@@ -198,14 +269,14 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final loadingController = widget.loadingController!;
 
     sizeAnimation = Tween<double>(
-      begin: 48.0,
+      begin: 48,
       end: widget.width,
     ).animate(
       CurvedAnimation(
         parent: loadingController,
         curve: _getInternalInterval(
           .2,
-          1.0,
+          1,
           interval.begin,
           interval.end,
           Curves.linearToEaseOut,
@@ -353,7 +424,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Icon(
                         Icons.open_in_new,
                         color: Theme.of(context).textTheme.bodyMedium!.color,
@@ -444,11 +515,23 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 }
 
+/// A password input field with animation support, designed for login and signup forms.
+///
+/// This widget includes support for:
+/// - Loading and entrance animations
+/// - Autofill hints
+/// - Inertial (slide-in) animation direction
+/// - Validation and focus control
 class AnimatedPasswordTextFormField extends StatefulWidget {
+  /// Creates an [AnimatedPasswordTextFormField] for use in authentication UIs.
+  ///
+  /// [animatedWidth] and [initialIsoCode] are required.
+  /// If [inertiaController] is provided, then [inertiaDirection] must also be set (and vice versa).
   const AnimatedPasswordTextFormField({
-    super.key,
-    this.interval = const Interval(0.0, 1.0),
     required this.animatedWidth,
+    required this.initialIsoCode,
+    super.key,
+    this.interval = const Interval(0, 1),
     this.loadingController,
     this.inertiaController,
     this.inertiaDirection,
@@ -462,27 +545,58 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onSaved,
     this.autofillHints,
-    required this.initialIsoCode,
   }) : assert(
           (inertiaController == null && inertiaDirection == null) ||
               (inertiaController != null && inertiaDirection != null),
+          'inertiaController and inertiaDirection must either both be null or both be non-null.',
         );
 
+  /// Interval defining how this field participates in an animation sequence.
   final Interval? interval;
+
+  /// Controller for triggering loading-related animations.
   final AnimationController? loadingController;
+
+  /// Controller for entry animation from the left or right.
   final AnimationController? inertiaController;
+
+  /// Width of the input field when animated.
   final double animatedWidth;
+
+  /// Whether the field is interactive or disabled.
   final bool enabled;
+
+  /// Optional label text shown above the input.
   final String? labelText;
+
+  /// Defines the keyboard type (usually [TextInputType.visiblePassword]).
   final TextInputType? keyboardType;
+
+  /// The action button to display on the soft keyboard (e.g., done, next).
   final TextInputAction? textInputAction;
+
+  /// Controller for managing the text value of the field.
   final TextEditingController? controller;
+
+  /// Optional focus node for managing field focus externally.
   final FocusNode? focusNode;
+
+  /// A validator function returning an error string or null.
   final FormFieldValidator<String>? validator;
+
+  /// Called when the field is submitted (e.g., keyboard "done").
   final ValueChanged<String>? onFieldSubmitted;
+
+  /// Called when the field is saved in a form.
   final FormFieldSetter<String>? onSaved;
+
+  /// The direction of the entry animation (left or right).
   final TextFieldInertiaDirection? inertiaDirection;
+
+  /// Autofill hints to help the OS autofill the field.
   final Iterable<String>? autofillHints;
+
+  /// ISO country code, passed for potential use in phone/password hybrid inputs.
   final String? initialIsoCode;
 
   @override
@@ -521,12 +635,12 @@ class _AnimatedPasswordTextFormFieldState
           },
           firstChild: const Icon(
             Icons.visibility,
-            size: 25.0,
+            size: 25,
             semanticLabel: 'show password',
           ),
           secondChild: const Icon(
             Icons.visibility_off,
-            size: 25.0,
+            size: 25,
             semanticLabel: 'hide password',
           ),
           crossFadeState: _obscureText

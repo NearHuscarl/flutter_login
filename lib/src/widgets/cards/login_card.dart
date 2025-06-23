@@ -1,11 +1,14 @@
 part of 'auth_card_builder.dart';
 
-// https://stackoverflow.com/a/32686261/9449426
+/// A basic email validation RegExp pattern.
+/// Source: https://stackoverflow.com/a/32686261/9449426
+///
+/// Matches a general email format: non-whitespace characters before and after
+/// the '@', and at least one '.' in the domain part.
 final email = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
 class _LoginCard extends StatefulWidget {
   const _LoginCard({
-    super.key,
     required this.loadingController,
     required this.userValidator,
     required this.validateUserImmediately,
@@ -16,16 +19,17 @@ class _LoginCard extends StatefulWidget {
     required this.requireAdditionalSignUpFields,
     required this.onSwitchConfirmSignup,
     required this.requireSignUpConfirmation,
+    required this.initialIsoCode,
+    required this.hideSignupPasswordFields,
+    required this.onSwitchAuthMode,
+    required this.autofocus,
+    super.key,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.introWidget,
-    required this.initialIsoCode,
-    required this.hideSignupPasswordFields,
-    required this.onSwitchAuthMode,
-    required this.autofocus,
   });
 
   final AnimationController loadingController;
@@ -56,7 +60,7 @@ class _LoginCard extends StatefulWidget {
 class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  final _userFieldKey = GlobalKey<FormFieldState>();
+  final _userFieldKey = GlobalKey<FormFieldState<void>>();
   final _userFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
@@ -117,13 +121,13 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         .toList();
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
-    _passTextFieldLoadingAnimationInterval = const Interval(.15, 1.0);
+    _passTextFieldLoadingAnimationInterval = const Interval(.15, 1);
     _textButtonLoadingAnimationInterval =
-        const Interval(.6, 1.0, curve: Curves.easeOut);
-    _buttonScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        const Interval(.6, 1, curve: Curves.easeOut);
+    _buttonScaleAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: widget.loadingController,
-        curve: const Interval(.4, 1.0, curve: Curves.easeOutBack),
+        curve: const Interval(.4, 1, curve: Curves.easeOutBack),
       ),
     );
 
@@ -283,7 +287,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }) async {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     if (!loginProvider.animated) {
-      final String? error = await loginProvider.callback();
+      final error = await loginProvider.callback();
 
       if (!isNullOrEmpty(error)) {
         // Only show error toast if error is not in exclusion list
@@ -496,7 +500,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       child: AnimatedButton(
         controller: _submitController,
         text: auth.isLogin ? messages.loginButton : messages.signupButton,
-        onPressed: () => _submit(),
+        onPressed: _submit,
       ),
     );
   }
@@ -525,7 +529,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               }
             : null,
         padding: loginTheme.authButtonPadding ??
-            const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+            const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: loginTheme.switchAuthTextColor ?? calculatedTextColor,
         child: AnimatedText(
@@ -611,7 +615,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           scale: _buttonScaleAnimation,
           child: SignInButton(
             loginProvider.button!,
-            onPressed: () async => await _loginProviderSubmit(
+            onPressed: () async => _loginProviderSubmit(
               loginProvider: loginProvider,
             ),
             text: loginProvider.label,
@@ -632,7 +636,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         final index = iconProvidersList.indexOf(loginProvider);
         return Padding(
           padding: loginTheme.providerButtonPadding ??
-              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+              const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
             child: Column(
@@ -664,7 +668,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         children: <Widget>[
           const Expanded(child: Divider()),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(messages.providersTitleFirst),
           ),
           const Expanded(child: Divider()),
@@ -680,7 +684,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         children: <Widget>[
           const Expanded(child: Divider()),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(messages.providersTitleSecond),
           ),
           const Expanded(child: Divider()),
@@ -705,7 +709,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
-    final cardWidth = min(MediaQuery.of(context).size.width * 0.75, 360.0);
+    final cardWidth =
+        min<double>(MediaQuery.of(context).size.width * 0.75, 360);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
@@ -723,9 +728,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (widget.introWidget != null) ScaleTransition(
-                      scale: _buttonScaleAnimation,
-                      child: widget.introWidget!),
+                  if (widget.introWidget != null)
+                    ScaleTransition(
+                        scale: _buttonScaleAnimation,
+                        child: widget.introWidget),
                   _buildUserField(textFieldWidth, messages, auth),
                   if (!isSignup || !widget.hideSignupPasswordFields) ...[
                     const SizedBox(height: 20),
@@ -753,7 +759,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               children: [
                 if (!isSignup || !widget.hideSignupPasswordFields)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: _buildConfirmPasswordField(
                       textFieldWidth,
                       messages,
