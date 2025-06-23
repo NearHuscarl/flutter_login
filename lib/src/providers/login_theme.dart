@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Defines theming properties for a login button, such as colors,
+/// text style, padding, and shape.
 class LoginButtonTheme {
+  /// Creates an [LoginButtonTheme] for use in authentication UIs.
   const LoginButtonTheme({
     this.backgroundColor,
     this.highlightColor,
@@ -38,7 +41,26 @@ class LoginButtonTheme {
   final ShapeBorder? shape;
 }
 
+/// A customizable theme class for the login UI.
+///
+/// Use this class to override the default styling for the FlutterLogin widget,
+/// including colors, typography, input decoration, button appearance, and more.
+///
+/// Pass an instance of [LoginTheme] to the `theme` parameter of FlutterLogin.
+///
+/// Example:
+/// ```dart
+/// FlutterLogin(
+///   theme: LoginTheme(
+///     primaryColor: Colors.deepPurple,
+///     accentColor: Colors.orange,
+///     titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+///   ),
+/// )
+/// ```
 class LoginTheme with ChangeNotifier {
+  /// Creates a [LoginTheme] instance to customize the look and feel
+  /// of the authentication UI.
   LoginTheme({
     this.pageColorLight,
     this.pageColorDark,

@@ -115,3 +115,5 @@ app.*.symbols
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 /example/android/app/.cxx/
+/example/ios/Flutter/ephemeral/flutter_lldb_helper.py
+/example/ios/Flutter/ephemeral/flutter_lldbinit

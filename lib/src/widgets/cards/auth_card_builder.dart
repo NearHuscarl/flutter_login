@@ -30,7 +30,17 @@ part 'recover_card.dart';
 part 'recover_confirm_card.dart';
 part 'signup_confirm_card.dart';
 
+/// The main card widget that wraps and controls all auth-related flows,
+/// including login, signup, password recovery, and confirmation steps.
+///
+/// This widget orchestrates transitions between auth steps using animations,
+/// and provides hooks and configuration for validation, theming, layout,
+/// and behavior customization.
 class AuthCard extends StatefulWidget {
+  /// Creates an [AuthCard] that handles authentication forms and animations.
+  ///
+  /// Requires a [loadingController], [userType], [onSwitchAuthMode], and other
+  /// configuration flags that determine which fields and flows are shown.
   const AuthCard({
     required this.userType,
     required this.loadingController,
@@ -59,40 +69,85 @@ class AuthCard extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
   });
 
+  /// Padding around the auth card.
   final EdgeInsets padding;
+
+  /// Animation controller used to trigger loading animations.
   final AnimationController loadingController;
+
+  /// Validator for the user input field (email/username/etc).
   final FormFieldValidator<String>? userValidator;
+
+  /// Whether to validate the user field immediately on blur.
   final bool? validateUserImmediately;
+
+  /// Validator for the password input field.
   final FormFieldValidator<String>? passwordValidator;
+
+  /// Called when the form is submitted (e.g., login/signup).
   final VoidCallback? onSubmit;
+
+  /// Called after the submit animation completes.
   final VoidCallback? onSubmitCompleted;
+
+  /// Whether to hide the "Forgot Password?" button.
   final bool hideForgotPasswordButton;
+
+  /// Whether to hide the "Sign Up" button.
   final bool hideSignUpButton;
+
+  /// Whether to login immediately after signing up.
   final bool loginAfterSignUp;
+
+  /// Type of user input (email, phone, name, etc).
   final LoginUserType userType;
+
+  /// Whether to hide the "or login with" title above provider buttons.
   final bool hideProvidersTitle;
 
+  /// Additional fields to show during the signup flow.
   final List<UserFormField>? additionalSignUpFields;
 
+  /// Whether to disable the custom page transition animation.
   final bool disableCustomPageTransformer;
+
+  /// Optional theme override for this specific auth card.
   final LoginTheme? loginTheme;
+
+  /// Whether to return to login screen after password recovery completes.
   final bool navigateBackAfterRecovery;
 
+  /// Whether the auth card should be scrollable if content overflows.
   final bool scrollable;
 
+  /// How the keyboard is dismissed (e.g., on drag or tap).
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
+  /// The keyboard type used for the confirmation code field.
   final TextInputType? confirmSignupKeyboardType;
+
+  /// Optional widget to show above the auth card (e.g., a logo or intro).
   final Widget? introWidget;
+
+  /// The default ISO country code used in phone fields.
   final String? initialIsoCode;
+
+  /// Whether to hide password fields during signup (e.g., for OTP-only flows).
   final bool hideSignupPasswordFields;
+
+  /// Called when the user switches between login and signup modes.
   final void Function(AuthMode mode) onSwitchAuthMode;
+
+  /// Whether the user input field should autofocus.
   final bool autofocus;
 
   @override
   AuthCardState createState() => AuthCardState();
 }
 
+/// The internal state for [AuthCard].
+///
+/// Manages animation controllers and page transitions for different card states.
 class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey _loginCardKey = GlobalKey();
   final GlobalKey _additionalSignUpCardKey = GlobalKey();
@@ -108,6 +163,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   int _pageIndex = _loginPageIndex;
 
   var _isLoadingFirstTime = true;
+
+  /// The final scale factor for shrinking the card during animations.
+  ///
+  /// A value of `0.2` means the card will shrink to 20% of its original size.
+  /// Used in transitions such as loading, page switching, or submission.
   static const cardSizeScaleEnd = .2;
 
   final TransformerPageController _pageController = TransformerPageController();
@@ -224,6 +284,16 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     });
   }
 
+  /// Triggers the loading animation sequence for the auth card.
+  ///
+  /// If the loadingController is dismissed (i.e., not yet started), it plays
+  /// forward. After that, it may trigger an additional form animation on first load.
+  ///
+  /// If the loadingController is already completed, it reverses both the
+  /// form animation and the main loading animation.
+  ///
+  /// Returns a [Future] that completes when all triggered animations finish,
+  /// or `null` if no animation was run.
   Future<void>? runLoadingAnimation() {
     if (widget.loadingController.isDismissed) {
       return widget.loadingController.forward().then((_) {
@@ -277,6 +347,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         .then((_) => _formLoadingController.forward());
   }
 
+  /// Runs the route transition animation to visually switch between screens.
+  ///
+  /// If the route transition animation has already completed, it will reverse
+  /// the animation. Otherwise, it starts the forward animation using the login card.
   void runChangeRouteAnimation() {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
@@ -285,6 +359,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     }
   }
 
+  /// Advances the visible auth card (e.g., from login to signup to recovery).
+  ///
+  /// Cycles through the available cards by incrementing [Auth.currentCardIndex].
+  /// Resets to the first card if the end of the sequence is reached.
   void runChangePageAnimation() {
     final auth = Provider.of<Auth>(context, listen: false);
     if (auth.currentCardIndex >= 2) {

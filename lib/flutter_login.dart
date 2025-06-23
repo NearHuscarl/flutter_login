@@ -33,7 +33,10 @@ export 'src/providers/auth.dart';
 export 'src/providers/login_messages.dart';
 export 'src/providers/login_theme.dart';
 
+/// Represents a third-party or custom login method (e.g., Google, Facebook).
+/// Includes an icon or button UI and associated authentication callback.
 class LoginProvider {
+  /// Creates an [LoginProvider] for use in authentication UIs.
   const LoginProvider({
     required this.callback,
     this.button,
@@ -42,7 +45,10 @@ class LoginProvider {
     this.label = '',
     this.providerNeedsSignUpCallback,
     this.animated = true,
-  }) : assert(button != null || icon != null);
+  }) : assert(
+          button != null || icon != null,
+          'Either [button] or [icon] must be provided for the login provider.',
+        );
 
   /// Used for custom sign-in buttons.
   ///
@@ -269,7 +275,37 @@ class __HeaderState extends State<_Header> {
   }
 }
 
+/// A customizable, animated login/signup UI component for Flutter apps.
+///
+/// `FlutterLogin` provides an all-in-one solution for authentication screens,
+/// supporting login, signup, password recovery, third-party providers,
+/// and terms of service agreements with beautiful transitions and theming.
+///
+/// ### Features:
+/// - Login, signup, and password recovery flows
+/// - Confirmation steps (e.g., OTP or email codes)
+/// - Support for additional signup fields
+/// - Customizable appearance via [LoginTheme]
+/// - Animated transitions
+/// - Third-party authentication buttons
+/// - Terms of service support
+///
+/// Example usage:
+/// ```dart
+/// FlutterLogin(
+///   onLogin: (loginData) async => null,
+///   onSignup: (signupData) async => null,
+///   onRecoverPassword: (email) async => 'Recover link sent',
+/// )
+/// ```
+///
+/// See [Auth], [LoginTheme], and [LoginMessages] for full customization options.
 class FlutterLogin extends StatefulWidget {
+  /// Creates a [FlutterLogin] widget.
+  ///
+  /// This constructor allows you to customize every aspect of the login/signup
+  /// experience including theming, form validation, animations, auth callbacks,
+  /// and even adding your own custom widgets.
   FlutterLogin({
     required this.onLogin,
     required this.onRecoverPassword,
@@ -436,8 +472,8 @@ class FlutterLogin extends StatefulWidget {
   /// Optional
   final ConfirmSignupCallback? onConfirmSignup;
 
-  // Additional option to decide in runtime if confirmation is required
-  // Optional
+  /// Additional option to decide in runtime if confirmation is required
+  /// Optional
   final ConfirmSignupRequiredCallback? confirmSignupRequired;
 
   /// Sets [TextInputType] of sign up confirmation form.
@@ -484,14 +520,26 @@ class FlutterLogin extends StatefulWidget {
   /// Default: false
   final bool hideSignupPasswordFields;
 
-  /// Called when the user switches between sign-in and sign-up mode
+  /// Called when the user switches between sign-in and sign-up mode.
+  ///
+  /// Provides the new [AuthMode] (either [AuthMode.login] or [AuthMode.signup])
+  /// to help parent widgets track mode changes.
   final void Function(AuthMode mode)? onSwitchAuthMode;
 
+  /// Controls how the keyboard is dismissed when interacting with scrollable content.
+  ///
+  /// Defaults to [ScrollViewKeyboardDismissBehavior.manual].
+  /// Set to [ScrollViewKeyboardDismissBehavior.onDrag] to dismiss the keyboard when scrolling.
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
-  /// Whether or not to autofocus on the user field
+  /// Whether or not to autofocus on the user input field when the form loads.
+  ///
+  /// Defaults to `false`. If `true`, the user field receives focus automatically.
   final bool autofocus;
 
+  /// Default email validator used when none is supplied.
+  ///
+  /// Returns `'Invalid email!'` if the value is null, empty, or doesn't match a basic email regex.
   static String? defaultEmailValidator(String? value) {
     if (value == null || value.isEmpty || !email.hasMatch(value)) {
       return 'Invalid email!';
@@ -499,6 +547,9 @@ class FlutterLogin extends StatefulWidget {
     return null;
   }
 
+  /// Default password validator used when none is supplied.
+  ///
+  /// Returns `'Password is too short!'` if the value is null, empty, or shorter than 3 characters.
   static String? defaultPasswordValidator(String? value) {
     if (value == null || value.isEmpty || value.length <= 2) {
       return 'Password is too short!';

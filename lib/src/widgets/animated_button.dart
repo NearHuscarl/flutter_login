@@ -3,7 +3,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_login/src/widgets/animated_text.dart';
 import 'package:flutter_login/src/widgets/ring.dart';
 
+/// A button widget with a built-in loading animation driven by an [AnimationController].
+///
+/// Commonly used in authentication flows where a button triggers a loading state
+/// (e.g., submitting login or signup forms).
 class AnimatedButton extends StatefulWidget {
+  /// Creates an [AnimatedButton].
+  ///
+  /// The [text] and [onPressed] callback are required.
+  /// An optional [controller] allows external control of the loading animation.
   const AnimatedButton({
     required this.text,
     required this.onPressed,
@@ -13,10 +21,22 @@ class AnimatedButton extends StatefulWidget {
     this.color,
   });
 
+  /// The label displayed inside the button.
   final String text;
+
+  /// The background color of the button.
   final Color? color;
+
+  /// The color of the loading spinner when active.
   final Color? loadingColor;
+
+  /// Called when the button is tapped.
   final VoidCallback? onPressed;
+
+  /// Controls the loading animation for the button.
+  ///
+  /// When provided, this controller should drive animation states such as
+  /// loading progress or success.
   final AnimationController? controller;
 
   @override

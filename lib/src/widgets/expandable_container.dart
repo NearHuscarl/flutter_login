@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 
+/// Represents the visual state of an [ExpandableContainer].
 enum ExpandableContainerState {
+  /// The container is fully expanded and visible.
   expanded,
+
+  /// The container is collapsed (shrunk) and hidden or minimized.
   shrunk,
 }
 
+/// A container widget that can animate between expanded and shrunk states.
+///
+/// Useful for showing/hiding UI content smoothly using an [AnimationController].
+/// Can be customized with alignment, colors, size, and padding.
+///
+/// The expansion and collapse are driven by the provided [controller].
 class ExpandableContainer extends StatefulWidget {
+  /// Creates an [ExpandableContainer] that expands or shrinks based on [controller].
+  ///
+  /// The [child] and [controller] are required. You may optionally provide
+  /// dimensions, alignment, colors, and padding.
   const ExpandableContainer({
     required this.child,
     required this.controller,
@@ -20,15 +34,34 @@ class ExpandableContainer extends StatefulWidget {
     this.initialState = ExpandableContainerState.shrunk,
   });
 
+  /// The animation controller driving expansion or collapse.
   final AnimationController controller;
+
+  /// Callback triggered when expansion animation completes.
   final VoidCallback? onExpandCompleted;
+
+  /// The widget displayed inside the container.
   final Widget child;
+
+  /// Alignment of the child within the container.
   final Alignment? alignment;
+
+  /// The background color behind the container.
   final Color? backgroundColor;
+
+  /// The container’s foreground color.
   final Color? color;
+
+  /// Width of the container when expanded.
   final double? width;
+
+  /// Height of the container when expanded.
   final double? height;
+
+  /// Padding inside the container.
   final EdgeInsetsGeometry? padding;
+
+  /// The initial state of the container (expanded or shrunk).
   final ExpandableContainerState initialState;
 
   @override

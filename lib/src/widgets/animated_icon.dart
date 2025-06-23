@@ -3,9 +3,18 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_login/src/widgets/ring.dart';
 
-///similar a AnimatedButton but has an icon instead of textButton
-//(basically its a modified version of the AnimatedButton Widget and may need to be cleaned up)
+/// A custom animated button widget that displays an [IconButton] instead of text,
+/// and animates between a static icon and a loading indicator.
+///
+/// This widget is similar to AnimatedButton, but shows an icon instead of a text label.
+/// It supports animation using the provided [controller], and allows customization of
+/// icon color and loading indicator color.
+///
+/// Typically used in login forms or actions requiring async loading states.
 class AnimatedIconButton extends StatefulWidget {
+  /// Creates an [AnimatedIconButton].
+  ///
+  /// The [tooltip], [onPressed], [controller], and [icon] parameters must not be null.
   const AnimatedIconButton({
     required this.tooltip,
     required this.onPressed,
@@ -17,12 +26,25 @@ class AnimatedIconButton extends StatefulWidget {
     this.iconColor,
   });
 
+  /// Tooltip shown on long press or mouse hover.
   final String tooltip;
+
+  /// Background color of the button.
   final Color? color;
+
+  /// Color of the loading indicator (spinner).
   final Color? loadingColor;
+
+  /// Color of the icon.
   final Color? iconColor;
+
+  /// Called when the button is pressed.
   final VoidCallback onPressed;
+
+  /// The controller used to drive the loading animation.
   final AnimationController controller;
+
+  /// The icon displayed in the button.
   final IconData icon;
 
   @override

@@ -7,10 +7,28 @@ import 'package:flutter_login/src/utils/math_helper.dart';
 import 'package:flutter_login/src/utils/matrix.dart';
 import 'package:flutter_login/src/utils/widget_helper.dart';
 
-enum AnimatedTextRotation { up, down }
+/// The direction in which the text should animate during transitions.
+enum AnimatedTextRotation {
+  /// Text animates upward (slides up and fades out).
+  up,
 
+  /// Text animates downward (slides down and fades out).
+  down,
+}
+
+/// A widget that animates its [text] vertically with a fade and slide effect,
+/// either upwards or downwards depending on [textRotation].
+///
+/// Commonly used in animated UI elements like tab bars, login cards,
+/// or value changes.
+///
+/// Inspired by 3D tab animations:
 /// https://medium.com/flutter-community/flutter-challenge-3d-bottom-navigation-bar-48952a5fd996
 class AnimatedText extends StatefulWidget {
+  /// Creates an [AnimatedText] widget.
+  ///
+  /// The [text] parameter must not be null.
+  /// By default, [textRotation] is set to [AnimatedTextRotation.up].
   const AnimatedText({
     required this.text,
     super.key,
@@ -18,8 +36,15 @@ class AnimatedText extends StatefulWidget {
     this.textRotation = AnimatedTextRotation.up,
   });
 
+  /// The string to be displayed and animated.
   final String text;
+
+  /// The style to apply to the animated text.
   final TextStyle? style;
+
+  /// The direction in which the text rotates or animates.
+  ///
+  /// Defaults to [AnimatedTextRotation.up].
   final AnimatedTextRotation textRotation;
 
   @override

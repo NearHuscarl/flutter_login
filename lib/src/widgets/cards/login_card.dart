@@ -1,6 +1,10 @@
 part of 'auth_card_builder.dart';
 
-// https://stackoverflow.com/a/32686261/9449426
+/// A basic email validation RegExp pattern.
+/// Source: https://stackoverflow.com/a/32686261/9449426
+///
+/// Matches a general email format: non-whitespace characters before and after
+/// the '@', and at least one '.' in the domain part.
 final email = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
 class _LoginCard extends StatefulWidget {

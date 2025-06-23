@@ -19,8 +19,12 @@ class FadeIn extends StatefulWidget {
   })  : assert(
           controller == null && duration != null ||
               controller != null && duration == null,
+          'You must provide either a [duration] or a [controller], but not both.',
         ),
-        assert(offset > 0);
+        assert(
+          offset > 0,
+          '[offset] must be greater than zero to apply a visible fade/slide effect.',
+        );
 
   /// [FadeIn] animation can be controlled via external [controller]. If
   /// [controller] is not provided, it will use the default internal controller

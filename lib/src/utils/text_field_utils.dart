@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+/// Returns the appropriate autofill hint for a given [LoginUserType].
+///
+/// This is used to provide contextual autofill support for form fields.
 String getAutofillHints(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
@@ -20,6 +23,9 @@ String getAutofillHints(LoginUserType userType) {
   }
 }
 
+/// Returns the appropriate [TextInputType] (keyboard type) for the given [LoginUserType].
+///
+/// This helps present the most relevant keyboard layout for each field type.
 TextInputType getKeyboardType(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
@@ -37,6 +43,9 @@ TextInputType getKeyboardType(LoginUserType userType) {
   }
 }
 
+/// Returns a contextual icon widget based on the [LoginUserType].
+///
+/// These icons are shown as prefix icons in text fields to visually indicate the field's purpose.
 Icon getPrefixIcon(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
@@ -53,6 +62,9 @@ Icon getPrefixIcon(LoginUserType userType) {
   }
 }
 
+/// Returns a human-readable label text for a form field based on [LoginUserType].
+///
+/// This is typically used as the `labelText` in a [TextField] or [TextFormField].
 String getLabelText(LoginUserType userType) {
   switch (userType) {
     case LoginUserType.name:
