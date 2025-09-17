@@ -15,8 +15,11 @@ dependencies:
   another_transformer_page_view: ^2.0.0
   flutter:
     sdk: flutter
+  flutter_form_builder: ^10.1.0
+  flutter_localizations:
+    sdk: flutter
   font_awesome_flutter: ^10.0.0
-  intl_phone_number_input: ^0.7.4
+  form_builder_phone_field: ^3.0.0
   phone_numbers_parser: ^9.0.0
   provider: ^6.0.1
   quiver: ^3.0.1
@@ -27,7 +30,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.16
-  very_good_analysis: ^8.0.0
+  very_good_analysis: ^9.0.0
 
 flutter:
   uses-material-design: true

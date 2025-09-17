@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:form_builder_phone_field/form_builder_phone_field.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -171,7 +172,6 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> iconRotationAnimation;
   late Animation<double> iconTranslateAnimation;
 
-  PhoneNumber? _phoneNumberInitialValue;
   final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
@@ -241,19 +241,18 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
 
     if (widget.userType == LoginUserType.intlPhone) {
-      _phoneNumberInitialValue = PhoneNumber(
-        isoCode: widget.initialIsoCode ?? 'US',
-        dialCode: '+1',
-      );
+      _phoneNumberController.text = pnp.PhoneNumber(
+        isoCode: pnp.IsoCode.fromJson(widget.initialIsoCode ?? 'US'),
+        nsn: '',
+      ).nsn;
       if (widget.controller?.value.text != null) {
         try {
           final parsed = pnp.PhoneNumber.parse(widget.controller!.value.text);
           if (parsed.isValid()) {
-            _phoneNumberInitialValue = PhoneNumber(
-              phoneNumber: parsed.nsn,
-              isoCode: parsed.isoCode.name,
-              dialCode: parsed.countryCode,
-            );
+            _phoneNumberController.text = pnp.PhoneNumber(
+              nsn: parsed.nsn,
+              isoCode: pnp.IsoCode.fromJson(parsed.isoCode.name),
+            ).nsn;
           }
         } on pnp.PhoneNumberException {
           // ignore
@@ -317,7 +316,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       builder: (context, child) => Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
-          ..translate(iconTranslateAnimation.value)
+          ..translateByDouble(iconTranslateAnimation.value, 0, 0, 1)
           ..rotateZ(iconRotationAnimation.value),
         child: child,
       ),
@@ -329,75 +328,47 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     return InputDecoration(
       labelText: widget.labelText,
       prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
-      suffixIcon: _buildInertiaAnimation(
-        widget.loadingController != null
-            ? FadeTransition(
-                opacity: suffixIconOpacityAnimation,
-                child: widget.suffixIcon,
-              )
-            : widget.suffixIcon,
-      ),
+      suffixIcon: widget.userType == LoginUserType.intlPhone
+          ? null
+          : _buildInertiaAnimation(
+              widget.loadingController != null
+                  ? FadeTransition(
+                      opacity: suffixIconOpacityAnimation,
+                      child: widget.suffixIcon,
+                    )
+                  : widget.suffixIcon,
+            ),
     );
   }
+
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget inputField;
     if (widget.userType == LoginUserType.intlPhone) {
-      inputField = Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: InternationalPhoneNumberInput(
+      _phoneNumberController.addListener(() {
+        final phoneNumber = (_formKey.currentState?.fields['phone_number_intl']
+                as FormBuilderPhoneFieldState?)
+            ?.fullNumber;
+        if (phoneNumber == null) return;
+        widget.controller?.text = phoneNumber;
+      });
+
+      inputField = FormBuilder(
+        key: _formKey,
+        child: FormBuilderPhoneField(
+          name: 'phone_number_intl',
+          iconSelector: const SizedBox.shrink(),
           cursorColor: theme.primaryColor,
           focusNode: widget.focusNode,
-          inputDecoration: _getInputDecoration(theme),
-          searchBoxDecoration: const InputDecoration(
-            contentPadding: EdgeInsets.only(left: 20),
-            labelText: 'Search by country name or dial code',
-          ),
+          decoration: _getInputDecoration(theme),
           keyboardType: widget.keyboardType ?? TextInputType.phone,
           onFieldSubmitted: widget.onFieldSubmitted,
-          onSaved: (phoneNumber) {
-            if (phoneNumber.phoneNumber == phoneNumber.dialCode) {
-              widget.controller?.text = '';
-            } else {
-              widget.controller?.text = phoneNumber.phoneNumber ?? '';
-            }
-            _phoneNumberController.selection = TextSelection.collapsed(
-              offset: _phoneNumberController.text.length,
-            );
-            widget.onSaved?.call(phoneNumber.phoneNumber);
-          },
           validator: widget.validator,
-          autofillHints: widget.autofillHints,
-          onInputChanged: (phoneNumber) {
-            if (phoneNumber.phoneNumber != null &&
-                phoneNumber.dialCode != null &&
-                phoneNumber.phoneNumber!.startsWith('+')) {
-              _phoneNumberController.text =
-                  _phoneNumberController.text.replaceAll(
-                RegExp(
-                  '^([\\+]${phoneNumber.dialCode!.replaceAll('+', '')}[\\s]?)',
-                ),
-                '',
-              );
-            }
-            _phoneNumberController.selection = TextSelection.collapsed(
-              offset: _phoneNumberController.text.length,
-            );
-          },
-          textFieldController: _phoneNumberController,
-          isEnabled: widget.enabled,
-          selectorConfig: SelectorConfig(
-            selectorType: PhoneInputSelectorType.DIALOG,
-            trailingSpace: false,
-            countryComparator: (c1, c2) =>
-                int.parse(c1.dialCode!.substring(1)).compareTo(
-              int.parse(c2.dialCode!.substring(1)),
-            ),
-          ),
-          spaceBetweenSelectorAndTextField: 0,
-          initialValue: _phoneNumberInitialValue,
+          controller: _phoneNumberController,
+          enabled: widget.enabled,
         ),
       );
     } else if (widget.userType == LoginUserType.checkbox) {

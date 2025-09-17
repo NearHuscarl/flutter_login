@@ -125,6 +125,11 @@ class LoginScreen extends StatelessWidget {
             return null;
           },
         ),
+        const UserFormField(
+          keyName: 'int_phone_number',
+          displayName: 'Int Phone Number',
+          userType: LoginUserType.intlPhone,
+        ),
       ],
       // scrollable: true,
       // hideProvidersTitle: false,
