@@ -1,3 +1,11 @@
+## 6.0.0
+Breaking Changes:
+- Replaced intl_phone_number_input with form_builder_phone_field, removing need for platform specific code.
+This change makes the plugin WASM compatible & fixes build errors on Android.
+
+Other changes:
+- Updated dependencies, fixed deprecated member usages
+
 ## 5.1.0
 Features:
 - Added background image (thanks @alenas !)
