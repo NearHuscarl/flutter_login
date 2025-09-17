@@ -14,7 +14,7 @@ dependencies:
   flutter_login:
     path: ../
   font_awesome_flutter: ^10.0.0
-  intl: ^0.19.0
+  intl: ^0.20.0
 
 dev_dependencies:
   flutter_test:
