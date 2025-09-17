@@ -316,7 +316,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       builder: (context, child) => Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
-          ..translate(iconTranslateAnimation.value)
+          ..translateByDouble(iconTranslateAnimation.value, 0, 0, 1)
           ..rotateZ(iconRotationAnimation.value),
         child: child,
       ),

@@ -20,13 +20,16 @@ class CustomPageTransformer extends PageTransformer {
     final pageDt = 1 - position.abs();
 
     // Apply scale and Y-axis rotation based on the page's position.
+    final scale = lerp(0.6, 1, pageDt);
     if (position > 0) {
       transform
-        ..scale(lerp(0.6, 1, pageDt)) // Scale up as it approaches center
+        ..scaleByDouble(
+            scale, scale, scale, 1) // Scale up as it approaches center
         ..rotateY(position * -1.5); // Rotate left for right-side pages
     } else {
       transform
-        ..scale(lerp(0.6, 1, pageDt)) // Scale up as it approaches center
+        ..scaleByDouble(
+            scale, scale, scale, 1) // Scale up as it approaches center
         ..rotateY(position * 1.5); // Rotate right for left-side pages
     }
 
