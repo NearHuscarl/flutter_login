@@ -120,40 +120,44 @@ class _AnimatedTextState extends State<AnimatedText>
 
   Matrix4 _getFrontSideUp(double value) {
     return _matrix
-      ..translate(
-        0.0,
+      ..translateByDouble(
+        0,
         -radius * sin(_animation.value),
         -radius * cos(_animation.value),
+        1,
       )
       ..rotateX(-_animation.value); // 0 -> -pi/2
   }
 
   Matrix4 _getBackSideUp(double value) {
     return _matrix
-      ..translate(
-        0.0,
+      ..translateByDouble(
+        0,
         radius * cos(_animation.value),
         -radius * sin(_animation.value),
+        1,
       )
       ..rotateX((pi / 2) - _animation.value); // pi/2 -> 0
   }
 
   Matrix4 _getFrontSideDown(double value) {
     return _matrix
-      ..translate(
-        0.0,
+      ..translateByDouble(
+        0,
         radius * sin(_animation.value),
         -radius * cos(_animation.value),
+        1,
       )
       ..rotateX(_animation.value); // 0 -> pi/2
   }
 
   Matrix4 _getBackSideDown(double value) {
     return _matrix
-      ..translate(
-        0.0,
+      ..translateByDouble(
+        0,
         -radius * cos(_animation.value),
         -radius * sin(_animation.value),
+        1,
       )
       ..rotateX(_animation.value - pi / 2); // -pi/2 -> 0
   }
