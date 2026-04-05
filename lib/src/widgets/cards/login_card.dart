@@ -321,7 +321,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     });
 
     if (!isNullOrEmpty(error)) {
-      await control?.reverse();
+      if (mounted) {
+        await control?.reverse();
+      }
 
       // Only show error toast if error is not in exclusion list
       if (loginProvider.errorsToExcludeFromErrorMessage == null ||
@@ -352,7 +354,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             additionalSignupData: auth.additionalSignupData,
           ),
         );
-        await control?.reverse();
+        if (mounted) {
+          await control?.reverse();
+        }
         if (!isNullOrEmpty(error)) {
           // Only show error toast if error is not in exclusion list
           if (loginProvider.errorsToExcludeFromErrorMessage == null ||
@@ -370,12 +374,16 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           return false;
         }
       }
-      await control?.reverse();
+      if (mounted) {
+        await control?.reverse();
+      }
       widget.onSwitchSignUpAdditionalData();
     } else {
       widget.onSubmitCompleted?.call();
     }
-    await control?.reverse();
+    if (mounted) {
+      await control?.reverse();
+    }
     return true;
   }
 
