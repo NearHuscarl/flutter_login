@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -584,12 +585,12 @@ class _FlutterLoginState extends State<FlutterLogin>
           duration: loadingDuration,
         )..addStatusListener((status) {
           if (status == AnimationStatus.forward) {
-            _logoController.forward();
-            _titleController.forward();
+            unawaited(_logoController.forward());
+            unawaited(_titleController.forward());
           }
           if (status == AnimationStatus.reverse) {
-            _logoController.reverse();
-            _titleController.reverse();
+            unawaited(_logoController.reverse());
+            unawaited(_titleController.reverse());
           }
         });
     _logoController = AnimationController(
@@ -601,11 +602,13 @@ class _FlutterLoginState extends State<FlutterLogin>
       duration: loadingDuration,
     );
 
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        _loadingController.forward();
-      }
-    });
+    unawaited(
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) {
+          unawaited(_loadingController.forward());
+        }
+      }),
+    );
   }
 
   @override
@@ -618,10 +621,10 @@ class _FlutterLoginState extends State<FlutterLogin>
 
   void _reverseHeaderAnimation() {
     if (widget.logoTag == null) {
-      _logoController.reverse();
+      unawaited(_logoController.reverse());
     }
     if (widget.titleTag == null) {
-      _titleController.reverse();
+      unawaited(_titleController.reverse());
     }
   }
 
@@ -652,27 +655,31 @@ class _FlutterLoginState extends State<FlutterLogin>
             color: Colors.green,
             onPressed: () {
               timeDilation = 1.0;
-              showModalBottomSheet<_AnimationTimeDilationDropdown>(
-                context: context,
-                builder: (_) {
-                  return _AnimationTimeDilationDropdown(
-                    initialValue: _selectTimeDilation,
-                    onChanged: (int index) {
-                      setState(() {
-                        _selectTimeDilation = _AnimationTimeDilationDropdown
-                            .animationSpeeds[index]
-                            .toDouble();
-                      });
-                    },
+              unawaited(
+                showModalBottomSheet<_AnimationTimeDilationDropdown>(
+                  context: context,
+                  builder: (_) {
+                    return _AnimationTimeDilationDropdown(
+                      initialValue: _selectTimeDilation,
+                      onChanged: (int index) {
+                        setState(() {
+                          _selectTimeDilation = _AnimationTimeDilationDropdown
+                              .animationSpeeds[index]
+                              .toDouble();
+                        });
+                      },
+                    );
+                  },
+                ).then<void>((_) {
+                  // wait until the BottomSheet close animation finishing before
+                  // assigning or you will have to watch x100 time slower animation
+                  unawaited(
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      timeDilation = _selectTimeDilation;
+                    }),
                   );
-                },
-              ).then((_) {
-                // wait until the BottomSheet close animation finishing before
-                // assigning or you will have to watch x100 time slower animation
-                Future.delayed(const Duration(milliseconds: 300), () {
-                  timeDilation = _selectTimeDilation;
-                });
-              });
+                }),
+              );
             },
             child: const Text('OPTIONS', style: textStyle),
           ),

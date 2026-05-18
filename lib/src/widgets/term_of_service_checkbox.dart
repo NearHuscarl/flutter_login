@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/term_of_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,7 +43,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
       title: widget.termOfService.linkUrl != null
           ? InkWell(
               onTap: () {
-                launchUrl(Uri.parse(widget.termOfService.linkUrl!));
+                launchUrl(Uri.parse(widget.termOfService.linkUrl!)).ignore();
               },
               child: Row(
                 children: [
@@ -68,7 +70,7 @@ class _TermCheckboxState extends State<TermCheckbox> {
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.left,
             ),
-      validator: (bool? value) {
+      validator: (value) {
         if (widget.validation &&
             widget.termOfService.mandatory &&
             !widget.termOfService.checked) {
@@ -98,7 +100,7 @@ class CheckboxFormField extends FormField<bool> {
     super.key,
     bool super.initialValue = false,
   }) : super(
-         builder: (FormFieldState<bool> state) {
+         builder: (state) {
            return CheckboxListTile(
              dense: true,
              title: title,
@@ -109,7 +111,7 @@ class CheckboxFormField extends FormField<bool> {
              },
              subtitle: state.hasError
                  ? Builder(
-                     builder: (BuildContext context) => Text(
+                     builder: (context) => Text(
                        state.errorText!,
                        style: TextStyle(
                          color: Theme.of(context).colorScheme.error,

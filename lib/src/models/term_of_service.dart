@@ -39,26 +39,6 @@ class TermOfService {
 
   /// Current checked (accepted) state of the term.
   bool checked = false;
-
-  /// Deprecated: Use [checked] directly instead.
-  ///
-  /// Sets the checked state of the term.
-  @Deprecated('Please use [checked] instead of this setter.')
-  // ignore: use_setters_to_change_properties due to being deprecated
-  void setStatus(
-    // ignore: avoid_positional_boolean_parameters due to being deprecated
-    bool checked,
-  ) {
-    this.checked = checked;
-  }
-
-  /// Deprecated: Use [checked] directly instead.
-  ///
-  /// Gets the checked state of the term.
-  @Deprecated('Please use [checked] instead of this getter.')
-  bool getStatus() {
-    return checked;
-  }
 }
 
 /// Represents the result of a user's response to a [TermOfService].

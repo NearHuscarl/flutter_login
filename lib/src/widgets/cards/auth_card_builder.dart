@@ -1,5 +1,6 @@
 library;
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:another_transformer_page_view/another_transformer_page_view.dart';
@@ -191,7 +192,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     widget.loadingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isLoadingFirstTime = false;
-        _formLoadingController.forward();
+        unawaited(_formLoadingController.forward());
       }
     });
 
@@ -279,10 +280,12 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     Provider.of<Auth>(context, listen: false).currentCardIndex = newCardIndex;
 
     setState(() {
-      _pageController.animateToPage(
-        newCardIndex,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.ease,
+      unawaited(
+        _pageController.animateToPage(
+          newCardIndex,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        ),
       );
       _pageIndex = newCardIndex;
     });
@@ -302,7 +305,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     if (widget.loadingController.isDismissed) {
       return widget.loadingController.forward().then((_) {
         if (!_isLoadingFirstTime) {
-          _formLoadingController.forward();
+          unawaited(_formLoadingController.forward());
         }
       });
     } else if (widget.loadingController.isCompleted) {
@@ -351,8 +354,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   }
 
   void _reverseChangeRouteAnimation() {
-    _routeTransitionController.reverse().then(
-      (_) => _formLoadingController.forward(),
+    unawaited(
+      _routeTransitionController.reverse().then(
+        (_) => _formLoadingController.forward(),
+      ),
     );
   }
 
@@ -364,7 +369,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     if (_routeTransitionController.isCompleted) {
       _reverseChangeRouteAnimation();
     } else if (_routeTransitionController.isDismissed) {
-      _forwardChangeRouteAnimation(_loginCardKey);
+      unawaited(_forwardChangeRouteAnimation(_loginCardKey));
     }
   }
 
@@ -464,9 +469,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation(_loginCardKey).then((_) {
-                widget.onSubmitCompleted?.call();
-              });
+              unawaited(
+                _forwardChangeRouteAnimation(_loginCardKey).then((_) {
+                  widget.onSubmitCompleted?.call();
+                }),
+              );
             },
             requireSignUpConfirmation: requireSignUpConfirmation,
             onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
@@ -552,9 +559,11 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loadingController: formController,
             onSubmitCompleted: () {
               if (widget.loginAfterSignUp) {
-                _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
-                  widget.onSubmitCompleted?.call();
-                });
+                unawaited(
+                  _forwardChangeRouteAnimation(_confirmSignUpCardKey).then((_) {
+                    widget.onSubmitCompleted?.call();
+                  }),
+                );
               } else {
                 _changeCard(_loginPageIndex);
               }
@@ -587,7 +596,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         transformer: widget.disableCustomPageTransformer
             ? null
             : CustomPageTransformer(),
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (context, index) {
           if (widget.scrollable) {
             return Align(
               alignment: Alignment.topCenter,

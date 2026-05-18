@@ -3,6 +3,7 @@ Breaking Changes:
 - Updated the minimum SDK requirements to Dart 3.9 and Flutter 3.27 to support font_awesome_flutter v11.
 - Upgraded font_awesome_flutter from v10 to v11.
 - Updated sign_in_button to a version compatible with font_awesome_flutter v11.
+- Removed deprecated `TermOfService.setStatus` and `TermOfService.getStatus`.
 
 Bugs fixed:
 - Fixed null-check error in route change animation by adding mounted check to `_forwardChangeRouteAnimation` (thanks @vargab95 !)

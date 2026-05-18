@@ -173,9 +173,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final newAuthMode = auth.switchAuth();
 
     if (newAuthMode == AuthMode.signup) {
-      _switchAuthController.forward();
+      unawaited(_switchAuthController.forward());
     } else {
-      _switchAuthController.reverse();
+      unawaited(_switchAuthController.reverse());
     }
   }
 
@@ -437,7 +437,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       focusNode: _passwordFocusNode,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
-          _submit();
+          unawaited(_submit());
         } else {
           // SignUp
           FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);

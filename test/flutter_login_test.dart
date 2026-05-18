@@ -20,7 +20,7 @@ void main() {
   }
 
   testWidgets('Default email validator throws error if not match email regex', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(defaultFlutterLogin());
 
@@ -85,7 +85,7 @@ void main() {
 
   testWidgets(
     'Default password validator throws error if password is less than 3 characters',
-    (WidgetTester tester) async {
+    (tester) async {
       await tester.pumpWidget(defaultFlutterLogin());
 
       // wait for loading animation to finish
@@ -139,7 +139,7 @@ void main() {
   );
 
   testWidgets('Confirm password field throws error if not match with password', (
-    WidgetTester tester,
+    tester,
   ) async {
     await tester.pumpWidget(defaultFlutterLogin());
 
@@ -180,7 +180,7 @@ void main() {
   });
 
   testWidgets('Custom userValidator should show error when return a string', (
-    WidgetTester tester,
+    tester,
   ) async {
     Widget loginBuilder() => widget(
       FlutterLogin(
@@ -214,7 +214,7 @@ void main() {
 
   testWidgets(
     'Custom passwordValidator should show error when return a string',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onSignup: (data) => null,
@@ -291,7 +291,7 @@ void main() {
   // });
 
   testWidgets('Custom login messages should display correct texts', (
-    WidgetTester tester,
+    tester,
   ) async {
     const recoverIntro = "Don't feel bad. Happens all the time.";
     const recoverDescription =
@@ -405,7 +405,7 @@ void main() {
   });
 
   testWidgets('showDebugButtons = false should not show debug buttons', (
-    WidgetTester tester,
+    tester,
   ) async {
     var flutterLogin = widget(
       FlutterLogin(
@@ -434,7 +434,7 @@ void main() {
   });
 
   testWidgets('Leave logo parameter empty should not display login logo image', (
-    WidgetTester tester,
+    tester,
   ) async {
     // default device height is 600. Logo is hidden in all cases because there is no space to display
     setScreenSize(const Size(786, 1024), tester);
@@ -469,7 +469,7 @@ void main() {
   });
 
   testWidgets('Leave title parameter empty should not display login title', (
-    WidgetTester tester,
+    tester,
   ) async {
     var flutterLogin = widget(
       FlutterLogin(
@@ -512,7 +512,7 @@ void main() {
 
   testWidgets(
     'Login callbacks should be called in order: validating cb > onLogin > onSubmitAnimationCompleted. If one callback fails, the subsequent callbacks will not be invoked',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onSignup: (data) => null,
@@ -588,7 +588,7 @@ void main() {
 
   testWidgets(
     'Signup callbacks should be called in order: validating cb > onSignup > onSubmitAnimationCompleted. If one callback fails, the subsequent callbacks will not be invoked',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onLogin: (data) => null,
@@ -695,7 +695,7 @@ void main() {
 
   testWidgets(
     'Signup callbacks with additionalForm should be called in order: validating cb > onSignup > onSubmitAnimationCompleted. If one callback fails, the subsequent callbacks will not be invoked',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onLogin: (data) => null,
@@ -818,7 +818,7 @@ void main() {
 
   testWidgets(
     'Name, pass and confirm pass fields should remember their content when switching between login/signup and recover password',
-    (WidgetTester tester) async {
+    (tester) async {
       await tester.pumpWidget(defaultFlutterLogin());
       await tester.pumpAndSettle(loadingAnimationDuration);
 
@@ -851,7 +851,7 @@ void main() {
   // https://github.com/NearHuscarl/flutter_login/issues/20
   testWidgets(
     'Logo should be hidden if its height is less than kMinLogoHeight. Logo height should be never larger than kMaxLogoHeight',
-    (WidgetTester tester) async {
+    (tester) async {
       final flutterLogin = widget(
         FlutterLogin(
           onSignup: (data) => null,
@@ -894,7 +894,7 @@ void main() {
   // https://github.com/NearHuscarl/flutter_login/issues/7
   testWidgets(
     'AnimatedText should be centered in mobile and web consistently',
-    (WidgetTester tester) async {
+    (tester) async {
       await tester.pumpWidget(defaultFlutterLogin());
       await tester.pumpAndSettle(loadingAnimationDuration);
 
@@ -909,7 +909,7 @@ void main() {
 
   testWidgets(
     'hideSignUpButton & hideForgotPasswordButton should hide SignUp and forgot password button',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onLogin: (data) => null,
@@ -930,7 +930,7 @@ void main() {
   );
 
   testWidgets('providers Title should be shown when there are providers', (
-    WidgetTester tester,
+    tester,
   ) async {
     Widget loginBuilder() => widget(
       FlutterLogin(
@@ -959,7 +959,7 @@ void main() {
 
   testWidgets(
     'providers Title should not be shown when there are no providers',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           onSignup: (data) => null,
@@ -978,7 +978,7 @@ void main() {
     },
   );
   testWidgets('hideProvidersTitle should hide providers title', (
-    WidgetTester tester,
+    tester,
   ) async {
     Widget loginBuilder() => widget(
       FlutterLogin(
@@ -1065,7 +1065,7 @@ void main() {
   // });
 
   testWidgets('Redirect to login page after sign up.', (
-    WidgetTester tester,
+    tester,
   ) async {
     Widget loginBuilder() => widget(
       FlutterLogin(
@@ -1098,7 +1098,7 @@ void main() {
 
   testWidgets(
     'Redirect to signup card if there are additional signup fields, test that filled in fields are passed correctly to the callback',
-    (WidgetTester tester) async {
+    (tester) async {
       var signupFields = <String, String>{};
       Widget loginBuilder() => widget(
         FlutterLogin(
@@ -1157,7 +1157,7 @@ void main() {
 
   testWidgets(
     'Redirect to login page after sign up with additional fields when loginAfterSignup is false',
-    (WidgetTester tester) async {
+    (tester) async {
       Widget loginBuilder() => widget(
         FlutterLogin(
           loginAfterSignUp: false,
@@ -1204,7 +1204,7 @@ void main() {
   );
 
   testWidgets('Redirect to login page after sign up with additional fields', (
-    WidgetTester tester,
+    tester,
   ) async {
     var onSubmitAnimationCompletedExecuted = false;
     Widget loginBuilder() => widget(
@@ -1252,7 +1252,7 @@ void main() {
     expect(onSubmitAnimationCompletedExecuted, true);
   });
 
-  testWidgets('Check if footer text is visible.', (WidgetTester tester) async {
+  testWidgets('Check if footer text is visible.', (tester) async {
     Widget loginBuilder() => widget(
       FlutterLogin(
         onSignup: (data) => null,

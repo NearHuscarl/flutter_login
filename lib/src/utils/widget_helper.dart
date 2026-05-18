@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +31,7 @@ Flushbar<void> showSuccessToast(
   String message, [
   Duration? duration,
 ]) {
-  return Flushbar(
+  final flushbar = Flushbar<void>(
     title: title,
     message: message,
     icon: const Icon(
@@ -41,8 +43,10 @@ Flushbar<void> showSuccessToast(
     backgroundGradient: LinearGradient(
       colors: [Colors.green[600]!, Colors.green[400]!],
     ),
-    onTap: (flushbar) => flushbar.dismiss(),
-  )..show(context);
+    onTap: (flushbar) => unawaited(flushbar.dismiss()),
+  );
+  flushbar.show(context).ignore();
+  return flushbar;
 }
 
 /// Shows an error-style [Flushbar] toast with a red gradient background.
@@ -57,7 +61,7 @@ Flushbar<void> showErrorToast(
   String title,
   String message,
 ) {
-  return Flushbar(
+  final flushbar = Flushbar<void>(
     title: title,
     message: message,
     icon: const Icon(
@@ -69,6 +73,8 @@ Flushbar<void> showErrorToast(
     backgroundGradient: LinearGradient(
       colors: [Colors.red[600]!, Colors.red[400]!],
     ),
-    onTap: (flushbar) => flushbar.dismiss(),
-  )..show(context);
+    onTap: (flushbar) => unawaited(flushbar.dismiss()),
+  );
+  flushbar.show(context).ignore();
+  return flushbar;
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
@@ -305,7 +306,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
   void handleAnimationStatus(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      widget.inertiaController?.reverse();
+      unawaited(widget.inertiaController?.reverse());
     }
   }
 
@@ -401,7 +402,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         title: widget.linkUrl != null
             ? InkWell(
                 onTap: () {
-                  launchUrl(Uri.parse(widget.linkUrl!));
+                  launchUrl(Uri.parse(widget.linkUrl!)).ignore();
                 },
                 child: Row(
                   children: [
@@ -616,7 +617,7 @@ class _AnimatedPasswordTextFormFieldState
           firstCurve: Curves.easeInOutSine,
           secondCurve: Curves.easeInOutSine,
           alignment: Alignment.center,
-          layoutBuilder: (Widget topChild, _, Widget bottomChild, _) {
+          layoutBuilder: (topChild, _, bottomChild, _) {
             return Stack(
               alignment: Alignment.center,
               children: <Widget>[bottomChild, topChild],

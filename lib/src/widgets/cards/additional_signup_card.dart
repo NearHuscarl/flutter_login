@@ -177,7 +177,7 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
   Widget _buildFields(double width) {
     return Column(
-      children: widget.formFields.map((UserFormField formField) {
+      children: widget.formFields.map((formField) {
         return Column(
           children: [
             const SizedBox(

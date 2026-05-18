@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_classes_with_only_static_members due to being migrated
-
 import 'package:flutter/material.dart';
 
 /// A helper class for managing login-related theming across screens.

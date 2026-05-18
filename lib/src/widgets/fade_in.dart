@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Defines the direction from which a widget should fade and slide in.
@@ -84,7 +86,7 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
     }
 
     _updateAnimations();
-    _controller?.forward();
+    unawaited(_controller?.forward());
   }
 
   void _updateAnimations() {

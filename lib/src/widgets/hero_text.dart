@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Represents the animation state of a [HeroText] widget.
@@ -99,7 +101,7 @@ class __HeroTextContentState extends State<_HeroTextContent>
 
     if (widget.viewState == ViewState.enlarge ||
         widget.viewState == ViewState.shrink) {
-      _controller.forward(from: 0);
+      unawaited(_controller.forward(from: 0));
     }
   }
 
@@ -247,11 +249,11 @@ class HeroText extends StatelessWidget {
       tag: tag!,
       flightShuttleBuilder:
           (
-            BuildContext flightContext,
-            Animation<double> animation,
-            HeroFlightDirection flightDirection,
-            BuildContext fromHeroContext,
-            BuildContext toHeroContext,
+            flightContext,
+            animation,
+            flightDirection,
+            fromHeroContext,
+            toHeroContext,
           ) {
             return _HeroTextContent(
               text,

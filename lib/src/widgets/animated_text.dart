@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -93,14 +94,16 @@ class _AnimatedTextState extends State<AnimatedText>
     if (widget.text != oldWidget.text) {
       _oldText = oldWidget.text;
       _newText = widget.text;
-      _controller.forward().then((_) {
-        setState(() {
-          final t = _oldText;
-          _oldText = _newText;
-          _newText = t;
-        });
-        _controller.reset();
-      });
+      unawaited(
+        _controller.forward().then((_) {
+          setState(() {
+            final t = _oldText;
+            _oldText = _newText;
+            _newText = t;
+          });
+          _controller.reset();
+        }),
+      );
     }
   }
 
