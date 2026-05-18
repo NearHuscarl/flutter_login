@@ -449,7 +449,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   ) {
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
-      enabled: auth.isSignup,
+      enabled: !_isSubmitting && auth.isSignup,
       loadingController: widget.loadingController,
       inertiaController: _postSwitchAuthController,
       inertiaDirection: TextFieldInertiaDirection.right,
