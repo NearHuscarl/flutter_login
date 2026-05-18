@@ -4,6 +4,11 @@ Breaking Changes:
 - Upgraded font_awesome_flutter from v10 to v11.
 - Updated sign_in_button to a version compatible with font_awesome_flutter v11.
 
+Bugs fixed:
+- Fixed null-check error in route change animation by adding mounted check to `_forwardChangeRouteAnimation` (thanks @vargab95 !)
+- Fixed null-check errors by adding mounted checks before `control.reverse` calls in login card (thanks @vargab95 !)
+- Fixed confirm password field being editable while form is submitting (thanks @vargab95 !)
+
 ## 6.0.0
 Breaking Changes:
 - Replaced intl_phone_number_input with form_builder_phone_field, removing need for platform specific code.
