@@ -26,8 +26,8 @@ class SignupData {
   const SignupData.fromProvider({
     required this.additionalSignupData,
     this.termsOfService = const [],
-  })  : name = null,
-        password = null;
+  }) : name = null,
+       password = null;
 
   /// The user's identifier (e.g. email, username).
   ///

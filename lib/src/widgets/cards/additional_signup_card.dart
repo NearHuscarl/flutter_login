@@ -127,8 +127,9 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
 
     // We have to convert the Map<String, TextEditingController> to a Map<String, String>
     // and pass it to the function given by the user
-    auth.additionalSignupData =
-        _nameControllers.map((key, value) => MapEntry(key, value.text));
+    auth.additionalSignupData = _nameControllers.map(
+      (key, value) => MapEntry(key, value.text),
+    );
 
     switch (auth.authType) {
       case AuthType.provider:
@@ -189,16 +190,17 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
               loadingController: widget.loadingController,
               width: width,
               labelText: formField.displayName,
-              prefixIcon: formField.icon ??
-                  const Icon(FontAwesomeIcons.solidCircleUser),
+              prefixIcon:
+                  formField.icon ??
+                  const FaIcon(FontAwesomeIcons.solidCircleUser),
               keyboardType: getKeyboardType(formField.userType),
               autofillHints: [
                 getAutofillHints(formField.userType),
               ],
               textInputAction:
                   formField.keyName == widget.formFields.last.keyName
-                      ? TextInputAction.done
-                      : TextInputAction.next,
+                  ? TextInputAction.done
+                  : TextInputAction.next,
               validator: formField.fieldValidator,
               tooltip: formField.tooltip,
               initialIsoCode: widget.initialIsoCode,
@@ -230,8 +232,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
   ) {
     final calculatedTextColor =
         (theme.cardTheme.color!.computeLuminance() < 0.5)
-            ? Colors.white
-            : theme.primaryColor;
+        ? Colors.white
+        : theme.primaryColor;
     return ScaleTransition(
       scale: _buttonScaleAnimation,
       child: MaterialButton(

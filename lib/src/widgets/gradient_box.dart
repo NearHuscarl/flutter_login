@@ -14,8 +14,10 @@ class GradientBox extends StatelessWidget {
     this.colors,
     this.begin = Alignment.topLeft,
     this.end = Alignment.bottomRight,
-  }) : assert(colors != null && colors.length >= 2,
-            'The "colors" parameter must contain at least two colors.');
+  }) : assert(
+         colors != null && colors.length >= 2,
+         'The "colors" parameter must contain at least two colors.',
+       );
 
   /// The starting point of the gradient.
   ///

@@ -29,8 +29,8 @@ typedef SignupCallback = Future<String?>? Function(SignupData);
 
 /// Callback for submitting additional signup fields as a key-value map.
 /// The result is an error message; callback succeeds if the message is null.
-typedef AdditionalFieldsCallback = Future<String?>? Function(
-    Map<String, String>);
+typedef AdditionalFieldsCallback =
+    Future<String?>? Function(Map<String, String>);
 
 /// Callback to validate or prepare before showing additional signup fields.
 /// The result is an error message; callback succeeds if the message is null.
@@ -79,10 +79,10 @@ class Auth with ChangeNotifier {
     String confirmPassword = '',
     AuthMode initialAuthMode = AuthMode.login,
     this.termsOfService = const [],
-  })  : _email = email,
-        _password = password,
-        _confirmPassword = confirmPassword,
-        _mode = initialAuthMode;
+  }) : _email = email,
+       _password = password,
+       _confirmPassword = confirmPassword,
+       _mode = initialAuthMode;
 
   /// Callback triggered when user logs in.
   final LoginCallback? onLogin;

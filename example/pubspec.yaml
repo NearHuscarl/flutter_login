@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_login:
     path: ../
-  font_awesome_flutter: ^10.0.0
+  font_awesome_flutter: ^11.0.0
   intl: ^0.20.0
 
 dev_dependencies:

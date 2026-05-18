@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:flutter_login/src/widgets/ring.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// A custom animated button widget that displays an [IconButton] instead of text,
 /// and animates between a static icon and a loading indicator.
@@ -45,7 +46,7 @@ class AnimatedIconButton extends StatefulWidget {
   final AnimationController controller;
 
   /// The icon displayed in the button.
-  final IconData icon;
+  final Object icon;
 
   @override
   State<AnimatedIconButton> createState() => _AnimatedIconButtonState();
@@ -84,13 +85,15 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     );
 
     _ringThicknessAnimation =
-        Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
-            .animate(
-      CurvedAnimation(
-        parent: widget.controller,
-        curve: const Interval(.65, .85),
-      ),
-    );
+        Tween<double>(
+          begin: _loadingCircleRadius,
+          end: _loadingCircleThickness,
+        ).animate(
+          CurvedAnimation(
+            parent: widget.controller,
+            curve: const Interval(.65, .85),
+          ),
+        );
     _ringOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller,
@@ -115,15 +118,16 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     _color = widget.color ?? buttonTheme.backgroundColor;
     _loadingColor = widget.loadingColor ?? theme.colorScheme.secondary;
 
-    _colorAnimation = ColorTween(
-      begin: _color,
-      end: _loadingColor,
-    ).animate(
-      CurvedAnimation(
-        parent: widget.controller,
-        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
-      ),
-    );
+    _colorAnimation =
+        ColorTween(
+          begin: _color,
+          end: _loadingColor,
+        ).animate(
+          CurvedAnimation(
+            parent: widget.controller,
+            curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
+          ),
+        );
   }
 
   @override
@@ -180,8 +184,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
     _width = textWidth > 120.0 && textWidth < 240.0
         ? textWidth
         : textWidth >= 240.0
-            ? 240.0
-            : 120.0;
+        ? 240.0
+        : 120.0;
 
     _sizeAnimation = Tween<double>(begin: 1, end: _height / _width).animate(
       CurvedAnimation(
@@ -205,8 +209,8 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
-                    ? buttonTheme.highlightElevation!
-                    : buttonTheme.elevation!)
+                      ? buttonTheme.highlightElevation!
+                      : buttonTheme.elevation!)
                 : 0,
             child: child,
           ),
@@ -222,8 +226,10 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
                 width: _height,
                 height: _height,
                 alignment: Alignment.center,
-                child:
-                    Icon(widget.icon, color: widget.iconColor ?? Colors.white),
+                child: _ButtonIcon(
+                  widget.icon,
+                  color: widget.iconColor ?? Colors.white,
+                ),
               ),
             ),
           ),
@@ -260,5 +266,23 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
         _buildButton(theme),
       ],
     );
+  }
+}
+
+class _ButtonIcon extends StatelessWidget {
+  const _ButtonIcon(this.icon, {required this.color});
+
+  final Object icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    if (icon is FaIconData) {
+      return FaIcon(icon as FaIconData, color: color);
+    }
+    if (icon is IconData) {
+      return Icon(icon as IconData, color: color);
+    }
+    return const SizedBox.shrink();
   }
 }

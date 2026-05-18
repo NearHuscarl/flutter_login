@@ -98,27 +98,27 @@ class CheckboxFormField extends FormField<bool> {
     super.key,
     bool super.initialValue = false,
   }) : super(
-          builder: (FormFieldState<bool> state) {
-            return CheckboxListTile(
-              dense: true,
-              title: title,
-              value: state.value,
-              onChanged: (value) {
-                onChanged(value);
-                state.didChange(value);
-              },
-              subtitle: state.hasError
-                  ? Builder(
-                      builder: (BuildContext context) => Text(
-                        state.errorText!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    )
-                  : null,
-              controlAffinity: ListTileControlAffinity.leading,
-            );
-          },
-        );
+         builder: (FormFieldState<bool> state) {
+           return CheckboxListTile(
+             dense: true,
+             title: title,
+             value: state.value,
+             onChanged: (value) {
+               onChanged(value);
+               state.didChange(value);
+             },
+             subtitle: state.hasError
+                 ? Builder(
+                     builder: (BuildContext context) => Text(
+                       state.errorText!,
+                       style: TextStyle(
+                         color: Theme.of(context).colorScheme.error,
+                       ),
+                     ),
+                   )
+                 : null,
+             controlAffinity: ListTileControlAffinity.leading,
+           );
+         },
+       );
 }

@@ -24,12 +24,20 @@ class CustomPageTransformer extends PageTransformer {
     if (position > 0) {
       transform
         ..scaleByDouble(
-            scale, scale, scale, 1) // Scale up as it approaches center
+          scale,
+          scale,
+          scale,
+          1,
+        ) // Scale up as it approaches center
         ..rotateY(position * -1.5); // Rotate left for right-side pages
     } else {
       transform
         ..scaleByDouble(
-            scale, scale, scale, 1) // Scale up as it approaches center
+          scale,
+          scale,
+          scale,
+          1,
+        ) // Scale up as it approaches center
         ..rotateY(position * 1.5); // Rotate right for left-side pages
     }
 

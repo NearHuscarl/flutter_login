@@ -46,9 +46,9 @@ class LoginProvider {
     this.providerNeedsSignUpCallback,
     this.animated = true,
   }) : assert(
-          button != null || icon != null,
-          'Either [button] or [icon] must be provided for the login provider.',
-        );
+         button != null || icon != null,
+         'Either [button] or [icon] must be provided for the login provider.',
+       );
 
   /// Used for custom sign-in buttons.
   ///
@@ -56,11 +56,13 @@ class LoginProvider {
   /// but [button] will take preference over [icon]
   final Buttons? button;
 
-  /// The icon shown on the provider button
+  /// The icon shown on the provider button.
+  ///
+  /// Accepts Flutter [IconData] and Font Awesome FaIconData.
   ///
   /// NOTE: Both [button] and [icon] can be added to [LoginProvider],
   /// but [button] will take preference over [icon]
-  final IconData? icon;
+  final Object? icon;
 
   /// The label shown under the provider
   final String label;
@@ -354,20 +356,20 @@ class FlutterLogin extends StatefulWidget {
     this.hideSignupPasswordFields = false,
     this.onSwitchAuthMode,
     this.autofocus = false,
-  })  : assert(
-          logo == null || logo is String || logo is ImageProvider,
-          'logo must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
-        ),
-        assert(
-          backgroundImage == null ||
-              backgroundImage is String ||
-              backgroundImage is ImageProvider,
-          'backgroundImage must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
-        ),
-        logo = logo is String ? AssetImage(logo) : logo as ImageProvider?,
-        backgroundImage = backgroundImage is String
-            ? AssetImage(backgroundImage)
-            : backgroundImage as ImageProvider?;
+  }) : assert(
+         logo == null || logo is String || logo is ImageProvider,
+         'logo must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
+       ),
+       assert(
+         backgroundImage == null ||
+             backgroundImage is String ||
+             backgroundImage is ImageProvider,
+         'backgroundImage must be a String (path to asset) or an ImageProvider (e.g., AssetImage, NetworkImage, FileImage).',
+       ),
+       logo = logo is String ? AssetImage(logo) : logo as ImageProvider?,
+       backgroundImage = backgroundImage is String
+           ? AssetImage(backgroundImage)
+           : backgroundImage as ImageProvider?;
 
   /// Called when the user hit the submit button when in sign up mode
   ///
@@ -576,19 +578,20 @@ class _FlutterLoginState extends State<FlutterLogin>
   void initState() {
     super.initState();
 
-    _loadingController = AnimationController(
-      vsync: this,
-      duration: loadingDuration,
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.forward) {
-          _logoController.forward();
-          _titleController.forward();
-        }
-        if (status == AnimationStatus.reverse) {
-          _logoController.reverse();
-          _titleController.reverse();
-        }
-      });
+    _loadingController =
+        AnimationController(
+          vsync: this,
+          duration: loadingDuration,
+        )..addStatusListener((status) {
+          if (status == AnimationStatus.forward) {
+            _logoController.forward();
+            _titleController.forward();
+          }
+          if (status == AnimationStatus.reverse) {
+            _logoController.reverse();
+            _titleController.reverse();
+          }
+        });
     _logoController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -701,8 +704,9 @@ class _FlutterLoginState extends State<FlutterLogin>
     required ThemeData theme,
     required LoginTheme loginTheme,
   }) {
-    final blackOrWhite =
-        theme.brightness == Brightness.light ? Colors.black54 : Colors.white;
+    final blackOrWhite = theme.brightness == Brightness.light
+        ? Colors.black54
+        : Colors.white;
     final primaryOrWhite = theme.brightness == Brightness.light
         ? theme.primaryColor
         : Colors.white;
@@ -717,11 +721,13 @@ class _FlutterLoginState extends State<FlutterLogin>
     final accentColor = loginTheme.accentColor ?? theme.colorScheme.secondary;
     final errorColor = loginTheme.errorColor ?? theme.colorScheme.error;
     // the background is a dark gradient, force to use white text if detect default black text color
-    final isDefaultBlackText = theme.textTheme.displaySmall!.color ==
+    final isDefaultBlackText =
+        theme.textTheme.displaySmall!.color ==
         Typography.blackMountainView.displaySmall!.color;
     final titleStyle = theme.textTheme.displaySmall!
         .copyWith(
-          color: loginTheme.accentColor ??
+          color:
+              loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
                   : theme.textTheme.displaySmall!.color),
@@ -731,7 +737,8 @@ class _FlutterLoginState extends State<FlutterLogin>
         .merge(loginTheme.titleStyle);
     final footerStyle = theme.textTheme.bodyLarge!
         .copyWith(
-          color: loginTheme.accentColor ??
+          color:
+              loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
                   : theme.textTheme.displaySmall!.color),
@@ -770,45 +777,53 @@ class _FlutterLoginState extends State<FlutterLogin>
         color: cardTheme.color ?? theme.cardColor,
         elevation: cardTheme.elevation ?? 12.0,
         margin: cardTheme.margin ?? const EdgeInsets.all(4),
-        shape: cardTheme.shape ??
+        shape:
+            cardTheme.shape ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: theme.inputDecorationTheme.copyWith(
         filled: inputTheme.filled,
-        fillColor: inputTheme.fillColor ??
+        fillColor:
+            inputTheme.fillColor ??
             Color.alphaBlend(
               primaryOrWhite.withValues(alpha: .07),
               Colors.grey.withValues(alpha: .04),
             ),
-        contentPadding: inputTheme.contentPadding ??
+        contentPadding:
+            inputTheme.contentPadding ??
             const EdgeInsets.symmetric(vertical: 4),
         errorStyle: inputTheme.errorStyle ?? TextStyle(color: errorColor),
         labelStyle: inputTheme.labelStyle ?? labelStyle,
-        enabledBorder: inputTheme.enabledBorder ??
+        enabledBorder:
+            inputTheme.enabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.transparent),
               borderRadius: roundBorderRadius,
             ),
-        focusedBorder: inputTheme.focusedBorder ??
+        focusedBorder:
+            inputTheme.focusedBorder ??
             inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: primaryColor!, width: 1.5),
               borderRadius: roundBorderRadius,
             ),
-        errorBorder: inputTheme.errorBorder ??
+        errorBorder:
+            inputTheme.errorBorder ??
             inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: errorColor),
               borderRadius: roundBorderRadius,
             ),
-        focusedErrorBorder: inputTheme.focusedErrorBorder ??
+        focusedErrorBorder:
+            inputTheme.focusedErrorBorder ??
             inputTheme.border ??
             OutlineInputBorder(
               borderSide: BorderSide(color: errorColor, width: 1.5),
               borderRadius: roundBorderRadius,
             ),
-        disabledBorder: inputTheme.disabledBorder ??
+        disabledBorder:
+            inputTheme.disabledBorder ??
             inputTheme.border ??
             OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.transparent),
@@ -832,8 +847,7 @@ class _FlutterLoginState extends State<FlutterLogin>
         titleSmall: footerStyle,
         labelLarge: buttonStyle,
       ),
-      colorScheme: Theme.of(context)
-          .colorScheme
+      colorScheme: Theme.of(context).colorScheme
           .copyWith(secondary: accentColor)
           .copyWith(error: errorColor),
     );
@@ -846,7 +860,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     final deviceSize = MediaQuery.of(context).size;
     final headerMargin = loginTheme.headerMargin ?? 15;
     final cardInitialHeight = loginTheme.cardInitialHeight ?? 300;
-    final cardTopPosition = loginTheme.cardTopPosition ??
+    final cardTopPosition =
+        loginTheme.cardTopPosition ??
         max(deviceSize.height / 2 - cardInitialHeight / 2, 85);
     final headerHeight = cardTopPosition - headerMargin;
     final userValidator =

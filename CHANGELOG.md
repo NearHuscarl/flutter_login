@@ -1,3 +1,9 @@
+## 7.0.0
+Breaking Changes:
+- Updated the minimum SDK requirements to Dart 3.9 and Flutter 3.27 to support font_awesome_flutter v11.
+- Upgraded font_awesome_flutter from v10 to v11.
+- Updated sign_in_button to a version compatible with font_awesome_flutter v11.
+
 ## 6.0.0
 Breaking Changes:
 - Replaced intl_phone_number_input with form_builder_phone_field, removing need for platform specific code.

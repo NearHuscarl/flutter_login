@@ -87,12 +87,13 @@ class __HeroTextContentState extends State<_HeroTextContent>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..addListener(() {
-        setState(() => fontSize = _fontSizeTween.value);
-      });
+    _controller =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 600),
+        )..addListener(() {
+          setState(() => fontSize = _fontSizeTween.value);
+        });
 
     _updateFontSize();
 
@@ -106,29 +107,31 @@ class __HeroTextContentState extends State<_HeroTextContent>
   void _updateFontSize() {
     switch (widget.viewState) {
       case ViewState.enlarge:
-        _fontSizeTween = Tween<double>(
-          begin: widget.smallFontSize,
-          end: widget.largeFontSize,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeInOut,
-          ),
-        );
+        _fontSizeTween =
+            Tween<double>(
+              begin: widget.smallFontSize,
+              end: widget.largeFontSize,
+            ).animate(
+              CurvedAnimation(
+                parent: _controller,
+                curve: Curves.easeInOut,
+              ),
+            );
 
       case ViewState.enlarged:
         fontSize = widget.largeFontSize;
 
       case ViewState.shrink:
-        _fontSizeTween = Tween<double>(
-          begin: widget.largeFontSize,
-          end: widget.smallFontSize,
-        ).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeInOut,
-          ),
-        );
+        _fontSizeTween =
+            Tween<double>(
+              begin: widget.largeFontSize,
+              end: widget.smallFontSize,
+            ).animate(
+              CurvedAnimation(
+                parent: _controller,
+                curve: Curves.easeInOut,
+              ),
+            );
 
       case ViewState.shrunk:
         fontSize = widget.smallFontSize;
@@ -198,9 +201,9 @@ class HeroText extends StatelessWidget {
     this.locale,
     this.strutStyle,
   }) : assert(
-          viewState == ViewState.shrunk || viewState == ViewState.enlarged,
-          'viewState must be either ViewState.shrunk or ViewState.enlarged for static HeroText.',
-        );
+         viewState == ViewState.shrunk || viewState == ViewState.enlarged,
+         'viewState must be either ViewState.shrunk or ViewState.enlarged for static HeroText.',
+       );
 
   /// The text to display and animate.
   final String? text;
@@ -242,33 +245,34 @@ class HeroText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: tag!,
-      flightShuttleBuilder: (
-        BuildContext flightContext,
-        Animation<double> animation,
-        HeroFlightDirection flightDirection,
-        BuildContext fromHeroContext,
-        BuildContext toHeroContext,
-      ) {
-        return _HeroTextContent(
-          text,
-          viewState: viewState == ViewState.shrunk
-              ? (flightDirection == HeroFlightDirection.push
-                  ? ViewState.shrink
-                  : ViewState.enlarge)
-              : (flightDirection == HeroFlightDirection.push
-                  ? ViewState.enlarge
-                  : ViewState.shrink),
-          smallFontSize: smallFontSize,
-          largeFontSize: largeFontSize,
-          style: style,
-          textAlign: textAlign,
-          textDirection: textDirection,
-          textScaleFactor: textScaleFactor,
-          maxLines: maxLines,
-          locale: locale,
-          strutStyle: strutStyle,
-        );
-      },
+      flightShuttleBuilder:
+          (
+            BuildContext flightContext,
+            Animation<double> animation,
+            HeroFlightDirection flightDirection,
+            BuildContext fromHeroContext,
+            BuildContext toHeroContext,
+          ) {
+            return _HeroTextContent(
+              text,
+              viewState: viewState == ViewState.shrunk
+                  ? (flightDirection == HeroFlightDirection.push
+                        ? ViewState.shrink
+                        : ViewState.enlarge)
+                  : (flightDirection == HeroFlightDirection.push
+                        ? ViewState.enlarge
+                        : ViewState.shrink),
+              smallFontSize: smallFontSize,
+              largeFontSize: largeFontSize,
+              style: style,
+              textAlign: textAlign,
+              textDirection: textDirection,
+              textScaleFactor: textScaleFactor,
+              maxLines: maxLines,
+              locale: locale,
+              strutStyle: strutStyle,
+            );
+          },
       child: _HeroTextContent(
         text,
         viewState: viewState,

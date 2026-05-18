@@ -84,13 +84,15 @@ class _AnimatedButtonState extends State<AnimatedButton>
     );
 
     _ringThicknessAnimation =
-        Tween<double>(begin: _loadingCircleRadius, end: _loadingCircleThickness)
-            .animate(
-      CurvedAnimation(
-        parent: widget.controller!,
-        curve: const Interval(.65, .85),
-      ),
-    );
+        Tween<double>(
+          begin: _loadingCircleRadius,
+          end: _loadingCircleThickness,
+        ).animate(
+          CurvedAnimation(
+            parent: widget.controller!,
+            curve: const Interval(.65, .85),
+          ),
+        );
     _ringOpacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: widget.controller!,
@@ -115,15 +117,16 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _color = widget.color ?? buttonTheme.backgroundColor;
     _loadingColor = widget.loadingColor ?? theme.colorScheme.secondary;
 
-    _colorAnimation = ColorTween(
-      begin: _color,
-      end: _loadingColor,
-    ).animate(
-      CurvedAnimation(
-        parent: widget.controller!,
-        curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
-      ),
-    );
+    _colorAnimation =
+        ColorTween(
+          begin: _color,
+          end: _loadingColor,
+        ).animate(
+          CurvedAnimation(
+            parent: widget.controller!,
+            curve: const Interval(0, .65, curve: Curves.fastOutSlowIn),
+          ),
+        );
   }
 
   @override
@@ -180,8 +183,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
     _width = textWidth > 120.0 && textWidth < 240.0
         ? textWidth
         : textWidth >= 240.0
-            ? 240.0
-            : 120.0;
+        ? 240.0
+        : 120.0;
 
     _sizeAnimation = Tween<double>(begin: 1, end: _height / _width).animate(
       CurvedAnimation(
@@ -215,8 +218,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
             shadowColor: _color,
             elevation: !_isLoading
                 ? (_hover
-                    ? buttonTheme.highlightElevation!
-                    : buttonTheme.elevation!)
+                      ? buttonTheme.highlightElevation!
+                      : buttonTheme.elevation!)
                 : 0,
             child: child,
           ),

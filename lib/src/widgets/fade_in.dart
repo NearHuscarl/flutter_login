@@ -35,12 +35,12 @@ class FadeIn extends StatefulWidget {
     this.controller,
     this.duration,
     this.curve = Curves.easeOut,
-  })  : assert(
-          controller == null && duration != null ||
-              controller != null && duration == null,
-          'You must provide either a controller or a duration, not both.',
-        ),
-        assert(offset > 0, 'Offset must be greater than 0.');
+  }) : assert(
+         controller == null && duration != null ||
+             controller != null && duration == null,
+         'You must provide either a controller or a duration, not both.',
+       ),
+       assert(offset > 0, 'Offset must be greater than 0.');
 
   /// Optional external animation controller. If provided, you must manage
   /// the animation lifecycle yourself.
@@ -107,24 +107,26 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
         end = Offset.zero;
     }
 
-    _slideAnimation = Tween<Offset>(
-      begin: begin,
-      end: end,
-    ).animate(
-      CurvedAnimation(
-        parent: _effectiveController!,
-        curve: widget.curve!,
-      ),
-    );
-    _opacityAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _effectiveController!,
-        curve: widget.curve!,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(
+          begin: begin,
+          end: end,
+        ).animate(
+          CurvedAnimation(
+            parent: _effectiveController!,
+            curve: widget.curve!,
+          ),
+        );
+    _opacityAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _effectiveController!,
+            curve: widget.curve!,
+          ),
+        );
   }
 
   AnimationController? get _effectiveController =>

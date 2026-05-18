@@ -83,29 +83,32 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
       _controller = widget.controller..value = 0;
     }
 
-    _sizeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0, .6875, curve: Curves.bounceOut),
-        reverseCurve: const Interval(0, .6875, curve: Curves.bounceIn),
-      ),
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(-1, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(.6875, 1, curve: Curves.fastOutSlowIn),
-      ),
-    )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          widget.onExpandCompleted?.call();
-        }
-      });
+    _sizeAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0, .6875, curve: Curves.bounceOut),
+            reverseCurve: const Interval(0, .6875, curve: Curves.bounceIn),
+          ),
+        );
+    _slideAnimation =
+        Tween<Offset>(
+            begin: const Offset(-1, 0),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(
+              parent: _controller,
+              curve: const Interval(.6875, 1, curve: Curves.fastOutSlowIn),
+            ),
+          )
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              widget.onExpandCompleted?.call();
+            }
+          });
   }
 
   @override

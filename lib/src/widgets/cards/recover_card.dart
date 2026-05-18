@@ -131,8 +131,8 @@ class _RecoverCardState extends State<_RecoverCard>
   ) {
     final calculatedTextColor =
         (theme.cardTheme.color!.computeLuminance() < 0.5)
-            ? Colors.white
-            : theme.primaryColor;
+        ? Colors.white
+        : theme.primaryColor;
     return MaterialButton(
       onPressed: !_isSubmitting
           ? () {

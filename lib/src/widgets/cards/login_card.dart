@@ -122,8 +122,11 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     _nameTextFieldLoadingAnimationInterval = const Interval(0, .85);
     _passTextFieldLoadingAnimationInterval = const Interval(.15, 1);
-    _textButtonLoadingAnimationInterval =
-        const Interval(.6, 1, curve: Curves.easeOut);
+    _textButtonLoadingAnimationInterval = const Interval(
+      .6,
+      1,
+      curve: Curves.easeOut,
+    );
     _buttonScaleAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: widget.loadingController,
@@ -250,8 +253,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     }
 
     if (auth.isSignup) {
-      final requireSignUpConfirmation =
-          await widget.requireSignUpConfirmation();
+      final requireSignUpConfirmation = await widget
+          .requireSignUpConfirmation();
       if (widget.requireAdditionalSignUpFields) {
         widget.onSwitchSignUpAdditionalData();
         // The login page wil be shown in login mode (used if loginAfterSignUp disabled)
@@ -417,11 +420,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       autofillHints: _isSubmitting
           ? null
           : (auth.isLogin
-              ? [AutofillHints.password]
-              : [AutofillHints.newPassword]),
+                ? [AutofillHints.password]
+                : [AutofillHints.newPassword]),
       controller: _passController,
-      textInputAction:
-          auth.isLogin ? TextInputAction.done : TextInputAction.next,
+      textInputAction: auth.isLogin
+          ? TextInputAction.done
+          : TextInputAction.next,
       focusNode: _passwordFocusNode,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
@@ -513,8 +517,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   ) {
     final calculatedTextColor =
         (theme.cardTheme.color!.computeLuminance() < 0.5)
-            ? Colors.white
-            : theme.primaryColor;
+        ? Colors.white
+        : theme.primaryColor;
     return FadeIn(
       controller: widget.loadingController,
       offset: .5,
@@ -528,7 +532,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 widget.onSwitchAuthMode(auth.mode);
               }
             : null,
-        padding: loginTheme.authButtonPadding ??
+        padding:
+            loginTheme.authButtonPadding ??
             const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textColor: loginTheme.switchAuthTextColor ?? calculatedTextColor,
@@ -635,7 +640,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       children: iconProvidersList.map((loginProvider) {
         final index = iconProvidersList.indexOf(loginProvider);
         return Padding(
-          padding: loginTheme.providerButtonPadding ??
+          padding:
+              loginTheme.providerButtonPadding ??
               const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           child: ScaleTransition(
             scale: _buttonScaleAnimation,
@@ -709,8 +715,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
-    final cardWidth =
-        min<double>(MediaQuery.of(context).size.width * 0.75, 360);
+    final cardWidth = min<double>(
+      MediaQuery.of(context).size.width * 0.75,
+      360,
+    );
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
@@ -730,8 +738,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 children: <Widget>[
                   if (widget.introWidget != null)
                     ScaleTransition(
-                        scale: _buttonScaleAnimation,
-                        child: widget.introWidget),
+                      scale: _buttonScaleAnimation,
+                      child: widget.introWidget,
+                    ),
                   _buildUserField(textFieldWidth, messages, auth),
                   if (!isSignup || !widget.hideSignupPasswordFields) ...[
                     const SizedBox(height: 20),

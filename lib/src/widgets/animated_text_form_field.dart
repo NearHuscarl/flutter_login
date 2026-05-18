@@ -79,10 +79,10 @@ class AnimatedTextFormField extends StatefulWidget {
     this.autofillHints,
     this.tooltip,
   }) : assert(
-          (inertiaController == null && inertiaDirection == null) ||
-              (inertiaController != null && inertiaDirection != null),
-          'inertiaController and inertiaDirection must either both be null or both be non-null',
-        );
+         (inertiaController == null && inertiaDirection == null) ||
+             (inertiaController != null && inertiaDirection != null),
+         'inertiaController and inertiaDirection must either both be null or both be non-null',
+       );
 
   /// A unique key for the internal [TextFormField].
   final Key? textFormFieldKey;
@@ -184,21 +184,22 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final loadingController = widget.loadingController;
 
     if (loadingController != null) {
-      scaleAnimation = Tween<double>(
-        begin: 0,
-        end: 1,
-      ).animate(
-        CurvedAnimation(
-          parent: loadingController,
-          curve: _getInternalInterval(
-            0,
-            .2,
-            interval!.begin,
-            interval.end,
-            Curves.easeOutBack,
-          ),
-        ),
-      );
+      scaleAnimation =
+          Tween<double>(
+            begin: 0,
+            end: 1,
+          ).animate(
+            CurvedAnimation(
+              parent: loadingController,
+              curve: _getInternalInterval(
+                0,
+                .2,
+                interval!.begin,
+                interval.end,
+                Curves.easeOutBack,
+              ),
+            ),
+          );
       suffixIconOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
           parent: loadingController,
@@ -213,24 +214,25 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final sign = inertiaDirection == TextFieldInertiaDirection.right ? 1 : -1;
 
     if (inertiaController != null) {
-      fieldTranslateAnimation = Tween<double>(
-        begin: 0,
-        end: sign * 15.0,
-      ).animate(
-        CurvedAnimation(
-          parent: inertiaController,
-          curve: const Interval(0, .5, curve: Curves.easeOut),
-          reverseCurve: Curves.easeIn,
-        ),
-      );
+      fieldTranslateAnimation =
+          Tween<double>(
+            begin: 0,
+            end: sign * 15.0,
+          ).animate(
+            CurvedAnimation(
+              parent: inertiaController,
+              curve: const Interval(0, .5, curve: Curves.easeOut),
+              reverseCurve: Curves.easeIn,
+            ),
+          );
       iconRotationAnimation =
           Tween<double>(begin: 0, end: sign * pi / 12 /* ~15deg */).animate(
-        CurvedAnimation(
-          parent: inertiaController,
-          curve: const Interval(.5, 1, curve: Curves.easeOut),
-          reverseCurve: Curves.easeIn,
-        ),
-      );
+            CurvedAnimation(
+              parent: inertiaController,
+              curve: const Interval(.5, 1, curve: Curves.easeOut),
+              reverseCurve: Curves.easeIn,
+            ),
+          );
       iconTranslateAnimation = Tween<double>(begin: 0, end: 8).animate(
         CurvedAnimation(
           parent: inertiaController,
@@ -267,22 +269,23 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     final interval = widget.interval!;
     final loadingController = widget.loadingController!;
 
-    sizeAnimation = Tween<double>(
-      begin: 48,
-      end: widget.width,
-    ).animate(
-      CurvedAnimation(
-        parent: loadingController,
-        curve: _getInternalInterval(
-          .2,
-          1,
-          interval.begin,
-          interval.end,
-          Curves.linearToEaseOut,
-        ),
-        reverseCurve: Curves.easeInExpo,
-      ),
-    );
+    sizeAnimation =
+        Tween<double>(
+          begin: 48,
+          end: widget.width,
+        ).animate(
+          CurvedAnimation(
+            parent: loadingController,
+            curve: _getInternalInterval(
+              .2,
+              1,
+              interval.begin,
+              interval.end,
+              Curves.linearToEaseOut,
+            ),
+            reverseCurve: Curves.easeInExpo,
+          ),
+        );
   }
 
   @override
@@ -324,10 +327,24 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     );
   }
 
+  Widget? _buildPrefixIcon(Widget? child) {
+    if (child == null) {
+      return null;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Align(
+        widthFactor: 1,
+        alignment: Alignment.centerLeft,
+        child: child,
+      ),
+    );
+  }
+
   InputDecoration _getInputDecoration(ThemeData theme) {
     return InputDecoration(
       labelText: widget.labelText,
-      prefixIcon: _buildInertiaAnimation(widget.prefixIcon),
+      prefixIcon: _buildPrefixIcon(_buildInertiaAnimation(widget.prefixIcon)),
       suffixIcon: widget.userType == LoginUserType.intlPhone
           ? null
           : _buildInertiaAnimation(
@@ -349,9 +366,10 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     Widget inputField;
     if (widget.userType == LoginUserType.intlPhone) {
       _phoneNumberController.addListener(() {
-        final phoneNumber = (_formKey.currentState?.fields['phone_number_intl']
-                as FormBuilderPhoneFieldState?)
-            ?.fullNumber;
+        final phoneNumber =
+            (_formKey.currentState?.fields['phone_number_intl']
+                    as FormBuilderPhoneFieldState?)
+                ?.fullNumber;
         if (phoneNumber == null) return;
         widget.controller?.text = phoneNumber;
       });
@@ -517,10 +535,10 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
     this.onSaved,
     this.autofillHints,
   }) : assert(
-          (inertiaController == null && inertiaDirection == null) ||
-              (inertiaController != null && inertiaDirection != null),
-          'inertiaController and inertiaDirection must either both be null or both be non-null.',
-        );
+         (inertiaController == null && inertiaDirection == null) ||
+             (inertiaController != null && inertiaDirection != null),
+         'inertiaController and inertiaDirection must either both be null or both be non-null.',
+       );
 
   /// Interval defining how this field participates in an animation sequence.
   final Interval? interval;
@@ -589,7 +607,7 @@ class _AnimatedPasswordTextFormFieldState
       enabled: widget.enabled,
       autofillHints: widget.autofillHints,
       labelText: widget.labelText,
-      prefixIcon: const Icon(FontAwesomeIcons.lock, size: 20),
+      prefixIcon: const FaIcon(FontAwesomeIcons.lock, size: 20),
       suffixIcon: GestureDetector(
         onTap: () => setState(() => _obscureText = !_obscureText),
         dragStartBehavior: DragStartBehavior.down,
@@ -598,7 +616,7 @@ class _AnimatedPasswordTextFormFieldState
           firstCurve: Curves.easeInOutSine,
           secondCurve: Curves.easeInOutSine,
           alignment: Alignment.center,
-          layoutBuilder: (Widget topChild, _, Widget bottomChild, __) {
+          layoutBuilder: (Widget topChild, _, Widget bottomChild, _) {
             return Stack(
               alignment: Alignment.center,
               children: <Widget>[bottomChild, topChild],

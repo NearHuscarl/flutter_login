@@ -14,9 +14,11 @@ class Ring extends StatelessWidget {
     this.size = 40.0,
     this.thickness = 2.0,
     this.value = 1.0,
-  })  : assert(
-            size - thickness > 0, 'Ring thickness must be smaller than size.'),
-        assert(thickness >= 0, 'Ring thickness must be non-negative.');
+  }) : assert(
+         size - thickness > 0,
+         'Ring thickness must be smaller than size.',
+       ),
+       assert(thickness >= 0, 'Ring thickness must be non-negative.');
 
   /// The color of the ring stroke.
   final Color? color;

@@ -89,8 +89,9 @@ List<Color?> getDarkShades(
   Color color, [
   ColorShade minShade = ColorShade.fifthLightest,
 ]) {
-  final materialColor =
-      color is MaterialColor ? color : getMaterialColor(color);
+  final materialColor = color is MaterialColor
+      ? color
+      : getMaterialColor(color);
   final darkShades = <Color>[];
 
   for (final shade in shades.values) {
@@ -111,8 +112,10 @@ List<Color?> getDarkShades(
 ///
 /// Uses HSL color space to reduce lightness. Default amount is `0.1`.
 Color darken(Color color, [double amount = .1]) {
-  assert(amount >= 0 && amount <= 1,
-      'The darken amount must be between 0.0 and 1.0 (was $amount)');
+  assert(
+    amount >= 0 && amount <= 1,
+    'The darken amount must be between 0.0 and 1.0 (was $amount)',
+  );
 
   final hsl = HSLColor.fromColor(color);
   final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
@@ -124,8 +127,10 @@ Color darken(Color color, [double amount = .1]) {
 ///
 /// Uses HSL color space to increase lightness. Default amount is `0.1`.
 Color lighten(Color color, [double amount = .1]) {
-  assert(amount >= 0 && amount <= 1,
-      'The lighten amount must be between 0.0 and 1.0 (was $amount)');
+  assert(
+    amount >= 0 && amount <= 1,
+    'The lighten amount must be between 0.0 and 1.0 (was $amount)',
+  );
 
   final hsl = HSLColor.fromColor(color);
   final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
