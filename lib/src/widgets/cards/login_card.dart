@@ -780,14 +780,17 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             ),
           ),
           if (widget.showTermsInLogin && auth.termsOfService.isNotEmpty)
-            Container(
-              width: cardWidth,
-              padding: const EdgeInsets.symmetric(horizontal: cardPadding),
-              child: Column(
-                children: [
-                  for (final e in auth.termsOfService)
-                    TermCheckbox(termOfService: e),
-                ],
+            ScaleTransition(
+              scale: _buttonScaleAnimation,
+              child: Container(
+                width: cardWidth,
+                padding: const EdgeInsets.symmetric(horizontal: cardPadding),
+                child: Column(
+                  children: [
+                    for (final e in auth.termsOfService)
+                      TermCheckbox(termOfService: e),
+                  ],
+                ),
               ),
             ),
           Container(
