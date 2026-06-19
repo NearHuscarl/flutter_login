@@ -23,6 +23,7 @@ class _LoginCard extends StatefulWidget {
     required this.hideSignupPasswordFields,
     required this.onSwitchAuthMode,
     required this.autofocus,
+    this.showTermsInLogin = false,
     super.key,
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
@@ -52,6 +53,7 @@ class _LoginCard extends StatefulWidget {
   final bool hideSignupPasswordFields;
   final void Function(AuthMode mode) onSwitchAuthMode;
   final bool autofocus;
+  final bool showTermsInLogin;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -199,10 +201,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     if (auth.isLogin) {
       error = await auth.onLogin?.call(
-        LoginData(
-          name: auth.email,
-          password: auth.password,
-        ),
+        LoginData(name: auth.email, password: auth.password),
       );
     } else {
       if (!widget.requireAdditionalSignUpFields) {
@@ -390,11 +389,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     return true;
   }
 
-  Widget _buildUserField(
-    double width,
-    LoginMessages messages,
-    Auth auth,
-  ) {
+  Widget _buildUserField(double width, LoginMessages messages, Auth auth) {
     return AnimatedTextFormField(
       textFormFieldKey: _userFieldKey,
       userType: widget.userType,
@@ -628,9 +623,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
           scale: _buttonScaleAnimation,
           child: SignInButton(
             loginProvider.button!,
-            onPressed: () async => _loginProviderSubmit(
-              loginProvider: loginProvider,
-            ),
+            onPressed: () async =>
+                _loginProviderSubmit(loginProvider: loginProvider),
             text: loginProvider.label,
           ),
         );
@@ -708,11 +702,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   EdgeInsets fromRBL(double value) {
-    return EdgeInsets.only(
-      right: value,
-      bottom: value,
-      left: value,
-    );
+    return EdgeInsets.only(right: value, bottom: value, left: value);
   }
 
   @override
@@ -783,14 +773,23 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                       auth,
                     ),
                   ),
-                for (final e in auth.termsOfService)
-                  TermCheckbox(
-                    termOfService: e,
-                    validation: auth.isSignup,
-                  ),
+                if (!widget.showTermsInLogin)
+                  for (final e in auth.termsOfService)
+                    TermCheckbox(termOfService: e, validation: auth.isSignup),
               ],
             ),
           ),
+          if (widget.showTermsInLogin && auth.termsOfService.isNotEmpty)
+            Container(
+              width: cardWidth,
+              padding: const EdgeInsets.symmetric(horizontal: cardPadding),
+              child: Column(
+                children: [
+                  for (final e in auth.termsOfService)
+                    TermCheckbox(termOfService: e),
+                ],
+              ),
+            ),
           Container(
             padding: fromRBL(cardPadding),
             width: cardWidth,
@@ -799,16 +798,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 if (!widget.hideForgotPasswordButton)
                   _buildForgotPassword(theme, messages)
                 else
-                  SizedBox.fromSize(
-                    size: const Size.fromHeight(16),
-                  ),
+                  SizedBox.fromSize(size: const Size.fromHeight(16)),
                 _buildSubmitButton(theme, messages, auth),
                 if (!widget.hideSignUpButton)
                   _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                 else
-                  SizedBox.fromSize(
-                    size: const Size.fromHeight(10),
-                  ),
+                  SizedBox.fromSize(size: const Size.fromHeight(10)),
                 if (auth.loginProviders.isNotEmpty &&
                     !widget.hideProvidersTitle)
                   _buildProvidersTitleFirst(messages)

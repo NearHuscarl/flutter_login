@@ -51,6 +51,7 @@ class AuthCard extends StatefulWidget {
     required this.hideSignupPasswordFields,
     required this.onSwitchAuthMode,
     required this.autofocus,
+    this.showTermsInLogin = false,
     super.key,
     this.padding = EdgeInsets.zero,
     this.userValidator,
@@ -141,6 +142,9 @@ class AuthCard extends StatefulWidget {
 
   /// Whether the user input field should autofocus.
   final bool autofocus;
+
+  /// Whether to also display terms of service in login mode.
+  final bool showTermsInLogin;
 
   @override
   AuthCardState createState() => AuthCardState();
@@ -443,10 +447,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
     Future<bool> requireSignUpConfirmation() async {
       final confirmSignupRequired =
           await auth.confirmSignupRequired?.call(
-            LoginData(
-              name: auth.email,
-              password: auth.password,
-            ),
+            LoginData(name: auth.email, password: auth.password),
           ) ??
           true;
       return auth.onConfirmSignup != null && confirmSignupRequired;
@@ -486,6 +487,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             hideSignupPasswordFields: widget.hideSignupPasswordFields,
             onSwitchAuthMode: widget.onSwitchAuthMode,
             autofocus: widget.autofocus,
+            showTermsInLogin: widget.showTermsInLogin,
           ),
         );
       case _recoveryIndex:

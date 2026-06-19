@@ -224,10 +224,7 @@ class __HeaderState extends State<_Header> {
         : const SizedBox.shrink();
 
     if (widget.logoTag != null) {
-      logo = Hero(
-        tag: widget.logoTag!,
-        child: logo,
-      );
+      logo = Hero(tag: widget.logoTag!, child: logo);
     }
 
     Widget? title;
@@ -340,6 +337,7 @@ class FlutterLogin extends StatefulWidget {
     this.disableCustomPageTransformer = false,
     this.navigateBackAfterRecovery = false,
     this.termsOfService = const <TermOfService>[],
+    this.showTermsInLogin = false,
     this.onConfirmRecover,
     this.onConfirmSignup,
     this.confirmSignupRequired,
@@ -499,6 +497,17 @@ class FlutterLogin extends StatefulWidget {
   /// List of terms of service to be listed during registration. On onSignup callback LoginData contains a list of TermOfServiceResult
   final List<TermOfService> termsOfService;
 
+  /// Whether to also display [termsOfService] in login mode.
+  ///
+  /// By default, terms of service are only shown during signup. Set this to
+  /// `true` (e.g. when targeting markets such as China that require terms
+  /// acceptance on login as well) to render the same terms checkboxes in
+  /// login mode. When shown in login mode, mandatory terms are validated
+  /// before the login can proceed.
+  ///
+  /// Default: `false`.
+  final bool showTermsInLogin;
+
   /// The initial auth mode for the widget to show. This defaults to [AuthMode.login]
   /// if not specified. This field can allow you to show the sign up state by default.
   final AuthMode initialAuthMode;
@@ -580,19 +589,17 @@ class _FlutterLoginState extends State<FlutterLogin>
     super.initState();
 
     _loadingController =
-        AnimationController(
-          vsync: this,
-          duration: loadingDuration,
-        )..addStatusListener((status) {
-          if (status == AnimationStatus.forward) {
-            unawaited(_logoController.forward());
-            unawaited(_titleController.forward());
-          }
-          if (status == AnimationStatus.reverse) {
-            unawaited(_logoController.reverse());
-            unawaited(_titleController.reverse());
-          }
-        });
+        AnimationController(vsync: this, duration: loadingDuration)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.forward) {
+              unawaited(_logoController.forward());
+              unawaited(_titleController.forward());
+            }
+            if (status == AnimationStatus.reverse) {
+              unawaited(_logoController.reverse());
+              unawaited(_titleController.reverse());
+            }
+          });
     _logoController = AnimationController(
       vsync: this,
       duration: loadingDuration,
@@ -891,12 +898,8 @@ class _FlutterLoginState extends State<FlutterLogin>
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: widget.messages ?? LoginMessages(),
-        ),
-        ChangeNotifierProvider.value(
-          value: widget.theme ?? LoginTheme(),
-        ),
+        ChangeNotifierProvider.value(value: widget.messages ?? LoginMessages()),
+        ChangeNotifierProvider.value(value: widget.theme ?? LoginTheme()),
         ChangeNotifierProvider(
           create: (context) => Auth(
             onLogin: widget.onLogin,
@@ -975,6 +978,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                             widget.hideSignupPasswordFields,
                         onSwitchAuthMode: widget.onSwitchAuthMode ?? (_) {},
                         autofocus: widget.autofocus,
+                        showTermsInLogin: widget.showTermsInLogin,
                       ),
                     ),
                     Positioned(
