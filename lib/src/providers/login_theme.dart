@@ -89,6 +89,7 @@ class LoginTheme with ChangeNotifier {
     this.headerMargin,
     this.cardInitialHeight,
     this.cardTopPosition,
+    this.cardWidth,
   });
 
   /// The background color of the login page for light gradient; if provided,
@@ -180,4 +181,11 @@ class LoginTheme with ChangeNotifier {
   ///
   /// Default: deviceSize.height / 2 - cardInitialHeight / 2
   final double? cardTopPosition;
+
+  /// The width of the login card.
+  ///
+  /// If not provided, the card width defaults to the smallest of
+  /// `deviceSize.width * 0.75` and `360`. Set this to widen or narrow
+  /// the authentication form.
+  final double? cardWidth;
 }

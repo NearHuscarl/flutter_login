@@ -90,8 +90,8 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
         ).animate(
           CurvedAnimation(
             parent: _controller,
-            curve: const Interval(0, .6875, curve: Curves.bounceOut),
-            reverseCurve: const Interval(0, .6875, curve: Curves.bounceIn),
+            curve: const Interval(0, .6875, curve: Curves.easeOutQuart),
+            reverseCurve: const Interval(0, .6875, curve: Curves.easeInQuart),
           ),
         );
     _slideAnimation =
@@ -101,7 +101,7 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
           ).animate(
             CurvedAnimation(
               parent: _controller,
-              curve: const Interval(.6875, 1, curve: Curves.fastOutSlowIn),
+              curve: const Interval(.6875, 1, curve: Curves.easeOutQuart),
             ),
           )
           ..addStatusListener((status) {

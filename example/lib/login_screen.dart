@@ -50,6 +50,11 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: Constants.appName,
+      theme: LoginTheme(
+        logoWidth: 0.4,
+        cardInitialHeight: 430,
+        cardWidth: 460,
+      ),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       logo: const AssetImage('assets/images/ecorp.png'),
       // backgroundImage: const AssetImage('assets/images/bgr.jpg'),

@@ -31,6 +31,17 @@ part 'recover_card.dart';
 part 'recover_confirm_card.dart';
 part 'signup_confirm_card.dart';
 
+/// Computes the auth card width and clamps it so it never overflows the
+/// screen. Used by every card (login, signup, recover, confirm) so they all
+/// share the exact same width.
+double resolveCardWidth(LoginTheme loginTheme, double deviceWidth) {
+  const cardHorizontalGap = 24.0;
+  return min<double>(
+    loginTheme.cardWidth ?? min<double>(deviceWidth * 0.75, 360),
+    max(deviceWidth - cardHorizontalGap * 2, 0),
+  );
+}
+
 /// The main card widget that wraps and controls all auth-related flows,
 /// including login, signup, password recovery, and confirmation steps.
 ///
@@ -599,7 +610,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
         itemBuilder: (context, index) {
           if (widget.scrollable) {
             return Align(
-              alignment: Alignment.topCenter,
+              alignment: Alignment.bottomCenter,
               child: Scrollbar(
                 controller: _scrollController,
                 child: SingleChildScrollView(
@@ -611,7 +622,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             );
           } else {
             return Align(
-              alignment: Alignment.topCenter,
+              alignment: Alignment.bottomCenter,
               child: _changeToCard(context, index),
             );
           }

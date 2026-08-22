@@ -256,7 +256,10 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
     final theme = Theme.of(context);
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-    final cardWidth = min<double>(deviceSize.width * 0.75, 360);
+    final cardWidth = resolveCardWidth(
+      Provider.of<LoginTheme>(context, listen: false),
+      deviceSize.width,
+    );
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
 

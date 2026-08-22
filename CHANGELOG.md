@@ -1,3 +1,8 @@
+## 8.0.0
+Features:
+- Added a splash screen to the example app showing the app logo (ecorp.png) with fade in/out transition animation over 2 seconds.
+- App now opens on the splash screen before navigating to the login screen.
+
 ## 7.0.0
 Breaking Changes:
 - Updated the minimum SDK requirements to Dart 3.9 and Flutter 3.27 to support font_awesome_flutter v11.

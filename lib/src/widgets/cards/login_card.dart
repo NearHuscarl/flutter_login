@@ -723,10 +723,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     final messages = Provider.of<LoginMessages>(context, listen: false);
     final loginTheme = Provider.of<LoginTheme>(context, listen: false);
     final theme = Theme.of(context);
-    final cardWidth = min<double>(
-      MediaQuery.of(context).size.width * 0.75,
-      360,
-    );
+    final deviceSize = MediaQuery.of(context).size;
+    final cardWidth = resolveCardWidth(loginTheme, deviceSize.width);
     const cardPadding = 16.0;
     final textFieldWidth = cardWidth - cardPadding * 2;
     final authForm = Form(
@@ -737,7 +735,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             padding: const EdgeInsets.only(
               left: cardPadding,
               right: cardPadding,
-              top: cardPadding + 10,
+              top: cardPadding + 8,
             ),
             width: cardWidth,
             child: AutofillGroup(
@@ -751,10 +749,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     ),
                   _buildUserField(textFieldWidth, messages, auth),
                   if (!isSignup || !widget.hideSignupPasswordFields) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     _buildPasswordField(textFieldWidth, messages, auth),
                   ],
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -776,7 +774,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               children: [
                 if (!isSignup || !widget.hideSignupPasswordFields)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
                     child: _buildConfirmPasswordField(
                       textFieldWidth,
                       messages,
@@ -784,15 +782,22 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                     ),
                   ),
                 for (final e in auth.termsOfService)
-                  TermCheckbox(
-                    termOfService: e,
-                    validation: auth.isSignup,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: TermCheckbox(
+                      termOfService: e,
+                      validation: auth.isSignup,
+                    ),
                   ),
               ],
             ),
           ),
-          Container(
-            padding: fromRBL(cardPadding),
+Container(
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: 20,
+            ),
             width: cardWidth,
             child: Column(
               children: <Widget>[
@@ -800,14 +805,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                   _buildForgotPassword(theme, messages)
                 else
                   SizedBox.fromSize(
-                    size: const Size.fromHeight(16),
+                    size: const Size.fromHeight(12),
                   ),
                 _buildSubmitButton(theme, messages, auth),
                 if (!widget.hideSignUpButton)
                   _buildSwitchAuthButton(theme, messages, auth, loginTheme)
                 else
                   SizedBox.fromSize(
-                    size: const Size.fromHeight(10),
+                    size: const Size.fromHeight(8),
                   ),
                 if (auth.loginProviders.isNotEmpty &&
                     !widget.hideProvidersTitle)

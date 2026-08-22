@@ -146,6 +146,8 @@ class _Header extends StatefulWidget {
     this.height = 250.0,
     this.logoController,
     this.titleController,
+    this.logoScaleController,
+    this.logoScaleAnimation,
   });
 
   final ImageProvider? logo;
@@ -157,6 +159,8 @@ class _Header extends StatefulWidget {
   final LoginTheme loginTheme;
   final AnimationController? logoController;
   final AnimationController? titleController;
+  final AnimationController? logoScaleController;
+  final Animation<double>? logoScaleAnimation;
 
   @override
   __HeaderState createState() => __HeaderState();
@@ -251,28 +255,52 @@ class __HeaderState extends State<_Header> {
       title = null;
     }
 
-    return SafeArea(
-      child: SizedBox(
-        height: widget.height - MediaQuery.of(context).padding.top,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (displayLogo)
-              FadeIn(
-                controller: widget.logoController,
-                offset: .25,
-                fadeDirection: FadeDirection.topToBottom,
-                child: logo,
-              ),
-            const SizedBox(height: gap),
-            FadeIn(
-              controller: widget.titleController,
-              offset: .5,
-              fadeDirection: FadeDirection.topToBottom,
-              child: title,
-            ),
-          ],
+    Widget headerContent = Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        if (displayLogo)
+          FadeIn(
+            controller: widget.logoController,
+            offset: .25,
+            fadeDirection: FadeDirection.topToBottom,
+            child: logo,
+          ),
+        const SizedBox(height: gap),
+        FadeIn(
+          controller: widget.titleController,
+          offset: .5,
+          fadeDirection: FadeDirection.topToBottom,
+          child: title,
         ),
+      ],
+    );
+
+    if (widget.logoScaleAnimation != null) {
+      headerContent = ScaleTransition(
+        alignment: Alignment.bottomCenter,
+        scale: widget.logoScaleAnimation!,
+        child: headerContent,
+      );
+      // Fade the logo + title out completely on Signup so it only
+      // appears above the Login form.
+      headerContent = FadeTransition(
+        opacity: widget.logoScaleAnimation!,
+        child: headerContent,
+      );
+    }
+
+    return SafeArea(
+      child: AnimatedBuilder(
+        animation: widget.logoScaleAnimation!,
+        builder: (context, child) {
+          final scale = widget.logoScaleAnimation!.value;
+          return SizedBox(
+            height:
+                (widget.height - MediaQuery.of(context).padding.top) * scale,
+            child: child,
+          );
+        },
+        child: headerContent,
       ),
     );
   }
@@ -574,6 +602,8 @@ class _FlutterLoginState extends State<FlutterLogin>
   late AnimationController _loadingController;
   late AnimationController _logoController;
   late AnimationController _titleController;
+  late AnimationController _logoScaleController;
+  late Animation<double> _logoScaleAnimation;
 
   @override
   void initState() {
@@ -602,13 +632,21 @@ class _FlutterLoginState extends State<FlutterLogin>
       duration: loadingDuration,
     );
 
-    unawaited(
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) {
-          unawaited(_loadingController.forward());
-        }
-      }),
+    _logoScaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
     );
+    _logoScaleAnimation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(
+        parent: _logoScaleController,
+        curve: Curves.easeOutQuart,
+        reverseCurve: Curves.easeInQuart,
+      ),
+    );
+
+    if (mounted) {
+      unawaited(_loadingController.forward());
+    }
   }
 
   @override
@@ -616,6 +654,7 @@ class _FlutterLoginState extends State<FlutterLogin>
     _loadingController.dispose();
     _logoController.dispose();
     _titleController.dispose();
+    _logoScaleController.dispose();
     super.dispose();
   }
 
@@ -632,6 +671,8 @@ class _FlutterLoginState extends State<FlutterLogin>
     return _Header(
       logoController: _logoController,
       titleController: _titleController,
+      logoScaleController: _logoScaleController,
+      logoScaleAnimation: _logoScaleAnimation,
       height: height,
       logo: widget.logo,
       logoTag: widget.logoTag,
@@ -742,23 +783,24 @@ class _FlutterLoginState extends State<FlutterLogin>
           fontWeight: FontWeight.w300,
         )
         .merge(loginTheme.titleStyle);
-    final footerStyle = theme.textTheme.bodyLarge!
+    final footerStyle = theme.textTheme.bodyMedium!
         .copyWith(
           color:
               loginTheme.accentColor ??
               (isDefaultBlackText
                   ? Colors.white
                   : theme.textTheme.displaySmall!.color),
+          fontSize: 13,
         )
         .merge(loginTheme.footerTextStyle);
     final textStyle = theme.textTheme.bodyMedium!
-        .copyWith(color: blackOrWhite)
+        .copyWith(color: blackOrWhite, fontSize: 14)
         .merge(loginTheme.bodyStyle);
     final textFieldStyle = theme.textTheme.titleMedium!
-        .copyWith(color: blackOrWhite, fontSize: 14)
+        .copyWith(color: blackOrWhite, fontSize: 15)
         .merge(loginTheme.textFieldStyle);
     final buttonStyle = theme.textTheme.labelLarge!
-        .copyWith(color: Colors.white)
+        .copyWith(color: Colors.white, fontSize: 15)
         .merge(loginTheme.buttonStyle);
     final cardTheme = loginTheme.cardTheme;
     final inputTheme = loginTheme.inputTheme;
@@ -871,6 +913,9 @@ class _FlutterLoginState extends State<FlutterLogin>
         loginTheme.cardTopPosition ??
         max(deviceSize.height / 2 - cardInitialHeight / 2, 85);
     final headerHeight = cardTopPosition - headerMargin;
+    // Anchor the card to the bottom (just above the footer) so it grows
+    // upward instead of pushing down toward the footer.
+    final cardBottomPadding = loginTheme.footerBottomPadding + 30;
     final userValidator =
         widget.userValidator ?? FlutterLogin.defaultEmailValidator;
     final validateUserImmediately = widget.validateUserImmediately ?? false;
@@ -943,12 +988,11 @@ class _FlutterLoginState extends State<FlutterLogin>
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
-                    Positioned(
-                      child: AuthCard(
+                    AuthCard(
                         key: authCardKey,
                         userType: widget.userType,
                         keyboardDismissBehavior: widget.keyboardDismissBehavior,
-                        padding: EdgeInsets.only(top: cardTopPosition),
+                        padding: EdgeInsets.only(bottom: cardBottomPadding),
                         loadingController: _loadingController,
                         userValidator: userValidator,
                         validateUserImmediately: validateUserImmediately,
@@ -973,10 +1017,16 @@ class _FlutterLoginState extends State<FlutterLogin>
                         initialIsoCode: widget.initialIsoCode,
                         hideSignupPasswordFields:
                             widget.hideSignupPasswordFields,
-                        onSwitchAuthMode: widget.onSwitchAuthMode ?? (_) {},
+                        onSwitchAuthMode: (mode) {
+                          if (mode == AuthMode.signup) {
+                            unawaited(_logoScaleController.forward());
+                          } else {
+                            unawaited(_logoScaleController.reverse());
+                          }
+                          widget.onSwitchAuthMode?.call(mode);
+                        },
                         autofocus: widget.autofocus,
                       ),
-                    ),
                     Positioned(
                       top: cardTopPosition - headerHeight - headerMargin,
                       child: _buildHeader(headerHeight, loginTheme),
