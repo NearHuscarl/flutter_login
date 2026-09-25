@@ -620,6 +620,9 @@ class _FlutterLoginState extends State<FlutterLogin>
   }
 
   void _reverseHeaderAnimation() {
+    if (!mounted) {
+      return;
+    }
     if (widget.logoTag == null) {
       unawaited(_logoController.reverse());
     }
